@@ -1,16 +1,13 @@
 import TextViewer from "@components/Ui/RichTextViewer";
 import { Box, Card, Group, Title } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
-import { IAssessmentExam } from "@utils/services/assessmentService";
+import type { UseFormReturnType } from "@mantine/form";
+import type { IAssessmentExam } from "@utils/services/assessmentService";
 import cx from "clsx";
 import { t } from "i18next";
 import classes from "../styles/assessmentQuestion.module.css";
 
 type Props = {
-  form: UseFormReturnType<
-    IAssessmentExam[],
-    (values: IAssessmentExam[]) => IAssessmentExam[]
-  >;
+  form: UseFormReturnType<IAssessmentExam[], (values: IAssessmentExam[]) => IAssessmentExam[]>;
   options: [
     {
       optionId: string;
@@ -35,18 +32,14 @@ const AssessmentExamCheckBox = ({ form, options, currentIndex }: Props) => {
             type={"checkbox"}
             id={option.optionId}
             style={{ display: "none" }}
-            {...form.getInputProps(
-              `${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`
-            )}
+            {...form.getInputProps(`${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`)}
           ></input>
           <Card
             shadow={"md"}
             my={10}
             p={10}
             className={cx({
-              [classes.active]:
-                form.values[currentIndex].assessmentQuestionOptions[index]
-                  .isCorrect,
+              [classes.active]: form.values[currentIndex].assessmentQuestionOptions[index].isCorrect,
             })}
           >
             <TextViewer

@@ -2,11 +2,7 @@ import { Button, Checkbox, Flex, NumberInput, Switch } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
-import {
-  IUpdateShuffle,
-  useGetShuffleDetails,
-  useUpdateShuffle,
-} from "@utils/services/courseService";
+import { type IUpdateShuffle, useGetShuffleDetails, useUpdateShuffle } from "@utils/services/courseService";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -14,14 +10,8 @@ import { useParams } from "react-router-dom";
 const Shuffle = () => {
   const { t } = useTranslation();
   const params = useParams();
-  const shuffleDetail = useGetShuffleDetails(
-    params.id as string,
-    params.lessonSlug as string
-  );
-  const updateShuffle = useUpdateShuffle(
-    params.id as string,
-    params.lessonSlug as string
-  );
+  const shuffleDetail = useGetShuffleDetails(params.id as string, params.lessonSlug as string);
+  const updateShuffle = useUpdateShuffle(params.id as string, params.lessonSlug as string);
 
   const form = useForm({
     initialValues: {
@@ -62,11 +52,7 @@ const Shuffle = () => {
     <>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Flex align={"flex-end"} gap={15}>
-          <Checkbox
-            label={t("all")}
-            labelPosition="right"
-            {...form.getInputProps("showAll", { type: "checkbox" })}
-          />
+          <Checkbox label={t("all")} labelPosition="right" {...form.getInputProps("showAll", { type: "checkbox" })} />
           <NumberInput
             min={0}
             defaultValue={0}
@@ -74,10 +60,7 @@ const Shuffle = () => {
             disabled={form.values.showAll}
             {...form.getInputProps("noOfQuestion")}
           />
-          <Switch
-            label={t("shuffle")}
-            {...form.getInputProps("isShuffle", { type: "checkbox" })}
-          />
+          <Switch label={t("shuffle")} {...form.getInputProps("isShuffle", { type: "checkbox" })} />
           <Button type="submit">{t("submit")}</Button>
         </Flex>
       </form>

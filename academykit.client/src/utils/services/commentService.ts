@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { IPaginated, IUser } from "./types";
+import type { IPaginated, IUser } from "./types";
 
 export interface IComment {
   id: string;
@@ -100,21 +100,11 @@ export interface ICommentReply {
   createdOn: string;
 }
 
-const getCommentReplies = (
-  courseId: string,
-  commentId: string,
-  replyCount: number
-) => {
-  return httpClient.get<IPaginated<ICommentReply>>(
-    api.comments.getRepliesList(courseId, commentId, replyCount)
-  );
+const getCommentReplies = (courseId: string, commentId: string, replyCount: number) => {
+  return httpClient.get<IPaginated<ICommentReply>>(api.comments.getRepliesList(courseId, commentId, replyCount));
 };
 
-export const useGetCommentReplies = (
-  courseId: string,
-  commentId: string,
-  replyCount: number
-) => {
+export const useGetCommentReplies = (courseId: string, commentId: string, replyCount: number) => {
   return useQuery({
     queryKey: [api.comments.getRepliesList(courseId, commentId, replyCount)],
     queryFn: () => getCommentReplies(courseId, commentId, replyCount),
@@ -160,8 +150,7 @@ const deleteCommentReply = ({
   courseId: string;
   commentId: string;
   replyId: string;
-}) =>
-  httpClient.delete(api.comments.repliesDetails(courseId, commentId, replyId));
+}) => httpClient.delete(api.comments.repliesDetails(courseId, commentId, replyId));
 
 export const useDeleteCommentReply = (courseId: string, commentId: string) => {
   const queryClient = useQueryClient();

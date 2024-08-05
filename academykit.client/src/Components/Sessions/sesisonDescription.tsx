@@ -26,9 +26,7 @@ const SessionDescription = () => {
         <div className={classes.inner}>
           <div className={classes.content}>
             <div className={classes.innerContent}>
-              <Title className={classes.title}>
-                A modern React components library
-              </Title>
+              <Title className={classes.title}>A modern React components library</Title>
               <Badge
                 // className={classes.BadgeWrapperPrice}
                 c="green"
@@ -47,9 +45,8 @@ const SessionDescription = () => {
               Description
             </Text>
             <Text c="dimmed" mt="sm">
-              Build fully functional accessible web applications faster than
-              ever – Mantine includes more than 120 customizable components and
-              hooks to cover you in any situation
+              Build fully functional accessible web applications faster than ever – Mantine includes more than 120
+              customizable components and hooks to cover you in any situation
             </Text>
             <List
               mt={30}
@@ -62,16 +59,13 @@ const SessionDescription = () => {
               }
             >
               <List.Item>
-                <b>TypeScript based</b> – build type safe applications, all
-                components and hooks export types
+                <b>TypeScript based</b> – build type safe applications, all components and hooks export types
               </List.Item>
               <List.Item>
-                <b>Free and open source</b> – all packages have MIT license, you
-                can use Mantine in any project
+                <b>Free and open source</b> – all packages have MIT license, you can use Mantine in any project
               </List.Item>
               <List.Item>
-                <b>No annoying focus ring</b> – focus ring will appear only when
-                user navigates with keyboard
+                <b>No annoying focus ring</b> – focus ring will appear only when user navigates with keyboard
               </List.Item>
             </List>
           </div>
@@ -93,9 +87,7 @@ const SessionDescription = () => {
             </Text>
           </div>
         </div>
-        <Box className={classes.CourseContentSmall}>
-          {/* <CourseContent /> */}
-        </Box>
+        <Box className={classes.CourseContentSmall}>{/* <CourseContent /> */}</Box>
       </Container>
     </div>
   );

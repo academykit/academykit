@@ -2,10 +2,7 @@ import { Button, Group, Loader, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
-import {
-  useGetCommentReplies,
-  usePostCommentReply,
-} from "@utils/services/commentService";
+import { useGetCommentReplies, usePostCommentReply } from "@utils/services/commentService";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import CommentReply from "./CommentReply";
@@ -30,8 +27,7 @@ const CommentReplies = ({
 
   const initialVisibleReplies = 3;
   const [visibleReplies, setVisibleReplies] = useState(initialVisibleReplies);
-  const hasMoreReplies =
-    (commentReplies.data?.items.length as number) > initialVisibleReplies;
+  const hasMoreReplies = (commentReplies.data?.items.length as number) > initialVisibleReplies;
 
   const submitHandler = async ({ content }: { content: string }) => {
     try {
@@ -59,19 +55,14 @@ const CommentReplies = ({
   }
 
   const showMoreReplies = () => {
-    setVisibleReplies(
-      commentReplies.data?.items.length ?? initialVisibleReplies
-    );
+    setVisibleReplies(commentReplies.data?.items.length ?? initialVisibleReplies);
   };
 
   const showLessReplies = () => {
     setVisibleReplies(initialVisibleReplies);
   };
 
-  const visibleRepliesData = commentReplies.data?.items.slice(
-    0,
-    visibleReplies
-  );
+  const visibleRepliesData = commentReplies.data?.items.slice(0, visibleReplies);
 
   return (
     <>
@@ -94,12 +85,7 @@ const CommentReplies = ({
         </Group>
       </form>
       {visibleRepliesData?.map((x) => (
-        <CommentReply
-          key={x.id}
-          reply={x}
-          commentId={commentId}
-          courseId={courseId}
-        />
+        <CommentReply key={x.id} reply={x} commentId={commentId} courseId={courseId} />
       ))}
 
       {/* show button when replies are more than 3 */}

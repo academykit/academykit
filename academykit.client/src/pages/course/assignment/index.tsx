@@ -17,13 +17,7 @@ const AssignmentPage = () => {
         <div>
           <Title className={classes.title}>{t("no_question_found")}</Title>
 
-          <Button
-            variant="outline"
-            size="md"
-            mt="xl"
-            onClick={() => navigate(-1)}
-            className={classes.control}
-          >
+          <Button variant="outline" size="md" mt="xl" onClick={() => navigate(-1)} className={classes.control}>
             {t("back_course")}
           </Button>
         </div>
@@ -34,9 +28,7 @@ const AssignmentPage = () => {
   return (
     <Container my={50}>
       <Divider />
-      {assignment.isSuccess && (
-        <AssignmentForm item={assignment.data} lessonId={id as string} />
-      )}
+      {assignment.isSuccess && <AssignmentForm item={assignment.data} lessonId={id as string} />}
     </Container>
   );
 };

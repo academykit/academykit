@@ -1,5 +1,5 @@
 import { Avatar, Flex, Paper, Text } from "@mantine/core";
-import { IUser } from "@utils/services/types";
+import type { IUser } from "@utils/services/types";
 
 const SkillUser = ({ user }: { user: IUser }) => {
   return (

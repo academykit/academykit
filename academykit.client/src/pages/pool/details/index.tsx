@@ -1,14 +1,6 @@
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Paper,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Box, Button, Container, Flex, Paper, Text, Title } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";

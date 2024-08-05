@@ -1,5 +1,5 @@
 import moment from "moment";
-import { FC, useEffect, useMemo, useState } from "react";
+import { type FC, useEffect, useMemo, useState } from "react";
 import TimeCounter from "./TimeCounter";
 
 type Props = {
@@ -25,15 +25,11 @@ const CountDownTimer: FC<Props> = ({ startDateTime, cb, time }) => {
     setTimeOut(
       setInterval(() => {
         setTimer(end.diff(moment()));
-      }, 1000)
+      }, 1000),
     );
   }, []);
 
-  return timer ? (
-    <TimeCounter time={timer / 1000 > 0 ? timer / 1000 : 0} />
-  ) : (
-    <></>
-  );
+  return timer ? <TimeCounter time={timer / 1000 > 0 ? timer / 1000 : 0} /> : <></>;
 };
 
 export default CountDownTimer;

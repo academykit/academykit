@@ -25,11 +25,7 @@ const ServerError = () => {
           {t("server_error")}
         </Text>
         <Group justify="center" style={{ flexDirection: "column" }}>
-          <Button
-            variant="white"
-            size="md"
-            onClick={() => window.location.reload()}
-          >
+          <Button variant="white" size="md" onClick={() => window.location.reload()}>
             {t("refresh_page")}
           </Button>
           <Button variant="white" size="md" component={Link} to={"/"}>

@@ -81,24 +81,18 @@ const RoutePath = {
 
   assessmentExam: {
     base: "/assessment/exam",
-    details: function (id?: string) {
-      return {
+    details: (id?: string) => ({
         signature: "/assessment/exam/:id",
         route: `/assessment/exam/${id}`,
-      };
-    },
-    result: function (id?: string) {
-      return {
+      }),
+    result: (id?: string) => ({
         signature: "/assessment/exam/:id/result",
         route: `/assessment/exam/${id}/result`,
-      };
-    },
-    resultOne: function (id?: string, submissionId?: string) {
-      return {
+      }),
+    resultOne: (id?: string, submissionId?: string) => ({
         signature: "/assessment/exam/:id/result/:submissionId",
         route: `/assessment/exam/${id}/result/${submissionId}`,
-      };
-    },
+      }),
   },
 
   manageCourse: {
@@ -208,13 +202,7 @@ const RoutePath = {
     skill: function () {
       return this.base + "/skill";
     },
-    hangfire: function () {
-      return (
-        (isDevelopment
-          ? "https://localhost:7042"
-          : location.protocol + "//" + window.location.host) + "/hangfire"
-      );
-    },
+    hangfire: () => (isDevelopment ? "https://localhost:7042" : location.protocol + "//" + window.location.host) + "/hangfire",
     log: function () {
       return this.base + "/log";
     },
@@ -278,70 +266,52 @@ const RoutePath = {
   },
   exam: {
     base: "/exam",
-    details: function (id?: string) {
-      return {
+    details: (id?: string) => ({
         signature: "/exam/:id",
         route: `/exam/${id}`,
-      };
-    },
-    result: function (id?: string) {
-      return {
+      }),
+    result: (id?: string) => ({
         signature: "/exam/:id/result",
         route: `/exam/${id}/result`,
-      };
-    },
-    resultOne: function (id?: string, submissionId?: string) {
-      return {
+      }),
+    resultOne: (id?: string, submissionId?: string) => ({
         signature: "/exam/:id/result/:submissionId",
         route: `/exam/${id}/result/${submissionId}`,
-      };
-    },
+      }),
   },
   meeting: {
     base: "/meeting",
-    details: function (id?: string, courseSlug?: string) {
-      return {
+    details: (id?: string, courseSlug?: string) => ({
         signature: "/meeting/:courseSlug/:id",
         route: `/meeting/${courseSlug}/${id}`,
-      };
-    },
+      }),
   },
 
   assignment: {
     base: "/assignment",
-    details: function (id?: string) {
-      return {
+    details: (id?: string) => ({
         signature: "/assignment/:id",
         route: `/assignment/${id}`,
-      };
-    },
-    result: function (id?: string, studentId?: string) {
-      return {
+      }),
+    result: (id?: string, studentId?: string) => ({
         signature: "/assignment/:id/result/:studentId",
         route: `/assignment/${id}/result/${studentId}`,
-      };
-    },
+      }),
   },
   feedback: {
     base: "/feedback",
-    details: function (id?: string) {
-      return {
+    details: (id?: string) => ({
         signature: "/feedback/:id",
         route: `/feedback/${id}`,
-      };
-    },
-    myDetails: function (id?: string) {
-      return {
+      }),
+    myDetails: (id?: string) => ({
         signature: "/myfeedback/:id",
         route: `/myfeedback/${id}`,
-      };
-    },
-    result: function (id?: string, studentId?: string) {
-      return {
+      }),
+    result: (id?: string, studentId?: string) => ({
         signature: "/feedback/:id/result/:studentId",
         route: `/feedback/${id}/result/${studentId}`,
-      };
-    },
+      }),
   },
   knowledge: {
     base: "knowledge-base",

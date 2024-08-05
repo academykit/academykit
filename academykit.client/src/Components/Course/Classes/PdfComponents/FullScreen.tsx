@@ -1,7 +1,7 @@
 /* eslint-disable react/no-children-prop */
 import { ActionIcon } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { ToolbarSlot } from "@react-pdf-viewer/toolbar";
+import type { ToolbarSlot } from "@react-pdf-viewer/toolbar";
 import { IconArrowsMaximize } from "@tabler/icons-react";
 
 const FullScreen = ({ toolbarSlot }: { toolbarSlot: ToolbarSlot }) => {

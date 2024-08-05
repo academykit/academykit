@@ -1,28 +1,15 @@
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 import RichTextEditor from "@components/Ui/RichTextEditor/Index";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  Box,
-  Button,
-  Grid,
-  Group,
-  NumberInput,
-  Paper,
-  Switch,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { Box, Button, Grid, Group, NumberInput, Paper, Switch, Text, Tooltip } from "@mantine/core";
 import { DatePickerInput, TimeInput } from "@mantine/dates";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { LessonType } from "@utils/enums";
 import { getDateTime } from "@utils/getDateTime";
 import errorType from "@utils/services/axiosError";
-import {
-  useCreateLesson,
-  useUpdateLesson,
-} from "@utils/services/courseService";
-import { ILessonMCQ } from "@utils/services/types";
+import { useCreateLesson, useUpdateLesson } from "@utils/services/courseService";
+import type { ILessonMCQ } from "@utils/services/types";
 import moment from "moment";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -41,9 +28,7 @@ const schema = () => {
     endDate: Yup.date()
       .required(t("end_date_required") as string)
       .typeError(t("start_date_required") as string),
-    questionMarking: Yup.string().required(
-      t("question_weightage_required") as string
-    ),
+    questionMarking: Yup.string().required(t("question_weightage_required") as string),
     startTime: Yup.string()
       .required(t("start_time_not_empty") as string)
       .typeError(t("start_time_required") as string),
@@ -75,9 +60,7 @@ const AddExam = ({
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
   const { t } = useTranslation();
-  const [isMandatory, setIsMandatory] = useState<boolean>(
-    item?.isMandatory ?? false
-  );
+  const [isMandatory, setIsMandatory] = useState<boolean>(item?.isMandatory ?? false);
 
   const startDateTime = item?.questionSet?.startTime
     ? moment(item?.questionSet?.startTime + "Z")
@@ -111,14 +94,8 @@ const AddExam = ({
   const strippedFormValue = (value: Partial<typeof form.values>) => {
     const val = { ...value };
     delete val.isMandatory;
-    const startTime =
-      val.startDate && val.startTime
-        ? getDateTime(val.startDate, val.startTime)
-        : undefined;
-    const endTime =
-      val.endDate && val.endTime
-        ? getDateTime(val.endDate, val.endTime)
-        : undefined;
+    const startTime = val.startDate && val.startTime ? getDateTime(val.startDate, val.startTime) : undefined;
+    const endTime = val.endDate && val.endTime ? getDateTime(val.endDate, val.endTime) : undefined;
     val.startTime = startTime?.utcDateTime;
     val.endTime = endTime?.utcDateTime;
 
@@ -155,9 +132,7 @@ const AddExam = ({
       }
       showNotification({
         title: t("success"),
-        message: `${t("capital_lesson")} ${
-          isEditing ? t("edited") : t("added")
-        } ${t("successfully")}`,
+        message: `${t("capital_lesson")} ${isEditing ? t("edited") : t("added")} ${t("successfully")}`,
       });
     } catch (error) {
       const err = errorType(error);
@@ -289,19 +264,13 @@ const AddExam = ({
           <Grid.Col>
             <Box my={20}>
               <Text size={"sm"}>{t("description")}</Text>
-              <RichTextEditor
-                placeholder={t("exam_description") as string}
-                {...form.getInputProps("description")}
-              />
+              <RichTextEditor placeholder={t("exam_description") as string} {...form.getInputProps("description")} />
             </Box>
           </Grid.Col>
         </Grid>
 
         <Group mt="md">
-          <Button
-            type="submit"
-            loading={updateLesson.isLoading || lesson.isLoading}
-          >
+          <Button type="submit" loading={updateLesson.isLoading || lesson.isLoading}>
             {t("submit")}
           </Button>
           {!isEditing && (

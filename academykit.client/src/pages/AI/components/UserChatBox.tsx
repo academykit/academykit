@@ -1,4 +1,4 @@
-import { IAuthContext } from "@context/AuthProvider";
+import type { IAuthContext } from "@context/AuthProvider";
 import { Avatar, Flex, Paper, Text } from "@mantine/core";
 
 interface IProps {
@@ -17,13 +17,7 @@ const UserChatBox = ({ user }: IProps) => {
         </Flex>
 
         <Flex align={"center"} justify={"flex-end"}>
-          <Paper
-            p={"md"}
-            withBorder
-            w={"fit-content"}
-            maw={"80vw"}
-            style={{ wordBreak: "break-word" }}
-          >
+          <Paper p={"md"} withBorder w={"fit-content"} maw={"80vw"} style={{ wordBreak: "break-word" }}>
             HEllo, create an examOkay, Im on it. It will be done
           </Paper>
         </Flex>

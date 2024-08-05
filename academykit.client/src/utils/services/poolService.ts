@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import errorType from "./axiosError";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { IPaginated, IUser } from "./types";
+import type { IPaginated, IUser } from "./types";
 
 export interface IPoolTeacher {
   id: string;
@@ -79,8 +79,7 @@ export interface IPool {
   user: IUser;
 }
 
-const getPools = (search: string) =>
-  httpClient.get<IPaginated<IPool>>(api.pool.list + `?${search}`);
+const getPools = (search: string) => httpClient.get<IPaginated<IPool>>(api.pool.list + `?${search}`);
 
 export const usePools = (search: string) =>
   useQuery({
@@ -89,8 +88,7 @@ export const usePools = (search: string) =>
     select: (data) => data.data,
   });
 
-const addPool = async (name: string) =>
-  await httpClient.post<IPool>(api.pool.list, { name });
+const addPool = async (name: string) => await httpClient.post<IPool>(api.pool.list, { name });
 
 export const useAddPool = (searchParams: string) => {
   const queryClient = useQueryClient();
@@ -110,8 +108,7 @@ export const useAddPool = (searchParams: string) => {
   });
 };
 
-const getOnePool = (poolId: string) =>
-  httpClient.get<IPool>(api.pool.getOne(poolId));
+const getOnePool = (poolId: string) => httpClient.get<IPool>(api.pool.getOne(poolId));
 
 export const useOnePool = (poolId: string) =>
   useQuery({
@@ -144,10 +141,7 @@ export const useAddOnePool = (poolId: string) => {
 const deleteQuestionPool = (identity: string) => {
   return httpClient.delete(api.pool.getOne(identity));
 };
-export const useDeleteQuestionPool = (
-  identity: string,
-  searchParams: string
-) => {
+export const useDeleteQuestionPool = (identity: string, searchParams: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete" + api.pool.getOne(identity)],

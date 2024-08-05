@@ -12,8 +12,8 @@ import { showNotification } from "@mantine/notifications";
 import { IconTrashX } from "@tabler/icons-react";
 import { LessonType, ReadableEnum } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
-import { ILessons, useDeleteLesson } from "@utils/services/courseService";
-import {
+import { type ILessons, useDeleteLesson } from "@utils/services/courseService";
+import type {
   ILessonAssignment,
   ILessonFeedback,
   ILessonFile,
@@ -63,27 +63,17 @@ const Lesson = ({
   };
   return (
     <div>
-      <DeleteModal
-        title={t("sure_want_to_delete")}
-        open={value}
-        onClose={toggle}
-        onConfirm={onDeleteLesson}
-      />
+      <DeleteModal title={t("sure_want_to_delete")} open={value} onClose={toggle} onConfirm={onDeleteLesson} />
       <div className={classes.item}>
         <Grid grow justify={"center"}>
           <Grid.Col span={4}>
-            <div
-              style={{ display: "flex", alignItems: "center", padding: "10px" }}
-            >
-              {lesson?.name}
-            </div>
+            <div style={{ display: "flex", alignItems: "center", padding: "10px" }}>{lesson?.name}</div>
           </Grid.Col>
           <Grid.Col span={4}>
             <Group justify="center">
               <Text m={"auto"} style={{ padding: "10px" }}>
-                {ReadableEnum[
-                  t(`${LessonType[lesson.type]}`) as keyof typeof ReadableEnum
-                ] ?? t(`${LessonType[lesson.type]}`)}
+                {ReadableEnum[t(`${LessonType[lesson.type]}`) as keyof typeof ReadableEnum] ??
+                  t(`${LessonType[lesson.type]}`)}
               </Text>
             </Group>
           </Grid.Col>

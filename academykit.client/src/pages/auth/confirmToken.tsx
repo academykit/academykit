@@ -16,11 +16,7 @@ import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import RoutePath from "@utils/routeConstants";
 import { useCompanySetting } from "@utils/services/adminService";
-import {
-  useLogin,
-  useResetPassword,
-  useResetPasswordToken,
-} from "@utils/services/authService";
+import { useLogin, useResetPassword, useResetPasswordToken } from "@utils/services/authService";
 import errorType from "@utils/services/axiosError";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -110,9 +106,7 @@ const ConfirmToken = () => {
   const companySettings = useCompanySetting();
 
   const setHeader = () => {
-    const info =
-      localStorage.getItem("app-info") &&
-      JSON.parse(localStorage.getItem("app-info") ?? "");
+    const info = localStorage.getItem("app-info") && JSON.parse(localStorage.getItem("app-info") ?? "");
     if (info) {
       let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
       document.title = info.name;
@@ -134,7 +128,7 @@ const ConfirmToken = () => {
         JSON.stringify({
           name: companySettings.data.data.name,
           logo: companySettings.data.data.imageUrl,
-        })
+        }),
       );
       setHeader();
     }
@@ -144,21 +138,12 @@ const ConfirmToken = () => {
     <Container size={470} my={40} style={{ position: "relative" }}>
       <Center m={"lg"}>
         <Link to={"/"}>
-          <Image
-            height={100}
-            width={100}
-            src={companySettings?.data?.data?.imageUrl}
-          ></Image>
+          <Image height={100} width={100} src={companySettings?.data?.data?.imageUrl}></Image>
         </Link>
       </Center>
 
       <Box style={{ position: "absolute", width: "100%" }}>
-        <Transition
-          mounted={!toggle}
-          transition="fade"
-          duration={400}
-          timingFunction="ease"
-        >
+        <Transition mounted={!toggle} transition="fade" duration={400} timingFunction="ease">
           {(styles) => (
             <div style={styles}>
               <form onSubmit={form.onSubmit(onFormSubmit)}>
@@ -172,23 +157,12 @@ const ConfirmToken = () => {
 
                   <Group justify="flex-end" mt={10}>
                     <Link to={RoutePath.login}>
-                      <Anchor
-                        component="button"
-                        ta="end"
-                        type="button"
-                        c="dimmed"
-                        size="xs"
-                      >
+                      <Anchor component="button" ta="end" type="button" c="dimmed" size="xs">
                         {t("want_login")}
                       </Anchor>
                     </Link>
                   </Group>
-                  <Button
-                    loading={login.isLoading}
-                    fullWidth
-                    mt="xl"
-                    type="submit"
-                  >
+                  <Button loading={login.isLoading} fullWidth mt="xl" type="submit">
                     {t("proceed")}
                   </Button>
                 </Paper>
@@ -199,12 +173,7 @@ const ConfirmToken = () => {
       </Box>
 
       <Box style={{ position: "absolute", width: "100%" }}>
-        <Transition
-          mounted={toggle}
-          transition="pop"
-          duration={400}
-          timingFunction="ease"
-        >
+        <Transition mounted={toggle} transition="pop" duration={400} timingFunction="ease">
           {(styles) => (
             <div style={styles}>
               <form onSubmit={passwordForm.onSubmit(onPasswordFormSubmit)}>
@@ -226,23 +195,12 @@ const ConfirmToken = () => {
 
                   <Group justify="flex-end" mt={10}>
                     <Link to={RoutePath.login}>
-                      <Anchor
-                        component="button"
-                        ta="end"
-                        type="button"
-                        c="dimmed"
-                        size="xs"
-                      >
+                      <Anchor component="button" ta="end" type="button" c="dimmed" size="xs">
                         {t("want_login")}?
                       </Anchor>
                     </Link>
                   </Group>
-                  <Button
-                    loading={login.isLoading}
-                    fullWidth
-                    mt="xl"
-                    type="submit"
-                  >
+                  <Button loading={login.isLoading} fullWidth mt="xl" type="submit">
                     {t("proceed")}
                   </Button>
                 </Paper>

@@ -7,10 +7,7 @@ import { showNotification } from "@mantine/notifications";
 import { IconTrash } from "@tabler/icons-react";
 import { PoolRole } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
-import {
-  IPoolTeacher,
-  useDeletePoolTeacher,
-} from "@utils/services/poolService";
+import { type IPoolTeacher, useDeletePoolTeacher } from "@utils/services/poolService";
 import { useTranslation } from "react-i18next";
 
 const TeacherCard = ({
@@ -48,22 +45,13 @@ const TeacherCard = ({
       />
 
       <Group py={5} justify="space-between">
-        <UserShortProfile
-          size={"md"}
-          user={{ ...teacher.user, role: teacher?.role }}
-        />
+        <UserShortProfile size={"md"} user={{ ...teacher.user, role: teacher?.role }} />
 
-        {auth?.auth &&
-          auth?.auth.id !== teacher.user.id &&
-          teacher?.role !== PoolRole.Creator && (
-            <Group>
-              <IconTrash
-                color="red"
-                style={{ cursor: "pointer" }}
-                onClick={() => setConfirmation()}
-              />
-            </Group>
-          )}
+        {auth?.auth && auth?.auth.id !== teacher.user.id && teacher?.role !== PoolRole.Creator && (
+          <Group>
+            <IconTrash color="red" style={{ cursor: "pointer" }} onClick={() => setConfirmation()} />
+          </Group>
+        )}
       </Group>
     </Card>
   );

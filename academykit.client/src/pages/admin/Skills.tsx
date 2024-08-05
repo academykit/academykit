@@ -1,8 +1,6 @@
 import DeleteModal from "@components/Ui/DeleteModal";
 import EmptyRow from "@components/Ui/EmptyRow";
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   ActionIcon,
@@ -29,7 +27,7 @@ import { showNotification } from "@mantine/notifications";
 import { IconPencil, IconTrash, IconUsers } from "@tabler/icons-react";
 import errorType from "@utils/services/axiosError";
 import {
-  ISkill,
+  type ISkill,
   useDeleteSkill,
   usePostDepartmentSetting,
   useSkills,
@@ -52,12 +50,7 @@ const schema = () => {
   });
 };
 
-const Skills = ({
-  searchComponent,
-  filterComponent,
-  searchParams,
-  pagination,
-}: IWithSearchPagination) => {
+const Skills = ({ searchComponent, filterComponent, searchParams, pagination }: IWithSearchPagination) => {
   const { t } = useTranslation();
   const [opened, { open, close }] = useDisclosure(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -131,8 +124,7 @@ const Skills = ({
 
   const Rows = ({ item }: { item: ISkill }) => {
     const [opened, setOpened] = useState(false);
-    const [openedUserModal, { open: openUserModal, close: closeUserModal }] =
-      useDisclosure(false);
+    const [openedUserModal, { open: openUserModal, close: closeUserModal }] = useDisclosure(false);
 
     const handleDelete = async () => {
       try {
@@ -161,11 +153,7 @@ const Skills = ({
             onConfirm={handleDelete}
           />
         )}
-        <Modal
-          opened={openedUserModal}
-          onClose={closeUserModal}
-          title={t("users")}
-        >
+        <Modal opened={openedUserModal} onClose={closeUserModal} title={t("users")}>
           <ScrollArea.Autosize mah={300} maw={400} mx="auto">
             {item.userModel?.map((user, index) => (
               <SkillUser key={index} user={user} />
@@ -227,10 +215,7 @@ const Skills = ({
   return (
     <>
       <section>
-        <Group
-          style={{ justifyContent: "space-between", alignItems: "center" }}
-          mb={15}
-        >
+        <Group style={{ justifyContent: "space-between", alignItems: "center" }} mb={15}>
           <Title>{t("skill")}</Title>
           <Button
             onClick={() => {
@@ -251,11 +236,7 @@ const Skills = ({
           overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
         >
           <Box>
-            <form
-              onSubmit={form.onSubmit(
-                isEditing ? handleEditSubmit : handleSubmit
-              )}
-            >
+            <form onSubmit={form.onSubmit(isEditing ? handleEditSubmit : handleSubmit)}>
               <Grid>
                 <Grid.Col span={{ xs: 6, lg: 12 }}>
                   <TextInput
@@ -303,20 +284,14 @@ const Skills = ({
                 { value: "false", label: t("inactive") },
               ],
               t("skill_status"),
-              "IsActive"
+              "IsActive",
             )}
           </Flex>
         </Flex>
 
         <Paper>
           <ScrollArea>
-            <Table
-              striped
-              highlightOnHover
-              withTableBorder
-              withColumnBorders
-              style={{ marginTop: "10px" }}
-            >
+            <Table striped highlightOnHover withTableBorder withColumnBorders style={{ marginTop: "10px" }}>
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>
@@ -337,12 +312,8 @@ const Skills = ({
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
-                {skillData.data &&
-                skillData.data.items &&
-                skillData.data?.totalCount > 0 ? (
-                  skillData.data?.items.map((item: any) => (
-                    <Rows item={item} key={item.id} />
-                  ))
+                {skillData.data && skillData.data.items && skillData.data?.totalCount > 0 ? (
+                  skillData.data?.items.map((item: any) => <Rows item={item} key={item.id} />)
                 ) : (
                   <EmptyRow colspan={5} message="no_skill" />
                 )}
@@ -350,8 +321,7 @@ const Skills = ({
             </Table>
           </ScrollArea>
 
-          {skillData.data &&
-            pagination(skillData.data?.totalPage, skillData.data?.items.length)}
+          {skillData.data && pagination(skillData.data?.totalPage, skillData.data?.items.length)}
         </Paper>
       </section>
     </>

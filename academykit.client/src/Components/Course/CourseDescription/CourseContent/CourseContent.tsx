@@ -1,8 +1,8 @@
 import UserShortProfile from "@components/UserShortProfile";
 import { Box, Group, Text, Title } from "@mantine/core";
 import formatDuration from "@utils/formatDuration";
-import { ISection } from "@utils/services/courseService";
-import { IUser } from "@utils/services/types";
+import type { ISection } from "@utils/services/courseService";
+import type { IUser } from "@utils/services/types";
 import { useTranslation } from "react-i18next";
 import Sessions from "./Sessions";
 
@@ -38,18 +38,11 @@ const CourseContent = ({
         {t("content_of")} {courseName}
       </Title>
       <Text size={"md"} c={"dimmed"}>
-        {formatDuration(duration, false, t)} {sections.length} {t(
-          "section/s"
-        )}{" "}
+        {formatDuration(duration, false, t)} {sections.length} {t("section/s")}{" "}
       </Text>
       <Box m={4} mx={10}>
         {sections.map((x) => (
-          <Sessions
-            key={x.id}
-            section={x}
-            courseSlug={courseSlug}
-            enrollmentStatus={enrollmentStatus}
-          />
+          <Sessions key={x.id} section={x} courseSlug={courseSlug} enrollmentStatus={enrollmentStatus} />
         ))}
       </Box>
     </Box>

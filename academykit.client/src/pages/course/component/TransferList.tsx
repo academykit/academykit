@@ -1,21 +1,9 @@
 import TextViewer from "@components/Ui/RichTextViewer";
-import {
-  ActionIcon,
-  Checkbox,
-  Combobox,
-  Group,
-  Text,
-  TextInput,
-  useCombobox,
-} from "@mantine/core";
-import {
-  IconChevronRight,
-  IconChevronsRight,
-  IconPlus,
-} from "@tabler/icons-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { ActionIcon, Checkbox, Combobox, Group, Text, TextInput, useCombobox } from "@mantine/core";
+import { IconChevronRight, IconChevronsRight, IconPlus } from "@tabler/icons-react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { IQuestionListData } from "../question";
+import type { IQuestionListData } from "../question";
 import classes from "./TransferList.module.css";
 
 interface RenderListProps {
@@ -26,13 +14,7 @@ interface RenderListProps {
   openModal?: () => void;
 }
 
-function RenderList({
-  options,
-  onTransfer,
-  type,
-  onTransferAll,
-  openModal,
-}: RenderListProps) {
+function RenderList({ options, onTransfer, type, onTransferAll, openModal }: RenderListProps) {
   const combobox = useCombobox();
   const [value, setValue] = useState<IQuestionListData[]>([]);
   const [search, setSearch] = useState("");
@@ -45,14 +27,12 @@ function RenderList({
     setValue((current) =>
       current.some((item) => item.value === val)
         ? current.filter((item) => item.value !== val)
-        : [...current, options.find((item) => item.value === val)!]
+        : [...current, options.find((item) => item.value === val)!],
     );
   };
 
   const items = options
-    .filter((item) =>
-      item.label?.toLowerCase().includes(search.toLowerCase().trim())
-    )
+    .filter((item) => item.label?.toLowerCase().includes(search.toLowerCase().trim()))
     .map((item) => (
       <Combobox.Option
         value={item.value}
@@ -144,11 +124,7 @@ function RenderList({
 
         <div className={classes.list}>
           <Combobox.Options>
-            {items.length > 0 ? (
-              items
-            ) : (
-              <Combobox.Empty>{t("no_question_found")}</Combobox.Empty>
-            )}
+            {items.length > 0 ? items : <Combobox.Empty>{t("no_question_found")}</Combobox.Empty>}
           </Combobox.Options>
         </div>
       </Combobox>
@@ -163,15 +139,10 @@ interface IProps {
 }
 export default function TransferList({ data, setData, openModal }: IProps) {
   // transfer selected items to the opposite container
-  const handleTransfer = (
-    transferFrom: number,
-    options: IQuestionListData[]
-  ) => {
+  const handleTransfer = (transferFrom: number, options: IQuestionListData[]) => {
     setData((current) => {
       const transferTo = transferFrom === 0 ? 1 : 0;
-      const transferFromData = current[transferFrom].filter(
-        (item: any) => !options.includes(item)
-      );
+      const transferFromData = current[transferFrom].filter((item: any) => !options.includes(item));
       const transferToData = [...current[transferTo], ...options];
       const result = [];
       result[transferFrom] = transferFromData;

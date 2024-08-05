@@ -16,11 +16,8 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { IconCircleCheck, IconSquareRoundedX } from "@tabler/icons-react";
-import {
-  ILessonResultQuestionOption,
-  ILessonStartQuestion,
-} from "@utils/services/examService";
-import { IUser } from "@utils/services/types";
+import type { ILessonResultQuestionOption, ILessonStartQuestion } from "@utils/services/examService";
+import type { IUser } from "@utils/services/types";
 import cx from "clsx";
 import moment from "moment";
 import { useState } from "react";
@@ -61,19 +58,11 @@ const SubmittedResultDetails = ({
               <Text>{moment(submissionDate + "Z").fromNow()}</Text>
             </div>
             <UserShortProfile user={user}></UserShortProfile>
-            <SubmitResultHeader
-              duration={duration}
-              marks={marks}
-              totalMarks={totalMarks}
-            />
+            <SubmitResultHeader duration={duration} marks={marks} totalMarks={totalMarks} />
           </Group>
         </Paper>
       </Grid.Col>
-      <Grid.Col
-        span={matches ? 9 : 12}
-        style={{ maxWidth: "100%" }}
-        className={classes.examContainer}
-      >
+      <Grid.Col span={matches ? 9 : 12} style={{ maxWidth: "100%" }} className={classes.examContainer}>
         <ScrollArea>
           <Card p={4} my={10} shadow="lg" withBorder>
             <Box
@@ -122,28 +111,13 @@ const SubmittedResultDetails = ({
                       />
                     </Grid.Col>
                     {/* showing icon if correct answer was selected */}
-                    {x.isCorrect && x.isSelected && (
-                      <IconCircleCheck
-                        size={36}
-                        color={theme.colors.green[6]}
-                      />
-                    )}
+                    {x.isCorrect && x.isSelected && <IconCircleCheck size={36} color={theme.colors.green[6]} />}
 
                     {/* showing icon if right answer was not selected */}
-                    {x.isCorrect && !x.isSelected && (
-                      <IconCircleCheck
-                        size={36}
-                        color={theme.colors.green[6]}
-                      />
-                    )}
+                    {x.isCorrect && !x.isSelected && <IconCircleCheck size={36} color={theme.colors.green[6]} />}
 
                     {/* shoing icon if wrong answer was selected */}
-                    {!x.isCorrect && x.isSelected && (
-                      <IconSquareRoundedX
-                        size={36}
-                        color={theme.colors.red[6]}
-                      />
-                    )}
+                    {!x.isCorrect && x.isSelected && <IconSquareRoundedX size={36} color={theme.colors.red[6]} />}
                   </Grid>
                 </Card>
               ))}
@@ -198,11 +172,7 @@ const SubmittedResultDetails = ({
           )}
         </Card>
       </Grid.Col>
-      <Grid.Col
-        span={matches ? 3 : 12}
-        m={0}
-        className={classes.optionContainer}
-      >
+      <Grid.Col span={matches ? 3 : 12} m={0} className={classes.optionContainer}>
         <Group p={10} className={classes.navigateWrapper}>
           {questions.map((x, i) => (
             <UnstyledButton
@@ -220,11 +190,8 @@ const SubmittedResultDetails = ({
                 className={cx(classes.navigate, {
                   [classes.activeCircle]: currentIndex === i,
                   [classes.correctCircle]: x.isCorrect,
-                  [classes.errorCircle]:
-                    x.questionOptions.filter((x) => x.isSelected).length >= 1 &&
-                    !x.isCorrect,
-                  [classes.unanswered]:
-                    x.questionOptions.filter((x) => x.isSelected).length === 0,
+                  [classes.errorCircle]: x.questionOptions.filter((x) => x.isSelected).length >= 1 && !x.isCorrect,
+                  [classes.unanswered]: x.questionOptions.filter((x) => x.isSelected).length === 0,
                 })}
                 radius={10000}
               >

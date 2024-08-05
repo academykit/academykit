@@ -1,6 +1,4 @@
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
 import { Button } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { useAssessmentQuestion } from "@utils/services/assessmentService";
@@ -9,17 +7,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import AssessmentQuestionForm from "./Assessment Details/AssessmentQuestionForm";
 import AssessmentItem from "./AssessmentItem";
 
-const AssessmentQuestionList = ({
-  searchParams,
-  pagination,
-}: IWithSearchPagination) => {
+const AssessmentQuestionList = ({ searchParams, pagination }: IWithSearchPagination) => {
   const navigate = useNavigate();
   const params = useParams();
   const [addQuestion, setAddQuestion] = useToggle();
-  const getAssessments = useAssessmentQuestion(
-    searchParams,
-    params.id as string
-  );
+  const getAssessments = useAssessmentQuestion(searchParams, params.id as string);
 
   return (
     <>
@@ -27,15 +19,9 @@ const AssessmentQuestionList = ({
         <AssessmentItem key={index} data={question} />
       ))}
 
-      {getAssessments.data &&
-        pagination(
-          getAssessments.data?.totalPage,
-          getAssessments.data?.items.length
-        )}
+      {getAssessments.data && pagination(getAssessments.data?.totalPage, getAssessments.data?.items.length)}
 
-      {addQuestion && (
-        <AssessmentQuestionForm onCancel={() => setAddQuestion()} />
-      )}
+      {addQuestion && <AssessmentQuestionForm onCancel={() => setAddQuestion()} />}
 
       <Button disabled={addQuestion} onClick={() => setAddQuestion()} mt={10}>
         {t("add_assessment_question")}

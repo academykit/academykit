@@ -1,13 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import useAuth from "@hooks/useAuth";
-import {
-  Badge,
-  Button,
-  Container,
-  Divider,
-  Group,
-  useMantineColorScheme,
-} from "@mantine/core";
+import { Badge, Button, Container, Divider, Group, useMantineColorScheme } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
@@ -15,7 +8,7 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import "@react-pdf-viewer/toolbar/lib/styles/index.css";
-import { ICourseLesson } from "@utils/services/courseService";
+import type { ICourseLesson } from "@utils/services/courseService";
 import { useWatchHistory } from "@utils/services/watchHistory";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
@@ -75,11 +68,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
                   */}
                   {!lesson.isCompleted ? (
                     lesson.isTrainee && (
-                      <Button
-                        onClick={onMarkComplete}
-                        loading={watchHistory.isLoading}
-                        disabled={disable}
-                      >
+                      <Button onClick={onMarkComplete} loading={watchHistory.isLoading} disabled={disable}>
                         {t("mark_complete")}
                       </Button>
                     )
@@ -146,11 +135,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
             overflow: "hidden",
           }}
         >
-          <Viewer
-            theme={theme.colorScheme}
-            plugins={[defaultLayoutPluginInstance]}
-            fileUrl={lesson.documentUrl}
-          />
+          <Viewer theme={theme.colorScheme} plugins={[defaultLayoutPluginInstance]} fileUrl={lesson.documentUrl} />
         </div>
       </div>
     </Worker>

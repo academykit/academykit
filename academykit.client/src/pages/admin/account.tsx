@@ -1,13 +1,6 @@
 import useAuth from "@hooks/useAuth";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  Button,
-  Container,
-  Modal,
-  PasswordInput,
-  SimpleGrid,
-  TextInput,
-} from "@mantine/core";
+import { Button, Container, Modal, PasswordInput, SimpleGrid, TextInput } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { useChangeEmail, useChangePassword } from "@utils/services/authService";

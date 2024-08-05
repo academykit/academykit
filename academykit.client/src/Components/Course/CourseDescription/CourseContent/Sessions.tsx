@@ -2,7 +2,7 @@
 import useAuth from "@hooks/useAuth";
 import { Accordion, Box, Text, Title } from "@mantine/core";
 import { CourseUserStatus, UserRole } from "@utils/enums";
-import { ISection } from "@utils/services/courseService";
+import type { ISection } from "@utils/services/courseService";
 import { useTranslation } from "react-i18next";
 import Lesson from "./Lesson";
 
@@ -20,9 +20,7 @@ const Sessions = ({
   const { t } = useTranslation();
 
   const canClickLessons =
-    enrollmentStatus === CourseUserStatus.NotEnrolled &&
-    auth?.auth &&
-    Number(auth.auth?.role) > UserRole.Admin;
+    enrollmentStatus === CourseUserStatus.NotEnrolled && auth?.auth && Number(auth.auth?.role) > UserRole.Admin;
 
   // automatic expand current section
   // const getCurrentSectionName = () => {
@@ -51,12 +49,7 @@ const Sessions = ({
               }}
             >
               {section.lessons?.map((x, i) => (
-                <Lesson
-                  key={x.id}
-                  lesson={x}
-                  index={i}
-                  courseSlug={courseSlug}
-                />
+                <Lesson key={x.id} lesson={x} index={i} courseSlug={courseSlug} />
               ))}
             </Box>
           </Accordion.Panel>

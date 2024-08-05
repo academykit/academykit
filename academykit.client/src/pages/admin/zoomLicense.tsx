@@ -20,7 +20,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import {
-  IZoomLicense,
+  type IZoomLicense,
   updateZoomLicenseStatus,
   useAddZoomLicense,
   useDeleteZoomLicense,
@@ -28,7 +28,7 @@ import {
   useZoomLicense,
 } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
-import { IUser } from "@utils/services/types";
+import type { IUser } from "@utils/services/types";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
@@ -109,9 +109,7 @@ export default function ZoomLicense() {
         {opened && (
           <DeleteModal
             key={item.id}
-            title={`${t("zoom_license_delete_confirmation")} "${
-              item.licenseEmail
-            }"?`}
+            title={`${t("zoom_license_delete_confirmation")} "${item.licenseEmail}"?`}
             open={opened}
             onClose={() => setOpened(false)}
             onConfirm={handleDelete}
@@ -127,9 +125,7 @@ export default function ZoomLicense() {
         </Table.Td>
 
         <Table.Td>
-          <Badge variant={colorScheme === "dark" ? "light" : "outline"}>
-            {item.hostId}
-          </Badge>
+          <Badge variant={colorScheme === "dark" ? "light" : "outline"}>{item.hostId}</Badge>
         </Table.Td>
         <Table.Td style={{ textAlign: "center" }}>{item.capacity}</Table.Td>
         <Table.Td style={{ textAlign: "center" }}>
@@ -221,10 +217,7 @@ export default function ZoomLicense() {
 
   return (
     <ScrollArea>
-      <Group
-        style={{ justifyContent: "space-between", alignItems: "center" }}
-        mb={15}
-      >
+      <Group style={{ justifyContent: "space-between", alignItems: "center" }} mb={15}>
         <Title>{t("zoom_licenses")}</Title>
         <Button
           onClick={() => {
@@ -269,10 +262,7 @@ export default function ZoomLicense() {
             {...form.getInputProps("capacity")}
           />
           <Group mt={10}>
-            <Button
-              type="submit"
-              loading={addZoomLicense.isLoading || updateZoomLicense.isLoading}
-            >
+            <Button type="submit" loading={addZoomLicense.isLoading || updateZoomLicense.isLoading}>
               {t("submit")}
             </Button>
           </Group>
@@ -293,15 +283,9 @@ export default function ZoomLicense() {
             <Table.Tr>
               <Table.Th>{t("license_email")}</Table.Th>
               <Table.Th>{t("host_id")}</Table.Th>
-              <Table.Th style={{ textAlign: "center" }}>
-                {t("capacity")}
-              </Table.Th>
-              <Table.Th style={{ textAlign: "center" }}>
-                {t("active_status")}
-              </Table.Th>
-              <Table.Th style={{ textAlign: "center" }}>
-                {t("actions")}
-              </Table.Th>
+              <Table.Th style={{ textAlign: "center" }}>{t("capacity")}</Table.Th>
+              <Table.Th style={{ textAlign: "center" }}>{t("active_status")}</Table.Th>
+              <Table.Th style={{ textAlign: "center" }}>{t("actions")}</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>

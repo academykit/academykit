@@ -41,10 +41,7 @@ export function AppFooter({ name }: { name: string }) {
         <Text size={"xs"} c={"dimmed"} mr={3}>
           {t("powered_by")}
         </Text>
-        <Anchor
-          href={"https://www.academykit.co"}
-          style={{ textDecoration: "none" }}
-        >
+        <Anchor href={"https://www.academykit.co"} style={{ textDecoration: "none" }}>
           <Text size={"xs"} c={"dimmed"}>
             Academy Kit
           </Text>

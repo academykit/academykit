@@ -1,6 +1,6 @@
 import { Table, Text } from "@mantine/core";
 import { LessonType, ReadableEnum } from "@utils/enums";
-import { IStudentInfoLesson } from "@utils/services/manageCourseService";
+import type { IStudentInfoLesson } from "@utils/services/manageCourseService";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import StudentLessonDetails from "./StudentDetails";
@@ -30,16 +30,10 @@ const CourseStudentLessons = ({
         <LessonStatusColor status={element} />
       </Table.Td>
       <Table.Td>
-        {ReadableEnum[
-          LessonType[element.lessonType] as keyof typeof ReadableEnum
-        ] ?? t(LessonType[element.lessonType])}
+        {ReadableEnum[LessonType[element.lessonType] as keyof typeof ReadableEnum] ?? t(LessonType[element.lessonType])}
       </Table.Td>
       <Table.Td>
-        <StudentLessonDetails
-          studentInfo={element}
-          studentId={studentId}
-          courseId={courseId}
-        />
+        <StudentLessonDetails studentInfo={element} studentId={studentId} courseId={courseId} />
       </Table.Td>
     </Table.Tr>
   );

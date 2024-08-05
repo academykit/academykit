@@ -1,4 +1,4 @@
-import { FC, createContext, useState } from "react";
+import { type FC, createContext, useState } from "react";
 
 interface IFormContext {
   isReady: boolean;
@@ -12,11 +12,7 @@ const FormProvider: FC<React.PropsWithChildren> = ({ children }) => {
   const setReady = () => {
     setIsReady((isReady) => !isReady);
   };
-  return (
-    <FormContext.Provider value={{ isReady, setReady }}>
-      {children}
-    </FormContext.Provider>
-  );
+  return <FormContext.Provider value={{ isReady, setReady }}>{children}</FormContext.Provider>;
 };
 
 export default FormProvider;

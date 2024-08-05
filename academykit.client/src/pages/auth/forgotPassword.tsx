@@ -1,14 +1,4 @@
-import {
-  Anchor,
-  Button,
-  Center,
-  Container,
-  Group,
-  Image,
-  Paper,
-  TextInput,
-  Title,
-} from "@mantine/core";
+import { Anchor, Button, Center, Container, Group, Image, Paper, TextInput, Title } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import RoutePath from "@utils/routeConstants";
@@ -72,9 +62,7 @@ const ForgotPassword = () => {
   const companySettings = useCompanySetting();
 
   const setHeader = () => {
-    const info =
-      localStorage.getItem("app-info") &&
-      JSON.parse(localStorage.getItem("app-info") ?? "");
+    const info = localStorage.getItem("app-info") && JSON.parse(localStorage.getItem("app-info") ?? "");
     if (info) {
       let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
       document.title = info.name;
@@ -96,7 +84,7 @@ const ForgotPassword = () => {
         JSON.stringify({
           name: companySettings.data.data.name,
           logo: companySettings.data.data.imageUrl,
-        })
+        }),
       );
       setHeader();
     }
@@ -106,11 +94,7 @@ const ForgotPassword = () => {
     <Container size={470} my={40}>
       <Center m={"lg"}>
         <Link to={"/"}>
-          <Image
-            height={50}
-            width={50}
-            src={companySettings?.data?.data?.imageUrl}
-          ></Image>
+          <Image height={50} width={50} src={companySettings?.data?.data?.imageUrl}></Image>
         </Link>
       </Center>
       <Title
@@ -124,31 +108,16 @@ const ForgotPassword = () => {
       </Title>
       <form onSubmit={form.onSubmit(onFormSubmit)}>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <TextInput
-            {...form.getInputProps("email")}
-            label={t("email")}
-            placeholder={t("your_email") as string}
-          />
+          <TextInput {...form.getInputProps("email")} label={t("email")} placeholder={t("your_email") as string} />
 
           <Group justify="flex-end" mt={10}>
             <Link to={RoutePath.login}>
-              <Anchor
-                component="button"
-                ta="end"
-                type="button"
-                c="dimmed"
-                size="xs"
-              >
+              <Anchor component="button" ta="end" type="button" c="dimmed" size="xs">
                 {t("want_login")}?
               </Anchor>
             </Link>
           </Group>
-          <Button
-            loading={forgotPassword.isLoading}
-            fullWidth
-            mt="xl"
-            type="submit"
-          >
+          <Button loading={forgotPassword.isLoading} fullWidth mt="xl" type="submit">
             {t("proceed")}
           </Button>
         </Paper>

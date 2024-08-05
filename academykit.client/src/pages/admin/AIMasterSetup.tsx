@@ -79,11 +79,7 @@ const AIMasterSetup = () => {
             {...form.getInputProps("aiModel")}
           />
 
-          <Switch
-            mb={10}
-            label={t("isActive")}
-            {...form.getInputProps("isActive", { type: "checkbox" })}
-          />
+          <Switch mb={10} label={t("isActive")} {...form.getInputProps("isActive", { type: "checkbox" })} />
           <Button loading={updateAISetup.isLoading} type="submit">
             {t("submit")}
           </Button>

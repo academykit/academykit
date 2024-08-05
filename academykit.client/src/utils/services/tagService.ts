@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import errorType from "./axiosError";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { IPaginated } from "./types";
+import type { IPaginated } from "./types";
 
 export interface ITag {
   id: string;
@@ -12,23 +12,13 @@ export interface ITag {
   tagName?: string;
 }
 
-const getTags = async (
-  search: string,
-  trainingType?: number,
-  identity?: string
-) =>
+const getTags = async (search: string, trainingType?: number, identity?: string) =>
   await httpClient.get<IPaginated<ITag>>(
     api.tags.list +
-      `?${search}${identity ? `Idenitiy=${identity}` : ""}${
-        trainingType ? `&TrainingType=${trainingType}` : ""
-      }`
+      `?${search}${identity ? `Idenitiy=${identity}` : ""}${trainingType ? `&TrainingType=${trainingType}` : ""}`,
   );
 
-export const useTags = (
-  search: string,
-  identity?: string,
-  trainingType?: number
-) =>
+export const useTags = (search: string, identity?: string, trainingType?: number) =>
   useQuery({
     queryKey: [api.tags.list, search],
     queryFn: () => getTags(search, trainingType, identity),
@@ -37,8 +27,7 @@ export const useTags = (
     select: (data) => data.data,
   });
 
-const addTag = async (tagName: string) =>
-  await httpClient.post<ITag>(api.tags.list, { name: tagName });
+const addTag = async (tagName: string) => await httpClient.post<ITag>(api.tags.list, { name: tagName });
 
 export const useAddTag = () => {
   const queryClient = useQueryClient();

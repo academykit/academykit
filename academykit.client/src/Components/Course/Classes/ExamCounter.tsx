@@ -15,11 +15,7 @@ const ExamCounter = ({
   const { t } = useTranslation();
   return (
     <Group>
-      <CountDownTimer
-        time={duration}
-        startDateTime={new Date().toString()}
-        cb={onSubmit}
-      />
+      <CountDownTimer time={duration} startDateTime={new Date().toString()} cb={onSubmit} />
       <Button loading={isLoading} onClick={onClick}>
         {t("submit")}
       </Button>

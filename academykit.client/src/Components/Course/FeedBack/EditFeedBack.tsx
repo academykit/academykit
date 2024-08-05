@@ -1,24 +1,13 @@
 import RichTextEditor from "@components/Ui/RichTextEditor/Index";
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Group,
-  Paper,
-  Select,
-  Text,
-  TextInput,
-  UnstyledButton,
-} from "@mantine/core";
+import { Box, Button, Container, Flex, Group, Paper, Select, Text, TextInput, UnstyledButton } from "@mantine/core";
 import { createFormContext, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { FeedbackType } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
 import {
-  ICreateFeedback,
-  IFeedbackQuestions,
+  type ICreateFeedback,
+  type IFeedbackQuestions,
   useAddFeedbackQuestion,
   useEditFeedbackQuestion,
 } from "@utils/services/feedbackService";
@@ -42,46 +31,37 @@ const schema = () => {
         is: FeedbackType.MultipleChoice.toString(),
         then: Yup.array()
           .min(1, t("more_option_required") as string)
-          .test(
-            t("test"),
-            t("more_option_required") as string,
-            function (value: any) {
-              const a = value.length > 1;
-              return a;
-            }
-          )
+          .test(t("test"), t("more_option_required") as string, (value: any) => {
+            const a = value.length > 1;
+            return a;
+          })
           .of(
             Yup.object().shape({
               option: Yup.string()
                 .trim()
                 .required(t("option_required") as string),
-            })
+            }),
           ),
       })
       .when(["type"], {
         is: FeedbackType.SingleChoice.toString(),
         then: Yup.array()
-          .test(
-            t("test"),
-            t("more_option_required") as string,
-            function (value: any) {
-              const length: number = value && value.length;
-              return length > 1;
-            }
-          )
+          .test(t("test"), t("more_option_required") as string, (value: any) => {
+            const length: number = value && value.length;
+            return length > 1;
+          })
           .of(
             Yup.object().shape({
               option: Yup.string()
                 .trim()
                 .required(t("option_required") as string),
-            })
+            }),
           ),
       }),
   });
 };
 
-const [FormProvider, useFormContext, useForm] =
-  createFormContext<ICreateFeedback>();
+const [FormProvider, useFormContext, useForm] = createFormContext<ICreateFeedback>();
 const EditFeedback = ({
   lessonId,
   onCancel,
@@ -171,10 +151,7 @@ const EditFeedback = ({
               {...form.getInputProps("type")}
               data={getQuestionType()}
               onClick={() => {
-                feedbackQuestion &&
-                  form.setFieldValue("answers", [
-                    { option: "", isSelected: false },
-                  ]);
+                feedbackQuestion && form.setFieldValue("answers", [{ option: "", isSelected: false }]);
               }}
               withAsterisk
             ></Select>
@@ -184,10 +161,7 @@ const EditFeedback = ({
                 <Text mt={20}>{t("options")}</Text>
                 {form.values.answers &&
                   form.values.answers.map((x, i) => (
-                    <div
-                      key={i}
-                      style={{ marginBottom: "30px", width: "100%" }}
-                    >
+                    <div key={i} style={{ marginBottom: "30px", width: "100%" }}>
                       <Flex>
                         <div style={{ width: "90%" }}>
                           <RichTextEditor
@@ -204,22 +178,21 @@ const EditFeedback = ({
                               {
                                 option: "",
                               },
-                              i + 1
+                              i + 1,
                             );
                           }}
                         >
                           <IconPlus color="green" />
                         </UnstyledButton>
-                        {form.values.answers &&
-                          form.values.answers.length > 1 && (
-                            <UnstyledButton
-                              onClick={() => {
-                                form.removeListItem("answers", i);
-                              }}
-                            >
-                              <IconTrash color="red" />
-                            </UnstyledButton>
-                          )}
+                        {form.values.answers && form.values.answers.length > 1 && (
+                          <UnstyledButton
+                            onClick={() => {
+                              form.removeListItem("answers", i);
+                            }}
+                          >
+                            <IconTrash color="red" />
+                          </UnstyledButton>
+                        )}
                       </Flex>
                     </div>
                   ))}
@@ -239,12 +212,7 @@ const EditFeedback = ({
               >
                 {t("save")}
               </Button>
-              <Button
-                size="sm"
-                type="reset"
-                onClick={onCancel}
-                variant="outline"
-              >
+              <Button size="sm" type="reset" onClick={onCancel} variant="outline">
                 {t("cancel")}
               </Button>
             </Group>

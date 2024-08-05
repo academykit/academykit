@@ -2,23 +2,12 @@ import ThumbnailEditor from "@components/Ui/ThumbnailEditor";
 import { BrandingContext } from "@context/BrandingThemeContext";
 import useCustomForm from "@hooks/useCustomForm";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  ActionIcon,
-  Button,
-  ColorInput,
-  Container,
-  Text,
-  TextInput,
-  Textarea,
-} from "@mantine/core";
+import { ActionIcon, Button, ColorInput, Container, Text, TextInput, Textarea } from "@mantine/core";
 import { createFormContext, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { IconRefresh } from "@tabler/icons-react";
 import { PHONE_VALIDATION } from "@utils/constants";
-import {
-  useGeneralSetting,
-  useUpdateGeneralSetting,
-} from "@utils/services/adminService";
+import { useGeneralSetting, useUpdateGeneralSetting } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -28,9 +17,7 @@ const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
     companyName: Yup.string().required(t("company_name_required") as string),
-    companyAddress: Yup.string().required(
-      t("company_address_required") as string
-    ),
+    companyAddress: Yup.string().required(t("company_address_required") as string),
     companyContactNumber: Yup.string()
       .required(t("contact_number_required") as string)
       .matches(PHONE_VALIDATION, {
@@ -51,8 +38,7 @@ interface ICompanySettings {
   logoUrl?: string | undefined;
 }
 
-const [FormProvider, useFormContext, useForm] =
-  createFormContext<ICompanySettings>();
+const [FormProvider, useFormContext, useForm] = createFormContext<ICompanySettings>();
 
 const GeneralSettings = () => {
   const cForm = useCustomForm();
@@ -166,10 +152,7 @@ const GeneralSettings = () => {
             label="Branding color"
             // defaultValue="#0E99AC"
             rightSection={
-              <ActionIcon
-                variant="subtle"
-                onClick={() => handleColorChange("#0E99AC")}
-              >
+              <ActionIcon variant="subtle" onClick={() => handleColorChange("#0E99AC")}>
                 <IconRefresh size="1rem" />
               </ActionIcon>
             }
@@ -182,12 +165,7 @@ const GeneralSettings = () => {
             placeholder={t("enter_mail_signature") as string}
             {...form.getInputProps("emailSignature")}
           />
-          <Button
-            disabled={!cForm?.isReady}
-            mt={10}
-            type="submit"
-            loading={updateGeneral.isLoading}
-          >
+          <Button disabled={!cForm?.isReady} mt={10} type="submit" loading={updateGeneral.isLoading}>
             {t("submit")}
           </Button>
         </Container>

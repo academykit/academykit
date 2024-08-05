@@ -13,10 +13,7 @@ import {
   IconUserCircle,
   IconUsers,
 } from "@tabler/icons-react";
-import {
-  DashboardStats,
-  DashboardStatsData,
-} from "@utils/services/dashboardService";
+import type { DashboardStats, DashboardStatsData } from "@utils/services/dashboardService";
 
 const icons = {
   userEnrollment: IconUserCircle,
@@ -43,10 +40,7 @@ interface StatsGridProps {
 
 export const StatsCard = ({ data, dashboard }: StatsGridProps) => {
   const Icon = icons[data.icon as keyof typeof icons];
-  const backLabel =
-    dashboard && dashboard[data.key as keyof DashboardStats] > 1
-      ? data.pluLabel
-      : data.signLabel;
+  const backLabel = dashboard && dashboard[data.key as keyof DashboardStats] > 1 ? data.pluLabel : data.signLabel;
 
   return (
     <Paper withBorder p="md" color={data.color} radius="md">

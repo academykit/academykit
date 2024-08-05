@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { QuestionType } from "@utils/enums";
+import type { QuestionType } from "@utils/enums";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { IPaginated, IUser } from "./types";
+import type { IPaginated, IUser } from "./types";
 
 interface IAssignmentAttachment {
   assignmentId: string;
@@ -42,9 +42,7 @@ export interface IAssignmentQuestion {
 }
 
 const getAssignmentQuestion = (lessonId: string, search: string) => {
-  return httpClient.get<IAssignmentQuestion[]>(
-    api.assignment.list(lessonId, search)
-  );
+  return httpClient.get<IAssignmentQuestion[]>(api.assignment.list(lessonId, search));
 };
 
 export const useAssignmentQuestion = (lessonId: string, search: string) => {
@@ -57,9 +55,7 @@ export const useAssignmentQuestion = (lessonId: string, search: string) => {
 };
 
 const getSingleAssignment = (assignmentId: string) => {
-  return httpClient.get<IAssignmentQuestion>(
-    api.assignment.listOne(assignmentId)
-  );
+  return httpClient.get<IAssignmentQuestion>(api.assignment.listOne(assignmentId));
 };
 export const useSingleAssignment = (assignmentId: string) => {
   return useQuery({
@@ -142,10 +138,7 @@ const deleteAssignmentQuestion = ({
   return httpClient.delete(api.assignment.listOne(assignmentId));
 };
 
-export const useDeleteAssignmentQuestion = (
-  lessonId: string,
-  search: string
-) => {
+export const useDeleteAssignmentQuestion = (lessonId: string, search: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -209,9 +202,7 @@ export interface IAssignmentReview {
 }
 
 const getAssignmentReview = (lessonId: string, userId: string) => {
-  return httpClient.get<IAssignmentReview>(
-    api.assignment.assignmentReview(lessonId, userId)
-  );
+  return httpClient.get<IAssignmentReview>(api.assignment.assignmentReview(lessonId, userId));
 };
 
 export const useAssignmentReview = (lessonId: string, userId: string) => {
@@ -293,14 +284,9 @@ export interface IAssignmentSummary {
 }
 
 const getAssignmentSummary = (courseIdentity: string, lessonId: string) =>
-  httpClient.get<IAssignmentSummary>(
-    api.course.assignmentSummary(courseIdentity, lessonId)
-  );
+  httpClient.get<IAssignmentSummary>(api.course.assignmentSummary(courseIdentity, lessonId));
 
-export const useGetAssignmentSummary = (
-  courseIdentity: string,
-  lessonId: string
-) =>
+export const useGetAssignmentSummary = (courseIdentity: string, lessonId: string) =>
   useQuery({
     queryKey: [api.course.assignmentSummary(courseIdentity, lessonId)],
     queryFn: () => getAssignmentSummary(courseIdentity, lessonId),
@@ -322,24 +308,14 @@ export interface IAssignmentSubmission {
   submissionDate: Date;
 }
 
-const getAssignmentSubmission = async (
-  courseIdentity: string,
-  lessonId: string,
-  search: string
-) =>
+const getAssignmentSubmission = async (courseIdentity: string, lessonId: string, search: string) =>
   await httpClient.get<IPaginated<IAssignmentSubmission>>(
-    api.course.assignmentSubmission(courseIdentity, lessonId, search)
+    api.course.assignmentSubmission(courseIdentity, lessonId, search),
   );
 
-export const useGetAssignmentSubmission = (
-  courseIdentity: string,
-  lessonId: string,
-  search: string
-) =>
+export const useGetAssignmentSubmission = (courseIdentity: string, lessonId: string, search: string) =>
   useQuery({
-    queryKey: [
-      api.course.assignmentSubmission(courseIdentity, lessonId, search),
-    ],
+    queryKey: [api.course.assignmentSubmission(courseIdentity, lessonId, search)],
     queryFn: () => getAssignmentSubmission(courseIdentity, lessonId, search),
     select: (data) => data.data,
   });

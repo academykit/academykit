@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ICertificateList } from "./manageCourseService";
+import type { ICertificateList } from "./manageCourseService";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { IPaginated, IUser } from "./types";
+import type { IPaginated, IUser } from "./types";
 
 export interface ExternalCertificatePost {
   name: string;
@@ -103,9 +103,7 @@ export const useDeleteCertificate = () => {
 };
 
 const getUserCertificate = (id?: string) => {
-  return httpClient.get<GetExternalCertificate[]>(
-    api.externalCertificate.user(id)
-  );
+  return httpClient.get<GetExternalCertificate[]>(api.externalCertificate.user(id));
 };
 
 export const useGetUserCertificate = (id?: string) => {
@@ -123,9 +121,7 @@ export interface ListCertificate extends ExternalCertificatePost {
 }
 
 const getListCertificate = (query: string) =>
-  httpClient.get<IPaginated<ListCertificate>>(
-    api.externalCertificate.list + `?${query}`
-  );
+  httpClient.get<IPaginated<ListCertificate>>(api.externalCertificate.list + `?${query}`);
 
 export const useGetListCertificate = (query: string) =>
   useQuery({
@@ -140,10 +136,7 @@ const updateCertificateStatus = ({
 }: {
   id: string;
   status: CertificateStatus;
-}) =>
-  httpClient.patch(
-    api.externalCertificate.updateStatus(id) + "?status=" + status
-  );
+}) => httpClient.patch(api.externalCertificate.updateStatus(id) + "?status=" + status);
 export const useUpdateCertificateStatus = (id: string, search: string) => {
   const queryClient = useQueryClient();
   return useMutation({

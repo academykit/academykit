@@ -20,11 +20,7 @@ const ChangeEmail = () => {
         )}
 
         {verifyChangeEmail.isError && (
-          <Alert
-            icon={<IconAlertCircle size={20} />}
-            title="Error!"
-            color="pink"
-          >
+          <Alert icon={<IconAlertCircle size={20} />} title="Error!" color="pink">
             {t("something_terrible_email")}
           </Alert>
         )}

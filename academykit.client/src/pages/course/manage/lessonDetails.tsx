@@ -1,25 +1,10 @@
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
-import {
-  Box,
-  Button,
-  Center,
-  Group,
-  Loader,
-  Paper,
-  Table,
-  Tabs,
-  Title,
-} from "@mantine/core";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
+import { Box, Button, Center, Group, Loader, Paper, Table, Tabs, Title } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { IconChevronLeft, IconTableExport } from "@tabler/icons-react";
 import { LessonType } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
-import {
-  exportFeedback,
-  useGetFeedbackGraph,
-} from "@utils/services/feedbackService";
+import { exportFeedback, useGetFeedbackGraph } from "@utils/services/feedbackService";
 import { downloadCSVFile } from "@utils/services/fileService";
 import { useGetLessonStatisticsDetails } from "@utils/services/manageCourseService";
 import { useState } from "react";
@@ -58,20 +43,12 @@ const getDefaultValue = (lessonType: LessonType) => {
   }
 };
 
-const LessonDetails = ({
-  searchComponent,
-  pagination,
-  searchParams,
-}: IWithSearchPagination) => {
+const LessonDetails = ({ searchComponent, pagination, searchParams }: IWithSearchPagination) => {
   const { id, lessonId } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { state } = useLocation();
-  const lessonDetails = useGetLessonStatisticsDetails(
-    id as string,
-    lessonId as string,
-    searchParams
-  );
+  const lessonDetails = useGetLessonStatisticsDetails(id as string, lessonId as string, searchParams);
   const [loading, setLoading] = useState(false);
   const chartData = useGetFeedbackGraph(lessonId as string);
 
@@ -87,11 +64,7 @@ const LessonDetails = ({
       const element = document.createElement("a");
       setLoading(false);
 
-      element.setAttribute(
-        "href",
-        "data:text/plain;charset=utf-8," +
-          encodeURIComponent(res.data as string)
-      );
+      element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(res.data as string));
       element.setAttribute("download", "Feedback-" + lessonId + ".csv");
       document.body.appendChild(element);
       element.click();
@@ -111,27 +84,17 @@ const LessonDetails = ({
 
   return (
     <>
-      <Button
-        leftSection={<IconChevronLeft size={16} />}
-        variant="outline"
-        onClick={() => navigate(-1)}
-      >
+      <Button leftSection={<IconChevronLeft size={16} />} variant="outline" onClick={() => navigate(-1)}>
         Go back
       </Button>
       <Title ta={"center"}>{state?.lessonName}</Title>
 
-      <Tabs
-        defaultValue={getDefaultValue(state?.lessonType)}
-        orientation="horizontal"
-      >
+      <Tabs defaultValue={getDefaultValue(state?.lessonType)} orientation="horizontal">
         <Tabs.List>
           <Visibility view={state?.lessonType} lessonType={LessonType.Exam}>
             <Tabs.Tab value="summary-exam">{t("summary")}</Tabs.Tab>
           </Visibility>
-          <Visibility
-            view={state?.lessonType}
-            lessonType={LessonType.Assignment}
-          >
+          <Visibility view={state?.lessonType} lessonType={LessonType.Assignment}>
             <Tabs.Tab value="summary-assignment">{t("summary")}</Tabs.Tab>
           </Visibility>
 
@@ -147,33 +110,21 @@ const LessonDetails = ({
             <Tabs.Tab value="submission-exam">{t("submission")}</Tabs.Tab>
           </Visibility>
 
-          <Visibility
-            view={state?.lessonType}
-            lessonType={LessonType.Assignment}
-          >
+          <Visibility view={state?.lessonType} lessonType={LessonType.Assignment}>
             <Tabs.Tab value="submission-assignment">{t("submission")}</Tabs.Tab>
           </Visibility>
         </Tabs.List>
 
         <Tabs.Panel value="summary-exam" pt="xs">
-          <ExamSummary
-            courseIdentity={id as string}
-            lessonId={lessonId as string}
-          />
+          <ExamSummary courseIdentity={id as string} lessonId={lessonId as string} />
         </Tabs.Panel>
 
         <Tabs.Panel value="submission-exam" pt="xs">
-          <ExamSubmission
-            courseIdentity={id as string}
-            lessonId={lessonId as string}
-          />
+          <ExamSubmission courseIdentity={id as string} lessonId={lessonId as string} />
         </Tabs.Panel>
 
         <Tabs.Panel value="summary-assignment" pt="xs">
-          <AssignmentSummary
-            courseIdentity={id as string}
-            lessonId={lessonId as string}
-          />
+          <AssignmentSummary courseIdentity={id as string} lessonId={lessonId as string} />
         </Tabs.Panel>
 
         <Tabs.Panel value="submission-assignment" pt="xs">
@@ -199,18 +150,12 @@ const LessonDetails = ({
               </Button>
             </Group>
           )}
-          {lessonDetails.data?.items[0]?.lessonType ===
-            LessonType.Assignment && (
+          {lessonDetails.data?.items[0]?.lessonType === LessonType.Assignment && (
             <Group justify="flex-end" my="md">
               <Button
                 rightSection={<IconTableExport size={18} />}
                 variant="outline"
-                onClick={() =>
-                  downloadCSVFile(
-                    exportIndividualCSV,
-                    "AssignmentIndividualStats"
-                  )
-                }
+                onClick={() => downloadCSVFile(exportIndividualCSV, "AssignmentIndividualStats")}
               >
                 {t("export")}
               </Button>
@@ -232,22 +177,14 @@ const LessonDetails = ({
                 </Table.Thead>
                 <Table.Tbody>
                   {lessonDetails.data?.items.map((x, index) => (
-                    <CourseLessonDetails
-                      element={x}
-                      key={index}
-                      courseId={id as string}
-                    />
+                    <CourseLessonDetails element={x} key={index} courseId={id as string} />
                   ))}
                 </Table.Tbody>
               </Table>
             ) : (
               <Box>{t("no_enrolled_student_found")}</Box>
             )}
-            {lessonDetails.data &&
-              pagination(
-                lessonDetails.data.totalPage,
-                lessonDetails.data?.items.length
-              )}
+            {lessonDetails.data && pagination(lessonDetails.data.totalPage, lessonDetails.data?.items.length)}
           </Paper>
         </Tabs.Panel>
 

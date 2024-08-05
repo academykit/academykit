@@ -1,10 +1,4 @@
-import {
-  ActionIcon,
-  ActionIconProps,
-  CopyButton,
-  Tooltip,
-  rem,
-} from "@mantine/core";
+import { ActionIcon, type ActionIconProps, CopyButton, Tooltip, rem } from "@mantine/core";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
 
 interface IProps extends ActionIconProps {
@@ -16,22 +10,9 @@ const Copy = ({ value, disabled }: IProps) => {
     <>
       <CopyButton value={value} timeout={2000}>
         {({ copied, copy }) => (
-          <Tooltip
-            label={copied ? "Copied" : "Copy"}
-            withArrow
-            position="right"
-          >
-            <ActionIcon
-              color={copied ? "teal" : "gray"}
-              variant="subtle"
-              onClick={copy}
-              disabled={disabled}
-            >
-              {copied ? (
-                <IconCheck style={{ width: rem(16) }} />
-              ) : (
-                <IconCopy style={{ width: rem(16) }} />
-              )}
+          <Tooltip label={copied ? "Copied" : "Copy"} withArrow position="right">
+            <ActionIcon color={copied ? "teal" : "gray"} variant="subtle" onClick={copy} disabled={disabled}>
+              {copied ? <IconCheck style={{ width: rem(16) }} /> : <IconCopy style={{ width: rem(16) }} />}
             </ActionIcon>
           </Tooltip>
         )}

@@ -1,6 +1,6 @@
 import { StatsCard } from "@components/Dashboard/StatsCard";
 import { SimpleGrid, useMantineColorScheme } from "@mantine/core";
-import { DashboardStats } from "@utils/services/dashboardService";
+import type { DashboardStats } from "@utils/services/dashboardService";
 import { useGetCourseManageStatistics } from "@utils/services/manageCourseService";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -81,13 +81,7 @@ const ManageCourse = () => {
     <div>
       <SimpleGrid mb={20} cols={{ xs: 1, md: 2, lg: 4 }}>
         {getStat.data &&
-          incomingData.map((x, idx) => (
-            <StatsCard
-              key={idx}
-              data={x}
-              dashboard={getStat.data as DashboardStats}
-            />
-          ))}
+          incomingData.map((x, idx) => <StatsCard key={idx} data={x} dashboard={getStat.data as DashboardStats} />)}
       </SimpleGrid>
     </div>
   );

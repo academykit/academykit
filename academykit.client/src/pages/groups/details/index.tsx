@@ -1,23 +1,12 @@
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 import useAuth from "@hooks/useAuth";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Paper,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Box, Button, Container, Flex, Paper, Text, Title } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { UserRole } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
-import {
-  useGetGroupDetail,
-  useUpdateGroup,
-} from "@utils/services/groupService";
+import { useGetGroupDetail, useUpdateGroup } from "@utils/services/groupService";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -89,10 +78,7 @@ const GroupDetail = () => {
           <Button
             onClick={() => {
               setEdit(true);
-              form.setFieldValue(
-                "name",
-                groupDetail.data ? groupDetail.data.data.name : ""
-              );
+              form.setFieldValue("name", groupDetail.data ? groupDetail.data.data.name : "");
             }}
             variant="outline"
           >

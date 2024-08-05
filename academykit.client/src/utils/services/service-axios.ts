@@ -1,12 +1,7 @@
 import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from "@utils/constants";
 import { LanguageString } from "@utils/enums";
 import { BASE_URL } from "@utils/env";
-import axios, {
-  AxiosDefaults,
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosResponse,
-} from "axios";
+import axios, { type AxiosDefaults, type AxiosError, type AxiosRequestConfig, type AxiosResponse } from "axios";
 import { api } from "./service-api";
 
 type RequestData = Record<string, any>;
@@ -35,32 +30,20 @@ export const httpClient = {
       ...config,
     }),
 
-  post: <T>(
-    url: string,
-    data: RequestData,
-    config?: AxiosRequestConfig<RequestData>
-  ) =>
+  post: <T>(url: string, data: RequestData, config?: AxiosRequestConfig<RequestData>) =>
     axiosInstance.post<T>(url, data, {
       ...baseConfig,
       data,
       ...config,
     }),
 
-  put: <T>(
-    url: string,
-    data: RequestData,
-    config?: AxiosRequestConfig<RequestData>
-  ) =>
+  put: <T>(url: string, data: RequestData, config?: AxiosRequestConfig<RequestData>) =>
     axiosInstance.put<T>(url, data, {
       ...baseConfig,
       ...config,
     }),
 
-  patch: <T>(
-    url: string,
-    data?: RequestData,
-    config?: AxiosRequestConfig<RequestData>
-  ) =>
+  patch: <T>(url: string, data?: RequestData, config?: AxiosRequestConfig<RequestData>) =>
     axiosInstance.patch<T>(url, data, {
       ...baseConfig,
       ...config,
@@ -73,23 +56,19 @@ export const httpClient = {
 };
 
 axiosInstance.interceptors.request.use(
-  async function (config: AxiosRequestConfig) {
+  async (config: AxiosRequestConfig) => {
     const token = localStorage.getItem("token");
     const lang = localStorage.getItem("lang");
 
     if (config.headers) {
-      config.headers["Accept-Language"] =
-        LanguageString[lang as keyof typeof LanguageString] ?? "en-US";
+      config.headers["Accept-Language"] = LanguageString[lang as keyof typeof LanguageString] ?? "en-US";
     }
 
     if (token && config.headers) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
     config.data = filterFalseyValues(config.data);
-    if (
-      config.headers &&
-      config.headers["content-type"] === "multipart/form-data"
-    ) {
+    if (config.headers && config.headers["content-type"] === "multipart/form-data") {
       config.data = toFormData(config.data);
       delete config.headers["formData"];
     }
@@ -105,9 +84,7 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  function (error: any) {
-    return Promise.reject(error);
-  }
+  (error: any) => Promise.reject(error),
 );
 
 interface IFailedRequestQueue {
@@ -149,25 +126,20 @@ function handleRefreshToken(refreshToken: string) {
     });
 }
 
-export function setAuthorizationHeader(
-  request: AxiosDefaults | AxiosRequestConfig | any,
-  token: string
-) {
+export function setAuthorizationHeader(request: AxiosDefaults | AxiosRequestConfig | any, token: string) {
   request.headers.Authorization = `Bearer ${token}`;
 }
 
 axiosInstance.interceptors.response.use(
-  function (response: AxiosResponse) {
+  (response: AxiosResponse) => {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
     return response;
   },
-  function (error: any) {
+  (error: any) => {
     if (error?.response?.status === 401) {
       const originalConfig = error.config;
-      const refreshToken = localStorage.getItem(
-        REFRESH_TOKEN_STORAGE
-      ) as string;
+      const refreshToken = localStorage.getItem(REFRESH_TOKEN_STORAGE) as string;
       !isRefreshing && handleRefreshToken(refreshToken);
 
       return new Promise((resolve, reject) => {
@@ -183,7 +155,7 @@ axiosInstance.interceptors.response.use(
       });
     }
     return Promise.reject(error);
-  }
+  },
 );
 /**
  * Remove empty, null and undefined values
@@ -194,10 +166,7 @@ export function filterFalseyValues(obj: Record<string, any>) {
   for (const propName in obj) {
     if (["", null, undefined].includes(obj[propName])) {
       delete obj[propName];
-    } else if (
-      obj[propName] instanceof Object &&
-      Object.keys(obj[propName]).length
-    ) {
+    } else if (obj[propName] instanceof Object && Object.keys(obj[propName]).length) {
       obj[propName] = filterFalseyValues(obj[propName]);
     }
   }

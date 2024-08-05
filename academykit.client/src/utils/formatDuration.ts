@@ -1,16 +1,12 @@
-import { TFunction } from "i18next";
+import type { TFunction } from "i18next";
 
 // eslint-disable-next-line no-self-compare
 
 const isNaN = Number.isNaN || ((value) => value !== value);
 
-const formatDuration = (
-  duration: number,
-  isShort: boolean,
-  t: TFunction<"translation", undefined, "translation">
-) => {
+const formatDuration = (duration: number, isShort: boolean, t: TFunction<"translation", undefined, "translation">) => {
   // handle invalid times
-  if (isNaN(duration) || duration === Infinity) {
+  if (isNaN(duration) || duration === Number.POSITIVE_INFINITY) {
     return "-";
   }
 
@@ -24,9 +20,7 @@ const formatDuration = (
 
   // If hours are showing, we may need to add a leading zero.
   // Always show at least one digit of minutes.
-  const formattedMinutes = `${
-    m > 0 ? `${m} ${isShort ? "m" : t("minute")} ` : ""
-  }`;
+  const formattedMinutes = `${m > 0 ? `${m} ${isShort ? "m" : t("minute")} ` : ""}`;
 
   // Check if leading zero is need for seconds
   const formattedSecs = s > 0 ? `${s} ${isShort ? "s" : t("second")}` : "";

@@ -1,11 +1,7 @@
 import { Button, Container, PasswordInput, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import {
-  ISMTPSettingUpdate,
-  useSMTPSetting,
-  useUpdateSMTPSetting,
-} from "@utils/services/adminService";
+import { type ISMTPSettingUpdate, useSMTPSetting, useUpdateSMTPSetting } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";

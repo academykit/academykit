@@ -1,6 +1,6 @@
 import { List, Paper, Title } from "@mantine/core";
-import { IQuestion } from "@utils/services/questionService";
-import { IUser } from "@utils/services/types";
+import type { IQuestion } from "@utils/services/questionService";
+import type { IUser } from "@utils/services/types";
 import { useTranslation } from "react-i18next";
 interface IProps {
   title: string;

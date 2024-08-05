@@ -1,6 +1,4 @@
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
 import useAuth from "@hooks/useAuth";
 import { Box, Container, Flex, Loader } from "@mantine/core";
 import { CourseStatus, UserRole } from "@utils/enums";
@@ -9,12 +7,7 @@ import { useEffect, useState } from "react"; // Import useState
 import { useTranslation } from "react-i18next";
 import CourseList from "./component/List";
 
-const ReviewedCourse = ({
-  setInitialSearch,
-  searchParams,
-  searchComponent,
-  pagination,
-}: IWithSearchPagination) => {
+const ReviewedCourse = ({ setInitialSearch, searchParams, searchComponent, pagination }: IWithSearchPagination) => {
   useEffect(() => {
     setInitialSearch([
       {
@@ -56,11 +49,7 @@ const ReviewedCourse = ({
         (data.totalCount >= 1 ? (
           // Show CourseList based on the state value
           showCourseList ? (
-            <CourseList
-              role={role}
-              courses={data.items}
-              search={searchParams}
-            />
+            <CourseList role={role} courses={data.items} search={searchParams} />
           ) : (
             <Loader />
           )

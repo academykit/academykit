@@ -1,14 +1,11 @@
 import RichTextEditor from "@components/Ui/RichTextEditor/Index";
-import { UseFormReturnType } from "@mantine/form";
+import type { UseFormReturnType } from "@mantine/form";
 import { useDebouncedValue } from "@mantine/hooks";
-import { IFeedbackQuestions } from "@utils/services/feedbackService";
+import type { IFeedbackQuestions } from "@utils/services/feedbackService";
 import { useEffect, useState } from "react";
 
 type Props = {
-  form: UseFormReturnType<
-    IFeedbackQuestions[],
-    (values: IFeedbackQuestions[]) => IFeedbackQuestions[]
-  >;
+  form: UseFormReturnType<IFeedbackQuestions[], (values: IFeedbackQuestions[]) => IFeedbackQuestions[]>;
   currentIndex: number;
 };
 

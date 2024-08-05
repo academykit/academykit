@@ -1,16 +1,5 @@
 import AIStar from "@components/Icons/AIStar";
-import {
-  ActionIcon,
-  Flex,
-  Group,
-  Input,
-  Loader,
-  Popover,
-  Text,
-  TextInput,
-  Textarea,
-  Tooltip,
-} from "@mantine/core";
+import { ActionIcon, Flex, Group, Input, Loader, Popover, Text, TextInput, Textarea, Tooltip } from "@mantine/core";
 import { IconReload, IconThumbUp } from "@tabler/icons-react";
 import { t } from "i18next";
 import Copy from "../Copy";
@@ -23,13 +12,7 @@ interface IAIProps {
   acceptAnswer: () => void;
 }
 
-const TitleAndDescriptionSuggestion = ({
-  title,
-  description,
-  isLoading,
-  refetch,
-  acceptAnswer,
-}: IAIProps) => {
+const TitleAndDescriptionSuggestion = ({ title, description, isLoading, refetch, acceptAnswer }: IAIProps) => {
   return (
     <Flex gap={5} align={"center"}>
       <Text>{t("powered_by_ai")}</Text>
@@ -72,23 +55,13 @@ const TitleAndDescriptionSuggestion = ({
 
           <Group gap="xs" mt={10}>
             <Tooltip label={t("regenerate_suggestion")}>
-              <ActionIcon
-                variant="transparent"
-                c={"gray"}
-                disabled={isLoading}
-                onClick={refetch}
-              >
+              <ActionIcon variant="transparent" c={"gray"} disabled={isLoading} onClick={refetch}>
                 <IconReload size={18} />
               </ActionIcon>
             </Tooltip>
 
             <Tooltip label={t("accept_answer")}>
-              <ActionIcon
-                variant="transparent"
-                c={"gray"}
-                onClick={acceptAnswer}
-                disabled={isLoading}
-              >
+              <ActionIcon variant="transparent" c={"gray"} onClick={acceptAnswer} disabled={isLoading}>
                 <IconThumbUp size={18} />
               </ActionIcon>
             </Tooltip>

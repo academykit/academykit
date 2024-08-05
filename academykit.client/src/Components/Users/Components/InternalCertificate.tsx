@@ -15,8 +15,8 @@ import {
 } from "@mantine/core";
 import { IconCheck, IconDownload, IconEye } from "@tabler/icons-react";
 import { useProfileAuth } from "@utils/services/authService";
-import { ICertificateList } from "@utils/services/manageCourseService";
-import { TFunction } from "i18next";
+import type { ICertificateList } from "@utils/services/manageCourseService";
+import type { TFunction } from "i18next";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -38,19 +38,10 @@ const RowsCompleted = ({
 
       <Table.Td>{item?.percentage}%</Table.Td>
       <Table.Td>
-        {item?.hasCertificateIssued ? (
-          <Badge color="cyan">{t("yes")}</Badge>
-        ) : (
-          <Badge color="cyan">{t("no")}</Badge>
-        )}
+        {item?.hasCertificateIssued ? <Badge color="cyan">{t("yes")}</Badge> : <Badge color="cyan">{t("no")}</Badge>}
       </Table.Td>
       <Table.Td style={{ width: "19%", height: "100px" }}>
-        <Modal
-          opened={opened}
-          size="xl"
-          title={item?.courseName}
-          onClose={() => setOpened(false)}
-        >
+        <Modal opened={opened} size="xl" title={item?.courseName} onClose={() => setOpened(false)}>
           <Image src={item?.certificateUrl}></Image>
         </Modal>
         <div style={{ position: "relative", width: "150px", height: "100px" }}>
@@ -78,21 +69,9 @@ const RowsCompleted = ({
           >
             <CopyButton value={item?.certificateUrl} timeout={2000}>
               {({ copied, copy }) => (
-                <Tooltip
-                  label={copied ? t("copied") : t("copy")}
-                  withArrow
-                  position="right"
-                >
-                  <ActionIcon
-                    variant="subtle"
-                    color={copied ? "teal" : "gray"}
-                    onClick={copy}
-                  >
-                    {copied ? (
-                      <IconCheck size={18} color="black" />
-                    ) : (
-                      <IconEye size={18} color="black" />
-                    )}
+                <Tooltip label={copied ? t("copied") : t("copy")} withArrow position="right">
+                  <ActionIcon variant="subtle" color={copied ? "teal" : "gray"} onClick={copy}>
+                    {copied ? <IconCheck size={18} color="black" /> : <IconEye size={18} color="black" />}
                   </ActionIcon>
                 </Tooltip>
               )}
@@ -135,9 +114,7 @@ const InternalCertificate = () => {
               </Table.Thead>
               <Table.Tbody>
                 {data?.certificates &&
-                  data?.certificates.map((x: any) => (
-                    <RowsCompleted key={x.userId} item={x} t={t} />
-                  ))}
+                  data?.certificates.map((x: any) => <RowsCompleted key={x.userId} item={x} t={t} />)}
               </Table.Tbody>
             </Table>
           </Paper>

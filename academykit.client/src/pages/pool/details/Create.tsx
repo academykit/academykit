@@ -23,18 +23,14 @@ import { QuestionType } from "@utils/enums";
 import queryStringGenerator from "@utils/queryStringGenerator";
 import errorType from "@utils/services/axiosError";
 import { useOnePool, usePools } from "@utils/services/poolService";
-import {
-  IAddQuestionType,
-  useAddQuestion,
-} from "@utils/services/questionService";
-import { ITag, useAddTag, useTags } from "@utils/services/tagService";
+import { type IAddQuestionType, useAddQuestion } from "@utils/services/questionService";
+import { type ITag, useAddTag, useTags } from "@utils/services/tagService";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 
-const [FormProvider, useFormContext, useForm] =
-  createFormContext<IAddQuestionType>();
+const [FormProvider, useFormContext, useForm] = createFormContext<IAddQuestionType>();
 
 const schema = () => {
   const { t } = useTranslation();
@@ -54,40 +50,31 @@ const schema = () => {
         is: QuestionType.MultipleChoice.toString(),
         then: Yup.array()
           .min(1, t("option_more_than_one") as string)
-          .test(
-            "test",
-            t("multiple_choice_option_atleast") as string,
-            function (value: any) {
-              const a = value?.filter((x: any) => x.isCorrect).length > 0;
-              return a;
-            }
-          )
+          .test("test", t("multiple_choice_option_atleast") as string, (value: any) => {
+            const a = value?.filter((x: any) => x.isCorrect).length > 0;
+            return a;
+          })
           .of(
             Yup.object().shape({
               option: Yup.string()
                 .trim()
                 .required(t("option_required") as string),
-            })
+            }),
           ),
       })
       .when(["type"], {
         is: QuestionType.SingleChoice.toString(),
         then: Yup.array()
-          .test(
-            t("test"),
-            t("single_choice_option_atleast") as string,
-            function (value: any) {
-              const length: number =
-                value && value.filter((e: any) => e?.isCorrect).length;
-              return length === 1;
-            }
-          )
+          .test(t("test"), t("single_choice_option_atleast") as string, (value: any) => {
+            const length: number = value && value.filter((e: any) => e?.isCorrect).length;
+            return length === 1;
+          })
           .of(
             Yup.object().shape({
               option: Yup.string()
                 .trim()
                 .required(t("option_required") as string),
-            })
+            }),
           ),
       }),
   });
@@ -176,7 +163,7 @@ const Create = () => {
     queryStringGenerator({
       search: searchParams,
       size: 10000,
-    })
+    }),
   );
 
   useEffect(() => {
@@ -249,12 +236,7 @@ const Create = () => {
               //   label={t('tags')}
               //   placeholder={t('select_tags') as string}
               // />
-              <TagMultiSelectCreatable
-                data={tagsLists ?? []}
-                mutateAsync={mutateAsync}
-                form={form}
-                size="lg"
-              />
+              <TagMultiSelectCreatable data={tagsLists ?? []} mutateAsync={mutateAsync} form={form} size="lg" />
             ) : (
               <Loader />
             )}
@@ -295,18 +277,14 @@ const Create = () => {
                 <Text mt={20}>{t("options")}</Text>
                 {form.values.answers.map((_x, i) => (
                   <Flex align={"center"} gap={"md"} key={i} mb={30}>
-                    {QuestionType.MultipleChoice.toString() ===
-                    form.values.type ? (
+                    {QuestionType.MultipleChoice.toString() === form.values.type ? (
                       <Checkbox
                         checked={form.values.answers[i].isCorrect}
                         {...form.getInputProps(`answers.${i}.isCorrect`)}
                         name=""
                       ></Checkbox>
                     ) : (
-                      <Radio
-                        onChange={() => onChangeRadioType(i)}
-                        checked={form.values.answers[i].isCorrect}
-                      ></Radio>
+                      <Radio onChange={() => onChangeRadioType(i)} checked={form.values.answers[i].isCorrect}></Radio>
                     )}
                     <div style={{ width: "80%" }}>
                       <RichTextEditor
@@ -323,7 +301,7 @@ const Create = () => {
                             option: "",
                             isCorrect: false,
                           },
-                          i + 1
+                          i + 1,
                         );
                       }}
                     >
@@ -346,26 +324,13 @@ const Create = () => {
               </Box>
             )}
             <Group mt={20}>
-              <Button
-                type="submit"
-                loading={addQuestion.isLoading}
-                onClick={() => setIsReset(false)}
-              >
+              <Button type="submit" loading={addQuestion.isLoading} onClick={() => setIsReset(false)}>
                 {t("save")}
               </Button>
-              <Button
-                type="submit"
-                loading={addQuestion.isLoading}
-                onClick={() => setIsReset(true)}
-              >
+              <Button type="submit" loading={addQuestion.isLoading} onClick={() => setIsReset(true)}>
                 {t("save_more")}
               </Button>
-              <Button
-                type="button"
-                variant="outline"
-                loading={addQuestion.isLoading}
-                onClick={() => cancelCreation()}
-              >
+              <Button type="button" variant="outline" loading={addQuestion.isLoading} onClick={() => cancelCreation()}>
                 {t("cancel")}
               </Button>
             </Group>

@@ -1,24 +1,11 @@
 import DeleteModal from "@components/Ui/DeleteModal";
 import TextViewer from "@components/Ui/RichTextViewer";
-import {
-  Box,
-  Button,
-  Checkbox,
-  Flex,
-  Group,
-  Paper,
-  Select,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Box, Button, Checkbox, Flex, Group, Paper, Select, Text, Title } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { IconDragDrop, IconEdit, IconTrash } from "@tabler/icons-react";
 import { QuestionType } from "@utils/enums";
-import {
-  IAssignmentQuestion,
-  useDeleteAssignmentQuestion,
-} from "@utils/services/assignmentService";
+import { type IAssignmentQuestion, useDeleteAssignmentQuestion } from "@utils/services/assignmentService";
 import errorType from "@utils/services/axiosError";
 import { useTranslation } from "react-i18next";
 import EditAssignment from "./EditAssignment";
@@ -106,10 +93,7 @@ const AssignmentItem = ({
         {data.description && (
           <Box my={10}>
             <Text>{t("description")}</Text>
-            <TextViewer
-              key={data.id + data.description}
-              content={data.description}
-            />
+            <TextViewer key={data.id + data.description} content={data.description} />
           </Box>
         )}
         {data?.hints && (
@@ -128,23 +112,13 @@ const AssignmentItem = ({
           disabled
         ></Select>
         <Box my={20}>
-          {(data.type === QuestionType.MultipleChoice ||
-            data.type === QuestionType.SingleChoice) && (
+          {(data.type === QuestionType.MultipleChoice || data.type === QuestionType.SingleChoice) && (
             <>
               <Text>{t("options")}</Text>
               {data.assignmentQuestionOptions?.map((x) => (
-                <Flex
-                  align={"center"}
-                  justify={"center"}
-                  gap={"md"}
-                  my={10}
-                  key={x.id}
-                >
+                <Flex align={"center"} justify={"center"} gap={"md"} my={10} key={x.id}>
                   <Checkbox readOnly checked={x.isCorrect} />
-                  <TextViewer
-                    styles={{ root: { flexGrow: 1 } }}
-                    content={x.option}
-                  ></TextViewer>
+                  <TextViewer styles={{ root: { flexGrow: 1 } }} content={x.option}></TextViewer>
                 </Flex>
               ))}
             </>

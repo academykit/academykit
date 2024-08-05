@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import errorType from "./axiosError";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { IUser } from "./types";
+import type { IUser } from "./types";
 
 export interface ILevel {
   id: string;
@@ -20,8 +20,7 @@ export const useLevels = () =>
     select: (data) => data.data,
   });
 
-const addLevel = async (tagName: string) =>
-  await httpClient.post(api.levels.list, { name: tagName });
+const addLevel = async (tagName: string) => await httpClient.post(api.levels.list, { name: tagName });
 
 export const useAddLevel = () => {
   const queryClient = useQueryClient();

@@ -2,9 +2,7 @@ import DeleteModal from "@components/Ui/DeleteModal";
 import EmptyRow from "@components/Ui/EmptyRow";
 import RichTextEditor from "@components/Ui/RichTextEditor/Index";
 import TextViewer from "@components/Ui/RichTextViewer";
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   ActionIcon,
@@ -39,7 +37,7 @@ import {
 } from "@tabler/icons-react";
 import { MailType } from "@utils/enums";
 import {
-  IMailNotification,
+  type IMailNotification,
   useDeleteMailNotification,
   useMailNotification,
   useMailPreview,
@@ -61,13 +59,9 @@ const schema = () => {
     mailType: Yup.string().required(t("mail_type_required") as string),
     mailMessage: Yup.string()
       .required(t("mail_message_required") as string)
-      .test(
-        "check-for-empty-p-tags",
-        t("mail_message_required") as string,
-        (value) => {
-          return value !== "<p></p>";
-        }
-      ),
+      .test("check-for-empty-p-tags", t("mail_message_required") as string, (value) => {
+        return value !== "<p></p>";
+      }),
   });
 };
 const emailSchema = () => {
@@ -79,12 +73,7 @@ const emailSchema = () => {
   });
 };
 
-const MailNotification = ({
-  searchComponent,
-  filterComponent,
-  searchParams,
-  pagination,
-}: IWithSearchPagination) => {
+const MailNotification = ({ searchComponent, filterComponent, searchParams, pagination }: IWithSearchPagination) => {
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [helpModal, toggleHelpModal] = useToggle();
@@ -178,8 +167,7 @@ const MailNotification = ({
 
   const Rows = ({ item }: { item: IMailNotification }) => {
     const mailReview = useMailPreview(item.id);
-    const [testEmailOpened, { open: openEmailModal, close: closeEmailModal }] =
-      useDisclosure(false);
+    const [testEmailOpened, { open: openEmailModal, close: closeEmailModal }] = useDisclosure(false);
     const [previewModal, setPreviewModal] = useState(false);
     const [opened, setOpened] = useState(false);
 
@@ -348,21 +336,13 @@ const MailNotification = ({
 
   return (
     <>
-      <Modal
-        title={t("modal_variables")}
-        opened={helpModal}
-        onClose={toggleHelpModal}
-        size={"xl"}
-      >
+      <Modal title={t("modal_variables")} opened={helpModal} onClose={toggleHelpModal} size={"xl"}>
         <ScrollArea h={690} scrollHideDelay={0}>
           <VariableHelpTable />
         </ScrollArea>
       </Modal>
       <section>
-        <Group
-          style={{ justifyContent: "space-between", alignItems: "center" }}
-          mb={15}
-        >
+        <Group style={{ justifyContent: "space-between", alignItems: "center" }} mb={15}>
           <Group>
             <Title>{t("mail-notification")}</Title>
             <IconInfoCircle
@@ -392,11 +372,7 @@ const MailNotification = ({
           size="xl"
         >
           <Box>
-            <form
-              onSubmit={form.onSubmit(
-                isEditing ? handleEditSubmit : handleSubmit
-              )}
-            >
+            <form onSubmit={form.onSubmit(isEditing ? handleEditSubmit : handleSubmit)}>
               <Grid>
                 <Grid.Col span={{ xs: 6, lg: 12 }}>
                   <TextInput
@@ -464,20 +440,14 @@ const MailNotification = ({
                 { value: "false", label: t("inactive") },
               ],
               t("mail_status"),
-              "IsActive"
+              "IsActive",
             )}
           </Flex>
         </Flex>
 
         <Paper>
           <ScrollArea>
-            <Table
-              striped
-              highlightOnHover
-              withTableBorder
-              withColumnBorders
-              style={{ marginTop: "10px" }}
-            >
+            <Table striped highlightOnHover withTableBorder withColumnBorders style={{ marginTop: "10px" }}>
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>
@@ -495,11 +465,8 @@ const MailNotification = ({
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
-                {getMailNotification.data &&
-                getMailNotification.data.totalCount > 0 ? (
-                  getMailNotification.data?.items.map((item) => (
-                    <Rows key={item.id} item={item} />
-                  ))
+                {getMailNotification.data && getMailNotification.data.totalCount > 0 ? (
+                  getMailNotification.data?.items.map((item) => <Rows key={item.id} item={item} />)
                 ) : (
                   <EmptyRow colspan={4} message="no_email_notifications" />
                 )}
@@ -508,10 +475,7 @@ const MailNotification = ({
           </ScrollArea>
 
           {getMailNotification.data &&
-            pagination(
-              getMailNotification.data?.totalPage,
-              getMailNotification.data?.items.length
-            )}
+            pagination(getMailNotification.data?.totalPage, getMailNotification.data?.items.length)}
         </Paper>
       </section>
     </>

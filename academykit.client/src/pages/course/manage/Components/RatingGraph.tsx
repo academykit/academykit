@@ -1,24 +1,9 @@
 import { Title as Heading, Paper, Text } from "@mantine/core";
-import {
-  BarElement,
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  Title,
-  Tooltip,
-} from "chart.js";
+import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useTranslation } from "react-i18next";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export const options = {
   maintainAspectRatio: false,
@@ -26,7 +11,7 @@ export const options = {
   plugins: {
     legend: {
       position: "top" as const,
-      onClick: function () {},
+      onClick: () => {},
     },
   },
 };
@@ -53,13 +38,7 @@ const RatingGraph = ({ name, stats, responseCount }: IProps) => {
     datasets: [
       {
         label: "Ratings",
-        data: [
-          stats.oneRating,
-          stats.twoRating,
-          stats.threeRating,
-          stats.fourRating,
-          stats.fiveRating,
-        ],
+        data: [stats.oneRating, stats.twoRating, stats.threeRating, stats.fourRating, stats.fiveRating],
         backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
     ],

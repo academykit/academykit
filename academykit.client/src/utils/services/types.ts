@@ -1,6 +1,6 @@
-import { UserRole, UserStatus } from "@utils/enums";
-import { ILessons } from "./courseService";
-import { ICertificateList } from "./manageCourseService";
+import type { UserRole, UserStatus } from "@utils/enums";
+import type { ILessons } from "./courseService";
+import type { ICertificateList } from "./manageCourseService";
 
 export interface ISkill {
   id: string;

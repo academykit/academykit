@@ -1,27 +1,9 @@
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
-import {
-  Box,
-  Flex,
-  Grid,
-  Group,
-  Loader,
-  Modal,
-  Paper,
-  ScrollArea,
-  Table,
-  Text,
-  Title,
-} from "@mantine/core";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
+import { Box, Flex, Grid, Group, Loader, Modal, Paper, ScrollArea, Table, Text, Title } from "@mantine/core";
 import { IconEye } from "@tabler/icons-react";
 import { SeverityType } from "@utils/enums";
-import {
-  IServerLogs,
-  useGetServerLogs,
-  useGetSingleLog,
-} from "@utils/services/adminService";
-import { IPaginated } from "@utils/services/types";
+import { type IServerLogs, useGetServerLogs, useGetSingleLog } from "@utils/services/adminService";
+import type { IPaginated } from "@utils/services/types";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -159,14 +141,8 @@ const LogDetails = ({ logId }: { logId: string }) => {
   return (
     <>
       <Grid>
-        <DetailFields
-          title={t("severity")}
-          content={(data && SeverityType[data?.type]) ?? "-"}
-        />
-        <DetailFields
-          title={t("time_stamp")}
-          content={data?.timeStamp.toISOString() ?? "-"}
-        />
+        <DetailFields title={t("severity")} content={(data && SeverityType[data?.type]) ?? "-"} />
+        <DetailFields title={t("time_stamp")} content={data?.timeStamp.toISOString() ?? "-"} />
         <DetailFields title={t("message")} content={data?.message ?? "-"} />
         <DetailFields title={t("faced_by")} content={data?.trackBy ?? "-"} />
       </Grid>
@@ -221,10 +197,7 @@ const Rows = ({ item }: { item: IServerLogs }) => {
         </Table.Td>
         <Table.Td>
           <Group gap="sm">
-            <IconEye
-              onClick={() => setViewLog(true)}
-              style={{ cursor: "pointer" }}
-            />
+            <IconEye onClick={() => setViewLog(true)} style={{ cursor: "pointer" }} />
           </Group>
         </Table.Td>
       </Table.Tr>
@@ -245,10 +218,7 @@ const Log = ({
 
   return (
     <>
-      <Group
-        style={{ justifyContent: "space-between", alignItems: "center" }}
-        mb={15}
-      >
+      <Group style={{ justifyContent: "space-between", alignItems: "center" }} mb={15}>
         <Title>{t("log")}</Title>
       </Group>
 
@@ -265,7 +235,7 @@ const Log = ({
               { value: "4", label: t("debug") },
             ],
             t("severity"),
-            "Severity"
+            "Severity",
           )}
         </div>
         {searchComponent(t("search_logs") as string)}
@@ -306,8 +276,7 @@ const Log = ({
         <Box mt={10}>{t("no_logs")}</Box>
       )}
 
-      {getLogData.data &&
-        pagination(getLogData.data?.totalPage, getLogData.data?.items.length)}
+      {getLogData.data && pagination(getLogData.data?.totalPage, getLogData.data?.items.length)}
     </>
   );
 };

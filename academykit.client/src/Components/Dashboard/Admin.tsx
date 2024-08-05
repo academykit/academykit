@@ -1,12 +1,9 @@
 import { SimpleGrid, Text, useMantineColorScheme } from "@mantine/core";
-import {
-  DashboardCourses,
-  DashboardStats,
-} from "@utils/services/dashboardService";
+import type { DashboardCourses, DashboardStats } from "@utils/services/dashboardService";
 
 import { useTranslation } from "react-i18next";
-import TrainingCards from "./TrainingCards";
 import { StatsCard } from "./StatsCard";
+import TrainingCards from "./TrainingCards";
 
 const Admin = ({
   dashboard,
@@ -64,10 +61,7 @@ const Admin = ({
   return (
     <div>
       <SimpleGrid mb={20} cols={{ base: 1, md: 2, lg: 4 }}>
-        {dashboard &&
-          incomingData.map((x, idx) => (
-            <StatsCard key={idx} data={x} dashboard={dashboard} />
-          ))}
+        {dashboard && incomingData.map((x, idx) => <StatsCard key={idx} data={x} dashboard={dashboard} />)}
       </SimpleGrid>
       <Text size={"xl"} fw="bold">
         {t("my_trainings")}
@@ -82,8 +76,7 @@ const Admin = ({
       )}
 
       <SimpleGrid spacing={10} cols={{ base: 1, sm: 2, md: 3, clg: 3, cxl: 4 }}>
-        {dashboardCourses.length > 0 &&
-          dashboardCourses.map((x) => <TrainingCards key={x.id} data={x} />)}
+        {dashboardCourses.length > 0 && dashboardCourses.map((x) => <TrainingCards key={x.id} data={x} />)}
       </SimpleGrid>
     </div>
   );

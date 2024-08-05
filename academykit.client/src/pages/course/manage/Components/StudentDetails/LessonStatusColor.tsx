@@ -1,6 +1,6 @@
 import { Badge, Group } from "@mantine/core";
 import { LessonType } from "@utils/enums";
-import { IStudentInfoLesson } from "@utils/services/manageCourseService";
+import type { IStudentInfoLesson } from "@utils/services/manageCourseService";
 import { useTranslation } from "react-i18next";
 
 const videoType = {
@@ -57,13 +57,7 @@ export const getType = (type: LessonType) => {
   }
 };
 const LessonStatusColor = ({
-  status: {
-    isPassed,
-    isAssignmentReviewed,
-    isCompleted,
-    lessonType: type,
-    attendanceReviewed,
-  },
+  status: { isPassed, isAssignmentReviewed, isCompleted, lessonType: type, attendanceReviewed },
 }: {
   status: IStudentInfoLesson;
 }) => {
@@ -86,12 +80,8 @@ const LessonStatusColor = ({
         {/* show isPassed badge only when assignment is reviewed */}
         {type == LessonType.Assignment &&
           (isPassed
-            ? isAssignmentReviewed && (
-                <Badge color={"green"}>{t(getType(type).true)}</Badge>
-              )
-            : isAssignmentReviewed && (
-                <Badge color={"red"}>{t(getType(type).false)}</Badge>
-              ))}
+            ? isAssignmentReviewed && <Badge color={"green"}>{t(getType(type).true)}</Badge>
+            : isAssignmentReviewed && <Badge color={"red"}>{t(getType(type).false)}</Badge>)}
 
         {/* Physical training review/attended/not-attended badges */}
         {type == LessonType.Physical &&
@@ -111,19 +101,10 @@ const LessonStatusColor = ({
             false is in-review 
         */}
         {isAssignmentReviewed === null
-          ? !isAssignmentReviewed &&
-            type == LessonType.Assignment && (
-              <Badge color="red">{t("not_submitted")}</Badge>
-            )
+          ? !isAssignmentReviewed && type == LessonType.Assignment && <Badge color="red">{t("not_submitted")}</Badge>
           : isAssignmentReviewed
-            ? !isAssignmentReviewed &&
-              type == LessonType.Assignment && (
-                <Badge color="green">{t("reviewed")}</Badge>
-              )
-            : !isAssignmentReviewed &&
-              type == LessonType.Assignment && (
-                <Badge color="orange">{t("in_review")}</Badge>
-              )}
+            ? !isAssignmentReviewed && type == LessonType.Assignment && <Badge color="green">{t("reviewed")}</Badge>
+            : !isAssignmentReviewed && type == LessonType.Assignment && <Badge color="orange">{t("in_review")}</Badge>}
 
         {isCompleted ? (
           <Badge color={"green"}>{t("completed")}</Badge>

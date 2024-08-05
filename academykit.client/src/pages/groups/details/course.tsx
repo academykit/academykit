@@ -1,28 +1,14 @@
 import CourseCard from "@components/Course/CourseCard";
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
 import useAuth from "@hooks/useAuth";
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Group,
-  Loader,
-  Title,
-} from "@mantine/core";
+import { Box, Button, Container, Flex, Group, Loader, Title } from "@mantine/core";
 import { UserRole } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
 import { useGroupCourse } from "@utils/services/groupService";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
-const GroupCourse = ({
-  searchParams,
-  pagination,
-  searchComponent,
-}: IWithSearchPagination) => {
+const GroupCourse = ({ searchParams, pagination, searchComponent }: IWithSearchPagination) => {
   const { id } = useParams();
   const { data, isLoading, error } = useGroupCourse(id as string, searchParams);
   const auth = useAuth();
@@ -32,11 +18,7 @@ const GroupCourse = ({
   }
   return (
     <Container fluid>
-      <Flex
-        my={10}
-        wrap={"wrap"}
-        style={{ justifyContent: "space-between", alignItems: "center" }}
-      >
+      <Flex my={10} wrap={"wrap"} style={{ justifyContent: "space-between", alignItems: "center" }}>
         <Title style={{ flexGrow: 2 }}>{t("trainings")}</Title>
         <Flex
           style={{
@@ -69,9 +51,7 @@ const GroupCourse = ({
           ))}
       </Flex>
       {isLoading && <Loader />}
-      {data &&
-        data.totalPage > 1 &&
-        pagination(data?.totalPage, data.items.length)}
+      {data && data.totalPage > 1 && pagination(data?.totalPage, data.items.length)}
     </Container>
   );
 };

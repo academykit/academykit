@@ -17,15 +17,11 @@ import { showNotification } from "@mantine/notifications";
 import TransferList from "@pages/course/component/TransferList";
 import errorType from "@utils/services/axiosError";
 import { usePools } from "@utils/services/poolService";
-import {
-  useAddQuestionQuestionSet,
-  useQuestion,
-  useQuestionSetQuestions,
-} from "@utils/services/questionService";
+import { useAddQuestionQuestionSet, useQuestion, useQuestionSetQuestions } from "@utils/services/questionService";
 import { api } from "@utils/services/service-api";
 import { httpClient } from "@utils/services/service-axios";
-import { ITag } from "@utils/services/tagService";
-import { IPaginated } from "@utils/services/types";
+import type { ITag } from "@utils/services/tagService";
+import type { IPaginated } from "@utils/services/types";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -60,25 +56,14 @@ const Questions = () => {
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.sm}px)`);
   const questionPools = usePools("");
   // const questionPoolTags = useTags('', poolValue ?? '', 1);
-  const [questionPoolTags, setQuestionPoolTags] = useState<IPaginated<ITag>>(
-    {} as IPaginated<ITag>
-  );
-  const questions = useQuestion(
-    poolValue ?? "",
-    `page=${activePage}&size=12&${tagValue ? `tags=${[tagValue]}` : ""}`
-  );
+  const [questionPoolTags, setQuestionPoolTags] = useState<IPaginated<ITag>>({} as IPaginated<ITag>);
+  const questions = useQuestion(poolValue ?? "", `page=${activePage}&size=12&${tagValue ? `tags=${[tagValue]}` : ""}`);
 
-  const callAPI = async (
-    search: string,
-    identity: string,
-    trainingType: number
-  ) => {
+  const callAPI = async (search: string, identity: string, trainingType: number) => {
     try {
       const response = await httpClient.get<IPaginated<ITag>>(
         api.tags.list +
-          `?${search}${identity ? `Idenitiy=${identity}` : ""}${
-            trainingType ? `&TrainingType=${trainingType}` : ""
-          }`
+          `?${search}${identity ? `Idenitiy=${identity}` : ""}${trainingType ? `&TrainingType=${trainingType}` : ""}`,
       );
       setQuestionPoolTags(response.data);
     } catch (error) {
@@ -111,20 +96,16 @@ const Questions = () => {
 
   useEffect(() => {
     if (poolValue) {
-      const i: IQuestionListData[] | undefined = questions.data?.items.map(
-        (e) => {
-          return {
-            value: e.questionPoolQuestionId,
-            label: e.name,
-            description: e.description,
-          };
-        }
-      );
+      const i: IQuestionListData[] | undefined = questions.data?.items.map((e) => {
+        return {
+          value: e.questionPoolQuestionId,
+          label: e.name,
+          description: e.description,
+        };
+      });
 
       if (i) {
-        const difference = i?.filter(
-          (x: any) => !data[1].some((e: any) => x.value === e.value)
-        );
+        const difference = i?.filter((x: any) => !data[1].some((e: any) => x.value === e.value));
         setData([difference, data[1]]);
       }
     } else {
@@ -195,8 +176,7 @@ const Questions = () => {
                   <Text>{t("mcq_pools")}</Text>
                   <Text size={"0.810rem"} c="#909296">
                     {t("question_pool_created")}
-                    <Anchor href="/pools">{t("question_pool_href")}</Anchor>{" "}
-                    {t("section")}
+                    <Anchor href="/pools">{t("question_pool_href")}</Anchor> {t("section")}
                     <Anchor href="https://docs.academykit.co/app-documentation/training/questions">
                       {t("learn_more")}
                     </Anchor>
@@ -240,12 +220,7 @@ const Questions = () => {
             <TransferList data={data} setData={setData} openModal={open} />
 
             {questions.data && questions.data.totalPage > 1 && (
-              <Pagination
-                mt={10}
-                value={activePage}
-                onChange={setPage}
-                total={questions.data?.totalPage ?? 1}
-              />
+              <Pagination mt={10} value={activePage} onChange={setPage} total={questions.data?.totalPage ?? 1} />
             )}
           </>
         )}

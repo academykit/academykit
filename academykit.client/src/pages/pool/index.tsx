@@ -1,6 +1,4 @@
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Box,
@@ -34,11 +32,7 @@ const schema = () => {
   });
 };
 
-const MCQPool = ({
-  searchParams,
-  pagination,
-  searchComponent,
-}: IWithSearchPagination) => {
+const MCQPool = ({ searchParams, pagination, searchComponent }: IWithSearchPagination) => {
   const pools = usePools(searchParams);
   const { mutateAsync, isLoading } = useAddPool(searchParams);
   const [opened, { open, close }] = useDisclosure(false);
@@ -63,10 +57,7 @@ const MCQPool = ({
   };
   return (
     <Container fluid>
-      <Group
-        style={{ justifyContent: "space-between", alignItems: "center" }}
-        mb={15}
-      >
+      <Group style={{ justifyContent: "space-between", alignItems: "center" }} mb={15}>
         <Title>{t("mcq_pools")}</Title>
 
         <Button onClick={open}>{t("create_pool")}</Button>
@@ -105,17 +96,12 @@ const MCQPool = ({
           <>
             <SimpleGrid spacing={10} cols={{ sx: 1, sm: 2, md: 3, lg: 4 }}>
               {pools.data.items.length >= 1 &&
-                pools.data?.items.map((x) => (
-                  <PoolCard search={searchParams} pool={x} key={x.id} />
-                ))}
-              {pools.data?.items.length < 1 && (
-                <Box mt={10}>{t("no_pools")}</Box>
-              )}
+                pools.data?.items.map((x) => <PoolCard search={searchParams} pool={x} key={x.id} />)}
+              {pools.data?.items.length < 1 && <Box mt={10}>{t("no_pools")}</Box>}
             </SimpleGrid>
           </>
         )}
-        {pools.data &&
-          pagination(pools.data.totalPage, pools.data.items.length)}
+        {pools.data && pagination(pools.data.totalPage, pools.data.items.length)}
       </Box>
     </Container>
   );

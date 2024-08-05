@@ -14,10 +14,7 @@ const schema = () => {
     endDate: Yup.date()
       .required(t("end_date_required") as string)
       .typeError(t("end_date_required") as string)
-      .min(
-        Yup.ref("startDate"),
-        t("end_date_must_be_after_start_date") as string
-      ),
+      .min(Yup.ref("startDate"), t("end_date_must_be_after_start_date") as string),
     retakes: Yup.number()
       .min(0, t("value_must_be_at_least_0") as string)
       .required(t("retake_required") as string),
@@ -35,7 +32,7 @@ const schema = () => {
           .min(0, t("value_must_be_at_least_0") as string)
           .max(100, t("percentage_must_be_at_most_100") as string)
           .required(t("percentage_required") as string),
-      })
+      }),
     ),
   });
 };

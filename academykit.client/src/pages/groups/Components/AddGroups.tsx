@@ -1,12 +1,5 @@
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  Button,
-  FocusTrap,
-  Group,
-  Paper,
-  Space,
-  TextInput,
-} from "@mantine/core";
+import { Button, FocusTrap, Group, Paper, Space, TextInput } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";

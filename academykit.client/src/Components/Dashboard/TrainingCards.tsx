@@ -1,31 +1,14 @@
 import UserShortProfile from "@components/UserShortProfile";
 import useAuth from "@hooks/useAuth";
-import {
-  ActionIcon,
-  Anchor,
-  Avatar,
-  Box,
-  Card,
-  Flex,
-  Group,
-  Image,
-  Menu,
-  Progress,
-  Text,
-} from "@mantine/core";
-import {
-  IconChevronRight,
-  IconDotsVertical,
-  IconGraph,
-  IconSettings,
-} from "@tabler/icons-react";
+import { ActionIcon, Anchor, Avatar, Box, Card, Flex, Group, Image, Menu, Progress, Text } from "@mantine/core";
+import { IconChevronRight, IconDotsVertical, IconGraph, IconSettings } from "@tabler/icons-react";
 import { UserRole } from "@utils/enums";
 import getCourseOgImageUrl from "@utils/getCourseOGImage";
 import { getInitials } from "@utils/getInitialName";
 import RoutePath from "@utils/routeConstants";
 import { useGeneralSetting } from "@utils/services/adminService";
-import { DashboardCourses } from "@utils/services/dashboardService";
-import { IUser } from "@utils/services/types";
+import type { DashboardCourses } from "@utils/services/dashboardService";
+import type { IUser } from "@utils/services/types";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import classes from "./styles/trainingCard.module.css";
@@ -66,16 +49,8 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
           />
         </Box>
         <div>
-          {(Number(role) === UserRole.Admin ||
-            Number(role) === UserRole.SuperAdmin) && (
-            <Menu
-              shadow="md"
-              position="left"
-              trigger="hover"
-              withArrow
-              withinPortal
-              width={200}
-            >
+          {(Number(role) === UserRole.Admin || Number(role) === UserRole.SuperAdmin) && (
+            <Menu shadow="md" position="left" trigger="hover" withArrow withinPortal width={200}>
               <Menu.Target>
                 <ActionIcon variant="subtle">
                   <IconDotsVertical size="1rem" />
@@ -119,12 +94,7 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
           <Text c="dimmed" fz="sm" mt="md">
             {t("progress")}
           </Text>
-          <Progress
-            value={data.percentage}
-            aria-label={t("progress") as string}
-            mt={5}
-            size="md"
-          ></Progress>
+          <Progress value={data.percentage} aria-label={t("progress") as string} mt={5} size="md"></Progress>
         </div>
       )}
 
@@ -141,12 +111,7 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
                 <Text size="xs">{t("no_user_enrolled")}</Text>
               )}
               {data.students?.length > 3 && (
-                <Avatar
-                  c="cyan"
-                  radius="xl"
-                  component={Link}
-                  to={RoutePath.manageCourse.student(data.slug).route}
-                >
+                <Avatar c="cyan" radius="xl" component={Link} to={RoutePath.manageCourse.student(data.slug).route}>
                   +{data.students?.length - 3}
                 </Avatar>
               )}

@@ -5,11 +5,7 @@ import { User } from "@components/Dashboard/User";
 import useAuth from "@hooks/useAuth";
 import { Card, Container, Grid, ScrollArea, Text } from "@mantine/core";
 import { UserRole } from "@utils/enums";
-import {
-  useDashboard,
-  useDashboardCourse,
-  useUpcomingDashboardDetail,
-} from "@utils/services/dashboardService";
+import { useDashboard, useDashboardCourse, useUpcomingDashboardDetail } from "@utils/services/dashboardService";
 import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {
@@ -40,10 +36,7 @@ const Dashboard = () => {
               ) : (
                 <>
                   {upcomingEvents.data?.map((event) => (
-                    <EventCard
-                      key={event.lessonSlug}
-                      detail={event}
-                    ></EventCard>
+                    <EventCard key={event.lessonSlug} detail={event}></EventCard>
                   ))}
                 </>
               )}
@@ -53,22 +46,12 @@ const Dashboard = () => {
         <Grid.Col span={{ sm: 9, xs: 12 }}>
           {dashboard.isSuccess && dashboardCourses.isSuccess && (
             <>
-              {Number(role) === UserRole.Admin ||
-              Number(role) === UserRole.SuperAdmin ? (
-                <Admin
-                  dashboard={dashboard.data}
-                  dashboardCourses={dashboardCourses.data?.items}
-                />
+              {Number(role) === UserRole.Admin || Number(role) === UserRole.SuperAdmin ? (
+                <Admin dashboard={dashboard.data} dashboardCourses={dashboardCourses.data?.items} />
               ) : Number(role) === UserRole.Trainer ? (
-                <Trainers
-                  dashboard={dashboard.data}
-                  dashboardCourses={dashboardCourses.data?.items}
-                />
+                <Trainers dashboard={dashboard.data} dashboardCourses={dashboardCourses.data?.items} />
               ) : (
-                <User
-                  dashboard={dashboard.data}
-                  dashboardCourses={dashboardCourses.data?.items}
-                />
+                <User dashboard={dashboard.data} dashboardCourses={dashboardCourses.data?.items} />
               )}
             </>
           )}

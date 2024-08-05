@@ -1,14 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  Combobox,
-  InputBase,
-  ScrollArea,
-  Text,
-  useCombobox,
-} from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
-import { IUserProfile } from "@utils/services/types";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Combobox, InputBase, ScrollArea, Text, useCombobox } from "@mantine/core";
+import type { UseFormReturnType } from "@mantine/form";
+import type { IUserProfile } from "@utils/services/types";
+import { type Dispatch, type SetStateAction, useEffect, useRef, useState } from "react";
 
 interface FormValues {
   thumbnail: string;
@@ -34,13 +28,7 @@ interface IInfiniteScrollSelect {
   totalData: number;
 }
 
-const InfiniteScrollSelect = ({
-  placeholder,
-  setPage,
-  form,
-  data = [],
-  totalData,
-}: IInfiniteScrollSelect) => {
+const InfiniteScrollSelect = ({ placeholder, setPage, form, data = [], totalData }: IInfiniteScrollSelect) => {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
@@ -52,9 +40,7 @@ const InfiniteScrollSelect = ({
 
   const shouldFilterOptions = data.every((item) => item.fullName !== search);
   const filteredOptions = shouldFilterOptions
-    ? data.filter((item) =>
-        item.fullName.toLowerCase().includes(search.toLowerCase().trim())
-      )
+    ? data.filter((item) => item.fullName.toLowerCase().includes(search.toLowerCase().trim()))
     : data;
 
   const options = filteredOptions.map((item) => (
@@ -66,10 +52,7 @@ const InfiniteScrollSelect = ({
   useEffect(() => {
     if (viewport.current) {
       // if the user scrolled near the bottom of the list
-      if (
-        viewport.current?.scrollHeight - viewport.current?.clientHeight ===
-        scrollPosition.y
-      ) {
+      if (viewport.current?.scrollHeight - viewport.current?.clientHeight === scrollPosition.y) {
         if (viewport.current.scrollHeight !== 0 && totalData > data.length) {
           // increase page number
           setPage((prev) => prev + 1);
@@ -113,16 +96,8 @@ const InfiniteScrollSelect = ({
 
         <Combobox.Dropdown>
           <Combobox.Options>
-            <ScrollArea
-              viewportRef={viewport}
-              onScrollPositionChange={onScrollPositionChange}
-              h={140}
-            >
-              {options.length > 0 ? (
-                options
-              ) : (
-                <Combobox.Empty>Nothing found</Combobox.Empty>
-              )}
+            <ScrollArea viewportRef={viewport} onScrollPositionChange={onScrollPositionChange} h={140}>
+              {options.length > 0 ? options : <Combobox.Empty>Nothing found</Combobox.Empty>}
             </ScrollArea>
           </Combobox.Options>
         </Combobox.Dropdown>

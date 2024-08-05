@@ -1,6 +1,4 @@
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
 import { Box, Button, Group, Paper, Table } from "@mantine/core";
 import { IconTableExport } from "@tabler/icons-react";
 import { useGetExamSubmission } from "@utils/services/examService";
@@ -17,10 +15,7 @@ const ExamSubmission = ({
 }: IWithSearchPagination & { courseIdentity: string; lessonId: string }) => {
   const { id } = useParams();
 
-  const { data, isLoading, isError } = useGetExamSubmission(
-    courseIdentity,
-    lessonId
-  );
+  const { data, isLoading, isError } = useGetExamSubmission(courseIdentity, lessonId);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -38,9 +33,7 @@ const ExamSubmission = ({
         <Button
           rightSection={<IconTableExport size={18} />}
           variant="outline"
-          onClick={() =>
-            downloadCSVFile(exportUserCSVSubmission, "lessonStatsSubmission")
-          }
+          onClick={() => downloadCSVFile(exportUserCSVSubmission, "lessonStatsSubmission")}
         >
           {t("export")}
         </Button>
@@ -65,19 +58,9 @@ const ExamSubmission = ({
             {data.map((submission, index) => (
               <Table.Tr key={index}>
                 <Table.Td>{index + 1}</Table.Td>
-                <Table.Td>
-                  {submission.student?.fullName || "Full Name Not Available"}
-                </Table.Td>
-                <Table.Td>
-                  {moment(submission.submissionDate).format(
-                    "MMMM D, YYYY h:mm:ss A"
-                  )}
-                </Table.Td>
-                <Table.Td>
-                  {submission.totalMarks !== undefined
-                    ? submission.totalMarks.toFixed(2)
-                    : "N/A"}
-                </Table.Td>
+                <Table.Td>{submission.student?.fullName || "Full Name Not Available"}</Table.Td>
+                <Table.Td>{moment(submission.submissionDate).format("MMMM D, YYYY h:mm:ss A")}</Table.Td>
+                <Table.Td>{submission.totalMarks !== undefined ? submission.totalMarks.toFixed(2) : "N/A"}</Table.Td>
               </Table.Tr>
             ))}
           </Table.Tbody>

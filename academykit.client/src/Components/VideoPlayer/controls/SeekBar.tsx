@@ -1,6 +1,7 @@
 import { Box, useMantineTheme } from "@mantine/core";
 import Slider from "rc-slider";
-import React, { FC } from "react";
+import type React from "react";
+import type { FC } from "react";
 
 interface Props {
   value: number;

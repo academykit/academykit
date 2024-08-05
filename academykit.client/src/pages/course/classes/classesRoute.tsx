@@ -3,9 +3,7 @@ import lazyWithRetry from "@utils/lazyImportWithReload";
 import { Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
-const CourseDescriptionSection = lazyWithRetry(
-  () => import("@pages/course/classes/description")
-);
+const CourseDescriptionSection = lazyWithRetry(() => import("@pages/course/classes/description"));
 
 const Comments = lazyWithRetry(() => import("@pages/course/classes/comments"));
 

@@ -16,10 +16,7 @@ const watchHistory = ({
     watchedPercentage: 100,
   });
 
-export const useWatchHistory = (
-  courseIdentity: string,
-  lessonIdentity: string | undefined
-) => {
+export const useWatchHistory = (courseIdentity: string, lessonIdentity: string | undefined) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [api.watchHistory.create],
@@ -51,11 +48,7 @@ const watchHistoryUser = ({
     watchedPercentage: 100,
   });
 
-export const useWatchHistoryUser = (
-  userId: string,
-  courseId: string,
-  lessonId: string
-) => {
+export const useWatchHistoryUser = (userId: string, courseId: string, lessonId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [api.watchHistory.updateUser(userId)],
@@ -63,9 +56,7 @@ export const useWatchHistoryUser = (
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [
-          api.course.lessonStatDetails(courseId, lessonId, "page=1&size=12"),
-        ],
+        queryKey: [api.course.lessonStatDetails(courseId, lessonId, "page=1&size=12")],
       });
       queryClient.invalidateQueries({
         queryKey: [api.course.studentStatDetails(courseId, userId)],

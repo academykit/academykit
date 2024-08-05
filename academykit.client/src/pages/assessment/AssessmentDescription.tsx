@@ -34,7 +34,7 @@ import { DATE_FORMAT } from "@utils/constants";
 import { AssessmentStatus, SkillAssessmentRule, UserRole } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
 import {
-  IResponseEligibilityCreation,
+  type IResponseEligibilityCreation,
   useGetSingleAssessment,
   useUpdateAssessmentStatus,
 } from "@utils/services/assessmentService";
@@ -113,8 +113,7 @@ const AssessmentDescription = () => {
       message: "",
     },
     validate: {
-      message: (value) =>
-        value.length === 0 ? "Rejection message is required!" : null,
+      message: (value) => (value.length === 0 ? "Rejection message is required!" : null),
     },
   });
 
@@ -123,10 +122,7 @@ const AssessmentDescription = () => {
   const getEditAndPreviewPermission = () => {
     if (userRole <= UserRole.Admin) {
       return true;
-    } else if (
-      userRole === UserRole.Trainer &&
-      assessmentDetail.data?.user.id === auth?.auth?.id
-    ) {
+    } else if (userRole === UserRole.Trainer && assessmentDetail.data?.user.id === auth?.auth?.id) {
       return true;
     } else {
       false;
@@ -162,11 +158,7 @@ const AssessmentDescription = () => {
     const endDate = moment(assessmentDetail.data?.endDate);
     const currentDate = moment(new Date());
 
-    if (
-      currentDate.isAfter(startDate) &&
-      currentDate.isBefore(endDate) &&
-      getEligibilityStatus()
-    ) {
+    if (currentDate.isAfter(startDate) && currentDate.isBefore(endDate) && getEligibilityStatus()) {
       return true;
     }
     return false;
@@ -175,10 +167,7 @@ const AssessmentDescription = () => {
   // do not show eligibility status to admin and super-admin
   // and the creator of the assessment (i.e., trainers and admins)
   const displayEligibilityStatus = () => {
-    if (
-      userRole > UserRole.Admin &&
-      assessmentDetail.data?.user.id !== auth?.auth?.id
-    ) {
+    if (userRole > UserRole.Admin && assessmentDetail.data?.user.id !== auth?.auth?.id) {
       return true;
     } else {
       return false;
@@ -195,15 +184,11 @@ const AssessmentDescription = () => {
     try {
       await assessmentStatus.mutateAsync({
         identity: params.id as string,
-        status: message
-          ? AssessmentStatus.Rejected
-          : AssessmentStatus.Published,
+        status: message ? AssessmentStatus.Rejected : AssessmentStatus.Published,
         message: message ?? "",
       });
       showNotification({
-        message: message
-          ? t("assessment_rejected_success")
-          : t("assessment_published_success"),
+        message: message ? t("assessment_rejected_success") : t("assessment_published_success"),
       });
     } catch (err) {
       const error = errorType(err);
@@ -223,9 +208,7 @@ const AssessmentDescription = () => {
         title={
           isRejected
             ? t("leave_message_reject")
-            : `${t("publish_confirmation")} ${assessmentDetail.data?.title} ${t(
-                "?"
-              )}`
+            : `${t("publish_confirmation")} ${assessmentDetail.data?.title} ${t("?")}`
         }
       >
         {!isRejected ? (
@@ -243,11 +226,7 @@ const AssessmentDescription = () => {
         ) : (
           <form onSubmit={form.onSubmit((value) => onPublish(value.message))}>
             <Group>
-              <Textarea
-                autoFocus
-                w={"100%"}
-                {...form.getInputProps("message")}
-              />
+              <Textarea autoFocus w={"100%"} {...form.getInputProps("message")} />
               <Button type="submit">{t("submit")}</Button>
               <Button variant="outline" onClick={() => toggleRejected()}>
                 {t("cancel")}
@@ -257,15 +236,8 @@ const AssessmentDescription = () => {
         )}
       </Modal>
 
-      <Modal
-        opened={resultModal}
-        onClose={() => toggleResultModal()}
-        size={"lg"}
-      >
-        <ResultTable
-          assessmentId={params.id as string}
-          userId={auth?.auth?.id as string}
-        />
+      <Modal opened={resultModal} onClose={() => toggleResultModal()} size={"lg"}>
+        <ResultTable assessmentId={params.id as string} userId={auth?.auth?.id as string} />
       </Modal>
 
       <Container fluid>
@@ -296,9 +268,7 @@ const AssessmentDescription = () => {
               )}
             </>
           )}
-          {getAssessmentStatus(
-            assessmentDetail.data?.assessmentStatus as AssessmentStatus
-          )}
+          {getAssessmentStatus(assessmentDetail.data?.assessmentStatus as AssessmentStatus)}
         </Flex>
 
         {assessmentDetail.data && (
@@ -309,19 +279,14 @@ const AssessmentDescription = () => {
 
         <Flex gap={10} justify={"flex-end"} mb={15}>
           {Number(auth?.auth?.role) <= UserRole.Admin &&
-            assessmentDetail.data?.assessmentStatus ===
-              AssessmentStatus.Review && (
+            assessmentDetail.data?.assessmentStatus === AssessmentStatus.Review && (
               <Button onClick={() => togglePublished()} radius="xl">
                 {t("publish")}
               </Button>
             )}
 
           {getEditAndPreviewPermission() && (
-            <Button
-              radius={"xl"}
-              component={Link}
-              to={RoutePath.manageAssessment.edit(params.id).route}
-            >
+            <Button radius={"xl"} component={Link} to={RoutePath.manageAssessment.edit(params.id).route}>
               {t("edit")}
             </Button>
           )}
@@ -329,9 +294,7 @@ const AssessmentDescription = () => {
           {getTakeAssessmentPermission() && (
             <Button
               radius={"xl"}
-              onClick={() =>
-                navigate(RoutePath.assessmentExam.details(params.id).route)
-              }
+              onClick={() => navigate(RoutePath.assessmentExam.details(params.id).route)}
               disabled={!checkAssessmentAvailability()}
             >
               {t("take")}
@@ -339,11 +302,7 @@ const AssessmentDescription = () => {
           )}
 
           {getEditAndPreviewPermission() && (
-            <Button
-              radius={"xl"}
-              component={Link}
-              to={RoutePath.assessmentExam.details(params.id).route}
-            >
+            <Button radius={"xl"} component={Link} to={RoutePath.assessmentExam.details(params.id).route}>
               {t("preview")}
             </Button>
           )}
@@ -356,18 +315,10 @@ const AssessmentDescription = () => {
         </Flex>
 
         <Grid>
-          <Grid.Col
-            span={{ base: 12, sm: 12, lg: 6 }}
-            order={{ base: 2, sm: 2, lg: 1 }}
-          >
-            {assessmentDetail.isFetched && (
-              <TextViewer content={assessmentDetail.data?.description ?? ""} />
-            )}
+          <Grid.Col span={{ base: 12, sm: 12, lg: 6 }} order={{ base: 2, sm: 2, lg: 1 }}>
+            {assessmentDetail.isFetched && <TextViewer content={assessmentDetail.data?.description ?? ""} />}
           </Grid.Col>
-          <Grid.Col
-            span={{ base: 12, sm: 12, lg: 6 }}
-            order={{ base: 1, sm: 1, lg: 2 }}
-          >
+          <Grid.Col span={{ base: 12, sm: 12, lg: 6 }} order={{ base: 1, sm: 1, lg: 2 }}>
             <Paper p="md">
               {assessmentDetail.data?.duration && (
                 <AssessmentStat
@@ -390,24 +341,18 @@ const AssessmentDescription = () => {
                 <AssessmentStat
                   icon={<IconArrowForward />}
                   label="remaining_retakes"
-                  value={
-                    assessmentDetail.data?.remainingAttempt.toString() ?? ""
-                  }
+                  value={assessmentDetail.data?.remainingAttempt.toString() ?? ""}
                 />
               )}
               <AssessmentStat
                 icon={<IconCalendar />}
                 label="start_date"
-                value={moment(assessmentDetail.data?.startDate).format(
-                  DATE_FORMAT
-                )}
+                value={moment(assessmentDetail.data?.startDate).format(DATE_FORMAT)}
               />
               <AssessmentStat
                 icon={<IconCalendar />}
                 label="end_date"
-                value={moment(assessmentDetail.data?.endDate).format(
-                  DATE_FORMAT
-                )}
+                value={moment(assessmentDetail.data?.endDate).format(DATE_FORMAT)}
               />
             </Paper>
 
@@ -416,31 +361,21 @@ const AssessmentDescription = () => {
 
               <ScrollArea.Autosize mah={300} mx="auto" scrollHideDelay={0}>
                 <List>
-                  {assessmentDetail.data?.eligibilityCreationRequestModels.map(
-                    (criteria, index) => (
-                      <List.Item
-                        key={index}
-                        icon={
-                          // show eligibility status icon only if the user is not admin or super-admin
-                          // and it not the owner of the assessment
-                          displayEligibilityStatus() && (
-                            <>
-                              {criteria.isEligible ? (
-                                <IconCheck size={18} />
-                              ) : (
-                                <IconX size={18} />
-                              )}
-                            </>
-                          )
-                        }
-                      >{`Must${getAssessmentText(criteria)}`}</List.Item>
-                    )
+                  {assessmentDetail.data?.eligibilityCreationRequestModels.map((criteria, index) => (
+                    <List.Item
+                      key={index}
+                      icon={
+                        // show eligibility status icon only if the user is not admin or super-admin
+                        // and it not the owner of the assessment
+                        displayEligibilityStatus() && (
+                          <>{criteria.isEligible ? <IconCheck size={18} /> : <IconX size={18} />}</>
+                        )
+                      }
+                    >{`Must${getAssessmentText(criteria)}`}</List.Item>
+                  ))}
+                  {assessmentDetail.data && assessmentDetail.data?.eligibilityCreationRequestModels.length < 1 && (
+                    <Text>{t("no_eligibility_criteria")}</Text>
                   )}
-                  {assessmentDetail.data &&
-                    assessmentDetail.data?.eligibilityCreationRequestModels
-                      .length < 1 && (
-                      <Text>{t("no_eligibility_criteria")}</Text>
-                    )}
                 </List>
               </ScrollArea.Autosize>
             </Paper>
@@ -450,18 +385,11 @@ const AssessmentDescription = () => {
 
               <ScrollArea.Autosize mah={300} mx="auto">
                 <List icon={<IconMilitaryAward size={18} />}>
-                  {assessmentDetail.data?.skillsCriteriaRequestModels.map(
-                    (criteria, index) => (
-                      <List.Item key={index}>{`${
-                        criteria.skillTypeName
-                      } skill is earned if obtained percentage is ${
-                        criteria.skillAssessmentRule ==
-                        SkillAssessmentRule.IsGreaterThan
-                          ? "greater than"
-                          : "less than"
-                      } ${criteria.percentage}%`}</List.Item>
-                    )
-                  )}
+                  {assessmentDetail.data?.skillsCriteriaRequestModels.map((criteria, index) => (
+                    <List.Item key={index}>{`${criteria.skillTypeName} skill is earned if obtained percentage is ${
+                      criteria.skillAssessmentRule == SkillAssessmentRule.IsGreaterThan ? "greater than" : "less than"
+                    } ${criteria.percentage}%`}</List.Item>
+                  ))}
                 </List>
               </ScrollArea.Autosize>
             </Paper>

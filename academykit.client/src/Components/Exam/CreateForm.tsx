@@ -1,37 +1,19 @@
 import RichTextEditor from "@components/Ui/RichTextEditor/Index";
-import {
-  Box,
-  Checkbox,
-  Flex,
-  Loader,
-  MultiSelect,
-  Select,
-  Text,
-  TextInput,
-  UnstyledButton,
-} from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
+import { Box, Checkbox, Flex, Loader, MultiSelect, Select, Text, TextInput, UnstyledButton } from "@mantine/core";
+import type { UseFormReturnType } from "@mantine/form";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { QuestionType, ReadableEnum } from "@utils/enums";
 import queryStringGenerator from "@utils/queryStringGenerator";
-import { IAddQuestionType } from "@utils/services/questionService";
+import type { IAddQuestionType } from "@utils/services/questionService";
 import { useTags } from "@utils/services/tagService";
-import React, { FC, useEffect, useState } from "react";
+import type React from "react";
+import { type FC, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next";
 
 type Props = {
-  form: UseFormReturnType<
-    IAddQuestionType,
-    (values: IAddQuestionType) => IAddQuestionType
-  >;
-  onSubmit: (
-    values: IAddQuestionType,
-    event: React.FormEvent<HTMLFormElement>
-  ) => void;
-  useFormContext: () => UseFormReturnType<
-    IAddQuestionType,
-    (values: IAddQuestionType) => IAddQuestionType
-  >;
+  form: UseFormReturnType<IAddQuestionType, (values: IAddQuestionType) => IAddQuestionType>;
+  onSubmit: (values: IAddQuestionType, event: React.FormEvent<HTMLFormElement>) => void;
+  useFormContext: () => UseFormReturnType<IAddQuestionType, (values: IAddQuestionType) => IAddQuestionType>;
 };
 
 const fieldSize = "md";
@@ -40,20 +22,17 @@ const getQuestionType = () => {
     .splice(0, Object.entries(QuestionType).length / 2)
     .map(([key, value]) => ({
       value: key,
-      label:
-        ReadableEnum[value as keyof typeof ReadableEnum] ?? value.toString(),
+      label: ReadableEnum[value as keyof typeof ReadableEnum] ?? value.toString(),
     }));
 };
 
 const CreateForm: FC<Props> = ({ form, useFormContext }) => {
-  const [tagsList, setTagsList] = useState<{ value: string; label: string }[]>(
-    []
-  );
+  const [tagsList, setTagsList] = useState<{ value: string; label: string }[]>([]);
   const tags = useTags(
     queryStringGenerator({
       search: "",
       size: 10000,
-    })
+    }),
   );
 
   useEffect(() => {
@@ -117,10 +96,7 @@ const CreateForm: FC<Props> = ({ form, useFormContext }) => {
                 flexWrap: "nowrap",
               }}
             >
-              <Checkbox
-                {...form.getInputProps(`answers.${i}.isCorrect`)}
-                name=""
-              ></Checkbox>
+              <Checkbox {...form.getInputProps(`answers.${i}.isCorrect`)} name=""></Checkbox>
 
               <RichTextEditor
                 placeholder={t("option_placeholder") as string}
@@ -135,7 +111,7 @@ const CreateForm: FC<Props> = ({ form, useFormContext }) => {
                       option: "",
                       isCorrect: false,
                     },
-                    i + 1
+                    i + 1,
                   );
                 }}
               >
@@ -151,15 +127,11 @@ const CreateForm: FC<Props> = ({ form, useFormContext }) => {
                 </UnstyledButton>
               )}
               {typeof form.errors[`answers.${i}.option`] === "string" && (
-                <span style={{ color: "red" }}>
-                  {form.errors[`answers.${i}.option`]}
-                </span>
+                <span style={{ color: "red" }}>{form.errors[`answers.${i}.option`]}</span>
               )}
             </Flex>
           ))}
-          {typeof form.errors[`answers`] === "string" && (
-            <span style={{ color: "red" }}>{form.errors[`answers`]}</span>
-          )}
+          {typeof form.errors[`answers`] === "string" && <span style={{ color: "red" }}>{form.errors[`answers`]}</span>}
         </Box>
       )}
     </>

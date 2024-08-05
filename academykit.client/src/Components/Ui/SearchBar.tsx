@@ -2,7 +2,8 @@ import { Cross } from "@components/Icons";
 import { ActionIcon, TextInput, Tooltip } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconSearch } from "@tabler/icons-react";
-import React, { useRef } from "react";
+import type React from "react";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 interface Props {
@@ -11,11 +12,7 @@ interface Props {
   search?: string;
 }
 
-const SearchBar: React.FC<React.PropsWithChildren<Props>> = ({
-  placeholder,
-  setSearch,
-  search,
-}) => {
+const SearchBar: React.FC<React.PropsWithChildren<Props>> = ({ placeholder, setSearch, search }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const form = useForm({
     initialValues: {

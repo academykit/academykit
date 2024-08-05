@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { IPaginated, IUser } from "./types";
+import type { IPaginated, IUser } from "./types";
 
 export interface DashboardStats {
   totalUsers: number;
@@ -66,8 +66,7 @@ export const useDashboardCourse = () => {
   return useQuery({
     queryKey: [api.course.dashboardCourse],
 
-    queryFn: () =>
-      httpClient.get<IPaginated<DashboardCourses>>(api.course.dashboardCourse),
+    queryFn: () => httpClient.get<IPaginated<DashboardCourses>>(api.course.dashboardCourse),
 
     select: (data) => data.data,
   });
@@ -76,8 +75,7 @@ export const useDashboardCourse = () => {
 export const useUpcomingDashboardDetail = () => {
   return useQuery({
     queryKey: [api.course.dashboardUpcoming],
-    queryFn: () =>
-      httpClient.get<UpcomingEvents[]>(api.course.dashboardUpcoming),
+    queryFn: () => httpClient.get<UpcomingEvents[]>(api.course.dashboardUpcoming),
     select: (data) => data.data,
   });
 };

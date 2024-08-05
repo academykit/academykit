@@ -29,9 +29,7 @@ const NotRequiredAuth = () => {
               v{appVersion}
             </Text>
           </div>
-          <div style={{ position: "fixed", bottom: "10px", right: "10px" }}>
-            {/* <LanguageSelector /> */}
-          </div>
+          <div style={{ position: "fixed", bottom: "10px", right: "10px" }}>{/* <LanguageSelector /> */}</div>
         </>
       )}
     </>

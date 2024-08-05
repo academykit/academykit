@@ -1,12 +1,5 @@
 import useAuth from "@hooks/useAuth";
-import {
-  Box,
-  Button,
-  Group,
-  MantineProvider,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Box, Button, Group, MantineProvider, Text, Title } from "@mantine/core";
 import UserResults from "@pages/course/exam/Components/UserResults";
 import { useQueryClient } from "@tanstack/react-query";
 import { DATE_FORMAT } from "@utils/constants";
@@ -31,10 +24,7 @@ const ExamDetails = ({
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const userId = auth?.auth?.id ?? "";
-  const { data } = useGetCourseLesson(
-    id as string,
-    lessonId === "1" ? undefined : lessonId
-  );
+  const { data } = useGetCourseLesson(id as string, lessonId === "1" ? undefined : lessonId);
   const invalidate = searchParams.get("invalidate");
 
   const exam = data?.questionSet;
@@ -42,19 +32,10 @@ const ExamDetails = ({
   useEffect(() => {
     if (invalidate) {
       queryClient.invalidateQueries({
-        queryKey: [
-          api.lesson.courseLesson(
-            id as string,
-            lessonId === "1" ? undefined : lessonId
-          ),
-        ],
+        queryKey: [api.lesson.courseLesson(id as string, lessonId === "1" ? undefined : lessonId)],
       });
 
-      window.history.pushState(
-        { fromJs: true },
-        "",
-        `${window.location.pathname}`
-      );
+      window.history.pushState({ fromJs: true }, "", `${window.location.pathname}`);
     }
   }, [invalidate]);
 
@@ -160,24 +141,14 @@ const ExamDetails = ({
               </Box>
               {exam?.startTime && (
                 <Text>
-                  {t("active_from")}:{" "}
-                  {moment(exam?.startTime).format(DATE_FORMAT)} (
-                  {moment(formattedStartTime, "hh:mm A")
-                    .add(5, "hours")
-                    .add(45, "minutes")
-                    .format("hh:mm A")}
-                  )
+                  {t("active_from")}: {moment(exam?.startTime).format(DATE_FORMAT)} (
+                  {moment(formattedStartTime, "hh:mm A").add(5, "hours").add(45, "minutes").format("hh:mm A")})
                 </Text>
               )}
               {exam?.endTime && (
                 <Text>
-                  {t("active_till")}:{" "}
-                  {moment(exam?.endTime).format(DATE_FORMAT)} (
-                  {moment(formattedEndTime, "hh:mm A")
-                    .add(5, "hours")
-                    .add(45, "minutes")
-                    .format("hh:mm A")}
-                  )
+                  {t("active_till")}: {moment(exam?.endTime).format(DATE_FORMAT)} (
+                  {moment(formattedEndTime, "hh:mm A").add(5, "hours").add(45, "minutes").format("hh:mm A")})
                 </Text>
               )}
 
@@ -201,8 +172,7 @@ const ExamDetails = ({
               )}
               {exam?.negativeMarking ? (
                 <Text>
-                  {t("negative_marking")}:{" "}
-                  <span style={{ color: "red" }}>{exam?.negativeMarking}</span>
+                  {t("negative_marking")}: <span style={{ color: "red" }}>{exam?.negativeMarking}</span>
                 </Text>
               ) : (
                 ""
@@ -214,8 +184,7 @@ const ExamDetails = ({
               )}
               {exam?.passingWeightage > 0 && (
                 <Text>
-                  {t("pass_mark")}:{" "}
-                  {exam?.totalMarks * (exam?.passingWeightage / 100)}
+                  {t("pass_mark")}: {exam?.totalMarks * (exam?.passingWeightage / 100)}
                 </Text>
               )}
             </Box>
@@ -223,18 +192,11 @@ const ExamDetails = ({
               <Box style={{ overflow: "auto", maxHeight: "60vh" }} px={10}>
                 {data.hasResult && (
                   <MantineProvider>
-                    <UserResults
-                      lessonId={exam?.slug}
-                      studentId={userId}
-                      isTrainee={data.isTrainee}
-                    />
+                    <UserResults lessonId={exam?.slug} studentId={userId} isTrainee={data.isTrainee} />
                   </MantineProvider>
                 )}
               </Box>
-              {moment().isBetween(
-                exam?.startTime + "Z",
-                exam?.endTime + "Z"
-              ) ? (
+              {moment().isBetween(exam?.startTime + "Z", exam?.endTime + "Z") ? (
                 <>
                   {data.status != CourseStatus.Completed ? (
                     <>

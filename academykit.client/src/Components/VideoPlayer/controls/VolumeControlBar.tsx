@@ -1,5 +1,6 @@
 import Slider from "rc-slider";
-import React, { FC } from "react";
+import type React from "react";
+import type { FC } from "react";
 
 interface Props {
   currentVolume: number;
@@ -7,11 +8,7 @@ interface Props {
   onValueChanged?: (value: number) => void;
 }
 
-const VolumeControlBar: FC<React.PropsWithChildren<Props>> = ({
-  currentVolume,
-  className,
-  onValueChanged,
-}) => {
+const VolumeControlBar: FC<React.PropsWithChildren<Props>> = ({ currentVolume, className, onValueChanged }) => {
   return (
     <div className={className}>
       <Slider
@@ -25,9 +22,7 @@ const VolumeControlBar: FC<React.PropsWithChildren<Props>> = ({
           borderColor: "#26ab95",
           backgroundColor: "#26ab95",
         }}
-        onChange={(value: number | number[]) =>
-          onValueChanged && onValueChanged(value as number)
-        }
+        onChange={(value: number | number[]) => onValueChanged && onValueChanged(value as number)}
       />
     </div>
   );

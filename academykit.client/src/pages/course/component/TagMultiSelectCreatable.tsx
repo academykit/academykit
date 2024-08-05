@@ -1,27 +1,14 @@
-import {
-  CheckIcon,
-  Combobox,
-  Group,
-  MantineSize,
-  Pill,
-  PillsInput,
-  useCombobox,
-} from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
-import { UseMutateAsyncFunction } from "@tanstack/react-query";
-import { IFullCourse } from "@utils/services/courseService";
-import { ITag } from "@utils/services/tagService";
-import { AxiosResponse } from "axios";
+import { CheckIcon, Combobox, Group, type MantineSize, Pill, PillsInput, useCombobox } from "@mantine/core";
+import type { UseFormReturnType } from "@mantine/form";
+import type { UseMutateAsyncFunction } from "@tanstack/react-query";
+import type { IFullCourse } from "@utils/services/courseService";
+import type { ITag } from "@utils/services/tagService";
+import type { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface IProps {
-  mutateAsync: UseMutateAsyncFunction<
-    AxiosResponse<ITag, any>,
-    unknown,
-    string,
-    unknown
-  >;
+  mutateAsync: UseMutateAsyncFunction<AxiosResponse<ITag, any>, unknown, string, unknown>;
   form: UseFormReturnType<any, (values: any) => any>;
   size?: MantineSize;
   data: ITag[] | undefined;
@@ -59,7 +46,7 @@ export default function TagMultiSelectCreatable({
       setValue((current) =>
         current.some((item) => item.id === val)
           ? current.filter((v) => v.id !== val)
-          : [...current, data!.find((item) => item.id === val)!]
+          : [...current, data!.find((item) => item.id === val)!],
       );
       form.setFieldValue("tags", [...form.values.tags, val]);
     }
@@ -69,30 +56,20 @@ export default function TagMultiSelectCreatable({
     setValue((current) => current.filter((v) => v.id !== pillId));
     form.setFieldValue(
       "tags",
-      form.values.tags.filter((v: any) => v !== pillId)
+      form.values.tags.filter((v: any) => v !== pillId),
     );
   };
 
   const values = value.map((item) => (
-    <Pill
-      key={item.id}
-      withRemoveButton={!readOnly}
-      onRemove={() => handleValueRemove(item.id)}
-    >
+    <Pill key={item.id} withRemoveButton={!readOnly} onRemove={() => handleValueRemove(item.id)}>
       {item.name}
     </Pill>
   ));
 
   const options = data
-    ?.filter((item) =>
-      item.name.toLowerCase().includes(search.trim().toLowerCase())
-    )
+    ?.filter((item) => item.name.toLowerCase().includes(search.trim().toLowerCase()))
     .map((item) => (
-      <Combobox.Option
-        value={item.id}
-        key={item.id}
-        active={value.includes(item)}
-      >
+      <Combobox.Option value={item.id} key={item.id} active={value.includes(item)}>
         <Group gap="sm">
           {value.includes(item) ? <CheckIcon size={12} /> : null}
           <span>{item.name}</span>
@@ -116,11 +93,7 @@ export default function TagMultiSelectCreatable({
   }, [existingTags]);
 
   return (
-    <Combobox
-      store={combobox}
-      onOptionSubmit={handleValueSelect}
-      withinPortal={false}
-    >
+    <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
       <Combobox.DropdownTarget>
         <PillsInput
           label={t("tags")}
@@ -179,11 +152,9 @@ export default function TagMultiSelectCreatable({
             <Combobox.Option value="$create">+ Create {search}</Combobox.Option>
           )}
 
-          {exactOptionMatch &&
-            search.trim().length > 0 &&
-            options?.length === 0 && (
-              <Combobox.Empty>{t("no_data")}</Combobox.Empty>
-            )}
+          {exactOptionMatch && search.trim().length > 0 && options?.length === 0 && (
+            <Combobox.Empty>{t("no_data")}</Combobox.Empty>
+          )}
         </Combobox.Options>
       </Combobox.Dropdown>
     </Combobox>

@@ -1,15 +1,4 @@
-import {
-  ActionIcon,
-  Box,
-  Button,
-  Group,
-  Loader,
-  Modal,
-  ScrollArea,
-  Table,
-  Textarea,
-  Tooltip,
-} from "@mantine/core";
+import { ActionIcon, Box, Button, Group, Loader, Modal, ScrollArea, Table, Textarea, Tooltip } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
@@ -20,11 +9,8 @@ import { LessonType } from "@utils/enums";
 import formatDuration from "@utils/formatDuration";
 import RoutePath from "@utils/routeConstants";
 import errorType from "@utils/services/axiosError";
-import {
-  IReportDetail,
-  useGetMeetingReport,
-} from "@utils/services/liveSessionService";
-import { IStudentInfoLesson } from "@utils/services/manageCourseService";
+import { type IReportDetail, useGetMeetingReport } from "@utils/services/liveSessionService";
+import type { IStudentInfoLesson } from "@utils/services/manageCourseService";
 import { useReviewAttendance } from "@utils/services/physicalTrainingService";
 import { useWatchHistoryUser } from "@utils/services/watchHistory";
 import moment from "moment";
@@ -46,15 +32,7 @@ const TableRow = ({ values }: { values: IReportDetail }) => {
 };
 
 const StudentLessonDetails = ({
-  studentInfo: {
-    lessonType: type,
-    isCompleted,
-    lessonId,
-    lessonName,
-    questionSetId,
-    isPassed,
-    attendanceReviewed,
-  },
+  studentInfo: { lessonType: type, isCompleted, lessonId, lessonName, questionSetId, isPassed, attendanceReviewed },
   courseId,
   studentId,
 }: {
@@ -63,18 +41,13 @@ const StudentLessonDetails = ({
   studentId: string;
 }) => {
   const slug = useParams();
-  const watchHistory = useWatchHistoryUser(
-    studentId,
-    courseId,
-    slug?.lessonId as string
-  );
+  const watchHistory = useWatchHistoryUser(studentId, courseId, slug?.lessonId as string);
   const form = useForm({
     initialValues: {
       message: "",
     },
     validate: {
-      message: (value) =>
-        value.length === 0 ? "Rejection message is required!" : null,
+      message: (value) => (value.length === 0 ? "Rejection message is required!" : null),
     },
   });
 
@@ -86,18 +59,9 @@ const StudentLessonDetails = ({
   const [isRejected, toggleRejected] = useToggle();
   const [confirmReview, toggleReview] = useToggle();
 
-  const attendanceReview = useReviewAttendance(
-    courseId,
-    slug?.lessonId as string,
-    studentId
-  );
+  const attendanceReview = useReviewAttendance(courseId, slug?.lessonId as string, studentId);
 
-  const meetingReport = useGetMeetingReport(
-    courseId,
-    slug?.lessonId as string,
-    studentId,
-    liveClassReportModal
-  );
+  const meetingReport = useGetMeetingReport(courseId, slug?.lessonId as string, studentId, liveClassReportModal);
 
   const onReview = async (message?: string) => {
     const data = {
@@ -127,11 +91,7 @@ const StudentLessonDetails = ({
       case LessonType.Exam:
         return (
           <Tooltip label={t("view_result")}>
-            <ActionIcon
-              c="green"
-              variant="subtle"
-              onClick={() => setExamResultModal()}
-            >
+            <ActionIcon c="green" variant="subtle" onClick={() => setExamResultModal()}>
               <IconEye />
             </ActionIcon>
           </Tooltip>
@@ -139,11 +99,7 @@ const StudentLessonDetails = ({
       case LessonType.LiveClass:
         return (
           <Tooltip label={t("view_live_class_report")}>
-            <ActionIcon
-              c="green"
-              variant="subtle"
-              onClick={() => setLiveClassReportModal()}
-            >
+            <ActionIcon c="green" variant="subtle" onClick={() => setLiveClassReportModal()}>
               <IconEye />
             </ActionIcon>
           </Tooltip>
@@ -178,11 +134,7 @@ const StudentLessonDetails = ({
       case LessonType.RecordedVideo:
         return (
           <Tooltip label={t("view_live_class_report")}>
-            <ActionIcon
-              c="green"
-              variant="subtle"
-              onClick={() => setLiveClassReportModal()}
-            >
+            <ActionIcon c="green" variant="subtle" onClick={() => setLiveClassReportModal()}>
               <IconEye />
             </ActionIcon>
           </Tooltip>
@@ -232,11 +184,7 @@ const StudentLessonDetails = ({
         }}
       >
         {examResultModal && questionSetId && (
-          <UserResults
-            isTrainee={false}
-            studentId={studentId}
-            lessonId={questionSetId}
-          />
+          <UserResults isTrainee={false} studentId={studentId} lessonId={questionSetId} />
         )}
       </Modal>
 
@@ -244,18 +192,11 @@ const StudentLessonDetails = ({
       <Modal
         opened={confirmReview}
         onClose={toggleReviewed}
-        title={
-          isRejected
-            ? t("leave_message_reject")
-            : `${t("mark_as_attended")}${t("?")}`
-        }
+        title={isRejected ? t("leave_message_reject") : `${t("mark_as_attended")}${t("?")}`}
       >
         {!isRejected ? (
           <Group mt={10}>
-            <Button
-              onClick={() => onReview()}
-              loading={attendanceReview.isLoading}
-            >
+            <Button onClick={() => onReview()} loading={attendanceReview.isLoading}>
               {t("approve")}
             </Button>
             <Button
@@ -285,9 +226,7 @@ const StudentLessonDetails = ({
       <Modal
         opened={confirmComplete}
         onClose={() => setConfirmComplete()}
-        title={`${t("pass_student_confirmation")} "${lessonName}" ${t(
-          "lesson?"
-        )}`}
+        title={`${t("pass_student_confirmation")} "${lessonName}" ${t("lesson?")}`}
       >
         <Group>
           <Button onClick={onCompletedClick}>{t("confirm")}</Button>
@@ -316,12 +255,7 @@ const StudentLessonDetails = ({
           ) : (
             <>
               {!meetingReport.isError && (
-                <Table
-                  striped
-                  withTableBorder
-                  withColumnBorders
-                  highlightOnHover
-                >
+                <Table striped withTableBorder withColumnBorders highlightOnHover>
                   <Table.Thead>
                     <Table.Tr>
                       <Table.Th>{t("start_date")}</Table.Th>
@@ -356,11 +290,7 @@ const StudentLessonDetails = ({
               variant="subtle"
               color={"primary"}
             >
-              {watchHistory.isLoading ? (
-                <Loader variant="oval" />
-              ) : (
-                <IconCheck />
-              )}
+              {watchHistory.isLoading ? <Loader variant="oval" /> : <IconCheck />}
             </ActionIcon>
           </Tooltip>
         )}
@@ -374,11 +304,7 @@ const StudentLessonDetails = ({
               variant="subtle"
               color={"primary"}
             >
-              {watchHistory.isLoading ? (
-                <Loader variant="oval" />
-              ) : (
-                <IconCheck />
-              )}
+              {watchHistory.isLoading ? <Loader variant="oval" /> : <IconCheck />}
             </ActionIcon>
           </Tooltip>
         )}

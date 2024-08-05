@@ -1,20 +1,9 @@
-import {
-  Box,
-  Button,
-  Container,
-  Group,
-  Select,
-  Title,
-  Transition,
-} from "@mantine/core";
+import { Box, Button, Container, Group, Select, Title, Transition } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
-import {
-  useCreateTeacherPool,
-  usePoolsTeacher,
-} from "@utils/services/poolService";
+import { useCreateTeacherPool, usePoolsTeacher } from "@utils/services/poolService";
 
 import { TrainingTypeEnum } from "@utils/enums";
 import queryStringGenerator from "@utils/queryStringGenerator";
@@ -40,11 +29,7 @@ const MCQTeacher = () => {
   const getPoolsTeacher = usePoolsTeacher(slug.id as string);
   const createPoolTeacher = useCreateTeacherPool(slug.id as string);
   const lessonType = TrainingTypeEnum.QuestionPool;
-  const { data: trainers, isLoading } = useGetTrainers(
-    queryStringGenerator({ search }),
-    lessonType,
-    slug.id
-  );
+  const { data: trainers, isLoading } = useGetTrainers(queryStringGenerator({ search }), lessonType, slug.id);
   const [showAddForm, toggleAddForm] = useToggle();
 
   const onSubmitForm = async ({ email }: { email: string }) => {
@@ -74,12 +59,7 @@ const MCQTeacher = () => {
           {!showAddForm ? t("add_trainer") : t("cancel")}
         </Button>
       </Group>
-      <Transition
-        mounted={showAddForm}
-        transition={"slide-down"}
-        duration={200}
-        timingFunction="ease"
-      >
+      <Transition mounted={showAddForm} transition={"slide-down"} duration={200} timingFunction="ease">
         {() => (
           <Box mt={10}>
             <form onSubmit={form.onSubmit(onSubmitForm)}>
@@ -88,9 +68,7 @@ const MCQTeacher = () => {
                   clearable
                   placeholder={t("enter_email_trainer") as string}
                   searchable
-                  nothingFoundMessage={
-                    isLoading ? "Loading..." : "No Trainers Found!"
-                  }
+                  nothingFoundMessage={isLoading ? "Loading..." : "No Trainers Found!"}
                   data={trainers?.map((e) => e.email) ?? []}
                   onSearchChange={setSearch}
                   searchValue={search}

@@ -3,15 +3,7 @@ import { DynamicAutoFocusTextField } from "@components/Ui/CustomTextFieldWithAut
 import RichTextEditor from "@components/Ui/RichTextEditor/Index";
 import TextViewer from "@components/Ui/RichTextViewer";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  Button,
-  Divider,
-  Grid,
-  Paper,
-  Text,
-  TextInput,
-  Title,
-} from "@mantine/core";
+import { Button, Divider, Grid, Paper, Text, TextInput, Title } from "@mantine/core";
 import { createFormContext, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { PHONE_VALIDATION } from "@utils/constants";
@@ -54,15 +46,11 @@ const schema = () => {
         message: t("enter_valid_phone"),
         excludeEmptyString: true,
       }),
-    bio: Yup.string().test(
-      "asdf",
-      t("bio_character_limit") as string,
-      function (value: any) {
-        const a = document.createElement("div");
-        a.innerHTML = value;
-        return a.innerText.length <= 200;
-      }
-    ),
+    bio: Yup.string().test("asdf", t("bio_character_limit") as string, (value: any) => {
+      const a = document.createElement("div");
+      a.innerHTML = value;
+      return a.innerText.length <= 200;
+    }),
   });
 };
 const UserInfo = () => {
@@ -147,12 +135,7 @@ const UserInfo = () => {
       <div style={{ marginBottom: "3px" }}>{t("recognize_you")}</div>
       <FormProvider form={formData}>
         <form onSubmit={formData.onSubmit(handleSubmit)}>
-          <AvatarEditor
-            url={imageURL}
-            label={t("image") as string}
-            formContext={useFormContext}
-            disabled={viewMode}
-          />
+          <AvatarEditor url={imageURL} label={t("image") as string} formContext={useFormContext} disabled={viewMode} />
 
           <Grid>
             <Grid.Col span={{ xs: 6, lg: 4 }}>
@@ -248,11 +231,7 @@ const UserInfo = () => {
 
               {!viewMode && (
                 <>
-                  <Button
-                    loading={updateUser.isLoading}
-                    type="submit"
-                    style={{ marginRight: "10px" }}
-                  >
+                  <Button loading={updateUser.isLoading} type="submit" style={{ marginRight: "10px" }}>
                     {t("save")}
                   </Button>
                   <Button onClick={() => createEditMode("0")} variant="outline">

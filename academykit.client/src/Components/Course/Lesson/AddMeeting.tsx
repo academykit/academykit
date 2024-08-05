@@ -1,17 +1,7 @@
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 import RichTextEditor from "@components/Ui/RichTextEditor/Index";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  Box,
-  Button,
-  Grid,
-  Group,
-  NumberInput,
-  Select,
-  Switch,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { Box, Button, Grid, Group, NumberInput, Select, Switch, Text, Tooltip } from "@mantine/core";
 import { DatePickerInput, TimeInput } from "@mantine/dates";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
@@ -19,14 +9,11 @@ import { LessonType } from "@utils/enums";
 import { getDateTime } from "@utils/getDateTime";
 import { useActiveZoomLicense } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
-import {
-  useCreateLesson,
-  useGetCourseLesson,
-  useUpdateLesson,
-} from "@utils/services/courseService";
-import { ILessonMeeting } from "@utils/services/types";
+import { useCreateLesson, useGetCourseLesson, useUpdateLesson } from "@utils/services/courseService";
+import type { ILessonMeeting } from "@utils/services/types";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
@@ -66,11 +53,7 @@ const AddMeeting = ({
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
   const [dateTime, setDateTime] = useState<string>("");
-  const lessonDetails = useGetCourseLesson(
-    item?.courseId || "",
-    item?.id,
-    isEditing
-  );
+  const lessonDetails = useGetCourseLesson(item?.courseId || "", item?.id, isEditing);
   const { t } = useTranslation();
 
   const form = useForm({
@@ -87,15 +70,9 @@ const AddMeeting = ({
   });
   useFormErrorHooks(form);
 
-  const [isMandatory, setIsMandatory] = useState<boolean>(
-    item?.isMandatory ?? false
-  );
+  const [isMandatory, setIsMandatory] = useState<boolean>(item?.isMandatory ?? false);
 
-  const updateLesson = useUpdateLesson(
-    slug as string,
-    item?.courseId,
-    item?.id
-  );
+  const updateLesson = useUpdateLesson(slug as string, item?.courseId, item?.id);
 
   useEffect(() => {
     if (lessonDetails.isSuccess && isEditing) {
@@ -128,11 +105,7 @@ const AddMeeting = ({
     }
   }, [form.values]);
 
-  const meeting = useActiveZoomLicense(
-    dateTime,
-    form.values.meetingDuration,
-    lessonDetails?.data?.id
-  );
+  const meeting = useActiveZoomLicense(dateTime, form.values.meetingDuration, lessonDetails?.data?.id);
 
   const selectItem = meeting.data?.data
     ? meeting.data.data.map((e) => {
@@ -161,9 +134,7 @@ const AddMeeting = ({
     // const time = new Date(values?.meetingStartTime).toLocaleTimeString();
     // const date = new Date(values?.meetingStartDate).toLocaleDateString();
     const time = moment(values?.meetingStartTime, "HH:mm").format("HH:mm");
-    const date = moment(values?.meetingStartDate, "MM/DD/YYYY").format(
-      "MM/DD/YYYY"
-    );
+    const date = moment(values?.meetingStartDate, "MM/DD/YYYY").format("MM/DD/YYYY");
 
     const meeting = {
       ...values,
@@ -201,9 +172,7 @@ const AddMeeting = ({
         } as ILessonMeeting);
       }
       showNotification({
-        message: `${t("capital_lesson")} ${
-          isEditing ? t("edited") : t("added")
-        } ${t("successfully")}`,
+        message: `${t("capital_lesson")} ${isEditing ? t("edited") : t("added")} ${t("successfully")}`,
         title: t("success"),
       });
       setAddLessonClick(true);
@@ -250,11 +219,7 @@ const AddMeeting = ({
           withAsterisk
           {...form.getInputProps("meetingStartDate")}
         />
-        <TimeInput
-          label={t("start_time")}
-          withAsterisk
-          {...form.getInputProps("meetingStartTime")}
-        />
+        <TimeInput label={t("start_time")} withAsterisk {...form.getInputProps("meetingStartTime")} />
       </Group>
       <Group grow mt={5} mb={10}>
         <NumberInput
@@ -276,13 +241,7 @@ const AddMeeting = ({
           defaultValue={t("pick_license")}
           label={t("zoom_license")}
           placeholder={t("pick_license") as string}
-          disabled={
-            !(
-              form.values.meetingDuration &&
-              form.values.meetingStartDate &&
-              form.values.meetingStartTime
-            )
-          }
+          disabled={!(form.values.meetingDuration && form.values.meetingStartDate && form.values.meetingStartTime)}
           data={selectItem}
           withAsterisk
           {...form.getInputProps("zoomLicenseId")}
@@ -291,16 +250,10 @@ const AddMeeting = ({
       </Group>
       <Box my={form.errors["videoUrl"] ? 20 : 10}>
         <Text size={"sm"}>{t("description")}</Text>
-        <RichTextEditor
-          placeholder={t("description_live_class") as string}
-          {...form.getInputProps("description")}
-        />
+        <RichTextEditor placeholder={t("description_live_class") as string} {...form.getInputProps("description")} />
       </Box>
       <Group mt="md">
-        <Button
-          type="submit"
-          loading={lesson.isLoading || updateLesson.isLoading}
-        >
+        <Button type="submit" loading={lesson.isLoading || updateLesson.isLoading}>
           {t("submit")}
         </Button>
         {!isEditing && (

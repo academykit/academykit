@@ -1,11 +1,11 @@
 //manage lessons stat
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { LessonType } from "@utils/enums";
+import type { LessonType } from "@utils/enums";
 import errorType from "./axiosError";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { IPaginated, IUser } from "./types";
+import type { IPaginated, IUser } from "./types";
 
 export interface ILessonStats {
   id: string;
@@ -24,14 +24,9 @@ export interface ILessonStats {
 }
 
 const getLessonStatistics = async (courseIdentity: string, query: string) => {
-  return await httpClient.get<IPaginated<ILessonStats>>(
-    api.course.lessonStat(courseIdentity) + `?${query}`
-  );
+  return await httpClient.get<IPaginated<ILessonStats>>(api.course.lessonStat(courseIdentity) + `?${query}`);
 };
-export const useGetLessonStatistics = (
-  courseIdentity: string,
-  query: string
-) => {
+export const useGetLessonStatistics = (courseIdentity: string, query: string) => {
   return useQuery({
     queryKey: [api.course.lessonStat(courseIdentity), query],
     queryFn: () => getLessonStatistics(courseIdentity, query),
@@ -56,20 +51,12 @@ export interface LessonStatDetails {
   attendanceReviewed: boolean;
 }
 
-const getLessonStatisticsDetails = async (
-  courseIdentity: string,
-  lessonId: string,
-  qs: string
-) => {
+const getLessonStatisticsDetails = async (courseIdentity: string, lessonId: string, qs: string) => {
   return await httpClient.get<IPaginated<LessonStatDetails>>(
-    api.course.lessonStatDetails(courseIdentity, lessonId, qs)
+    api.course.lessonStatDetails(courseIdentity, lessonId, qs),
   );
 };
-export const useGetLessonStatisticsDetails = (
-  courseIdentity: string,
-  lessonId: string,
-  qs: string
-) => {
+export const useGetLessonStatisticsDetails = (courseIdentity: string, lessonId: string, qs: string) => {
   return useQuery({
     queryKey: [api.course.lessonStatDetails(courseIdentity, lessonId, qs)],
     queryFn: () => getLessonStatisticsDetails(courseIdentity, lessonId, qs),
@@ -95,14 +82,9 @@ export interface IStudentStat {
 }
 
 const getStudentStatistics = async (courseIdentity: string, query: string) => {
-  return await httpClient.get<IPaginated<IStudentStat>>(
-    api.course.studentStat(courseIdentity) + `?${query}`
-  );
+  return await httpClient.get<IPaginated<IStudentStat>>(api.course.studentStat(courseIdentity) + `?${query}`);
 };
-export const useGetStudentStatistics = (
-  courseIdentity: string,
-  query: string
-) => {
+export const useGetStudentStatistics = (courseIdentity: string, query: string) => {
   return useQuery({
     queryKey: [api.course.studentStat(courseIdentity), query],
     queryFn: () => getStudentStatistics(courseIdentity, query),
@@ -128,19 +110,11 @@ export interface IStudentInfoLesson {
   attendanceReviewed: boolean;
 }
 
-const getStudentStatisticsDetails = async (
-  courseIdentity: string,
-  userId: string
-) => {
-  return await httpClient.get<IStudentInfoLesson[]>(
-    api.course.studentStatDetails(courseIdentity, userId)
-  );
+const getStudentStatisticsDetails = async (courseIdentity: string, userId: string) => {
+  return await httpClient.get<IStudentInfoLesson[]>(api.course.studentStatDetails(courseIdentity, userId));
 };
 
-export const useGetStudentStatisticsDetails = (
-  courseIdentity: string,
-  userId: string
-) => {
+export const useGetStudentStatisticsDetails = (courseIdentity: string, userId: string) => {
   return useQuery({
     queryKey: [api.course.studentStatDetails(courseIdentity, userId)],
     queryFn: () => getStudentStatisticsDetails(courseIdentity, userId),
@@ -165,19 +139,11 @@ export interface ICertificateList {
 export interface ICertificate {
   items: ICertificateList[];
 }
-const getStudentStatisticsCertificate = async (
-  courseIdentity: string,
-  search: string
-) => {
-  return await httpClient.get<IPaginated<ICertificate>>(
-    api.course.certificate(courseIdentity, search)
-  );
+const getStudentStatisticsCertificate = async (courseIdentity: string, search: string) => {
+  return await httpClient.get<IPaginated<ICertificate>>(api.course.certificate(courseIdentity, search));
 };
 
-export const useGetStudentStatisticsCertificate = (
-  courseIdentity: string,
-  search: string
-) => {
+export const useGetStudentStatisticsCertificate = (courseIdentity: string, search: string) => {
   return useQuery({
     queryKey: [api.course.certificate(courseIdentity, search)],
     queryFn: () => getStudentStatisticsCertificate(courseIdentity, search),
@@ -204,10 +170,7 @@ const postStudentStatisticsCertificate = async ({
     issueAll,
   });
 
-export const usePostStatisticsCertificate = (
-  identity: string,
-  search: string
-) => {
+export const usePostStatisticsCertificate = (identity: string, search: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [api.course.postCertificate(identity)],
@@ -241,9 +204,7 @@ interface ICourseStat {
 }
 
 const getCourseManageStatistics = async (courseIdentity: string) => {
-  return await httpClient.get<ICourseStat>(
-    api.course.getManageStat(courseIdentity)
-  );
+  return await httpClient.get<ICourseStat>(api.course.getManageStat(courseIdentity));
 };
 export const useGetCourseManageStatistics = (courseIdentity: string) => {
   return useQuery({

@@ -1,26 +1,13 @@
 import DeleteModal from "@components/Ui/DeleteModal";
 import useAuth from "@hooks/useAuth";
-import {
-  Avatar,
-  Box,
-  Button,
-  Group,
-  Paper,
-  Text,
-  Textarea,
-  Transition,
-} from "@mantine/core";
+import { Avatar, Box, Button, Group, Paper, Text, Textarea, Transition } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { UserRole } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
-import {
-  IComment,
-  useDeleteComment,
-  useEditComment,
-} from "@utils/services/commentService";
-import { IUser } from "@utils/services/types";
+import { type IComment, useDeleteComment, useEditComment } from "@utils/services/commentService";
+import type { IUser } from "@utils/services/types";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -127,11 +114,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
       />
 
       <Group>
-        <Avatar
-          src={comment.user.imageUrl}
-          alt={comment.user.fullName}
-          radius="xl"
-        />
+        <Avatar src={comment.user.imageUrl} alt={comment.user.fullName} radius="xl" />
         <div>
           <Text size="sm">{comment.user.fullName}</Text>
           <Text size="xs" c="dimmed">
@@ -180,9 +163,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
       )}
       <Box style={{ display: "flex", justifyContent: "end" }}>
         <Button variant="subtle" mx={4} onClick={() => setToggle()}>
-          {toggle
-            ? t("hide_reply")
-            : `${t("show_reply")}(${comment.repliesCount}) `}
+          {toggle ? t("hide_reply") : `${t("show_reply")}(${comment.repliesCount}) `}
         </Button>
 
         {!edit && showEdit(comment.user, true) && (
@@ -202,20 +183,11 @@ const Comment = ({ comment }: { comment: IComment }) => {
           </Button>
         )}
       </Box>
-      <Transition
-        mounted={toggle}
-        transition={"pop-top-left"}
-        duration={200}
-        timingFunction="ease"
-      >
+      <Transition mounted={toggle} transition={"pop-top-left"} duration={200} timingFunction="ease">
         {(styles) => (
           <Box style={{ ...styles }} p="sm" mt={1}>
             {toggle ? (
-              <CommentReplies
-                replyCount={comment.repliesCount}
-                commentId={comment.id}
-                courseId={id as string}
-              />
+              <CommentReplies replyCount={comment.repliesCount} commentId={comment.id} courseId={id as string} />
             ) : (
               <></>
             )}

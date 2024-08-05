@@ -1,10 +1,5 @@
 import NavOutlet from "@components/Layout/NavOutlet";
-import {
-  IconChartInfographic,
-  IconClipboard,
-  IconListNumbers,
-  IconTool,
-} from "@tabler/icons-react";
+import { IconChartInfographic, IconClipboard, IconListNumbers, IconTool } from "@tabler/icons-react";
 import { UserRole } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
 import { useTranslation } from "react-i18next";

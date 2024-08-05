@@ -2,26 +2,15 @@ import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAuto
 import FileUploadLesson from "@components/Ui/FileUploadLesson";
 import RichTextEditor from "@components/Ui/RichTextEditor/Index";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  Box,
-  Button,
-  Grid,
-  Group,
-  Paper,
-  Switch,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { Box, Button, Grid, Group, Paper, Switch, Text, Tooltip } from "@mantine/core";
 import { createFormContext, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { LessonType } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
-import {
-  useCreateLesson,
-  useUpdateLesson,
-} from "@utils/services/courseService";
-import { ILessonAssignment, ILessonFile } from "@utils/services/types";
-import React, { useState } from "react";
+import { useCreateLesson, useUpdateLesson } from "@utils/services/courseService";
+import type { ILessonAssignment, ILessonFile } from "@utils/services/types";
+import type React from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
@@ -59,12 +48,10 @@ const AddDocument = ({
   const updateLesson = useUpdateLesson(
     // item?.courseId || "",
     // item?.id,
-    slug as string
+    slug as string,
   );
 
-  const [isMandatory, setIsMandatory] = useState<boolean>(
-    item?.isMandatory ?? false
-  );
+  const [isMandatory, setIsMandatory] = useState<boolean>(item?.isMandatory ?? false);
 
   const [, setOpened] = useState(false);
   const [, setLessonId] = useState("");
@@ -103,9 +90,7 @@ const AddDocument = ({
       }
       showNotification({
         title: t("success"),
-        message: `${t("file")} ${isEditing ? t("edited") : t("added")} ${t(
-          "successfully"
-        )}`,
+        message: `${t("file")} ${isEditing ? t("edited") : t("added")} ${t("successfully")}`,
       });
       setAddLessonClick(true);
     } catch (error: any) {
@@ -149,22 +134,13 @@ const AddDocument = ({
           <Text size={"md"} mt={10}>
             {t("file")} <span className="global-astrick"> *</span>
           </Text>
-          <FileUploadLesson
-            currentFile={item?.documentUrl}
-            formContext={useFormContext}
-          />
+          <FileUploadLesson currentFile={item?.documentUrl} formContext={useFormContext} />
           <Box my={form.errors["documentUrl"] ? 20 : 10}>
             <Text size={"sm"}>{t("file_description")}</Text>
-            <RichTextEditor
-              placeholder={t("file_description") as string}
-              {...form.getInputProps("description")}
-            />
+            <RichTextEditor placeholder={t("file_description") as string} {...form.getInputProps("description")} />
           </Box>
           <Group mt="md">
-            <Button
-              type="submit"
-              loading={lesson.isLoading || updateLesson.isLoading}
-            >
+            <Button type="submit" loading={lesson.isLoading || updateLesson.isLoading}>
               {t("submit")}
             </Button>
             {!isEditing && (

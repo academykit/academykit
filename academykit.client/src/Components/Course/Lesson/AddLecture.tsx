@@ -2,26 +2,13 @@ import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAuto
 import LessonVideoUpload from "@components/Ui/LessonVideoUpload";
 import RichTextEditor from "@components/Ui/RichTextEditor/Index";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  Box,
-  Button,
-  Grid,
-  Group,
-  Paper,
-  Switch,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { Box, Button, Grid, Group, Paper, Switch, Text, Tooltip } from "@mantine/core";
 import { createFormContext, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { LessonType } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
-import {
-  ILessons,
-  useCreateLesson,
-  useUpdateLesson,
-} from "@utils/services/courseService";
-import { ILessonLecture, ILessonRecording } from "@utils/services/types";
+import { type ILessons, useCreateLesson, useUpdateLesson } from "@utils/services/courseService";
+import type { ILessonLecture, ILessonRecording } from "@utils/services/types";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -50,26 +37,16 @@ interface IFormValues {
   isMandatory?: boolean;
 }
 
-const [FormProvider, useFormContext, useForm] =
-  createFormContext<IFormValues>();
+const [FormProvider, useFormContext, useForm] = createFormContext<IFormValues>();
 
-const AddLecture = ({
-  setAddState,
-  item,
-  setAddLessonClick,
-  isEditing,
-  sectionId,
-  setIsEditing,
-}: IProps) => {
+const AddLecture = ({ setAddState, item, setAddLessonClick, isEditing, sectionId, setIsEditing }: IProps) => {
   const { id: slug } = useParams();
   const { t } = useTranslation();
   const [videoUrl] = React.useState<string>(item?.videoUrl ?? "");
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
   const isRecordedVideo = item?.type === LessonType.RecordedVideo;
-  const [isMandatory, setIsMandatory] = useState<boolean>(
-    item?.isMandatory ?? false
-  );
+  const [isMandatory, setIsMandatory] = useState<boolean>(item?.isMandatory ?? false);
 
   const form = useForm({
     initialValues: {
@@ -112,9 +89,7 @@ const AddLecture = ({
       }
       showNotification({
         title: t("successful"),
-        message: isEditing
-          ? t("lesson_edit_successful")
-          : t("lesson_add_successful"),
+        message: isEditing ? t("lesson_edit_successful") : t("lesson_add_successful"),
       });
       setAddLessonClick(true);
     } catch (error: any) {
@@ -135,11 +110,7 @@ const AddLecture = ({
               <CustomTextFieldWithAutoFocus
                 style={{ width: "100%" }}
                 label={isRecordedVideo ? t("recording_name") : t("video_name")}
-                placeholder={
-                  isRecordedVideo
-                    ? (t("recording_name") as string)
-                    : (t("video_name") as string)
-                }
+                placeholder={isRecordedVideo ? (t("recording_name") as string) : (t("video_name") as string)}
                 withAsterisk
                 {...form.getInputProps("name")}
                 styles={{ error: { position: "absolute" } }}
@@ -166,32 +137,19 @@ const AddLecture = ({
 
             <span className="global-astrick"> *</span>
           </Text>
-          <LessonVideoUpload
-            formContext={useFormContext}
-            currentVideo={videoUrl}
-            marginy={1}
-          />
+          <LessonVideoUpload formContext={useFormContext} currentVideo={videoUrl} marginy={1} />
           <Box my={form.errors["videoUrl"] ? 20 : 10}>
-            <Text size={"sm"}>
-              {isRecordedVideo
-                ? t("recording_description")
-                : t("video_description")}
-            </Text>
+            <Text size={"sm"}>{isRecordedVideo ? t("recording_description") : t("video_description")}</Text>
             <RichTextEditor
               placeholder={
-                isRecordedVideo
-                  ? (t("recording_description") as string)
-                  : (t("video_description") as string)
+                isRecordedVideo ? (t("recording_description") as string) : (t("video_description") as string)
               }
               formContext={useFormContext}
             />
           </Box>
 
           <Group mt="md">
-            <Button
-              type="submit"
-              loading={lesson.isLoading || updateLesson.isLoading}
-            >
+            <Button type="submit" loading={lesson.isLoading || updateLesson.isLoading}>
               {t("submit")}
             </Button>
             {!isEditing && (

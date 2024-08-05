@@ -6,12 +6,8 @@ import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { UserRole } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
-import {
-  ICommentReply,
-  useDeleteCommentReply,
-  useEditCommentReply,
-} from "@utils/services/commentService";
-import { IUser } from "@utils/services/types";
+import { type ICommentReply, useDeleteCommentReply, useEditCommentReply } from "@utils/services/commentService";
+import type { IUser } from "@utils/services/types";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import classes from "./styles/reply.module.css";
@@ -98,11 +94,7 @@ const CommentReply = ({
       />
 
       <Group>
-        <Avatar
-          src={reply.user.imageUrl}
-          alt={reply.user.fullName}
-          radius="xl"
-        />
+        <Avatar src={reply.user.imageUrl} alt={reply.user.fullName} radius="xl" />
         <div>
           <Text size="sm">{reply.user.fullName}</Text>
           <Text size="xs" c="dimmed">
@@ -156,12 +148,7 @@ const CommentReply = ({
           </Button>
         )}
         {showEdit(reply.user) && (
-          <Button
-            onClick={() => setDeleteConfirmation()}
-            variant="subtle"
-            c="red"
-            mx={4}
-          >
+          <Button onClick={() => setDeleteConfirmation()} variant="subtle" c="red" mx={4}>
             {t("delete")}
           </Button>
         )}

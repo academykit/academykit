@@ -28,24 +28,14 @@ const LessonExam = () => {
         <div>
           <Title className={classes.title}>{t("no_question_found")}</Title>
 
-          <Button
-            variant="outline"
-            size="md"
-            mt="xl"
-            onClick={() => navigate(-1)}
-            className={classes.control}
-          >
+          <Button variant="outline" size="md" mt="xl" onClick={() => navigate(-1)} className={classes.control}>
             {t("back_course")}
           </Button>
         </div>
       </Container>
     );
   }
-  return exam.data ? (
-    <Exam data={exam.data?.data} lessonId={id as string} />
-  ) : (
-    <></>
-  );
+  return exam.data ? <Exam data={exam.data?.data} lessonId={id as string} /> : <></>;
 };
 
 export default LessonExam;

@@ -1,16 +1,13 @@
 import TextViewer from "@components/Ui/RichTextViewer";
 import { Box, Card, Group, Title } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
-import { IAssessmentExam } from "@utils/services/assessmentService";
+import type { UseFormReturnType } from "@mantine/form";
+import type { IAssessmentExam } from "@utils/services/assessmentService";
 import cx from "clsx";
 import { useTranslation } from "react-i18next";
 import classes from "../styles/assessmentQuestion.module.css";
 
 type Props = {
-  form: UseFormReturnType<
-    IAssessmentExam[],
-    (values: IAssessmentExam[]) => IAssessmentExam[]
-  >;
+  form: UseFormReturnType<IAssessmentExam[], (values: IAssessmentExam[]) => IAssessmentExam[]>;
   options: [
     {
       optionId: string;
@@ -26,15 +23,9 @@ const AssessmentExamRadio = ({ form, options, currentIndex }: Props) => {
   const changeFieldValue = (optionCurrentIndex: number) => {
     options.map((_option, index) => {
       if (index !== optionCurrentIndex) {
-        form.setFieldValue(
-          `${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`,
-          false
-        );
+        form.setFieldValue(`${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`, false);
       } else {
-        form.setFieldValue(
-          `${currentIndex}.assessmentQuestionOptions.${optionCurrentIndex}.isCorrect`,
-          true
-        );
+        form.setFieldValue(`${currentIndex}.assessmentQuestionOptions.${optionCurrentIndex}.isCorrect`, true);
       }
     });
   };
@@ -47,27 +38,19 @@ const AssessmentExamRadio = ({ form, options, currentIndex }: Props) => {
         </Title>
       </Group>
       {options.map((option, index) => (
-        <div
-          style={{ cursor: "pointer" }}
-          key={option.optionId}
-          onClick={() => changeFieldValue(index)}
-        >
+        <div style={{ cursor: "pointer" }} key={option.optionId} onClick={() => changeFieldValue(index)}>
           <input
             type={"checkbox"}
             id={option.optionId}
             style={{ display: "none" }}
-            {...form.getInputProps(
-              `${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`
-            )}
+            {...form.getInputProps(`${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`)}
           ></input>
           <Card
             shadow={"md"}
             my={10}
             p={10}
             className={cx({
-              [classes.active]:
-                form.values[currentIndex].assessmentQuestionOptions[index]
-                  .isCorrect,
+              [classes.active]: form.values[currentIndex].assessmentQuestionOptions[index].isCorrect,
             })}
           >
             <input type={"checkbox"} style={{ display: "none" }} />

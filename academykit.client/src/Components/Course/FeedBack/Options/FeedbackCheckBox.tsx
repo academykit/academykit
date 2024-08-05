@@ -1,20 +1,14 @@
 import TextViewer from "@components/Ui/RichTextViewer";
 import { Box, Card, Group, Title } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
+import type { UseFormReturnType } from "@mantine/form";
 
-import {
-  IFeedbackOptions,
-  IFeedbackQuestions,
-} from "@utils/services/feedbackService";
+import type { IFeedbackOptions, IFeedbackQuestions } from "@utils/services/feedbackService";
 import cx from "clsx";
 import { useTranslation } from "react-i18next";
 import classes from "../../styles/feedbackList.module.css";
 
 type Props = {
-  form: UseFormReturnType<
-    IFeedbackQuestions[],
-    (values: IFeedbackQuestions[]) => IFeedbackQuestions[]
-  >;
+  form: UseFormReturnType<IFeedbackQuestions[], (values: IFeedbackQuestions[]) => IFeedbackQuestions[]>;
   options: IFeedbackOptions[];
   currentIndex: number;
 };
@@ -35,18 +29,14 @@ const FeedbackCheckBoxType = ({ options, form, currentIndex }: Props) => {
             type={"checkbox"}
             id={option.id}
             style={{ display: "none" }}
-            {...form.getInputProps(
-              `${currentIndex}.feedbackQuestionOptions.${index}.isSelected`
-            )}
+            {...form.getInputProps(`${currentIndex}.feedbackQuestionOptions.${index}.isSelected`)}
           ></input>
           <Card
             shadow={"md"}
             my={10}
             p={10}
             className={cx({
-              [classes.active]:
-                form.values[currentIndex].feedbackQuestionOptions![index]
-                  .isSelected,
+              [classes.active]: form.values[currentIndex].feedbackQuestionOptions![index].isSelected,
             })}
           >
             <input type={"checkbox"} style={{ display: "none" }} />

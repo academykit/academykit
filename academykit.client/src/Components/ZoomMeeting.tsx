@@ -1,13 +1,4 @@
-import {
-  Anchor,
-  Box,
-  Button,
-  Center,
-  Container,
-  Group,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Anchor, Box, Button, Center, Container, Group, Text, Title } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 
@@ -26,26 +17,11 @@ const ZoomMettingMessage = () => {
           <Text ta="center">{e}</Text>
           <Box my={20} ml={180}>
             <Group>
-              <Anchor
-                size={"xs"}
-                component={Link}
-                to={`/classes/${courseId}/${lessonId}/description`}
-                c={"dimmed"}
-              >
+              <Anchor size={"xs"} component={Link} to={`/classes/${courseId}/${lessonId}/description`} c={"dimmed"}>
                 <Button>{t("back_course")}</Button>
               </Anchor>
-              <Anchor
-                size={"xs"}
-                component={Link}
-                to={"#"}
-                c={"dimmed"}
-                target="_blank"
-              >
-                <Button
-                  variant="outline"
-                  component="a"
-                  href={`/meet.html?l=${lessonId}&c=${courseId}`}
-                >
+              <Anchor size={"xs"} component={Link} to={"#"} c={"dimmed"} target="_blank">
+                <Button variant="outline" component="a" href={`/meet.html?l=${lessonId}&c=${courseId}`}>
                   {t("rejoin")}
                 </Button>
               </Anchor>
@@ -66,26 +42,11 @@ const ZoomMettingMessage = () => {
           </Text>
           <Box my={20}>
             <Group style={{ display: "flex", justifyContent: "center" }}>
-              <Anchor
-                size={"xs"}
-                component={Link}
-                to={`/classes/${courseId}/${lessonId}/description`}
-                c={"dimmed"}
-              >
+              <Anchor size={"xs"} component={Link} to={`/classes/${courseId}/${lessonId}/description`} c={"dimmed"}>
                 <Button>{t("back_course")}</Button>
               </Anchor>
-              <Anchor
-                size={"xs"}
-                component={Link}
-                to={"#"}
-                c={"dimmed"}
-                target="_blank"
-              >
-                <Button
-                  variant="outline"
-                  component="a"
-                  href={`/meet.html?l=${lessonId}&c=${courseId}`}
-                >
+              <Anchor size={"xs"} component={Link} to={"#"} c={"dimmed"} target="_blank">
+                <Button variant="outline" component="a" href={`/meet.html?l=${lessonId}&c=${courseId}`}>
                   {t("rejoin")}
                 </Button>
               </Anchor>
@@ -105,12 +66,7 @@ const ZoomMettingMessage = () => {
         </Text>
         <Box my={20} ml={125}>
           <Group>
-            <Anchor
-              size={"xs"}
-              component={Link}
-              to={`/classes/${courseId}/${lessonId}/description`}
-              c={"dimmed"}
-            >
+            <Anchor size={"xs"} component={Link} to={`/classes/${courseId}/${lessonId}/description`} c={"dimmed"}>
               <Button>{t("back_course")}</Button>
             </Anchor>
             <Anchor size={"xs"} component={Link} to={"#"} c={"dimmed"}></Anchor>

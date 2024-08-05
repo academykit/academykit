@@ -1,6 +1,6 @@
 import AddLesson from "@components/Ui/AddLessons";
 import { CourseStatus } from "@utils/enums";
-import { ILessons } from "@utils/services/courseService";
+import type { ILessons } from "@utils/services/courseService";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import Lesson from "./Lesson";
 
@@ -16,11 +16,7 @@ const Lessons = ({
   const items = lessons.map((x, index) => (
     <Draggable key={x.slug} draggableId={x.slug} index={index}>
       {(provided) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
+        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
           <Lesson lesson={x} sectionId={sectionId} />
         </div>
       )}
@@ -36,9 +32,7 @@ const Lessons = ({
           </div>
         )}
       </Droppable>
-      {courseStatus !== CourseStatus.Completed && (
-        <AddLesson sectionId={sectionId} />
-      )}
+      {courseStatus !== CourseStatus.Completed && <AddLesson sectionId={sectionId} />}
     </>
   );
 };

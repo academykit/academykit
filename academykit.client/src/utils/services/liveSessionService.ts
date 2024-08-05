@@ -38,16 +38,9 @@ export interface IReportDetail {
 }
 
 const getMeetingReport = (courseId: string, lessonId: string, userId: string) =>
-  httpClient.get<IReportDetail[]>(
-    api.meeting.meetingReport(courseId, lessonId, userId)
-  );
+  httpClient.get<IReportDetail[]>(api.meeting.meetingReport(courseId, lessonId, userId));
 
-export const useGetMeetingReport = (
-  courseId: string,
-  lessonId: string,
-  userId: string,
-  enabled: boolean
-) =>
+export const useGetMeetingReport = (courseId: string, lessonId: string, userId: string, enabled: boolean) =>
   useQuery({
     queryKey: [api.meeting.meetingReport(courseId, lessonId, userId)],
     queryFn: () => getMeetingReport(courseId, lessonId, userId),

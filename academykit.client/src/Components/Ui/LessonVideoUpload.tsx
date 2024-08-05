@@ -1,5 +1,5 @@
 import { Box, Text, Tooltip } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
+import type { UseFormReturnType } from "@mantine/form";
 import { FileAccess, uploadVideo } from "@utils/services/fileService";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
@@ -14,7 +14,7 @@ registerPlugin(
   FilePondPluginImageExifOrientation,
   FilePondPluginImagePreview,
   FilePondPluginFileValidateType,
-  FilePondPluginImageValidateSize
+  FilePondPluginImageValidateSize,
 );
 
 const LessonVideoUpload = ({
@@ -75,12 +75,7 @@ const LessonVideoUpload = ({
           onremovefile={() => form.setFieldValue("videoUrl", "")}
           fileValidateTypeLabelExpectedTypes="Expected .mp4 .avi .mov"
           chunkSize={2 * 1024 * 1024} // 2MB
-          acceptedFileTypes={[
-            "video/mp4",
-            "video/avi",
-            "video/mov",
-            "video/quicktime",
-          ]}
+          acceptedFileTypes={["video/mp4", "video/avi", "video/mov", "video/quicktime"]}
           onupdatefiles={setFiles}
           allowMultiple={false}
           maxFiles={1}
@@ -89,15 +84,7 @@ const LessonVideoUpload = ({
             remove: null,
             revert: null,
             //processing a file
-            process: async (
-              fieldName,
-              file,
-              metadata,
-              load,
-              error,
-              progress,
-              abort
-            ) => {
+            process: async (fieldName, file, metadata, load, error, progress, abort) => {
               try {
                 const res = await uploadVideo(file as File, FileAccess.Private);
                 load(res.data);
@@ -112,9 +99,7 @@ const LessonVideoUpload = ({
               };
             },
             load: async (source, load, error, _progress, abort) => {
-              await fetch(
-                `${source}?cache=${Math.random().toString(36).substring(2, 7)}`
-              )
+              await fetch(`${source}?cache=${Math.random().toString(36).substring(2, 7)}`)
                 .then(async (r) => {
                   load(await r.blob());
                 })
@@ -128,9 +113,7 @@ const LessonVideoUpload = ({
             },
           }}
           name="files"
-          labelIdle={`${t(
-            "video_drag_drop"
-          )} <span class="filepond--label-action">${t("browse")}</span>`}
+          labelIdle={`${t("video_drag_drop")} <span class="filepond--label-action">${t("browse")}</span>`}
           {...filePondProps}
         />
         {form.errors["videoUrl"] && (

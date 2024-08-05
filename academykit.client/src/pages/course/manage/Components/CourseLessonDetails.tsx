@@ -1,6 +1,6 @@
 import UserShortProfile from "@components/UserShortProfile";
 import { Table } from "@mantine/core";
-import { LessonStatDetails } from "@utils/services/manageCourseService";
+import type { LessonStatDetails } from "@utils/services/manageCourseService";
 import StudentLessonDetails from "./StudentDetails";
 import LessonStatusColor from "./StudentDetails/LessonStatusColor";
 
@@ -21,11 +21,7 @@ const CourseLessonDetails = ({
       </Table.Td>
 
       <Table.Td>
-        <StudentLessonDetails
-          studentInfo={element}
-          courseId={courseId as string}
-          studentId={element.user.id}
-        />
+        <StudentLessonDetails studentInfo={element} courseId={courseId as string} studentId={element.user.id} />
       </Table.Td>
     </Table.Tr>
   );

@@ -17,10 +17,7 @@ const ProgressBar = ({
           {positiveNumber.toFixed(0)}%
         </Text>
       </Group>
-      <Progress
-        classNames={{ root: classes.progressBar, section: classes.section }}
-        value={positiveNumber}
-      />
+      <Progress classNames={{ root: classes.progressBar, section: classes.section }} value={positiveNumber} />
     </>
   );
 };

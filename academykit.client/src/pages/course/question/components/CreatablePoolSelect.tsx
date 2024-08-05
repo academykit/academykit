@@ -1,16 +1,9 @@
-import {
-  CheckIcon,
-  Combobox,
-  Group,
-  InputBase,
-  MantineSize,
-  useCombobox,
-} from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
-import { UseMutationResult } from "@tanstack/react-query";
-import { IPool } from "@utils/services/poolService";
-import { IAddQuestionType } from "@utils/services/questionService";
-import { AxiosResponse } from "axios";
+import { CheckIcon, Combobox, Group, InputBase, type MantineSize, useCombobox } from "@mantine/core";
+import type { UseFormReturnType } from "@mantine/form";
+import type { UseMutationResult } from "@tanstack/react-query";
+import type { IPool } from "@utils/services/poolService";
+import type { IAddQuestionType } from "@utils/services/questionService";
+import type { AxiosResponse } from "axios";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -22,10 +15,7 @@ interface IProps {
         label: string;
       }[]
     | undefined;
-  form: UseFormReturnType<
-    IAddQuestionType,
-    (values: IAddQuestionType) => IAddQuestionType
-  >;
+  form: UseFormReturnType<IAddQuestionType, (values: IAddQuestionType) => IAddQuestionType>;
   api: UseMutationResult<AxiosResponse<IPool, any>, unknown, string, unknown>;
 }
 
@@ -40,9 +30,7 @@ export function CreatablePoolSelect({ data, form, api, size = "sm" }: IProps) {
   const exactOptionMatch = data?.some((item) => item.label === search);
   const filteredOptions = exactOptionMatch
     ? data
-    : data?.filter((item) =>
-        item.label.toLowerCase().includes(search.toLowerCase().trim())
-      );
+    : data?.filter((item) => item.label.toLowerCase().includes(search.toLowerCase().trim()));
 
   const options = filteredOptions?.map((item) => (
     <Combobox.Option value={item.value} key={item.value}>
@@ -60,19 +48,11 @@ export function CreatablePoolSelect({ data, form, api, size = "sm" }: IProps) {
       onOptionSubmit={(val, optionProps) => {
         if (val === "$create") {
           setValue(search);
-          api
-            .mutateAsync(search)
-            .then((res: any) =>
-              form.setFieldValue("questionPoolId", res.data.id)
-            );
+          api.mutateAsync(search).then((res: any) => form.setFieldValue("questionPoolId", res.data.id));
         } else {
           // TODO: find a way to access the label
-          setValue(
-            optionProps!.children!.props!.children[1].props.children as string
-          );
-          setSearch(
-            optionProps!.children!.props!.children[1].props.children as string
-          );
+          setValue(optionProps!.children!.props!.children[1].props.children as string);
+          setSearch(optionProps!.children!.props!.children[1].props.children as string);
           form.setFieldValue("questionPoolId", val);
         }
         combobox.closeDropdown();

@@ -2,11 +2,7 @@ import { Button, Card, Group, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { QuestionType } from "@utils/enums";
-import {
-  IAssignmentQuestion,
-  IAssignmentSubmission,
-  useSubmitAssignment,
-} from "@utils/services/assignmentService";
+import { type IAssignmentQuestion, type IAssignmentSubmission, useSubmitAssignment } from "@utils/services/assignmentService";
 import errorType from "@utils/services/axiosError";
 import { useNavigate, useParams } from "react-router-dom";
 import CheckboxType from "./CheckboxType";
@@ -39,9 +35,7 @@ const AssignmentForm = ({
       data["assignmentId"] = x.id;
       data["answer"] = x.answer;
       if (x.assignmentQuestionOptions) {
-        data["selectedOption"] = x.assignmentQuestionOptions
-          .filter((y) => y.isSelected)
-          .map((y) => y.id);
+        data["selectedOption"] = x.assignmentQuestionOptions.filter((y) => y.isSelected).map((y) => y.id);
       }
       finalData.push(data);
     });
@@ -78,25 +72,13 @@ const AssignmentForm = ({
             }}
             content={x.description}
           ></TextViewer>
-          {x.type === QuestionType.MultipleChoice &&
-            x?.assignmentQuestionOptions && (
-              <CheckboxType
-                options={x?.assignmentQuestionOptions}
-                currentIndex={currentIndex}
-                form={form}
-              />
-            )}
-          {x.type === QuestionType.SingleChoice &&
-            x?.assignmentQuestionOptions && (
-              <RadioType
-                options={x?.assignmentQuestionOptions}
-                currentIndex={currentIndex}
-                form={form}
-              />
-            )}
-          {x.type == QuestionType.Subjective && (
-            <SubjectiveType form={form} currentIndex={currentIndex} />
+          {x.type === QuestionType.MultipleChoice && x?.assignmentQuestionOptions && (
+            <CheckboxType options={x?.assignmentQuestionOptions} currentIndex={currentIndex} form={form} />
           )}
+          {x.type === QuestionType.SingleChoice && x?.assignmentQuestionOptions && (
+            <RadioType options={x?.assignmentQuestionOptions} currentIndex={currentIndex} form={form} />
+          )}
+          {x.type == QuestionType.Subjective && <SubjectiveType form={form} currentIndex={currentIndex} />}
         </Card>
       ))}
       {item[0].isTrainee && (

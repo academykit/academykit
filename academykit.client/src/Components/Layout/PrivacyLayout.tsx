@@ -1,17 +1,11 @@
-import {
-  AppShell,
-  Button,
-  Container,
-  Group,
-  useMantineColorScheme,
-} from "@mantine/core";
+import { AppShell, Button, Container, Group, useMantineColorScheme } from "@mantine/core";
 import { useCompanySetting } from "@utils/services/adminService";
 import { Link, Outlet } from "react-router-dom";
 import { AppFooter } from "./AppFooter";
 
 import UserProfileMenu from "@components/UserProfileMenu";
 import useAuth from "@hooks/useAuth";
-import { IUser } from "@utils/services/types";
+import type { IUser } from "@utils/services/types";
 import classes from "./styles/layout.module.css";
 
 const PrivacyLayout = () => {
@@ -25,10 +19,7 @@ const PrivacyLayout = () => {
       padding="md"
       styles={(theme) => ({
         main: {
-          backgroundColor:
-            colorScheme === "dark"
-              ? theme.colors.dark[8]
-              : theme.colors.gray[0],
+          backgroundColor: colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
         },
       })}
     >
@@ -37,11 +28,7 @@ const PrivacyLayout = () => {
           <Container className={classes.inner} fluid>
             <Group justify={"space-between"} w={"100%"}>
               <Link to="/">
-                <img
-                  height={50}
-                  src={companySettings.data?.data?.imageUrl}
-                  alt=""
-                />
+                <img height={50} src={companySettings.data?.data?.imageUrl} alt="" />
               </Link>
               {auth?.loggedIn && auth?.auth ? (
                 <UserProfileMenu

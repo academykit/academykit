@@ -4,22 +4,13 @@ import { useSection } from "@context/SectionProvider";
 import { ActionIcon, Container, Group, Paper } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import {
-  IconChevronRight,
-  IconDragDrop,
-  IconPencilMinus,
-  IconTrashX,
-} from "@tabler/icons-react";
-import { CourseStatus } from "@utils/enums";
+import { IconChevronRight, IconDragDrop, IconPencilMinus, IconTrashX } from "@tabler/icons-react";
+import type { CourseStatus } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
-import {
-  ISection,
-  useDeleteSection,
-  useUpdateSectionName,
-} from "@utils/services/courseService";
+import { type ISection, useDeleteSection, useUpdateSectionName } from "@utils/services/courseService";
 import cx from "clsx";
 import { useState } from "react";
-import { DraggableStateSnapshot } from "react-beautiful-dnd";
+import type { DraggableStateSnapshot } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import classes from "../styles/sectionItem.module.css";
 import Lessons from "./Lessons";
@@ -76,12 +67,7 @@ const SectionItem = ({
         [classes.drop]: snapshot.isDropAnimating,
       })}
     >
-      <DeleteModal
-        title={t("sure_want_to_delete")}
-        open={value}
-        onClose={toggle}
-        onConfirm={onDelete}
-      />
+      <DeleteModal title={t("sure_want_to_delete")} open={value} onClose={toggle} onConfirm={onDelete} />
       <Container
         fluid
         style={{
@@ -101,12 +87,7 @@ const SectionItem = ({
             />
           </div>
         ) : (
-          <EditNameForm
-            updateFunction={updateSection}
-            item={item}
-            slug={slug}
-            setIsEditing={setIsEditing}
-          />
+          <EditNameForm updateFunction={updateSection} item={item} slug={slug} setIsEditing={setIsEditing} />
         )}
         <Group justify="flex-end" grow>
           <IconTrashX
@@ -132,13 +113,7 @@ const SectionItem = ({
           </ActionIcon>
         </Group>
       </Container>
-      {active() && item.lessons && (
-        <Lessons
-          lessons={item.lessons}
-          sectionId={item.slug}
-          courseStatus={status}
-        />
-      )}
+      {active() && item.lessons && <Lessons lessons={item.lessons} sectionId={item.slug} courseStatus={status} />}
     </Paper>
   );
 };

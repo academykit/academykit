@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { AiModelEnum } from "@utils/enums";
+import type { AiModelEnum } from "@utils/enums";
 
 interface ITrainingSuggest {
   title: string;
@@ -14,8 +14,7 @@ interface IMasterSetup {
   aiModel: AiModelEnum;
 }
 
-const getTrainingSuggestion = async () =>
-  await httpClient.get<ITrainingSuggest>(api.ai.trainingSuggest);
+const getTrainingSuggestion = async () => await httpClient.get<ITrainingSuggest>(api.ai.trainingSuggest);
 
 export const useTrainingSuggestion = (enabled?: boolean) => {
   return useQuery({
@@ -26,8 +25,7 @@ export const useTrainingSuggestion = (enabled?: boolean) => {
   });
 };
 
-const getAiMaster = async () =>
-  await httpClient.get<IMasterSetup>(api.ai.aiMasterSetup);
+const getAiMaster = async () => await httpClient.get<IMasterSetup>(api.ai.aiMasterSetup);
 
 export const useAIMaster = () => {
   return useQuery({

@@ -27,18 +27,12 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import { DATE_FORMAT, color } from "@utils/constants";
-import {
-  CourseLanguage,
-  CourseStatus,
-  CourseUserStatus,
-  CourseUserStatusValue,
-  UserRole,
-} from "@utils/enums";
+import { CourseLanguage, CourseStatus, CourseUserStatus, CourseUserStatusValue, UserRole } from "@utils/enums";
 import getCourseOgImageUrl from "@utils/getCourseOGImage";
 import RoutePath from "@utils/routeConstants";
 import { useGeneralSetting } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
-import { ICourse, useDeleteCourse } from "@utils/services/courseService";
+import { type ICourse, useDeleteCourse } from "@utils/services/courseService";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -152,9 +146,7 @@ const CourseCardHorizontal = ({
                 <Badge color="blue" variant="light">
                   {course?.levelName}
                 </Badge>
-                {auth?.auth &&
-                auth?.auth?.role <= UserRole.Admin &&
-                course.userStatus !== CourseUserStatus.Author ? (
+                {auth?.auth && auth?.auth?.role <= UserRole.Admin && course.userStatus !== CourseUserStatus.Author ? (
                   <></>
                 ) : (
                   <Badge color="cyan" variant="light">
@@ -165,11 +157,7 @@ const CourseCardHorizontal = ({
                   course.userStatus === CourseUserStatus.Author ||
                   course.userStatus === CourseUserStatus.Teacher) && (
                   <>
-                    <Badge
-                      variant="light"
-                      ml={10}
-                      color={color(course?.status)}
-                    >
+                    <Badge variant="light" ml={10} color={color(course?.status)}>
                       {t(`${CourseStatus[course?.status]}`)}
                     </Badge>
                   </>
@@ -178,13 +166,7 @@ const CourseCardHorizontal = ({
               {(course.userStatus === CourseUserStatus.Author ||
                 course.userStatus === CourseUserStatus.Teacher ||
                 (auth?.auth && Number(auth.auth.role) <= UserRole.Admin)) && (
-                <Menu
-                  shadow="md"
-                  width={200}
-                  trigger="hover"
-                  withArrow
-                  position="right"
-                >
+                <Menu shadow="md" width={200} trigger="hover" withArrow position="right">
                   <Menu.Target>
                     <Button style={{ zIndex: 50 }} variant="subtle" px={4}>
                       <IconDotsVertical />
@@ -217,11 +199,7 @@ const CourseCardHorizontal = ({
                       {t("trainee")}
                     </Menu.Item>
                     <Menu.Divider />
-                    <Menu.Item
-                      c="red"
-                      leftSection={<IconTrash size={14} />}
-                      onClick={() => setDeleteModal()}
-                    >
+                    <Menu.Item c="red" leftSection={<IconTrash size={14} />} onClick={() => setDeleteModal()}>
                       {t("delete")}
                     </Menu.Item>
                   </Menu.Dropdown>
@@ -260,14 +238,8 @@ const CourseCardHorizontal = ({
                 </Text>
               </Group> */}
               <Group style={{ justifyContent: "center", alignItems: "center" }}>
-                {!matches ? (
-                  <IconCalendar />
-                ) : (
-                  <Text c="dimmed">{t("created_on")}</Text>
-                )}
-                <Text c={"dimmed"}>
-                  {moment(course.createdOn).format(DATE_FORMAT)}
-                </Text>{" "}
+                {!matches ? <IconCalendar /> : <Text c="dimmed">{t("created_on")}</Text>}
+                <Text c={"dimmed"}>{moment(course.createdOn).format(DATE_FORMAT)}</Text>{" "}
                 <Badge
                   h={34}
                   title={t("group")}

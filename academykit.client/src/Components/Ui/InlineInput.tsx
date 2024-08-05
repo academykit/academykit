@@ -1,6 +1,6 @@
 import { Check, Cross } from "@components/Icons";
 import { Flex, Loader, TextInput, UnstyledButton } from "@mantine/core";
-import React from "react";
+import type React from "react";
 import classes from "./styles/inlineInput.module.css";
 
 type InlineInputProps = {

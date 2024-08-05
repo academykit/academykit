@@ -15,7 +15,7 @@ import { IconCheck } from "@tabler/icons-react";
 import { LessonType } from "@utils/enums";
 import formatDuration from "@utils/formatDuration";
 import RoutePath from "@utils/routeConstants";
-import { ILessons } from "@utils/services/courseService";
+import type { ILessons } from "@utils/services/courseService";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 import classes from "../../styles/lesson.module.css";
@@ -37,13 +37,7 @@ const Lesson = ({
   const theme = useMantineTheme();
 
   return (
-    <Popover
-      width={200}
-      position="top"
-      withArrow
-      shadow={"lg"}
-      opened={hovered}
-    >
+    <Popover width={200} position="top" withArrow shadow={"lg"} opened={hovered}>
       <Popover.Target>
         <Paper
           my={15}
@@ -54,11 +48,7 @@ const Lesson = ({
           withBorder
           style={{
             backgroundColor:
-              lessonId === lesson.slug
-                ? colorScheme === "light"
-                  ? theme.colors.dark[0]
-                  : theme.colors.gray[7]
-                : "",
+              lessonId === lesson.slug ? (colorScheme === "light" ? theme.colors.dark[0] : theme.colors.gray[7]) : "",
           }}
           component={Link}
           replace={true}
@@ -68,11 +58,7 @@ const Lesson = ({
             <Group>
               <Flex w={"100%"} p={15} direction={"row"}>
                 <Box w={"100%"}>
-                  <Title
-                    c={colorScheme == "dark" ? "#C1C2C5" : "dark"}
-                    size={matches ? 14 : 13}
-                    mb={3}
-                  >
+                  <Title c={colorScheme == "dark" ? "#C1C2C5" : "dark"} size={matches ? 14 : 13} mb={3}>
                     {index + 1}. {lesson.name}
                   </Title>
                   <Badge color="blue" variant="light" ml={10}>

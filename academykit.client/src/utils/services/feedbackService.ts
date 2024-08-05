@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FeedbackType } from "@utils/enums";
+import type { FeedbackType } from "@utils/enums";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { IUser } from "./types";
+import type { IUser } from "./types";
 
 export interface IFeedbackOptions {
   id: string;
@@ -63,9 +63,7 @@ export const useAddFeedbackQuestion = (lessonId: string, search: string) => {
 };
 
 const getFeedbackQuestion = (lessonId: string, search: string) => {
-  return httpClient.get<IFeedbackQuestions[]>(
-    api.feedback.list(lessonId, search)
-  );
+  return httpClient.get<IFeedbackQuestions[]>(api.feedback.list(lessonId, search));
 };
 export const useFeedbackQuestion = (lessonId: string, search: string) => {
   return useQuery({
@@ -77,15 +75,9 @@ export const useFeedbackQuestion = (lessonId: string, search: string) => {
 };
 
 const getUserFeedback = (lessonId: string, userId: string, search?: string) => {
-  return httpClient.get<IFeedbackQuestions[]>(
-    api.feedback.userFeedback(lessonId, userId, search)
-  );
+  return httpClient.get<IFeedbackQuestions[]>(api.feedback.userFeedback(lessonId, userId, search));
 };
-export const useGetUserFeedback = (
-  lessonId: string,
-  userId: string,
-  search?: string
-) => {
+export const useGetUserFeedback = (lessonId: string, userId: string, search?: string) => {
   return useQuery({
     queryKey: [api.feedback.userFeedback(lessonId, userId, search)],
     queryFn: () => getUserFeedback(lessonId, userId, search),
@@ -172,8 +164,7 @@ export const useFeedbackSubmission = ({ lessonId }: { lessonId: string }) => {
   });
 };
 
-export const exportFeedback = (lessonId: string) =>
-  httpClient.get(api.feedback.exportFeedback(lessonId));
+export const exportFeedback = (lessonId: string) => httpClient.get(api.feedback.exportFeedback(lessonId));
 
 export interface IFeedbackChart {
   id: string;

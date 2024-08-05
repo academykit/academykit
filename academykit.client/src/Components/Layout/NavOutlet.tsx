@@ -2,7 +2,7 @@ import useAuth from "@hooks/useAuth";
 import { ActionIcon, Loader, Menu, ScrollArea, Tabs } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { IconDotsVertical, IconSettings, IconUser } from "@tabler/icons-react";
-import { UserRole } from "@utils/enums";
+import type { UserRole } from "@utils/enums";
 import { t } from "i18next";
 import { Suspense } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -30,10 +30,7 @@ const NavOutlet = ({
 
   const getExactLocation = (location: string) => {
     // when user is inspecting lesson details, highlight lesson-stat tab
-    if (
-      location.split("/")[5] !== undefined &&
-      location.split("/")[3] !== "questions"
-    ) {
+    if (location.split("/")[5] !== undefined && location.split("/")[3] !== "questions") {
       const loc = location.split("/lessons-stat")[0] + "/lessons-stat";
       return loc;
     } else if (
@@ -79,19 +76,13 @@ const NavOutlet = ({
       >
         <ScrollArea scrollHideDelay={0}>
           <Tabs.List>
-            {routeData
-              .slice(0, isMobileView || isTabletView ? 2 : routeData.length)
-              .map((x) => {
-                return (
-                  <Tabs.Tab
-                    key={x.label}
-                    value={x.to}
-                    leftSection={x.icon ?? <IconUser size={14} />}
-                  >
-                    {x.label}
-                  </Tabs.Tab>
-                );
-              })}
+            {routeData.slice(0, isMobileView || isTabletView ? 2 : routeData.length).map((x) => {
+              return (
+                <Tabs.Tab key={x.label} value={x.to} leftSection={x.icon ?? <IconUser size={14} />}>
+                  {x.label}
+                </Tabs.Tab>
+              );
+            })}
 
             {/* display only when mobile view and contains more than 2 elements */}
             {routeData.length > 2 && (isMobileView || isTabletView) && (

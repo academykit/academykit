@@ -19,8 +19,8 @@ import { showNotification } from "@mantine/notifications";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { QuestionType } from "@utils/enums";
 import {
-  IAddAssessment,
-  IAssessmentQuestion,
+  type IAddAssessment,
+  type IAssessmentQuestion,
   usePostAssessmentQuestion,
   useUpdateAssessmentQuestion,
 } from "@utils/services/assessmentService";
@@ -45,47 +45,37 @@ const schema = () => {
         is: QuestionType.MultipleChoice.toString(),
         then: Yup.array()
           .min(1, t("option_more_than_one") as string)
-          .test(
-            "test",
-            t("multiple_choice_option_atleast") as string,
-            function (value: any) {
-              const a = value?.filter((x: any) => x.isCorrect).length > 0;
-              return a;
-            }
-          )
+          .test("test", t("multiple_choice_option_atleast") as string, (value: any) => {
+            const a = value?.filter((x: any) => x.isCorrect).length > 0;
+            return a;
+          })
           .of(
             Yup.object().shape({
               option: Yup.string()
                 .trim()
                 .required(t("option_required") as string),
-            })
+            }),
           ),
       })
       .when(["type"], {
         is: QuestionType.SingleChoice.toString(),
         then: Yup.array()
-          .test(
-            t("test"),
-            t("single_choice_option_atleast") as string,
-            function (value: any) {
-              const length: number =
-                value && value.filter((e: any) => e?.isCorrect).length;
-              return length === 1;
-            }
-          )
+          .test(t("test"), t("single_choice_option_atleast") as string, (value: any) => {
+            const length: number = value && value.filter((e: any) => e?.isCorrect).length;
+            return length === 1;
+          })
           .of(
             Yup.object().shape({
               option: Yup.string()
                 .trim()
                 .required(t("option_required") as string),
-            })
+            }),
           ),
       }),
   });
 };
 
-const [FormProvider, useFormContext, useForm] =
-  createFormContext<IAddAssessment>();
+const [FormProvider, useFormContext, useForm] = createFormContext<IAddAssessment>();
 
 interface IProps {
   onCancel: () => void;
@@ -103,9 +93,7 @@ const AssessmentQuestionForm = ({ onCancel, data }: IProps) => {
       description: data ? data.description : "",
       hints: data ? data.hints : "",
       type: data ? data.type.toString() : "1",
-      assessmentQuestionOptions: data
-        ? data.assessmentQuestionOptions
-        : [{ option: "", isCorrect: false }],
+      assessmentQuestionOptions: data ? data.assessmentQuestionOptions : [{ option: "", isCorrect: false }],
     },
     validate: yupResolver(schema()),
     validateInputOnChange: true,
@@ -128,15 +116,9 @@ const AssessmentQuestionForm = ({ onCancel, data }: IProps) => {
   const onChangeRadioType = (index: number) => {
     form.values.assessmentQuestionOptions.forEach((_x, i) => {
       if (i === index) {
-        return form.setFieldValue(
-          `assessmentQuestionOptions.${index}.isCorrect`,
-          true
-        );
+        return form.setFieldValue(`assessmentQuestionOptions.${index}.isCorrect`, true);
       }
-      return form.setFieldValue(
-        `assessmentQuestionOptions.${i}.isCorrect`,
-        false
-      );
+      return form.setFieldValue(`assessmentQuestionOptions.${i}.isCorrect`, false);
     });
   };
 
@@ -147,7 +129,7 @@ const AssessmentQuestionForm = ({ onCancel, data }: IProps) => {
           id: data.id,
           data: {
             ...values,
-            type: parseInt(values.type),
+            type: Number.parseInt(values.type),
           },
         });
 
@@ -163,7 +145,7 @@ const AssessmentQuestionForm = ({ onCancel, data }: IProps) => {
           id: params.id as string,
           data: {
             ...values,
-            type: parseInt(values.type),
+            type: Number.parseInt(values.type),
           },
         });
 
@@ -208,11 +190,7 @@ const AssessmentQuestionForm = ({ onCancel, data }: IProps) => {
 
               <Box mt={20}>
                 <Text size={"lg"}>{t("hint")}</Text>
-                <RichTextEditor
-                  label="hints"
-                  placeholder={t("question_hint") as string}
-                  formContext={useFormContext}
-                />
+                <RichTextEditor label="hints" placeholder={t("question_hint") as string} formContext={useFormContext} />
               </Box>
 
               <Select
@@ -231,22 +209,15 @@ const AssessmentQuestionForm = ({ onCancel, data }: IProps) => {
                   <Text mt={20}>{t("options")}</Text>
                   {form.values.assessmentQuestionOptions.map((_x, i) => (
                     <Flex align={"center"} gap={"md"} key={i} mb={30}>
-                      {QuestionType.MultipleChoice.toString() ===
-                      form.values.type ? (
+                      {QuestionType.MultipleChoice.toString() === form.values.type ? (
                         <Checkbox
-                          checked={
-                            form.values.assessmentQuestionOptions[i].isCorrect
-                          }
-                          {...form.getInputProps(
-                            `assessmentQuestionOptions.${i}.isCorrect`
-                          )}
+                          checked={form.values.assessmentQuestionOptions[i].isCorrect}
+                          {...form.getInputProps(`assessmentQuestionOptions.${i}.isCorrect`)}
                         ></Checkbox>
                       ) : (
                         <Radio
                           onChange={() => onChangeRadioType(i)}
-                          checked={
-                            form.values.assessmentQuestionOptions[i].isCorrect
-                          }
+                          checked={form.values.assessmentQuestionOptions[i].isCorrect}
                         ></Radio>
                       )}
                       <div style={{ width: "80%" }}>
@@ -264,7 +235,7 @@ const AssessmentQuestionForm = ({ onCancel, data }: IProps) => {
                               option: "",
                               isCorrect: false,
                             },
-                            i + 1
+                            i + 1,
                           );
                         }}
                       >
@@ -281,22 +252,13 @@ const AssessmentQuestionForm = ({ onCancel, data }: IProps) => {
                       )}
                     </Flex>
                   ))}
-                  {typeof form.errors[`assessmentQuestionOptions`] ===
-                    "string" && (
-                    <span style={{ color: "red" }}>
-                      {form.errors[`assessmentQuestionOptions`]}
-                    </span>
+                  {typeof form.errors[`assessmentQuestionOptions`] === "string" && (
+                    <span style={{ color: "red" }}>{form.errors[`assessmentQuestionOptions`]}</span>
                   )}
                 </Box>
               )}
               <Group mt={20}>
-                <Button
-                  type="submit"
-                  loading={
-                    postAssessmentQuestion.isLoading ||
-                    updateAssessmentQuestion.isLoading
-                  }
-                >
+                <Button type="submit" loading={postAssessmentQuestion.isLoading || updateAssessmentQuestion.isLoading}>
                   {t("save")}
                 </Button>
                 <Button type="button" variant="outline" onClick={onCancel}>

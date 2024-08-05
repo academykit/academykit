@@ -1,13 +1,7 @@
 import useAuth from "@hooks/useAuth";
 import { ActionIcon, Box, Loader, ScrollArea, Textarea } from "@mantine/core";
 import { IconSend } from "@tabler/icons-react";
-import {
-  KeyboardEvent,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { type KeyboardEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import AIChatBox from "./components/AIChatBox";
 import FirstChat from "./components/FirstChat";
@@ -39,10 +33,7 @@ const KnowledgeBase = () => {
     if (viewport.current) {
       // if the user is at the bottom of the list
       // but offset by 100px
-      if (
-        viewport.current.scrollHeight - viewport.current.scrollTop <
-        viewport.current.clientHeight + 100
-      ) {
+      if (viewport.current.scrollHeight - viewport.current.scrollTop < viewport.current.clientHeight + 100) {
         setIsAtBottom(true);
       } else {
         setIsAtBottom(false);
@@ -52,8 +43,7 @@ const KnowledgeBase = () => {
 
   // start at the bottom of conversation
   useLayoutEffect(() => {
-    if (viewport.current)
-      viewport.current.scrollTop = viewport.current.scrollHeight;
+    if (viewport.current) viewport.current.scrollTop = viewport.current.scrollHeight;
   }, [viewport]);
 
   return (
@@ -95,12 +85,7 @@ const KnowledgeBase = () => {
               isLoading ? (
                 <Loader color="cyan" type="dots" size={18} />
               ) : (
-                <ActionIcon
-                  variant="transparent"
-                  c={"gray"}
-                  mr={20}
-                  type="submit"
-                >
+                <ActionIcon variant="transparent" c={"gray"} mr={20} type="submit">
                   <IconSend size={18} />
                 </ActionIcon>
               )

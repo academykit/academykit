@@ -4,7 +4,7 @@ import { CourseLanguage } from "@utils/enums";
 import getCourseOgImageUrl from "@utils/getCourseOGImage";
 import RoutePath from "@utils/routeConstants";
 import { useGeneralSetting } from "@utils/services/adminService";
-import { ICourse } from "@utils/services/courseService";
+import type { ICourse } from "@utils/services/courseService";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import classes from "./styles/coursecard.module.css";
@@ -15,20 +15,8 @@ const CourseCard = ({ course }: { course: ICourse }) => {
   const companyName = generalSettings.data?.data.companyName;
   const companyLogo = generalSettings.data?.data.logoUrl;
   return (
-    <Card
-      className={classes.card}
-      shadow="sm"
-      p="lg"
-      radius="md"
-      withBorder
-      ml={15}
-      mb={15}
-      h={380}
-    >
-      <Card.Section
-        component={Link}
-        to={RoutePath.courses.description(course.slug).route}
-      >
+    <Card className={classes.card} shadow="sm" p="lg" radius="md" withBorder ml={15} mb={15} h={380}>
+      <Card.Section component={Link} to={RoutePath.courses.description(course.slug).route}>
         <Image
           src={getCourseOgImageUrl({
             author: course?.user,
@@ -68,10 +56,7 @@ const CourseCard = ({ course }: { course: ICourse }) => {
           content={course.description}
         />
       </Text>
-      <Link
-        style={{ textDecoration: "none" }}
-        to={RoutePath.courses.description(course.slug).route}
-      >
+      <Link style={{ textDecoration: "none" }} to={RoutePath.courses.description(course.slug).route}>
         <Button variant="light" c="blue" fullWidth mt="md" radius="md">
           {t("watch")}
         </Button>

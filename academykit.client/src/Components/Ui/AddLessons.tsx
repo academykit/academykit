@@ -7,7 +7,7 @@ import AddMeeting from "@components/Course/Lesson/AddMeeting";
 import AddPhysical from "@components/Course/Lesson/AddPhysical";
 import { useSection } from "@context/SectionProvider";
 import { Badge, Button, Tooltip } from "@mantine/core";
-import { TFunction } from "i18next";
+import type { TFunction } from "i18next";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -35,22 +35,10 @@ const LessonAddList = ({
       );
       break;
     case "mcq":
-      returnDiv = (
-        <AddExam
-          setIsEditing={() => {}}
-          setAddState={() => setAddState("")}
-          sectionId={sectionId}
-        />
-      );
+      returnDiv = <AddExam setIsEditing={() => {}} setAddState={() => setAddState("")} sectionId={sectionId} />;
       break;
     case "assignment":
-      returnDiv = (
-        <AddAssignment
-          setIsEditing={() => {}}
-          setAddState={() => setAddState("")}
-          sectionId={sectionId}
-        />
-      );
+      returnDiv = <AddAssignment setIsEditing={() => {}} setAddState={() => setAddState("")} sectionId={sectionId} />;
       break;
     case "meeting":
       returnDiv = (
@@ -64,13 +52,7 @@ const LessonAddList = ({
       );
       break;
     case "feedback":
-      returnDiv = (
-        <AddFeedback
-          setIsEditing={() => {}}
-          setAddState={setAddState}
-          sectionId={sectionId}
-        />
-      );
+      returnDiv = <AddFeedback setIsEditing={() => {}} setAddState={setAddState} sectionId={sectionId} />;
       break;
     case "document":
       returnDiv = (
@@ -99,61 +81,28 @@ const LessonAddList = ({
     <div>
       {!addState ? (
         <>
-          <Badge
-            style={{ cursor: "pointer" }}
-            variant="outline"
-            onClick={() => setAddState("lecture")}
-          >
+          <Badge style={{ cursor: "pointer" }} variant="outline" onClick={() => setAddState("lecture")}>
             + {t("video")}
           </Badge>{" "}
-          <Badge
-            style={{ cursor: "pointer" }}
-            variant="outline"
-            onClick={() => setAddState("mcq")}
-          >
+          <Badge style={{ cursor: "pointer" }} variant="outline" onClick={() => setAddState("mcq")}>
             + {t("exam")}
           </Badge>{" "}
-          <Badge
-            style={{ cursor: "pointer" }}
-            variant="outline"
-            onClick={() => setAddState("assignment")}
-          >
+          <Badge style={{ cursor: "pointer" }} variant="outline" onClick={() => setAddState("assignment")}>
             + {t("assignment")}
           </Badge>{" "}
-          <Badge
-            style={{ cursor: "pointer" }}
-            variant="outline"
-            onClick={() => setAddState("physical")}
-          >
+          <Badge style={{ cursor: "pointer" }} variant="outline" onClick={() => setAddState("physical")}>
             + {t("physical_name")}
           </Badge>{" "}
-          <Badge
-            style={{ cursor: "pointer" }}
-            variant="outline"
-            onClick={() => setAddState("meeting")}
-          >
+          <Badge style={{ cursor: "pointer" }} variant="outline" onClick={() => setAddState("meeting")}>
             + {t("live_class")}
           </Badge>{" "}
-          <Badge
-            style={{ cursor: "pointer" }}
-            variant="outline"
-            onClick={() => setAddState("feedback")}
-          >
+          <Badge style={{ cursor: "pointer" }} variant="outline" onClick={() => setAddState("feedback")}>
             + {t("feedback")}
           </Badge>{" "}
-          <Badge
-            style={{ cursor: "pointer" }}
-            variant="outline"
-            onClick={() => setAddState("document")}
-          >
+          <Badge style={{ cursor: "pointer" }} variant="outline" onClick={() => setAddState("document")}>
             + {t("document")}
           </Badge>{" "}
-          <Badge
-            color="red"
-            style={{ cursor: "pointer" }}
-            variant="outline"
-            onClick={() => setAddLessonClick(true)}
-          >
+          <Badge color="red" style={{ cursor: "pointer" }} variant="outline" onClick={() => setAddLessonClick(true)}>
             X {t("close")}
           </Badge>
         </>
@@ -172,12 +121,7 @@ const AddLesson = ({ sectionId }: { sectionId: string }) => {
   return (
     <div style={{ marginTop: "10px", marginBottom: "10px" }}>
       {addLessonClick ? (
-        <Tooltip
-          position="right"
-          multiline
-          w={220}
-          label={t("click_to_see_options")}
-        >
+        <Tooltip position="right" multiline w={220} label={t("click_to_see_options")}>
           <Button
             variant="outline"
             onClick={() => {
@@ -191,11 +135,7 @@ const AddLesson = ({ sectionId }: { sectionId: string }) => {
           </Button>
         </Tooltip>
       ) : (
-        <LessonAddList
-          t={t}
-          sectionId={sectionId}
-          setAddLessonClick={setAddLessonClick}
-        />
+        <LessonAddList t={t} sectionId={sectionId} setAddLessonClick={setAddLessonClick} />
       )}
     </div>
   );

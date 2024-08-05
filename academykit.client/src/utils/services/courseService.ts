@@ -1,16 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  CourseLanguage,
-  CourseStatus,
-  CourseUserStatus,
-  LessonType,
-} from "@utils/enums";
-import { ResponseData } from "./authService";
+import type { CourseLanguage, CourseStatus, CourseUserStatus, LessonType } from "@utils/enums";
+import type { ResponseData } from "./authService";
 import errorType from "./axiosError";
-import { INotMember } from "./groupService";
+import type { INotMember } from "./groupService";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import {
+import type {
   ILessonAssignment,
   ILessonFeedback,
   ILessonLecture,
@@ -44,8 +39,7 @@ export interface ICourse {
   userStatus: CourseUserStatus;
 }
 
-const getCourse = async (search: string) =>
-  await httpClient.get<IPaginated<ICourse>>(api.course.list + `?${search}`);
+const getCourse = async (search: string) => await httpClient.get<IPaginated<ICourse>>(api.course.list + `?${search}`);
 
 export const useCourse = (search: string) =>
   useQuery({
@@ -60,9 +54,7 @@ export interface IMyCourse extends ICourse {
 }
 
 const getMyCourse = async (userId: string, search: string) =>
-  await httpClient.get<IPaginated<IMyCourse>>(
-    api.course.userList(userId) + `?${search}`
-  );
+  await httpClient.get<IPaginated<IMyCourse>>(api.course.userList(userId) + `?${search}`);
 
 export const useMyCourse = (userId: string, search: string) =>
   useQuery({
@@ -73,7 +65,7 @@ export const useMyCourse = (userId: string, search: string) =>
 
 const getCourseTeacher = async (course_id: string, searchParams: string) =>
   await httpClient.get<IPaginated<ICreateCourseTeacher>>(
-    api.courseTeacher.list + `?CourseIdentity=${course_id}&${searchParams}`
+    api.courseTeacher.list + `?CourseIdentity=${course_id}&${searchParams}`,
   );
 
 export const useCourseTeacher = (course_id: string, searchParams: string) =>
@@ -111,9 +103,7 @@ export const useCreateTeacherCourse = (searchParams: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [
-          "get_course_teachers" + api.courseTeacher.list + searchParams,
-        ],
+        queryKey: ["get_course_teachers" + api.courseTeacher.list + searchParams],
       });
     },
   });
@@ -131,9 +121,7 @@ export const useDeleteCourseTeacher = (searchParams: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [
-          "get_course_teachers" + api.courseTeacher.list + searchParams,
-        ],
+        queryKey: ["get_course_teachers" + api.courseTeacher.list + searchParams],
       });
     },
   });
@@ -159,8 +147,7 @@ interface ICreateCourse {
   trainingEligibilities: IBaseTrainingEligibility[];
 }
 
-const createCourse = async (course: ICreateCourse) =>
-  await httpClient.post<ICourse>(api.course.list, course);
+const createCourse = async (course: ICreateCourse) => await httpClient.post<ICourse>(api.course.list, course);
 
 export const useCreateCourse = () => {
   const queryClient = useQueryClient();
@@ -188,8 +175,7 @@ export interface IFullCourse extends ICourse {
   trainingEligibilities: IBaseTrainingEligibility[];
   isEligible: boolean;
 }
-const getCourseDescription = async (id: string) =>
-  await httpClient.get<IFullCourse>(api.course.detail(id));
+const getCourseDescription = async (id: string) => await httpClient.get<IFullCourse>(api.course.detail(id));
 
 export const useCourseDescription = (id: string) =>
   useQuery({
@@ -247,11 +233,7 @@ const assignmentReorder = async ({
   lessonType: number;
   data: string[];
 }) =>
-  await httpClient.post(
-    api.course.reorder(id) +
-      `?lessonIdentity=${lessonIdentity}&lessonType=${lessonType}`,
-    data
-  );
+  await httpClient.post(api.course.reorder(id) + `?lessonIdentity=${lessonIdentity}&lessonType=${lessonType}`, data);
 
 export const useQuestionReorder = (id: string) => {
   const queryClient = useQueryClient();
@@ -386,9 +368,7 @@ export const useCreateSection = (slug: string) => {
 };
 
 const getSection = async (courseIdentity: string) => {
-  return await httpClient.get<IPaginated<ISection>>(
-    api.section.section(courseIdentity)
-  );
+  return await httpClient.get<IPaginated<ISection>>(api.section.section(courseIdentity));
 };
 export const useGetSection = (courseIdentity: string) => {
   return useQuery({
@@ -406,10 +386,7 @@ const updateSectionName = async (data: {
   sectionId: string;
   sectionName: string;
 }) => {
-  return await httpClient.patch(
-    api.section.updateSection(data.id, data.sectionId),
-    { name: data.sectionName }
-  );
+  return await httpClient.patch(api.section.updateSection(data.id, data.sectionId), { name: data.sectionName });
 };
 export const useUpdateSectionName = (slug: string) => {
   const queryClient = useQueryClient();
@@ -426,9 +403,7 @@ export const useUpdateSectionName = (slug: string) => {
 };
 
 const deleteSection = async (data: { id: string; sectionId: string }) => {
-  return await httpClient.delete(
-    api.section.updateSection(data.id, data.sectionId)
-  );
+  return await httpClient.delete(api.section.updateSection(data.id, data.sectionId));
 };
 export const useDeleteSection = (slug: string) => {
   const queryClient = useQueryClient();
@@ -444,14 +419,8 @@ export const useDeleteSection = (slug: string) => {
   });
 };
 
-const createLesson = async (
-  data:
-    | ILessonLecture
-    | ILessonMCQ
-    | ILessonAssignment
-    | ILessonMeeting
-    | ILessonFeedback
-) => await httpClient.post<ILessons>(api.lesson.addLesson(data.courseId), data);
+const createLesson = async (data: ILessonLecture | ILessonMCQ | ILessonAssignment | ILessonMeeting | ILessonFeedback) =>
+  await httpClient.post<ILessons>(api.lesson.addLesson(data.courseId), data);
 
 export const useCreateLesson = (slug: string) => {
   const queryClient = useQueryClient();
@@ -469,24 +438,12 @@ export const useCreateLesson = (slug: string) => {
 };
 
 const updateLesson = async (
-  data:
-    | ILessonLecture
-    | ILessonMCQ
-    | ILessonAssignment
-    | ILessonMeeting
-    | ILessonFeedback
+  data: ILessonLecture | ILessonMCQ | ILessonAssignment | ILessonMeeting | ILessonFeedback,
 ) => {
-  return await httpClient.put(
-    api.lesson.updateLesson(data.courseId, data.lessonIdentity),
-    data
-  );
+  return await httpClient.put(api.lesson.updateLesson(data.courseId, data.lessonIdentity), data);
 };
 
-export const useUpdateLesson = (
-  courseIdentity: string,
-  courseId?: string,
-  lessonId?: string
-) => {
+export const useUpdateLesson = (courseIdentity: string, courseId?: string, lessonId?: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -508,9 +465,7 @@ export const useUpdateLesson = (
 };
 
 const deleteLesson = async (data: { id: string; lessonId: string }) => {
-  return await httpClient.delete(
-    api.lesson.deleteLesson(data.id, data.lessonId)
-  );
+  return await httpClient.delete(api.lesson.deleteLesson(data.id, data.lessonId));
 };
 export const useDeleteLesson = (slug: string) => {
   const queryClient = useQueryClient();
@@ -664,19 +619,10 @@ export interface ICourseLesson {
   isTrainee: boolean;
 }
 
-const getCourseLesson = async (
-  courseIdentity: string,
-  lessonIdentity?: string
-) => {
-  return await httpClient.get<ICourseLesson>(
-    api.lesson.courseLesson(courseIdentity, lessonIdentity)
-  );
+const getCourseLesson = async (courseIdentity: string, lessonIdentity?: string) => {
+  return await httpClient.get<ICourseLesson>(api.lesson.courseLesson(courseIdentity, lessonIdentity));
 };
-export const useGetCourseLesson = (
-  courseIdentity: string,
-  lessonIdentity?: string,
-  enabled?: boolean
-) => {
+export const useGetCourseLesson = (courseIdentity: string, lessonIdentity?: string, enabled?: boolean) => {
   return useQuery({
     queryKey: [api.lesson.courseLesson(courseIdentity, lessonIdentity)],
     queryFn: () => getCourseLesson(courseIdentity, lessonIdentity),
@@ -813,9 +759,7 @@ export const useAddCertificate = (courseId: string) => {
 };
 
 const getSingleCertificate = (id: string) => {
-  return httpClient.get<IGetCertificateDetails>(
-    api.course.getCertificateDetails(id)
-  );
+  return httpClient.get<IGetCertificateDetails>(api.course.getCertificateDetails(id));
 };
 export const useGetCertificateDetails = (id: string) => {
   return useQuery({
@@ -844,9 +788,7 @@ export const useAddTrainee = (courseId: string) => {
 };
 
 const getTrainee = (courseId: string, query: string) => {
-  return httpClient.get<IPaginated<INotMember>>(
-    api.enrollment.trainee(courseId, query)
-  );
+  return httpClient.get<IPaginated<INotMember>>(api.enrollment.trainee(courseId, query));
 };
 
 export const useGetTrainee = (courseId: string, query: string) => {
@@ -864,15 +806,10 @@ export interface IUpdateShuffle {
 }
 
 const getShuffleDetails = (trainingSlug: string, lessonSlug: string) => {
-  return httpClient.get<IUpdateShuffle>(
-    api.course.getShuffle(trainingSlug, lessonSlug)
-  );
+  return httpClient.get<IUpdateShuffle>(api.course.getShuffle(trainingSlug, lessonSlug));
 };
 
-export const useGetShuffleDetails = (
-  trainingSlug: string,
-  lessonSlug: string
-) => {
+export const useGetShuffleDetails = (trainingSlug: string, lessonSlug: string) => {
   return useQuery({
     queryKey: [api.course.getShuffle(trainingSlug, lessonSlug)],
     queryFn: () => getShuffleDetails(trainingSlug, lessonSlug),

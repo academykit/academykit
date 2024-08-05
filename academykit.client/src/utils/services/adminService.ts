@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { EFileStorageType, MailType } from "@utils/enums";
+import type { EFileStorageType, MailType } from "@utils/enums";
 import queryStringGenerator from "@utils/queryStringGenerator";
 import axios from "axios";
 import errorType from "./axiosError";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { IAddUser, IPaginated, IUser, IUserProfile } from "./types";
+import type { IAddUser, IPaginated, IUser, IUserProfile } from "./types";
 
 export interface IMailNotification {
   id: string;
@@ -118,8 +118,7 @@ export const useUsers = (search: string) =>
     select: (data) => data.data,
   });
 
-const updateUser = ({ data, id }: { data: any; id: string }) =>
-  httpClient.put(api.auth.getUser(id), data);
+const updateUser = ({ data, id }: { data: any; id: string }) => httpClient.put(api.auth.getUser(id), data);
 export const useUpdateUser = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -160,8 +159,7 @@ export const useUpdateUserStatus = (search: string) => {
   });
 };
 
-const addUser = (data: IAddUser) =>
-  httpClient.post(api.adminUser.addUsers, data);
+const addUser = (data: IAddUser) => httpClient.post(api.adminUser.addUsers, data);
 
 export const useAddUser = (search: string) => {
   const queryClient = useQueryClient();
@@ -202,8 +200,8 @@ export const useLevelSetting = () => {
       return httpClient.get<ILevel[]>(api.adminUser.getLevelSetting);
     },
 
-    staleTime: Infinity,
-    cacheTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
+    cacheTime: Number.POSITIVE_INFINITY,
     select: (data) => data.data,
   });
 };
@@ -275,10 +273,7 @@ export const updateDepartmentStatus = (id: string) => {
     mutationKey: ["update" + api.adminUser.updateDepartmentSetting(id)],
 
     mutationFn: (data: { name: string }) => {
-      return httpClient.put<ILevel>(
-        api.adminUser.updateDepartmentSetting(id),
-        data
-      );
+      return httpClient.put<ILevel>(api.adminUser.updateDepartmentSetting(id), data);
     },
 
     onSuccess: () => {
@@ -290,16 +285,14 @@ export const updateDepartmentStatus = (id: string) => {
 };
 
 const getDepartment = async (search: string) =>
-  await httpClient.get<IPaginated<IDepartmentSetting>>(
-    api.adminUser.getDepartmentSettings + `?${search}`
-  );
+  await httpClient.get<IPaginated<IDepartmentSetting>>(api.adminUser.getDepartmentSettings + `?${search}`);
 
 export const useDepartmentSetting = (search: string) => {
   return useQuery({
     queryKey: [api.adminUser.getDepartmentSettings, search],
     queryFn: () => getDepartment(search),
-    staleTime: Infinity,
-    cacheTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
+    cacheTime: Number.POSITIVE_INFINITY,
     select: (data) => data.data,
   });
 };
@@ -309,10 +302,7 @@ export const usePostDepartmentSetting = () => {
     mutationKey: ["post" + api.adminUser.getDepartmentSettings],
 
     mutationFn: (data: { name: string; isActive: boolean }) => {
-      return httpClient.post<IDepartmentSetting>(
-        api.adminUser.getDepartmentSettings,
-        data
-      );
+      return httpClient.post<IDepartmentSetting>(api.adminUser.getDepartmentSettings, data);
     },
 
     onSuccess: () => {
@@ -345,10 +335,7 @@ export const useDeleteDepartmentSetting = () => {
   });
 };
 
-export const useUpdateDepartmentSettingStatus = (
-  id: string,
-  status: boolean
-) => {
+export const useUpdateDepartmentSettingStatus = (id: string, status: boolean) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["patch" + api.adminUser.updateDepartmentStatus(id, status)],
@@ -401,8 +388,8 @@ export const useZoomSetting = () => {
       return httpClient.get<IZoomSetting>(api.adminUser.getZoomSettings);
     },
 
-    staleTime: Infinity,
-    cacheTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
+    cacheTime: Number.POSITIVE_INFINITY,
   });
 };
 
@@ -419,10 +406,7 @@ export const useUpdateZoomSetting = (id: string | undefined) => {
       sdkSecret: string;
       isRecordingEnabled: boolean;
     }) => {
-      return httpClient.put<IZoomSetting>(
-        api.adminUser.updateZoomSettings(id),
-        data
-      );
+      return httpClient.put<IZoomSetting>(api.adminUser.updateZoomSettings(id), data);
     },
 
     onSuccess: () => {
@@ -441,8 +425,8 @@ export const useSMTPSetting = () => {
       return httpClient.get<ISMTPSetting>(api.adminUser.getSMTPSettings);
     },
 
-    staleTime: Infinity,
-    cacheTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
+    cacheTime: Number.POSITIVE_INFINITY,
   });
 };
 
@@ -452,10 +436,7 @@ export const useUpdateSMTPSetting = (id: string | undefined) => {
     mutationKey: ["update" + api.adminUser.getSMTPSettings],
 
     mutationFn: (data: ISMTPSettingUpdate) => {
-      return httpClient.put<ISMTPSetting>(
-        api.adminUser.updateSMTPSettings(id),
-        data
-      );
+      return httpClient.put<ISMTPSetting>(api.adminUser.updateSMTPSettings(id), data);
     },
 
     onSuccess: () => {
@@ -475,8 +456,8 @@ export const useGeneralSetting = () => {
       return httpClient.get<IGeneralSetting>(api.adminUser.getGeneralSettings);
     },
 
-    staleTime: Infinity,
-    cacheTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
+    cacheTime: Number.POSITIVE_INFINITY,
   });
 };
 // company settings
@@ -513,43 +494,26 @@ export const useZoomLicense = () => {
     queryKey: [api.adminUser.getZoomLicense],
 
     queryFn: () => {
-      return httpClient.get<IPaginated<IZoomLicense<IUser>>>(
-        api.adminUser.getZoomLicense
-      );
+      return httpClient.get<IPaginated<IZoomLicense<IUser>>>(api.adminUser.getZoomLicense);
     },
 
-    staleTime: Infinity,
-    cacheTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
+    cacheTime: Number.POSITIVE_INFINITY,
   });
 };
 
-const getActiveZoomLicense = (
-  startDateTime: string,
-  duration: number,
-  lessonIdentity?: string
-) => {
+const getActiveZoomLicense = (startDateTime: string, duration: number, lessonIdentity?: string) => {
   const query = queryStringGenerator({
     startDateTime,
     duration,
     lessonIdentity,
   });
-  return httpClient.get<IZoomLicense<IUser>[]>(
-    api.adminUser.getActiveZoomLicense(query)
-  );
+  return httpClient.get<IZoomLicense<IUser>[]>(api.adminUser.getActiveZoomLicense(query));
 };
-export const useActiveZoomLicense = (
-  startDateTime: string,
-  duration: number,
-  lessonIdentity?: string
-) => {
+export const useActiveZoomLicense = (startDateTime: string, duration: number, lessonIdentity?: string) => {
   return useQuery({
-    queryKey: [
-      "active" + api.adminUser.getZoomLicense,
-      startDateTime,
-      duration,
-    ],
-    queryFn: () =>
-      getActiveZoomLicense(startDateTime, duration, lessonIdentity),
+    queryKey: ["active" + api.adminUser.getZoomLicense, startDateTime, duration],
+    queryFn: () => getActiveZoomLicense(startDateTime, duration, lessonIdentity),
     select: (data) => data,
     enabled: !!startDateTime && !!duration,
   });
@@ -562,9 +526,7 @@ export const updateZoomLicenseStatus = async ({
   id: string;
   status: boolean;
 }) => {
-  return await httpClient.patch(
-    api.adminUser.updateZoomLicenseStatus(id, status)
-  );
+  return await httpClient.patch(api.adminUser.updateZoomLicenseStatus(id, status));
 };
 
 const deleteZoomLicense = async (id: string) => {
@@ -638,9 +600,7 @@ export interface IFileStorageValues {
   value: string | null;
 }
 const getFileStorageSetting = async () => {
-  return await httpClient.get<IFileStorage[]>(
-    api.fileStorage.getFileStorageSetting
-  );
+  return await httpClient.get<IFileStorage[]>(api.fileStorage.getFileStorageSetting);
 };
 
 export const useGetFileStorageSetting = () => {
@@ -668,10 +628,7 @@ export const useGetFileStorageSetting = () => {
 //putfilestorage
 
 const updateFileStorage = async (data: IFileStorage[]) =>
-  await httpClient.put<IFileStorage>(
-    api.fileStorage.updateFileStorageSetting,
-    data.filter((x) => x.isActive)[0]
-  );
+  await httpClient.put<IFileStorage>(api.fileStorage.updateFileStorageSetting, data.filter((x) => x.isActive)[0]);
 
 export const useUpdateFileStorage = () => {
   const queryClient = useQueryClient();
@@ -692,8 +649,7 @@ export const useUpdateFileStorage = () => {
 };
 
 // ------------Resend Email-------------------
-const resendEmail = async (id: string) =>
-  await httpClient.patch(api.auth.resendEmail(id));
+const resendEmail = async (id: string) => await httpClient.patch(api.auth.resendEmail(id));
 export const useResendEmail = (id: string) =>
   useMutation({
     mutationKey: [api.auth.resendEmail(id)],
@@ -709,14 +665,8 @@ interface ITrainerGet {
 }
 
 const getTrainers = async (search: string, lessonType?: number, id?: string) =>
-  await httpClient.get<ITrainerGet[]>(
-    api.adminUser.getTrainer(search, lessonType, id)
-  );
-export const useGetTrainers = (
-  search: string,
-  lessonType?: number,
-  id?: string
-) =>
+  await httpClient.get<ITrainerGet[]>(api.adminUser.getTrainer(search, lessonType, id));
+export const useGetTrainers = (search: string, lessonType?: number, id?: string) =>
   useQuery({
     queryKey: [api.adminUser.getTrainer(search, lessonType, id)],
     queryFn: () => getTrainers(search, lessonType, id),
@@ -763,16 +713,14 @@ export const useGetSingleLog = (id: string) => {
 // -----------------Mail Notification-------------------
 
 const getMailNotification = async (search: string) =>
-  httpClient.get<IPaginated<IMailNotification>>(
-    api.adminUser.getMailNotification + `?${search}`
-  );
+  httpClient.get<IPaginated<IMailNotification>>(api.adminUser.getMailNotification + `?${search}`);
 
 export const useMailNotification = (search: string) => {
   return useQuery({
     queryKey: [api.adminUser.getMailNotification, search],
     queryFn: () => getMailNotification(search),
-    staleTime: Infinity,
-    cacheTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
+    cacheTime: Number.POSITIVE_INFINITY,
     select: (data) => data.data,
   });
 };
@@ -806,10 +754,7 @@ export const usePostMailNotification = () => {
     mutationKey: ["post" + api.adminUser.getMailNotification],
 
     mutationFn: (data: IPostMailNotification) => {
-      return httpClient.post<IMailNotification>(
-        api.adminUser.getMailNotification,
-        data
-      );
+      return httpClient.post<IMailNotification>(api.adminUser.getMailNotification, data);
     },
 
     onSuccess: () => {
@@ -820,15 +765,14 @@ export const usePostMailNotification = () => {
   });
 };
 
-const getMailPreview = async (id: string) =>
-  httpClient.get<string>(api.adminUser.updateMailNotification(id));
+const getMailPreview = async (id: string) => httpClient.get<string>(api.adminUser.updateMailNotification(id));
 
 export const useMailPreview = (id: string) => {
   return useQuery({
     queryKey: [api.adminUser.updateMailNotification(id)],
     queryFn: () => getMailPreview(id),
-    staleTime: Infinity,
-    cacheTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
+    cacheTime: Number.POSITIVE_INFINITY,
     select: (data) => data.data,
     enabled: false,
   });
@@ -854,8 +798,7 @@ export const useTestEmail = () => {
   });
 };
 
-const deleteMailNotification = async (id: string) =>
-  httpClient.delete(api.adminUser.updateMailNotification(id));
+const deleteMailNotification = async (id: string) => httpClient.delete(api.adminUser.updateMailNotification(id));
 
 export const useDeleteMailNotification = () => {
   const queryClient = useQueryClient();

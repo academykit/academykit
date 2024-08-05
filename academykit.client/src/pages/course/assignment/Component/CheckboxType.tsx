@@ -1,19 +1,13 @@
 import TextViewer from "@components/Ui/RichTextViewer";
 import { Box, Card, Group, Title } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
-import {
-  IAssignmentOptions,
-  IAssignmentQuestion,
-} from "@utils/services/assignmentService";
+import type { UseFormReturnType } from "@mantine/form";
+import type { IAssignmentOptions, IAssignmentQuestion } from "@utils/services/assignmentService";
 import cx from "clsx";
 import { useTranslation } from "react-i18next";
 import classes from "../../styles/radioType.module.css";
 
 type Props = {
-  form: UseFormReturnType<
-    IAssignmentQuestion[],
-    (values: IAssignmentQuestion[]) => IAssignmentQuestion[]
-  >;
+  form: UseFormReturnType<IAssignmentQuestion[], (values: IAssignmentQuestion[]) => IAssignmentQuestion[]>;
   options: IAssignmentOptions[];
   currentIndex: number;
 };
@@ -33,18 +27,14 @@ const CheckBoxType = ({ options, form, currentIndex }: Props) => {
             type={"checkbox"}
             id={option.id}
             style={{ display: "none" }}
-            {...form.getInputProps(
-              `${currentIndex}.assignmentQuestionOptions.${index}.isSelected`
-            )}
+            {...form.getInputProps(`${currentIndex}.assignmentQuestionOptions.${index}.isSelected`)}
           ></input>
           <Card
             shadow={"md"}
             my={10}
             p={10}
             className={cx({
-              [classes.active]:
-                form.values[currentIndex].assignmentQuestionOptions![index]
-                  .isSelected,
+              [classes.active]: form.values[currentIndex].assignmentQuestionOptions![index].isSelected,
             })}
             style={{ cursor: "pointer" }}
           >

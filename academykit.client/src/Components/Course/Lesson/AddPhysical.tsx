@@ -8,14 +8,11 @@ import { showNotification } from "@mantine/notifications";
 import { LessonType } from "@utils/enums";
 import { getDateTime } from "@utils/getDateTime";
 import errorType from "@utils/services/axiosError";
-import {
-  useCreateLesson,
-  useGetCourseLesson,
-  useUpdateLesson,
-} from "@utils/services/courseService";
-import { IPhysicalTraining } from "@utils/services/types";
+import { useCreateLesson, useGetCourseLesson, useUpdateLesson } from "@utils/services/courseService";
+import type { IPhysicalTraining } from "@utils/services/types";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
@@ -51,11 +48,7 @@ const AddPhysical = ({
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
   const [dateTime, setDateTime] = useState<string>("");
-  const lessonDetails = useGetCourseLesson(
-    item?.courseId || "",
-    item?.id,
-    isEditing
-  );
+  const lessonDetails = useGetCourseLesson(item?.courseId || "", item?.id, isEditing);
   const { t } = useTranslation();
 
   const form = useForm({
@@ -69,11 +62,7 @@ const AddPhysical = ({
   });
   useFormErrorHooks(form);
 
-  const updateLesson = useUpdateLesson(
-    slug as string,
-    item?.courseId,
-    item?.id
-  );
+  const updateLesson = useUpdateLesson(slug as string, item?.courseId, item?.id);
 
   useEffect(() => {
     if (lessonDetails.isSuccess && isEditing) {
@@ -103,9 +92,7 @@ const AddPhysical = ({
 
   const handleSubmit = async (values: any) => {
     const time = moment(values?.physicalStartTime, "HH:mm").format("HH:mm");
-    const date = moment(values?.physicalStartDate, "MM/DD/YYYY").format(
-      "MM/DD/YYYY"
-    );
+    const date = moment(values?.physicalStartDate, "MM/DD/YYYY").format("MM/DD/YYYY");
 
     try {
       const startDate = isEditing
@@ -134,9 +121,7 @@ const AddPhysical = ({
         } as IPhysicalTraining);
       }
       showNotification({
-        message: `${t("capital_lesson")} ${
-          isEditing ? t("edited") : t("added")
-        } ${t("successfully")}`,
+        message: `${t("capital_lesson")} ${isEditing ? t("edited") : t("added")} ${t("successfully")}`,
         title: t("success"),
       });
       setAddLessonClick(true);
@@ -170,25 +155,15 @@ const AddPhysical = ({
           withAsterisk
           {...form.getInputProps("physicalStartDate")}
         />
-        <TimeInput
-          label={t("start_time")}
-          withAsterisk
-          {...form.getInputProps("physicalStartTime")}
-        />
+        <TimeInput label={t("start_time")} withAsterisk {...form.getInputProps("physicalStartTime")} />
       </Group>
 
       <Box my={20}>
         <Text size={"sm"}>{t("description")}</Text>
-        <RichTextEditor
-          placeholder={t("physical_name_description") as string}
-          {...form.getInputProps("description")}
-        />
+        <RichTextEditor placeholder={t("physical_name_description") as string} {...form.getInputProps("description")} />
       </Box>
       <Group mt="md">
-        <Button
-          type="submit"
-          loading={lesson.isLoading || updateLesson.isLoading}
-        >
+        <Button type="submit" loading={lesson.isLoading || updateLesson.isLoading}>
           {t("submit")}
         </Button>
         {!isEditing && (

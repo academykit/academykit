@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from "@utils/constants";
-import { UserRole } from "@utils/enums";
+import type { UserRole } from "@utils/enums";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { IPasswordResetResponse, IUserProfile } from "./types";
+import type { IPasswordResetResponse, IUserProfile } from "./types";
 
 export interface ILogin {
   firstName: string;
@@ -151,10 +151,7 @@ export const useChangeEmail = () => {
       confirmEmail: string;
       password: string;
     }) => {
-      return httpClient.put<{ resendToken: string }>(
-        api.auth.changeEmail,
-        data
-      );
+      return httpClient.put<{ resendToken: string }>(api.auth.changeEmail, data);
     },
   });
 };
@@ -177,8 +174,8 @@ export const useVerifyChangeEmail = (token: string) => {
     queryKey: [api.auth.verifyChangeEmail],
     queryFn: () => httpClient.get(url),
     select: (data) => data.data,
-    staleTime: Infinity,
-    cacheTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
+    cacheTime: Number.POSITIVE_INFINITY,
     retry: false,
 
     onSuccess: () => {

@@ -1,13 +1,5 @@
 import TextViewer from "@components/Ui/RichTextViewer";
-import {
-  Button,
-  Card,
-  Container,
-  Group,
-  Loader,
-  Rating,
-  Title,
-} from "@mantine/core";
+import { Button, Card, Container, Group, Loader, Rating, Title } from "@mantine/core";
 import { FeedbackType } from "@utils/enums";
 import { useReAuth } from "@utils/services/authService";
 import { useGetUserFeedback } from "@utils/services/feedbackService";
@@ -21,10 +13,7 @@ const FeedbackResult = () => {
   const navigate = useNavigate();
   const auth = useReAuth();
   const { t } = useTranslation();
-  const getUserFeedback = useGetUserFeedback(
-    id as string,
-    studentId ? (studentId as string) : auth.data?.id ?? ""
-  );
+  const getUserFeedback = useGetUserFeedback(id as string, studentId ? (studentId as string) : auth.data?.id ?? "");
 
   if (getUserFeedback.isError) {
     throw getUserFeedback.error;

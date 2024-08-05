@@ -17,7 +17,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconInfoSquare } from "@tabler/icons-react";
 import { UserRole } from "@utils/enums";
 import { useGeneralSetting } from "@utils/services/adminService";
-import { IUser } from "@utils/services/types";
+import type { IUser } from "@utils/services/types";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Outlet } from "react-router-dom";
@@ -29,9 +29,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
   const settings = useGeneralSetting();
 
   const setHeader = () => {
-    const info =
-      localStorage.getItem("app-info") &&
-      JSON.parse(localStorage.getItem("app-info") ?? "");
+    const info = localStorage.getItem("app-info") && JSON.parse(localStorage.getItem("app-info") ?? "");
     if (info) {
       let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
       document.title = info.name;
@@ -53,7 +51,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
         JSON.stringify({
           name: settings.data.data.companyName,
           logo: settings.data.data.logoUrl,
-        })
+        }),
       );
       setHeader();
     }
@@ -80,10 +78,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
     <AppShell
       styles={(theme) => ({
         main: {
-          backgroundColor:
-            colorScheme === "dark"
-              ? theme.colors.dark[8]
-              : theme.colors.gray[0],
+          backgroundColor: colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
         },
       })}
       header={{ height: 60 }}
@@ -108,12 +103,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
         ) : (
           <Container className={classes.inner} fluid>
             <Group>
-              <Burger
-                opened={opened}
-                onClick={toggle}
-                hiddenFrom="sm"
-                size="sm"
-              />
+              <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
               <Link to="/" style={{ marginTop: "5px" }}>
                 <img height={50} src={settings.data?.data?.logoUrl} alt="" />
               </Link>
@@ -140,9 +130,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
           {layout.meetPage ? (
             <></>
           ) : (!layout.examPage || !layout.meetPage) && showNavBar ? (
-            <Box py="sm">
-              {!layout.meetPage && <LeftMainLinks onClose={() => toggle()} />}
-            </Box>
+            <Box py="sm">{!layout.meetPage && <LeftMainLinks onClose={() => toggle()} />}</Box>
           ) : null}
         </AppShell.Section>
 
@@ -152,11 +140,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
               href={footerMenu.href}
               label={t(`${footerMenu.label}`)}
               target={footerMenu.target}
-              leftSection={
-                <ThemeIcon color={footerMenu.color}>
-                  {footerMenu.icon}
-                </ThemeIcon>
-              }
+              leftSection={<ThemeIcon color={footerMenu.color}>{footerMenu.icon}</ThemeIcon>}
               style={{
                 padding: theme.spacing.xs,
                 borderTop: "0.0125rem solid",

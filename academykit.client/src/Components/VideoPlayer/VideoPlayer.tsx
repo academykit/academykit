@@ -2,8 +2,8 @@ import { ActionIcon, Box, Flex } from "@mantine/core";
 import cx from "clsx";
 import fscreen from "fscreen";
 import "rc-slider/assets/index.css";
-import React, { FC, useEffect, useRef, useState } from "react";
-import ReactPlayer, { Config, ReactPlayerProps } from "react-player";
+import React, { type FC, useEffect, useRef, useState } from "react";
+import ReactPlayer, { type Config, type ReactPlayerProps } from "react-player";
 import PlayerIcon from "./controls/PlayerIcon";
 import RemainingTimeDisplay from "./controls/RemaningTimeDisplay";
 import SeekBar from "./controls/SeekBar";
@@ -14,15 +14,7 @@ interface Props extends ReactPlayerProps {
   config?: Config;
   thumbnailUrl?: string;
   setCurrentPlayerState: React.Dispatch<
-    React.SetStateAction<
-      | "loading"
-      | "completed"
-      | "loaded"
-      | "playing"
-      | "paused"
-      | "viewing"
-      | "buffering"
-    >
+    React.SetStateAction<"loading" | "completed" | "loaded" | "playing" | "paused" | "viewing" | "buffering">
   >;
 }
 
@@ -137,8 +129,7 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
     setPip(false);
   };
 
-  const [hideControlTimerFunc, setHideControlTimerFunc] =
-    useState<NodeJS.Timeout | null>(null);
+  const [hideControlTimerFunc, setHideControlTimerFunc] = useState<NodeJS.Timeout | null>(null);
 
   const autoHideControls = (hide: boolean) => {
     if (hideControlTimerFunc) clearTimeout(hideControlTimerFunc);
@@ -146,7 +137,7 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
       setHideControlTimerFunc(
         setTimeout(() => {
           setHideControls(true);
-        }, 1000)
+        }, 1000),
       );
     } else {
       setHideControls(false);
@@ -233,11 +224,7 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
             [classes.hidden]: hideControls,
           })}
         >
-          <ActionIcon
-            variant="subtle"
-            color=""
-            onClick={() => setPlaying(!playing)}
-          >
+          <ActionIcon variant="subtle" color="" onClick={() => setPlaying(!playing)}>
             {!playing ? <PlayerIcon.Play /> : <PlayerIcon.Pause />}
           </ActionIcon>
           <SeekBar
@@ -256,12 +243,7 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
               paddingRight: 8,
             }}
           >
-            <ActionIcon
-              variant="subtle"
-              color={"white"}
-              mx={5}
-              onClick={toggleMute}
-            >
+            <ActionIcon variant="subtle" color={"white"} mx={5} onClick={toggleMute}>
               {muted ? <PlayerIcon.VolumeMuted /> : <PlayerIcon.Volume />}
             </ActionIcon>
             <VolumeControlBar
@@ -271,27 +253,13 @@ const VideoPlayer: FC<React.PropsWithChildren<Props>> = ({
             ></VolumeControlBar>
           </Flex>
           {ReactPlayer.canEnablePIP(url) && (
-            <ActionIcon
-              variant="subtle"
-              mx={3}
-              color={"white"}
-              onClick={handleTogglePIP}
-            >
+            <ActionIcon variant="subtle" mx={3} color={"white"} onClick={handleTogglePIP}>
               {pip ? <PlayerIcon.PiPExit /> : <PlayerIcon.PiP />}
             </ActionIcon>
           )}
           {fscreen.fullscreenEnabled && (
-            <ActionIcon
-              variant="subtle"
-              mx={3}
-              color={"white"}
-              onClick={toggleFullscreen}
-            >
-              {inFullscreenMode ? (
-                <PlayerIcon.FullScreenExit />
-              ) : (
-                <PlayerIcon.FullScreen />
-              )}
+            <ActionIcon variant="subtle" mx={3} color={"white"} onClick={toggleFullscreen}>
+              {inFullscreenMode ? <PlayerIcon.FullScreenExit /> : <PlayerIcon.FullScreen />}
             </ActionIcon>
           )}
         </Box>

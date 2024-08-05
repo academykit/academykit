@@ -1,6 +1,6 @@
 import { Badge, Group, Indicator, Paper, Text } from "@mantine/core";
 import { LessonType } from "@utils/enums";
-import { UpcomingEvents } from "@utils/services/dashboardService";
+import type { UpcomingEvents } from "@utils/services/dashboardService";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -55,14 +55,7 @@ const EventCard = ({ detail }: { detail: UpcomingEvents }) => {
 
   return (
     <>
-      <Indicator
-        ml={8}
-        size={15}
-        disabled={!detail.isLive}
-        processing
-        color={"green"}
-        position="top-start"
-      >
+      <Indicator ml={8} size={15} disabled={!detail.isLive} processing color={"green"} position="top-start">
         <Paper
           mt={10}
           p={10}

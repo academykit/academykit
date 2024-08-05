@@ -3,24 +3,17 @@ import {
   BarElement,
   CategoryScale,
   Chart as ChartJS,
-  CoreScaleOptions,
+  type CoreScaleOptions,
   Legend,
   LinearScale,
-  Scale,
+  type Scale,
   Title,
   Tooltip,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useTranslation } from "react-i18next";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export const options = {
   indexAxis: "y" as const,
@@ -34,16 +27,13 @@ export const options = {
   plugins: {
     legend: {
       position: "top" as const,
-      onClick: function () {},
+      onClick: () => {},
     },
   },
   scales: {
     y: {
       ticks: {
-        callback: function (
-          this: Scale<CoreScaleOptions>,
-          tickValue: string | number
-        ): string | number {
+        callback: function (this: Scale<CoreScaleOptions>, tickValue: string | number): string | number {
           const truncatedValue =
             this.getLabelForValue(tickValue as number).toString().length > 6
               ? this.getLabelForValue(tickValue as number)
@@ -73,12 +63,7 @@ interface IProps {
   type: "SingleChoice" | "MultipleChoice";
 }
 
-const HorizontalBarGraph = ({
-  name,
-  feedbackOptions,
-  responseCount,
-  type,
-}: IProps) => {
+const HorizontalBarGraph = ({ name, feedbackOptions, responseCount, type }: IProps) => {
   const { t } = useTranslation();
 
   const removeTags = (value: string) => {

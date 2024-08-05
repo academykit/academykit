@@ -1,9 +1,9 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { CourseStatus, CourseUserStatus, QuestionType } from "@utils/enums";
-import { IQuestion } from "./questionService";
+import type { CourseStatus, CourseUserStatus, QuestionType } from "@utils/enums";
+import type { IQuestion } from "./questionService";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { IUser } from "./types";
+import type { IUser } from "./types";
 
 export interface ILessonStartQuestionOption {
   id: string;
@@ -34,8 +34,7 @@ export interface ILessonExamStart {
   role: CourseUserStatus;
 }
 
-const getStartExam = (lessonId: string) =>
-  httpClient.post<ILessonExamStart>(api.exam.startExam(lessonId), {});
+const getStartExam = (lessonId: string) => httpClient.post<ILessonExamStart>(api.exam.startExam(lessonId), {});
 
 export const useStartExam = (lessonId: string) =>
   useMutation({
@@ -57,8 +56,7 @@ const postExamSubmit = ({
   data: ILessonExamSubmit[];
   lessonId: string;
   questionSetSubmissionId: string;
-}) =>
-  httpClient.post(api.exam.submitExam(lessonId, questionSetSubmissionId), data);
+}) => httpClient.post(api.exam.submitExam(lessonId, questionSetSubmissionId), data);
 
 export const useSubmitExam = () =>
   useMutation({
@@ -83,10 +81,7 @@ export interface QuestionSetSubmissionResult {
 }
 
 const getMyResult = (lessonId: string, userId: string) =>
-  httpClient.get<QuestionSetSubmissionResult>(
-    api.exam.getStudentResults(lessonId, userId),
-    {}
-  );
+  httpClient.get<QuestionSetSubmissionResult>(api.exam.getStudentResults(lessonId, userId), {});
 
 export const useMyResult = (lessonId: string, userId: string) =>
   useQuery({
@@ -118,14 +113,9 @@ export interface IOneExamResult {
 }
 
 const getOneExamResult = (lessonId: string, questionSetSubmissionId: string) =>
-  httpClient.get<IOneExamResult>(
-    api.exam.getOneExamResult(lessonId, questionSetSubmissionId)
-  );
+  httpClient.get<IOneExamResult>(api.exam.getOneExamResult(lessonId, questionSetSubmissionId));
 
-export const useGetOneExamResult = (
-  lessonId: string,
-  questionSetSubmissionId: string
-) =>
+export const useGetOneExamResult = (lessonId: string, questionSetSubmissionId: string) =>
   useQuery({
     queryKey: [api.exam.getOneExamResult(lessonId, questionSetSubmissionId)],
     queryFn: () => getOneExamResult(lessonId, questionSetSubmissionId),
@@ -152,9 +142,7 @@ export interface IExamSummary {
 }
 
 const getExamSummary = (courseIdentity: string, lessonId: string) =>
-  httpClient.get<IExamSummary>(
-    api.course.examSummary(courseIdentity, lessonId)
-  );
+  httpClient.get<IExamSummary>(api.course.examSummary(courseIdentity, lessonId));
 
 export const useGetExamSummary = (courseIdentity: string, lessonId: string) =>
   useQuery({
@@ -179,14 +167,9 @@ export interface IExamSubmission {
 }
 
 const getExamSubmission = (courseIdentity: string, lessonId: string) =>
-  httpClient.get<IExamSubmission[]>(
-    api.course.examSubmission(courseIdentity, lessonId)
-  );
+  httpClient.get<IExamSubmission[]>(api.course.examSubmission(courseIdentity, lessonId));
 
-export const useGetExamSubmission = (
-  courseIdentity: string,
-  lessonId: string
-) =>
+export const useGetExamSubmission = (courseIdentity: string, lessonId: string) =>
   useQuery({
     queryKey: [api.course.examSubmission(courseIdentity, lessonId)],
     queryFn: () => getExamSubmission(courseIdentity, lessonId),

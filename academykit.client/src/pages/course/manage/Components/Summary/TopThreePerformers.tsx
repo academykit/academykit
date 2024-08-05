@@ -1,5 +1,5 @@
 import { Avatar, Flex, Grid, Tooltip, rem } from "@mantine/core";
-import { IUser } from "@utils/services/types";
+import type { IUser } from "@utils/services/types";
 import { useTranslation } from "react-i18next";
 
 interface TopThreePerformersProps {
@@ -16,12 +16,7 @@ const generateStudentTooltip = (student: IUser): React.ReactNode => (
     position="top"
     color="rgba(112, 112, 112, 1)"
   >
-    <Avatar
-      variant="filled"
-      radius={"100%"}
-      size={90}
-      src={student?.imageUrl}
-    />
+    <Avatar variant="filled" radius={"100%"} size={90} src={student?.imageUrl} />
   </Tooltip>
 );
 
@@ -38,12 +33,7 @@ const TopThreePerformers = ({ students }: TopThreePerformersProps) => {
       <Grid justify="center" align="center">
         {students[1]?.fullName && (
           <Grid.Col span={3}>
-            <Flex
-              justify={"center"}
-              direction="column"
-              align="center"
-              style={{ position: "relative" }}
-            >
+            <Flex justify={"center"} direction="column" align="center" style={{ position: "relative" }}>
               {generateStudentTooltip(secondStudent)}
               <div style={{ marginTop: rem(10) }}>{t("rank_2")}</div>
             </Flex>
@@ -51,12 +41,7 @@ const TopThreePerformers = ({ students }: TopThreePerformersProps) => {
         )}
 
         <Grid.Col span={3} style={{ minHeight: rem(220) }}>
-          <Flex
-            justify={"center"}
-            direction="column"
-            align="center"
-            style={{ position: "relative" }}
-          >
+          <Flex justify={"center"} direction="column" align="center" style={{ position: "relative" }}>
             {generateStudentTooltip(firstStudent)}
             <div style={{ marginTop: rem(10) }}>{t("rank_1")}</div>
           </Flex>
@@ -64,12 +49,7 @@ const TopThreePerformers = ({ students }: TopThreePerformersProps) => {
 
         {students[2]?.fullName && (
           <Grid.Col span={3}>
-            <Flex
-              justify={"center"}
-              direction="column"
-              align="center"
-              style={{ position: "relative" }}
-            >
+            <Flex justify={"center"} direction="column" align="center" style={{ position: "relative" }}>
               {generateStudentTooltip(thirdStudent)}
               <div style={{ marginTop: rem(10) }}>{t("rank_3")}</div>
             </Flex>

@@ -8,19 +8,13 @@ import { createFormContext, yupResolver } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
-import {
-  IGetSignature,
-  useAddSignature,
-  useDeleteSignature,
-  useEditSignature,
-} from "@utils/services/courseService";
+import { type IGetSignature, useAddSignature, useDeleteSignature, useEditSignature } from "@utils/services/courseService";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
-const [FormProvider, useFormContext, useForm] =
-  createFormContext<IGetSignature>();
+const [FormProvider, useFormContext, useForm] = createFormContext<IGetSignature>();
 
 const schema = () => {
   const { t } = useTranslation();
@@ -164,12 +158,7 @@ const CreateSignature = ({
               {edit ? t("save_edit") : t("add")}
             </Button>
             {edit ? (
-              <Button
-                onClick={() => setConfirmDelete()}
-                type="reset"
-                variant="outline"
-                color="red"
-              >
+              <Button onClick={() => setConfirmDelete()} type="reset" variant="outline" color="red">
                 {t("delete")}
               </Button>
             ) : (

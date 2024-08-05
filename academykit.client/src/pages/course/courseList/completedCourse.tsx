@@ -1,6 +1,4 @@
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
 import useAuth from "@hooks/useAuth";
 import { Box, Container, Flex, Loader } from "@mantine/core";
 import { CourseStatus, UserRole } from "@utils/enums";
@@ -53,11 +51,7 @@ const CompletedCourseList = ({
       {data?.items &&
         (data.totalCount >= 1 ? (
           showCompletedList ? (
-            <CourseList
-              role={role}
-              courses={data.items}
-              search={searchParams}
-            />
+            <CourseList role={role} courses={data.items} search={searchParams} />
           ) : (
             <Loader />
           )
@@ -65,9 +59,7 @@ const CompletedCourseList = ({
           <Box>{t("no_trainings_found")}</Box>
         ))}
       {isLoading && <Loader />}
-      {showCompletedList &&
-        data &&
-        pagination(data.totalPage, data.items.length)}
+      {showCompletedList && data && pagination(data.totalPage, data.items.length)}
     </Container>
   );
 };

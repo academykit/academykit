@@ -1,4 +1,4 @@
-import { UseFormReturnType } from "@mantine/form";
+import type { UseFormReturnType } from "@mantine/form";
 
 import { Box, Text } from "@mantine/core";
 import { Link, RichTextEditor } from "@mantine/tiptap";
@@ -28,15 +28,7 @@ type IProps = {
   error?: string;
   sx?: any[] | undefined;
 };
-const TextEditor = ({
-  formContext,
-  label,
-  placeholder,
-  onChange,
-  error,
-  value,
-  sx,
-}: IProps) => {
+const TextEditor = ({ formContext, label, placeholder, onChange, error, value, sx }: IProps) => {
   const { t } = useTranslation();
   const cPlaceholder = t(placeholder ?? "");
   const form = formContext && formContext();
@@ -64,8 +56,7 @@ const TextEditor = ({
   });
 
   useMemo(() => {
-    const textValue =
-      form?.getInputProps(label ?? "description").value ?? value;
+    const textValue = form?.getInputProps(label ?? "description").value ?? value;
     if (editor && textValue !== editor.getHTML()) {
       editor.commands.setContent(textValue);
     }

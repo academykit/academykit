@@ -1,24 +1,10 @@
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
-import {
-  Box,
-  Container,
-  Group,
-  Loader,
-  Paper,
-  ScrollArea,
-  Table,
-} from "@mantine/core";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
+import { Box, Container, Group, Loader, Paper, ScrollArea, Table } from "@mantine/core";
 import { useCourse } from "@utils/services/courseService";
 import { useTranslation } from "react-i18next";
 import CourseRow from "./Component/CourseRow";
 
-const AdminCourseList = ({
-  searchParams,
-  searchComponent,
-  pagination,
-}: IWithSearchPagination) => {
+const AdminCourseList = ({ searchParams, searchComponent, pagination }: IWithSearchPagination) => {
   const { data, isLoading, isError } = useCourse(searchParams);
   const { t } = useTranslation();
   return (

@@ -39,10 +39,7 @@ const AdminNav = () => {
       role: UserRole.Trainee,
       // additional active path for certificates
       isActive: (pathName: string) =>
-        pathName.includes(
-          RoutePath.settings.training() ||
-            RoutePath.settings.training() + "/external"
-        ),
+        pathName.includes(RoutePath.settings.training() || RoutePath.settings.training() + "/external"),
       group: "account",
       icon: <IconCertificate size={14} />,
     },

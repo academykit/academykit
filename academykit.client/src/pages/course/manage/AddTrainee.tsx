@@ -1,19 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  Avatar,
-  Box,
-  Button,
-  Group,
-  Loader,
-  MultiSelect,
-  Text,
-} from "@mantine/core";
+import { Avatar, Box, Button, Group, Loader, MultiSelect, Text } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
 import { useAddTrainee, useGetTrainee } from "@utils/services/courseService";
-import { INotMember } from "@utils/services/groupService";
+import type { INotMember } from "@utils/services/groupService";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -43,7 +35,7 @@ const SelectUserItem = forwardRef<HTMLDivElement, ItemProps>(
         </div>
       </Group>
     </div>
-  )
+  ),
 );
 
 const schema = () => {
@@ -65,10 +57,7 @@ const AddTrainee = ({
   const [data, setData] = useState<INotMember[]>([]);
 
   const addTrainee = useAddTrainee(id as string);
-  const nonTrainee = useGetTrainee(
-    id as string,
-    `Page=1&Size=10&EnrollmentStatus=3${search && `&search=${search}`}`
-  );
+  const nonTrainee = useGetTrainee(id as string, `Page=1&Size=10&EnrollmentStatus=3${search && `&search=${search}`}`);
   const ref = useRef<HTMLInputElement>(null);
 
   const form = useForm<IAddTrainee>({
@@ -89,9 +78,7 @@ const AddTrainee = ({
         };
       });
       const mergedData = [...data, ...t];
-      setData([
-        ...new Map(mergedData.map((item) => [item["email"], item])).values(),
-      ]);
+      setData([...new Map(mergedData.map((item) => [item["email"], item])).values()]);
     }
   }, [nonTrainee.isSuccess]);
 
@@ -134,9 +121,7 @@ const AddTrainee = ({
           withAsterisk
           name="email"
           size="md"
-          nothingFoundMessage={
-            nonTrainee.isLoading ? <Loader /> : <Box>{t("User Not found")}</Box>
-          }
+          nothingFoundMessage={nonTrainee.isLoading ? <Loader /> : <Box>{t("User Not found")}</Box>}
           onSearchChange={(d) => {
             setSearch(d);
           }}

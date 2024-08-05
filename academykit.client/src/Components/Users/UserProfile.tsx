@@ -1,24 +1,9 @@
 import TextViewer from "@components/Ui/RichTextViewer";
-import {
-  Avatar,
-  Badge,
-  Box,
-  Flex,
-  Group,
-  Paper,
-  Tabs,
-  Text,
-} from "@mantine/core";
+import { Avatar, Badge, Box, Flex, Group, Paper, Tabs, Text } from "@mantine/core";
 import { IconEdit, IconFileDescription, IconSchool } from "@tabler/icons-react";
 import { useProfileAuth } from "@utils/services/authService";
 import { useTranslation } from "react-i18next";
-import {
-  Link,
-  Outlet,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import classes from "./styles/profile.module.css";
 
 const UserProfile = () => {
@@ -35,12 +20,7 @@ const UserProfile = () => {
     <>
       <div>
         <div className={classes.avatar}>
-          <Avatar
-            src={data?.imageUrl}
-            size={200}
-            style={{ borderRadius: "50%" }}
-            alt={data?.fullName}
-          />
+          <Avatar src={data?.imageUrl} size={200} style={{ borderRadius: "50%" }} alt={data?.fullName} />
 
           <div style={{ marginLeft: "15px" }}>
             <Group>
@@ -54,9 +34,7 @@ const UserProfile = () => {
               )}
             </Group>
 
-            {data?.profession && (
-              <Text mt={5}>{`${data?.profession ?? ""}`}</Text>
-            )}
+            {data?.profession && <Text mt={5}>{`${data?.profession ?? ""}`}</Text>}
 
             {data?.memberId && <Text mt={5}>{data?.memberId}</Text>}
 
@@ -100,15 +78,10 @@ const UserProfile = () => {
           defaultChecked={true}
           defaultValue={location.pathname?.split("/").at(-1) ?? "certificate"}
           value={currentLocation}
-          onChange={(value) =>
-            navigate(`${value}`, { preventScrollReset: true })
-          }
+          onChange={(value) => navigate(`${value}`, { preventScrollReset: true })}
         >
           <Tabs.List>
-            <Tabs.Tab
-              value="certificate"
-              leftSection={<IconFileDescription size={14} />}
-            >
+            <Tabs.Tab value="certificate" leftSection={<IconFileDescription size={14} />}>
               {t("only_certificate")}
             </Tabs.Tab>
             <Tabs.Tab value="training" leftSection={<IconSchool size={14} />}>

@@ -7,17 +7,13 @@ import CourseStudentLessons from "./Components/CourseStudentLessons";
 const StudentDetails = () => {
   const { t } = useTranslation();
   const { id, studentId } = useParams();
-  const studentDetails = useGetStudentStatisticsDetails(
-    id as string,
-    studentId as string
-  );
+  const studentDetails = useGetStudentStatisticsDetails(id as string, studentId as string);
 
   if (studentDetails.isError) {
     throw studentDetails.error;
   }
 
-  if (studentDetails.data?.length === 0)
-    return <Box>{t("trainee_not_started_lesson")}</Box>;
+  if (studentDetails.data?.length === 0) return <Box>{t("trainee_not_started_lesson")}</Box>;
 
   if (studentDetails.isLoading) return <Loader />;
 

@@ -27,9 +27,7 @@ const MyTrainings = () => {
   const [page, setPage] = useState(1);
   const { id } = useParams();
   const { t } = useTranslation();
-  const authorCourse = useCourse(
-    `UserId=${id}&Enrollmentstatus=1&size=12&page=${page}`
-  );
+  const authorCourse = useCourse(`UserId=${id}&Enrollmentstatus=1&size=12&page=${page}`);
 
   return (
     <>
@@ -58,16 +56,11 @@ const MyTrainings = () => {
                     authorCourse.data.items.map((x) => (
                       <Table.Tr key={x.id}>
                         <Table.Td>
-                          <Anchor
-                            component={Link}
-                            to={RoutePath.courses.description(x.slug).route}
-                          >
+                          <Anchor component={Link} to={RoutePath.courses.description(x.slug).route}>
                             {x.name}
                           </Anchor>
                         </Table.Td>
-                        <Table.Td>
-                          {moment(x.createdOn).format(DATE_FORMAT)}
-                        </Table.Td>
+                        <Table.Td>{moment(x.createdOn).format(DATE_FORMAT)}</Table.Td>
                         <Table.Td>
                           <Badge color="pink" variant="light">
                             {CourseLanguage[x.language]}
@@ -99,19 +92,12 @@ const MyTrainings = () => {
 
           {
             authorCourse.data && authorCourse.data.totalPage > 1 && (
-              <Pagination
-                my={20}
-                total={authorCourse.data.totalPage}
-                value={page}
-                onChange={setPage}
-              />
+              <Pagination my={20} total={authorCourse.data.totalPage} value={page} onChange={setPage} />
             )
             // pagination(authorCourse.data.totalPage)
           }
 
-          {authorCourse.data && authorCourse.data.totalCount === 0 && (
-            <Box mt={5}>{t("no_trainings_found")}</Box>
-          )}
+          {authorCourse.data && authorCourse.data.totalCount === 0 && <Box mt={5}>{t("no_trainings_found")}</Box>}
         </div>
       )}
     </>

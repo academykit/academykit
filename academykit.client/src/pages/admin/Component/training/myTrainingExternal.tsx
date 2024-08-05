@@ -22,12 +22,7 @@ import { DatePickerInput } from "@mantine/dates";
 import { createFormContext, yupResolver } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import {
-  IconDownload,
-  IconEdit,
-  IconEye,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconDownload, IconEdit, IconEye, IconTrash } from "@tabler/icons-react";
 import downloadImage from "@utils/downloadImage";
 import { UserRole } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
@@ -62,7 +57,7 @@ const schema = () => {
         t("start_end_date_required") as string,
         (arr) => {
           return arr !== undefined && arr.every((element) => element !== null);
-        }
+        },
       ),
   });
 };
@@ -127,9 +122,7 @@ const MyTrainingExternal = () => {
         await addCertificate.mutateAsync(data);
       }
       showNotification({
-        message: updates
-          ? t("training_certificate_edited")
-          : t("training_certificate_added"),
+        message: updates ? t("training_certificate_edited") : t("training_certificate_added"),
       });
       form.reset();
     } catch (error) {
@@ -247,11 +240,7 @@ const MyTrainingExternal = () => {
               <Text c="dimmed" size="xs">
                 {t("image_dimension")}
               </Text>
-              <Button
-                disabled={!cForm?.isReady}
-                type="submit"
-                loading={addCertificate.isLoading}
-              >
+              <Button disabled={!cForm?.isReady} type="submit" loading={addCertificate.isLoading}>
                 {t("submit")}
               </Button>
             </form>
@@ -260,13 +249,9 @@ const MyTrainingExternal = () => {
       </Modal>
 
       <Group justify="flex-end">
-        <Button onClick={() => setShowConfirmation()}>
-          {t("add_certificate")}
-        </Button>
+        <Button onClick={() => setShowConfirmation()}>{t("add_certificate")}</Button>
       </Group>
-      {certificateList.isSuccess && certificateList.data?.length <= 0 && (
-        <Box>{t("no_external_training")}</Box>
-      )}
+      {certificateList.isSuccess && certificateList.data?.length <= 0 && <Box>{t("no_external_training")}</Box>}
       {certificateList.isSuccess &&
         certificateList.data.map((x) => (
           <Card key={x.id} withBorder mt={10}>
@@ -275,15 +260,7 @@ const MyTrainingExternal = () => {
                 <Flex>
                   <Text fw={"bold"}>
                     {x.name}
-                    <Badge
-                      variant="light"
-                      color={
-                        CertificateStatus[x.status] == "Rejected"
-                          ? "red"
-                          : "cyan"
-                      }
-                      ml={20}
-                    >
+                    <Badge variant="light" color={CertificateStatus[x.status] == "Rejected" ? "red" : "cyan"} ml={20}>
                       {t(`${CertificateStatus[x.status]}`)}
                     </Badge>
                   </Text>
@@ -326,9 +303,7 @@ const MyTrainingExternal = () => {
                   {x.location && `, ${x.location}`}
                 </Text>
               </Box>
-              <Box
-                style={{ width: 150, marginTop: "auto", marginBottom: "auto" }}
-              >
+              <Box style={{ width: 150, marginTop: "auto", marginBottom: "auto" }}>
                 {x.imageUrl && (
                   <div style={{ position: "relative" }}>
                     <Image
@@ -351,19 +326,10 @@ const MyTrainingExternal = () => {
                         display: "flex",
                       }}
                     >
-                      <ActionIcon
-                        onClick={() => window.open(x.imageUrl)}
-                        mr={10}
-                        variant="subtle"
-                      >
+                      <ActionIcon onClick={() => window.open(x.imageUrl)} mr={10} variant="subtle">
                         <IconEye color="black" />
                       </ActionIcon>
-                      <ActionIcon
-                        onClick={() =>
-                          downloadImage(x.imageUrl, x.user.fullName ?? "")
-                        }
-                        variant="subtle"
-                      >
+                      <ActionIcon onClick={() => downloadImage(x.imageUrl, x.user.fullName ?? "")} variant="subtle">
                         <IconDownload color="black" />
                       </ActionIcon>
                     </div>
@@ -371,16 +337,14 @@ const MyTrainingExternal = () => {
                 )}
               </Box>
             </Flex>
-            {auth?.auth &&
-              Number(auth.auth.role) <= UserRole.Admin &&
-              auth.auth.id !== x.user.id && (
-                <Box mt={10}>
-                  <Button>{t("approve")}</Button>
-                  <Button ml={10} variant="outline" color={"red"}>
-                    {t("reject")}
-                  </Button>
-                </Box>
-              )}
+            {auth?.auth && Number(auth.auth.role) <= UserRole.Admin && auth.auth.id !== x.user.id && (
+              <Box mt={10}>
+                <Button>{t("approve")}</Button>
+                <Button ml={10} variant="outline" color={"red"}>
+                  {t("reject")}
+                </Button>
+              </Box>
+            )}
           </Card>
         ))}
     </div>

@@ -69,8 +69,7 @@ function CourseEditNav() {
       isActive: (pathName: string) =>
         pathName.includes(
           RoutePath.manageCourse.lessonsStat(params.id).route ||
-            RoutePath.manageCourse.lessonsStat(params.id).route +
-              `${params.lessonId}`
+            RoutePath.manageCourse.lessonsStat(params.id).route + `${params.lessonId}`,
         ),
       icon: <IconChartInfographic size={14} />,
     },

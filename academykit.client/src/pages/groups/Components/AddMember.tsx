@@ -1,23 +1,10 @@
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  Avatar,
-  Box,
-  Button,
-  Group,
-  Loader,
-  MultiSelect,
-  Select,
-  Text,
-} from "@mantine/core";
+import { Avatar, Box, Button, Group, Loader, MultiSelect, Select, Text } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { useDepartmentSetting } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
-import {
-  INotMember,
-  useAddGroupMember,
-  useGroupNotMember,
-} from "@utils/services/groupService";
+import { type INotMember, useAddGroupMember, useGroupNotMember } from "@utils/services/groupService";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -49,7 +36,7 @@ const SelectUserItem = forwardRef<HTMLDivElement, ItemProps>(
         </div>
       </Group>
     </div>
-  )
+  ),
 );
 
 const schema = () => {
@@ -67,18 +54,13 @@ const AddMember = ({
 }) => {
   const [search, setSearch] = useState("");
   const { t } = useTranslation();
-  const [departments, setDepartments] = useState<
-    { label: string; value: string }[]
-  >([]);
+  const [departments, setDepartments] = useState<{ label: string; value: string }[]>([]);
   const [depSearch, setDepSearch] = useState("");
   const [departmentId, setDepartmentId] = useState<string | undefined>("");
   const getDepartment = useDepartmentSetting(depSearch);
 
   const { id } = useParams();
-  const { mutateAsync, isLoading } = useAddGroupMember(
-    id as string,
-    searchParams
-  );
+  const { mutateAsync, isLoading } = useAddGroupMember(id as string, searchParams);
 
   const form = useForm<IAddMember>({
     initialValues: {
@@ -88,11 +70,7 @@ const AddMember = ({
   });
   useFormErrorHooks(form);
   const ref = useRef<HTMLInputElement>(null);
-  const getNotMemberList = useGroupNotMember(
-    id as string,
-    `search=${search}`,
-    departmentId
-  );
+  const getNotMemberList = useGroupNotMember(id as string, `search=${search}`, departmentId);
 
   useEffect(() => {
     if (getNotMemberList.isSuccess) {
@@ -104,9 +82,7 @@ const AddMember = ({
         };
       });
       const mergedData = [...data, ...t];
-      setData([
-        ...new Map(mergedData.map((item) => [item["email"], item])).values(),
-      ]);
+      setData([...new Map(mergedData.map((item) => [item["email"], item])).values()]);
     }
   }, [getNotMemberList.isSuccess, departmentId]);
 
@@ -186,13 +162,7 @@ const AddMember = ({
             withAsterisk
             name="email"
             size="md"
-            nothingFoundMessage={
-              getNotMemberList.isLoading ? (
-                <Loader />
-              ) : (
-                <Box>{t("User Not found")}</Box>
-              )
-            }
+            nothingFoundMessage={getNotMemberList.isLoading ? <Loader /> : <Box>{t("User Not found")}</Box>}
             onSearchChange={(d) => {
               setSearch(d);
             }}

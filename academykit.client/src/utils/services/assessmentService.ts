@@ -1,13 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  AssessmentStatus,
-  AssessmentType,
-  SkillAssessmentRule,
-  UserRole,
-} from "@utils/enums";
+import type { AssessmentStatus, AssessmentType, SkillAssessmentRule, UserRole } from "@utils/enums";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { IPaginated, IUser } from "./types";
+import type { IPaginated, IUser } from "./types";
 
 interface IAssessmentOption {
   option: string;
@@ -105,10 +100,7 @@ export interface IAssessmentResponse extends IBaseAssessment {
   isEligible: boolean;
 }
 
-type IPostAssessment = Omit<
-  IAssessment,
-  "id" | "user" | "slug" | "assessmentStatus"
->;
+type IPostAssessment = Omit<IAssessment, "id" | "user" | "slug" | "assessmentStatus">;
 
 interface ISingleAssessmentDescription extends IAssessmentResponse {
   noOfQuestion: number;
@@ -182,9 +174,7 @@ export interface IAssessmentOneResult {
 }
 
 const getAssessments = async (search: string) =>
-  await httpClient.get<IPaginated<IAssessmentResponse>>(
-    api.assessment.list + `?${search}`
-  );
+  await httpClient.get<IPaginated<IAssessmentResponse>>(api.assessment.list + `?${search}`);
 
 export const useAssessments = (search: string) => {
   return useQuery({
@@ -195,9 +185,7 @@ export const useAssessments = (search: string) => {
 };
 
 const getSingleAssessment = async (slug: string) =>
-  await httpClient.get<ISingleAssessmentDescription>(
-    api.assessment.getSingle(slug)
-  );
+  await httpClient.get<ISingleAssessmentDescription>(api.assessment.getSingle(slug));
 
 export const useGetSingleAssessment = (slug: string) => {
   return useQuery({
@@ -246,8 +234,7 @@ export const useUpdateAssessment = (slug: string) => {
   });
 };
 
-const deleteAssessment = async (id: string) =>
-  httpClient.delete(api.assessment.update(id));
+const deleteAssessment = async (id: string) => httpClient.delete(api.assessment.update(id));
 
 export const useDeleteAssessment = () => {
   const queryClient = useQueryClient();
@@ -266,9 +253,7 @@ export const useDeleteAssessment = () => {
 // ---------------------------------- Assessment Questions ----------------------------------------------
 
 const getAssessmentQuestion = async (search: string, id: string) =>
-  httpClient.get<IPaginated<IAssessmentQuestion>>(
-    api.assessmentQuestion.list + `?${search}&identity=${id}`
-  );
+  httpClient.get<IPaginated<IAssessmentQuestion>>(api.assessmentQuestion.list + `?${search}&identity=${id}`);
 
 export const useAssessmentQuestion = (search: string, id: string) => {
   return useQuery({
@@ -309,8 +294,7 @@ export const usePostAssessmentQuestion = () => {
   });
 };
 
-const deleteAssessmentQuestion = async (id: string) =>
-  httpClient.delete(api.assessmentQuestion.update(id));
+const deleteAssessmentQuestion = async (id: string) => httpClient.delete(api.assessmentQuestion.update(id));
 
 export const useDeleteAssessmentQuestion = () => {
   const queryClient = useQueryClient();
@@ -378,9 +362,7 @@ export interface IAssessmentExamDetail {
 }
 
 const getAssessmentExamQuestions = async (id: string) =>
-  await httpClient.get<IAssessmentExamDetail>(
-    api.assessmentQuestion.getExam(id)
-  );
+  await httpClient.get<IAssessmentExamDetail>(api.assessmentQuestion.getExam(id));
 
 export const useAssessmentExamQuestions = (id: string) => {
   return useQuery({
@@ -425,8 +407,7 @@ const postAssessmentExam = async ({
 }: {
   assessmentId: string;
   data: IAssessmentExamSubmit[];
-}) =>
-  await httpClient.post(api.assessmentQuestion.submitExam(assessmentId), data);
+}) => await httpClient.post(api.assessmentQuestion.submitExam(assessmentId), data);
 
 export const useSubmitAssessmentExam = () =>
   useMutation({
@@ -437,9 +418,7 @@ export const useSubmitAssessmentExam = () =>
 // ---------------------------------- Assessment Stats ----------------------------------------------
 
 const getAllResults = async (id: string) =>
-  await httpClient.get<IPaginated<IAssessmentResult>>(
-    api.assessment.getResults(id)
-  );
+  await httpClient.get<IPaginated<IAssessmentResult>>(api.assessment.getResults(id));
 
 export const useGetAllResults = (id: string) => {
   return useQuery({
@@ -450,14 +429,9 @@ export const useGetAllResults = (id: string) => {
 };
 
 const getStudentResult = async (assessmentId: string, studentId: string) =>
-  await httpClient.get<IStudentAssessmentResult>(
-    api.assessment.getStudentResult(assessmentId, studentId)
-  );
+  await httpClient.get<IStudentAssessmentResult>(api.assessment.getStudentResult(assessmentId, studentId));
 
-export const useGetStudentResult = (
-  assessmentId: string,
-  studentId: string
-) => {
+export const useGetStudentResult = (assessmentId: string, studentId: string) => {
   return useQuery({
     queryKey: [api.assessment.getStudentResult(assessmentId, studentId)],
     queryFn: () => getStudentResult(assessmentId, studentId),
@@ -465,25 +439,12 @@ export const useGetStudentResult = (
   });
 };
 
-const getOneExamResult = (
-  assessmentId: string,
-  assessmentSubmissionId: string
-) =>
-  httpClient.get<IAssessmentOneResult>(
-    api.assessment.getOneAssessmentResult(assessmentId, assessmentSubmissionId)
-  );
+const getOneExamResult = (assessmentId: string, assessmentSubmissionId: string) =>
+  httpClient.get<IAssessmentOneResult>(api.assessment.getOneAssessmentResult(assessmentId, assessmentSubmissionId));
 
-export const useGetOneExamResult = (
-  assessmentId: string,
-  assessmentSubmissionId: string
-) =>
+export const useGetOneExamResult = (assessmentId: string, assessmentSubmissionId: string) =>
   useQuery({
-    queryKey: [
-      api.assessment.getOneAssessmentResult(
-        assessmentId,
-        assessmentSubmissionId
-      ),
-    ],
+    queryKey: [api.assessment.getOneAssessmentResult(assessmentId, assessmentSubmissionId)],
 
     queryFn: () => getOneExamResult(assessmentId, assessmentSubmissionId),
     select: (data) => data.data,

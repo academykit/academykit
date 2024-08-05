@@ -1,18 +1,8 @@
-import { CourseStatus } from "@utils/enums";
-import {
-  ILessons,
-  ISection,
-  useLessonReorder,
-  useSectionReorder,
-} from "@utils/services/courseService";
+import type { CourseStatus } from "@utils/enums";
+import { type ILessons, type ISection, useLessonReorder, useSectionReorder } from "@utils/services/courseService";
 
 import { useMemo, useState } from "react";
-import {
-  DragDropContext,
-  Draggable,
-  DropResult,
-  Droppable,
-} from "react-beautiful-dnd";
+import { DragDropContext, Draggable, type DropResult, Droppable } from "react-beautiful-dnd";
 
 import SectionItem from "./Section/SectionItem";
 
@@ -46,26 +36,15 @@ const CourseSection = ({
         break;
       default:
         // eslint-disable-next-line no-case-declarations
-        const draggableIndex = newList.findIndex(
-          (x) => x.slug == source.droppableId
-        );
+        const draggableIndex = newList.findIndex((x) => x.slug == source.droppableId);
         // eslint-disable-next-line no-case-declarations
-        const lessons = newList[draggableIndex].lessons && [
-          ...(newList[draggableIndex].lessons as ILessons[]),
-        ];
+        const lessons = newList[draggableIndex].lessons && [...(newList[draggableIndex].lessons as ILessons[])];
         // eslint-disable-next-line no-case-declarations
         const tempLesson = lessons?.splice(source.index, 1);
         newList[draggableIndex].lessons = lessons;
         // eslint-disable-next-line no-case-declarations
-        const dropableIndex = newList.findIndex(
-          (x) => x.slug == destination.droppableId
-        );
-        tempLesson &&
-          newList[dropableIndex].lessons?.splice(
-            destination.index,
-            0,
-            tempLesson[0]
-          );
+        const dropableIndex = newList.findIndex((x) => x.slug == destination.droppableId);
+        tempLesson && newList[dropableIndex].lessons?.splice(destination.index, 0, tempLesson[0]);
         setLessonData(newList);
         // eslint-disable-next-line no-case-declarations
         const requestData = {

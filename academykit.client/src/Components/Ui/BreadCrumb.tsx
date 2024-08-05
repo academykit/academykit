@@ -1,5 +1,5 @@
 import useNav from "@hooks/useNav";
-import { Anchor, Breadcrumbs, Divider, MantineStyleProps } from "@mantine/core";
+import { Anchor, Breadcrumbs, Divider, type MantineStyleProps } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
@@ -61,11 +61,7 @@ const Breadcrumb = ({
   const items = breadCrumb ?? newPath;
   return (
     <>
-      <Breadcrumbs
-        py={py}
-        pb={5}
-        styles={{ breadcrumb: { lineHeight: "20px" } }}
-      >
+      <Breadcrumbs py={py} pb={5} styles={{ breadcrumb: { lineHeight: "20px" } }}>
         {getItems({ items: start ? [start, ...items] : items, hide })}
       </Breadcrumbs>
       <Divider />

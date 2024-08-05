@@ -1,10 +1,4 @@
-import {
-  Group,
-  Paper,
-  SimpleGrid,
-  Text,
-  useMantineColorScheme,
-} from "@mantine/core";
+import { Group, Paper, SimpleGrid, Text, useMantineColorScheme } from "@mantine/core";
 import {
   IconArrowDownRight,
   IconArrowUpRight,
@@ -13,10 +7,7 @@ import {
   IconReceipt2,
   IconUserPlus,
 } from "@tabler/icons-react";
-import {
-  DashboardCourses,
-  DashboardStats,
-} from "@utils/services/dashboardService";
+import type { DashboardCourses, DashboardStats } from "@utils/services/dashboardService";
 import { useTranslation } from "react-i18next";
 import { StatsCard } from "./StatsCard";
 import TrainingCards from "./TrainingCards";
@@ -77,10 +68,7 @@ export const User = ({
   return (
     <div>
       <SimpleGrid mb={20} cols={{ base: 4, md: 2, xs: 1 }}>
-        {dashboard &&
-          incomingData.map((x) => (
-            <StatsCard key={x.key} data={x} dashboard={dashboard} />
-          ))}
+        {dashboard && incomingData.map((x) => <StatsCard key={x.key} data={x} dashboard={dashboard} />)}
       </SimpleGrid>
       <Text size={"xl"} fw={700}>
         {t("my_trainings")}
@@ -92,12 +80,8 @@ export const User = ({
       ) : (
         <Text c="dimmed">{t("not_enrolled_training")}</Text>
       )}
-      <SimpleGrid
-        cols={{ base: 1, sm: 2, md: 3, "1280": 3, "1780": 4 }}
-        spacing={10}
-      >
-        {dashboardCourses.length > 0 &&
-          dashboardCourses.map((x) => <TrainingCards key={x.id} data={x} />)}
+      <SimpleGrid cols={{ base: 1, sm: 2, md: 3, "1280": 3, "1780": 4 }} spacing={10}>
+        {dashboardCourses.length > 0 && dashboardCourses.map((x) => <TrainingCards key={x.id} data={x} />)}
       </SimpleGrid>
     </div>
   );
@@ -121,11 +105,7 @@ export function StatsGrid({ data }: StatsGridProps) {
 
         <Group justify="flex-end" gap="xs" mt={25}>
           <Text className={classes.value}>{stat.value}</Text>
-          <Text
-            c={stat.diff > 0 ? "teal" : "red"}
-            size="sm"
-            className={classes.diff}
-          >
+          <Text c={stat.diff > 0 ? "teal" : "red"} size="sm" className={classes.diff}>
             <span>{stat.diff}%</span>
             <DiffIcon size={16} stroke={1.5} />
           </Text>

@@ -1,26 +1,20 @@
 import ErrorBoundary from "@components/ErrorBoundry";
 import ScrollToTop from "@components/ScrollToTop";
 import { AuthProvider } from "@context/AuthProvider";
-import BrandingProvider, {
-  defaultBranding,
-} from "@context/BrandingThemeContext";
+import BrandingProvider, { defaultBranding } from "@context/BrandingThemeContext";
 import FormProvider from "@context/FormContext";
 import { LayoutProvider } from "@context/LayoutProvider";
-import {
-  CSSVariablesResolver,
-  MantineProvider,
-  createTheme,
-} from "@mantine/core";
+import { type CSSVariablesResolver, MantineProvider, createTheme } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { Notifications } from "@mantine/notifications";
 import "@mantine/notifications/styles.css";
 import "@mantine/tiptap/styles.css";
 import AppRoutes from "@routes/AppRoutes";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { type QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BRANDING_SCHEME_KEY } from "@utils/constants";
-import generateTints, { BrandingThemeType } from "@utils/services/colorService";
+import generateTints, { type BrandingThemeType } from "@utils/services/colorService";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BrowserRouter } from "react-router-dom";
@@ -36,11 +30,8 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
       : defaultBranding;
   };
 
-  const [brandingTheme, setBrandingTheme] = useState(
-    localStorage.getItem(BRANDING_SCHEME_KEY) ?? "#0E99AC"
-  );
-  const [brandingThemeValue, setBrandingThemeValue] =
-    useState<BrandingThemeType>(getBrandingTheme());
+  const [brandingTheme, setBrandingTheme] = useState(localStorage.getItem(BRANDING_SCHEME_KEY) ?? "#0E99AC");
+  const [brandingThemeValue, setBrandingThemeValue] = useState<BrandingThemeType>(getBrandingTheme());
 
   const { i18n } = useTranslation();
 
@@ -62,10 +53,7 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
       Popover: {
         styles: () => ({
           dropdown: {
-            backgroundColor:
-              localStorage.getItem("mantine-color-scheme-value") === "dark"
-                ? "#25262B"
-                : "#F2F4F4",
+            backgroundColor: localStorage.getItem("mantine-color-scheme-value") === "dark" ? "#25262B" : "#F2F4F4",
           },
         }),
       },

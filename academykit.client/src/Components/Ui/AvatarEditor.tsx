@@ -1,4 +1,4 @@
-import { UseFormReturnType } from "@mantine/form";
+import type { UseFormReturnType } from "@mantine/form";
 import { FileAccess, uploadFile } from "@utils/services/fileService";
 import { useEffect, useState } from "react";
 import { FilePond, registerPlugin } from "react-filepond";
@@ -22,7 +22,7 @@ registerPlugin(
   FilePondPluginFileValidateSize,
   FilePondPluginImageResize,
   FilePondPluginImageCrop,
-  FilePondPluginImageTransform
+  FilePondPluginImageTransform,
 );
 
 type IProps = {
@@ -32,12 +32,7 @@ type IProps = {
   formContext: () => UseFormReturnType<any, (values: any) => any>;
 };
 
-const AvatarEditor = ({
-  label = "files",
-  url,
-  formContext,
-  disabled,
-}: IProps) => {
+const AvatarEditor = ({ label = "files", url, formContext, disabled }: IProps) => {
   useEffect(() => {
     if (url) {
       setFiles([
@@ -97,7 +92,7 @@ const AvatarEditor = ({
         stylePanelAspectRatio="1:1"
         files={files}
         labelIdle={`${t("drag_and_drop")} ${label} ${t(
-          "or"
+          "or",
         )} <span class="filepond--label-action">${t("browse")}</span>`}
         onupdatefiles={setFiles}
         allowMultiple={false}
@@ -107,15 +102,7 @@ const AvatarEditor = ({
           remove: null,
           revert: null,
           //processing a file
-          process: async (
-            _fieldName,
-            file,
-            _metadata,
-            load,
-            error,
-            _progress,
-            abort
-          ) => {
+          process: async (_fieldName, file, _metadata, load, error, _progress, abort) => {
             try {
               const res = await uploadFile(file as File, FileAccess.Public);
               load(res.data);
@@ -130,9 +117,7 @@ const AvatarEditor = ({
             };
           },
           load: async (source, load, error, _progress, abort) => {
-            await fetch(
-              `${source}?cache=${Math.random().toString(36).substring(2, 7)}`
-            )
+            await fetch(`${source}?cache=${Math.random().toString(36).substring(2, 7)}`)
               .then(async (r) => {
                 load(await r.blob());
               })

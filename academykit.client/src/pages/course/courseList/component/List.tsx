@@ -2,7 +2,7 @@ import CourseCard from "@components/Course/CourseCard";
 import CourseCardHorizontal from "@components/Course/CourseCardHorizontal";
 import { Group } from "@mantine/core";
 import { UserRole } from "@utils/enums";
-import { ICourse } from "@utils/services/courseService";
+import type { ICourse } from "@utils/services/courseService";
 
 const CourseList = ({
   role,

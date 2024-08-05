@@ -1,6 +1,6 @@
 import useCustomForm from "@hooks/useCustomForm";
 import { Text } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form/lib/types";
+import type { UseFormReturnType } from "@mantine/form/lib/types";
 import { FileAccess, uploadFile } from "@utils/services/fileService";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
@@ -22,7 +22,7 @@ registerPlugin(
   FilePondPluginFileValidateSize,
   FilePondPluginImageResize,
   FilePondPluginImageValidateSize,
-  FilePondPluginImageTransform
+  FilePondPluginImageTransform,
 );
 type IProps = {
   formContext: () => UseFormReturnType<any, (values: any) => any>;
@@ -95,18 +95,9 @@ const ThumbnailEditor = ({
       <FilePond
         disabled={disabled}
         instantUpload={true}
-        acceptedFileTypes={[
-          "image/png",
-          "image/jpeg",
-          "image/gif",
-          "image/jpg",
-        ]}
+        acceptedFileTypes={["image/png", "image/jpeg", "image/gif", "image/jpg"]}
         files={files}
-        labelIdle={`${t(
-          "drag_and_drop"
-        )} ${label} or <span class="filepond--label-action">${t(
-          "browse"
-        )}</span>`}
+        labelIdle={`${t("drag_and_drop")} ${label} or <span class="filepond--label-action">${t("browse")}</span>`}
         imageValidateSizeMinWidth={639}
         imageValidateSizeMinHeight={359}
         allowImageResize={true}
@@ -124,15 +115,7 @@ const ThumbnailEditor = ({
           remove: null,
           revert: null,
           //processing a file
-          process: async (
-            fieldName,
-            file,
-            metadata,
-            load,
-            error,
-            progress,
-            abort
-          ) => {
+          process: async (fieldName, file, metadata, load, error, progress, abort) => {
             cForm?.setReady();
             try {
               const res = await uploadFile(file as File, FileAccess.Public);
@@ -151,9 +134,7 @@ const ThumbnailEditor = ({
           },
           load: async (source, load, error, _progress, abort) => {
             cForm?.setReady();
-            await fetch(
-              `${source}?cache=${Math.random().toString(36).substring(2, 7)}`
-            )
+            await fetch(`${source}?cache=${Math.random().toString(36).substring(2, 7)}`)
               .then(async (r) => {
                 load(await r.blob());
                 cForm?.setReady();

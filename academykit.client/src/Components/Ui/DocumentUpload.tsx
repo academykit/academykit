@@ -12,7 +12,7 @@ registerPlugin(
   FilePondPluginImageExifOrientation,
   FilePondPluginImagePreview,
   FilePondPluginFileValidateType,
-  FilePondPluginImageValidateSize
+  FilePondPluginImageValidateSize,
 );
 
 const DcoumentUpload = ({ setUrl }: { setUrl: (url: string) => void }) => {
@@ -57,9 +57,7 @@ const DcoumentUpload = ({ setUrl }: { setUrl: (url: string) => void }) => {
         credits={false}
         // server="/api"
         name="files"
-        labelIdle={`${t(
-          "drag_document"
-        )}<span class="filepond--label-action">${t("browse")}</span>`}
+        labelIdle={`${t("drag_document")}<span class="filepond--label-action">${t("browse")}</span>`}
         {...filePondProps}
       />
     </Box>

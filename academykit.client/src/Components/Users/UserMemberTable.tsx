@@ -1,5 +1,5 @@
-import { IAuthContext } from "@context/AuthProvider";
-import { IWithSearchPagination } from "@hoc/useSearchPagination";
+import type { IAuthContext } from "@context/AuthProvider";
+import type { IWithSearchPagination } from "@hoc/useSearchPagination";
 import useAuth from "@hooks/useAuth";
 import {
   ActionIcon,
@@ -20,8 +20,8 @@ import { getInitials } from "@utils/getInitialName";
 import lazyWithRetry from "@utils/lazyImportWithReload";
 import { useEditUser, useResendEmail } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
-import { IUserProfile } from "@utils/services/types";
-import { TFunction } from "i18next";
+import type { IUserProfile } from "@utils/services/types";
+import type { TFunction } from "i18next";
 import { Suspense, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -95,36 +95,21 @@ const UserRow = ({
           )}
         </Modal>
         <div style={{ display: "flex", textDecoration: "none" }}>
-          <Link
-            to={`/userProfile/${item.id}/certificate`}
-            style={{ textDecoration: "none" }}
-          >
+          <Link to={`/userProfile/${item.id}/certificate`} style={{ textDecoration: "none" }}>
             <Avatar size={26} src={item?.imageUrl} radius={26}>
               {!item?.imageUrl && getInitials(item?.fullName ?? "")}
             </Avatar>
           </Link>
 
-          <Text
-            size="sm"
-            fw={500}
-            lineClamp={1}
-            ml={5}
-            className={classes.nameCotainer}
-          >
+          <Text size="sm" fw={500} lineClamp={1} ml={5} className={classes.nameCotainer}>
             {item?.fullName}
           </Text>
         </div>
       </Table.Td>
-      <Table.Td className={classes.roleContainer}>
-        {t(`${UserRole[item.role]}`)}
-      </Table.Td>
-      <Table.Td className={classes.emailContainer}>
-        {item?.email.toLowerCase()}
-      </Table.Td>
+      <Table.Td className={classes.roleContainer}>{t(`${UserRole[item.role]}`)}</Table.Td>
+      <Table.Td className={classes.emailContainer}>{item?.email.toLowerCase()}</Table.Td>
 
-      <Table.Td className={classes.phoneContainer}>
-        {item?.mobileNumber}
-      </Table.Td>
+      <Table.Td className={classes.phoneContainer}>{item?.mobileNumber}</Table.Td>
       <Table.Td>
         {item?.status === UserStatus.Active ? (
           <Badge variant="light" color={"green"}>
@@ -151,11 +136,7 @@ const UserRow = ({
                 color: colorScheme === "dark" ? "#F8F9FA" : "#25262B",
               }}
             >
-              <IconEdit
-                onClick={() => setOpened(true)}
-                style={{ cursor: "pointer" }}
-                size={20}
-              />
+              <IconEdit onClick={() => setOpened(true)} style={{ cursor: "pointer" }} size={20} />
             </ActionIcon>
           </Tooltip>
         )}
@@ -169,11 +150,7 @@ const UserRow = ({
                 color: colorScheme === "dark" ? "#F8F9FA" : "#25262B",
               }}
             >
-              {resend.isLoading ? (
-                <Loader variant="oval" />
-              ) : (
-                <IconSend size={20} />
-              )}
+              {resend.isLoading ? <Loader variant="oval" /> : <IconSend size={20} />}
             </ActionIcon>
           </Tooltip>
         )}
@@ -196,31 +173,18 @@ const UserMemberTable = ({
 
   const Rows = (auth: IAuthContext | null) =>
     users.map((item: any) => {
-      return (
-        <UserRow item={item} search={search} key={item.id} auth={auth} t={t} />
-      );
+      return <UserRow item={item} search={search} key={item.id} auth={auth} t={t} />;
     });
 
   return (
     <Paper>
-      <Table
-        style={{ minWidth: 800 }}
-        verticalSpacing="sm"
-        striped
-        highlightOnHover
-        withTableBorder
-        withColumnBorders
-      >
+      <Table style={{ minWidth: 800 }} verticalSpacing="sm" striped highlightOnHover withTableBorder withColumnBorders>
         <Table.Thead>
           <Table.Tr>
             <Table.Th>{t("userid")}</Table.Th>
-            <Table.Th>
-              {sortComponent({ sortKey: "firstName", title: t("username") })}
-            </Table.Th>
+            <Table.Th>{sortComponent({ sortKey: "firstName", title: t("username") })}</Table.Th>
             <Table.Th>{t("role")}</Table.Th>
-            <Table.Th>
-              {sortComponent({ sortKey: "email", title: t("email") })}
-            </Table.Th>
+            <Table.Th>{sortComponent({ sortKey: "email", title: t("email") })}</Table.Th>
             <Table.Th>{t("phone_number")}</Table.Th>
             <Table.Th>{t("active_status")}</Table.Th>
             <Table.Th>{t("actions")}</Table.Th>

@@ -10,15 +10,9 @@ interface AssignmentSummaryProps {
   lessonId: string;
 }
 
-const AssignmentSummary = ({
-  courseIdentity,
-  lessonId,
-}: AssignmentSummaryProps) => {
+const AssignmentSummary = ({ courseIdentity, lessonId }: AssignmentSummaryProps) => {
   const { t } = useTranslation();
-  const { data, isLoading, isError } = useGetAssignmentSummary(
-    courseIdentity,
-    lessonId
-  );
+  const { data, isLoading, isError } = useGetAssignmentSummary(courseIdentity, lessonId);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -28,11 +22,9 @@ const AssignmentSummary = ({
     return <div>Error fetching data</div>;
   }
 
-  const { weekStudents, topStudents, assignmentStatus, mostWrongAnsQues } =
-    data;
+  const { weekStudents, topStudents, assignmentStatus, mostWrongAnsQues } = data;
 
-  const [firstStudent, secondStudent, thirdStudent, ...otherStudents] =
-    topStudents;
+  const [firstStudent, secondStudent, thirdStudent, ...otherStudents] = topStudents;
 
   return (
     <>
@@ -43,47 +35,22 @@ const AssignmentSummary = ({
           verticalSpacing={{ base: "md", sm: "xl" }}
           mb={15}
         >
-          <SummaryCard
-            title={t("total_attendees")}
-            count={assignmentStatus.totalAttend}
-          />
-          <SummaryCard
-            title={t("total_passed")}
-            count={assignmentStatus.totalPass}
-          />
-          <SummaryCard
-            title={t("total_failed")}
-            count={assignmentStatus.totalFail}
-          />
-          <SummaryCard
-            title={t("average")}
-            count={Number(assignmentStatus.averageMarks.toPrecision(3))}
-          />
+          <SummaryCard title={t("total_attendees")} count={assignmentStatus.totalAttend} />
+          <SummaryCard title={t("total_passed")} count={assignmentStatus.totalPass} />
+          <SummaryCard title={t("total_failed")} count={assignmentStatus.totalFail} />
+          <SummaryCard title={t("average")} count={Number(assignmentStatus.averageMarks.toPrecision(3))} />
         </SimpleGrid>
 
         <Grid>
-          <Grid.Col
-            span={6}
-            order={{ base: 2, sm: 2, lg: 1 }}
-            miw={{ base: "100%", sm: "100%", md: "50%", lg: "50%" }}
-          >
+          <Grid.Col span={6} order={{ base: 2, sm: 2, lg: 1 }} miw={{ base: "100%", sm: "100%", md: "50%", lg: "50%" }}>
             <Box h={"100%"}>
-              <Ranking
-                title="most_unanswered_questions"
-                data={mostWrongAnsQues}
-              />
+              <Ranking title="most_unanswered_questions" data={mostWrongAnsQues} />
               <Ranking title="weak_students" data={weekStudents.reverse()} />
             </Box>
           </Grid.Col>
 
-          <Grid.Col
-            span={6}
-            order={{ base: 1, sm: 1, lg: 2 }}
-            miw={{ base: "100%", sm: "100%", md: "50%", lg: "50%" }}
-          >
-            <TopThreePerformers
-              students={[firstStudent, secondStudent, thirdStudent]}
-            />
+          <Grid.Col span={6} order={{ base: 1, sm: 1, lg: 2 }} miw={{ base: "100%", sm: "100%", md: "50%", lg: "50%" }}>
+            <TopThreePerformers students={[firstStudent, secondStudent, thirdStudent]} />
 
             <Paper p={"md"} mb={10}>
               <ol start={4} style={{ paddingLeft: "18px", margin: 0 }}>

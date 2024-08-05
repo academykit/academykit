@@ -1,17 +1,7 @@
 import TextViewer from "@components/Ui/RichTextViewer";
 import UserShortProfile from "@components/UserShortProfile";
 import useAuth from "@hooks/useAuth";
-import {
-  Button,
-  Card,
-  Container,
-  Group,
-  Loader,
-  Modal,
-  Paper,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Button, Card, Container, Group, Loader, Modal, Paper, Text, Title } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { QuestionType, UserRole } from "@utils/enums";
 import { useAssignmentReview } from "@utils/services/assignmentService";
@@ -40,11 +30,7 @@ const AssignmentResult = () => {
       <Modal
         opened={showReviewBox}
         onClose={() => setShowReviewBox()}
-        title={
-          getAssignment.data?.assignmentReview?.review
-            ? t("edit_assignment_review")
-            : t("review_assignment")
-        }
+        title={getAssignment.data?.assignmentReview?.review ? t("edit_assignment_review") : t("review_assignment")}
       >
         {showReviewBox && (
           <AssignmentReviewForm
@@ -110,22 +96,15 @@ const AssignmentResult = () => {
         <Paper p={20}>
           <Title>{t("review")}</Title>
           <Group>
-            <UserShortProfile
-              size={"md"}
-              user={getAssignment.data?.assignmentReview?.teacher}
-            />
+            <UserShortProfile size={"md"} user={getAssignment.data?.assignmentReview?.teacher} />
             <Paper withBorder shadow={"xl"} px={40} py={20} mx={20}>
               <Group>
                 <Text> {t("mark")}</Text>
-                <Text c={"dimmed"}>
-                  {getAssignment.data?.assignmentReview?.mark}/100
-                </Text>
+                <Text c={"dimmed"}>{getAssignment.data?.assignmentReview?.mark}/100</Text>
               </Group>
               <Group>
                 <Text>{t("review")}</Text>
-                <Text c={"dimmed"}>
-                  {getAssignment.data?.assignmentReview?.review}
-                </Text>
+                <Text c={"dimmed"}>{getAssignment.data?.assignmentReview?.review}</Text>
               </Group>
             </Paper>
           </Group>
@@ -135,9 +114,7 @@ const AssignmentResult = () => {
       <Group my={20}>
         {auth?.auth && Number(auth?.auth?.role) <= UserRole.Trainer && (
           <Button onClick={() => setShowReviewBox()}>
-            {getAssignment.data?.assignmentReview?.review
-              ? t("edit_review")
-              : t("add_review")}
+            {getAssignment.data?.assignmentReview?.review ? t("edit_review") : t("add_review")}
           </Button>
         )}
         <Button

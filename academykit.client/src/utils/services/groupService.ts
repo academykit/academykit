@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import errorType from "./axiosError";
-import { ICourse } from "./courseService";
+import type { ICourse } from "./courseService";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { IPaginated, IUser, IUserProfile } from "./types";
+import type { IPaginated, IUser, IUserProfile } from "./types";
 
 export interface IGroup {
   id: string;
@@ -17,8 +17,7 @@ export interface IGroup {
   attachmentCount: number;
 }
 
-const getGroupDetail = (id: string) =>
-  httpClient.get<IGroup>(api.groups.details(id));
+const getGroupDetail = (id: string) => httpClient.get<IGroup>(api.groups.details(id));
 export const useGetGroupDetail = (id: string) =>
   useQuery({
     queryKey: [api.groups.details(id)],
@@ -55,8 +54,7 @@ export const useUpdateGroup = (id: string) => {
   });
 };
 
-const getGroups = (query: string) =>
-  httpClient.get<IPaginated<IGroup>>(api.groups.list + `?${query}`);
+const getGroups = (query: string) => httpClient.get<IPaginated<IGroup>>(api.groups.list + `?${query}`);
 
 export const useGroups = (query: string) =>
   useQuery({
@@ -135,11 +133,7 @@ const removeGroupMember = ({
   memberId: string;
 }) => httpClient.delete(api.groups.removeMember(id, memberId));
 
-export const useRemoveGroupMember = (
-  id: string,
-  query: string,
-  memberId: string
-) => {
+export const useRemoveGroupMember = (id: string, query: string, memberId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [api.groups.removeMember(id, memberId)],
@@ -157,8 +151,7 @@ export const useRemoveGroupMember = (
   });
 };
 
-const deleteGroup = ({ id }: { id: string }) =>
-  httpClient.delete(api.groups.details(id));
+const deleteGroup = ({ id }: { id: string }) => httpClient.delete(api.groups.details(id));
 export const useDeleteGroup = (id: string, query: string) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -174,9 +167,7 @@ export const useDeleteGroup = (id: string, query: string) => {
 };
 
 const getGroupCourse = (id: string, search: string) => {
-  return httpClient.get<IPaginated<ICourse>>(
-    api.groups.course(id) + `?${search}`
-  );
+  return httpClient.get<IPaginated<ICourse>>(api.groups.course(id) + `?${search}`);
 };
 
 export const useGroupCourse = (id: string, search: string) => {
@@ -203,7 +194,7 @@ export interface IGroupAttachment {
 }
 const getGroupAttachment = (groupId: string, search: string) => {
   return httpClient.get<IPaginated<IGroupAttachment>>(
-    api.groups.attachment + `?GroupIdentity=${groupId}` + `&${search}`
+    api.groups.attachment + `?GroupIdentity=${groupId}` + `&${search}`,
   );
 };
 
@@ -243,7 +234,7 @@ const addGroupAttachement = ({
       headers: {
         "content-type": "multipart/form-data",
       },
-    }
+    },
   );
 };
 export const useAddGroupAttachment = (search: string) => {
@@ -272,11 +263,7 @@ const removeGroupAttachment = ({
   fileId: string;
 }) => httpClient.delete(api.groups.removeAttachment(id, fileId));
 
-export const useRemoveGroupAttachment = (
-  id: string,
-  fileId: string,
-  search: string
-) => {
+export const useRemoveGroupAttachment = (id: string, fileId: string, search: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [api.groups.removeAttachment(id, fileId)],
@@ -304,20 +291,10 @@ export interface INotMember {
   label: string;
   value: string;
 }
-const getGroupNotMember = (
-  id: string,
-  query: string,
-  departmentId: string | undefined
-) =>
-  httpClient.get<IPaginated<INotMember>>(
-    api.groups.notMembers(id, query, departmentId)
-  );
+const getGroupNotMember = (id: string, query: string, departmentId: string | undefined) =>
+  httpClient.get<IPaginated<INotMember>>(api.groups.notMembers(id, query, departmentId));
 
-export const useGroupNotMember = (
-  id: string,
-  query: string,
-  departmentId: string | undefined
-) =>
+export const useGroupNotMember = (id: string, query: string, departmentId: string | undefined) =>
   useQuery({
     queryKey: [api.groups.notMembers(id, query, departmentId)],
     queryFn: () => getGroupNotMember(id, query, departmentId),

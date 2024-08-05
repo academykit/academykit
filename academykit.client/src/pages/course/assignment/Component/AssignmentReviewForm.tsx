@@ -1,16 +1,9 @@
-import {
-  Box,
-  Button,
-  Group,
-  NumberInput,
-  Switch,
-  Textarea,
-} from "@mantine/core";
+import { Box, Button, Group, NumberInput, Switch, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import {
-  IAddAssignmentReview,
-  IAssignmentReview,
+  type IAddAssignmentReview,
+  type IAssignmentReview,
   useAddReview,
   useEditReview,
 } from "@utils/services/assignmentService";
@@ -34,9 +27,7 @@ const AssignmentReviewForm = ({
   const addReview = useAddReview(id as string, studentId as string);
   const editReview = useEditReview(id as string, studentId as string);
 
-  const [isPass, setIsPass] = useState(
-    editData?.assignmentReview?.isPassed ?? false
-  );
+  const [isPass, setIsPass] = useState(editData?.assignmentReview?.isPassed ?? false);
   const { t } = useTranslation();
 
   const submitHandler = async (data: IAddAssignmentReview) => {
@@ -52,9 +43,7 @@ const AssignmentReviewForm = ({
       }
       showNotification({
         title: t("successful"),
-        message: `${t("Successfully")} ${edit ? t("edited") : t("added")} ${t(
-          "review_on_assignment"
-        )}`,
+        message: `${t("Successfully")} ${edit ? t("edited") : t("added")} ${t("review_on_assignment")}`,
       });
       closeModal();
     } catch (err) {

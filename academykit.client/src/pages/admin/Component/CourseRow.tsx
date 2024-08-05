@@ -1,16 +1,6 @@
 import UserShortProfile from "@components/UserShortProfile";
 import useAuth from "@hooks/useAuth";
-import {
-  ActionIcon,
-  Badge,
-  Button,
-  Group,
-  Modal,
-  Table,
-  Text,
-  Textarea,
-  Tooltip,
-} from "@mantine/core";
+import { ActionIcon, Badge, Button, Group, Modal, Table, Text, Textarea, Tooltip } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
@@ -19,7 +9,7 @@ import { color } from "@utils/constants";
 import { CourseStatus, CourseUserStatus, UserRole } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
 import errorType from "@utils/services/axiosError";
-import { ICourse, useCourseStatus } from "@utils/services/courseService";
+import { type ICourse, useCourseStatus } from "@utils/services/courseService";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -36,8 +26,7 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
       message: "",
     },
     validate: {
-      message: (value) =>
-        value.length === 0 ? "Rejection message is required!" : null,
+      message: (value) => (value.length === 0 ? "Rejection message is required!" : null),
     },
   });
 
@@ -61,9 +50,7 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
       });
       showNotification({
         title: t("successful"),
-        message: message
-          ? t("training_rejected_success")
-          : t("training_published_success"),
+        message: message ? t("training_rejected_success") : t("training_published_success"),
       });
     } catch (err) {
       const error = errorType(err);
@@ -80,18 +67,11 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
         <Modal
           opened={confirmPublish}
           onClose={togglePublished}
-          title={
-            isRejected
-              ? t("leave_message_reject")
-              : `${t("publish_confirmation")} "${course.name}"${t("?")}`
-          }
+          title={isRejected ? t("leave_message_reject") : `${t("publish_confirmation")} "${course.name}"${t("?")}`}
         >
           {!isRejected ? (
             <Group mt={10}>
-              <Button
-                onClick={() => onPublish()}
-                loading={courseStatus.isLoading}
-              >
+              <Button onClick={() => onPublish()} loading={courseStatus.isLoading}>
                 {t("publish")}
               </Button>
               <Button
@@ -159,11 +139,7 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
           )}
           {course.status === CourseStatus.Review && (
             <Tooltip label={t("publish_course")}>
-              <ActionIcon
-                variant="subtle"
-                onClick={togglePublished}
-                color={"green"}
-              >
+              <ActionIcon variant="subtle" onClick={togglePublished} color={"green"}>
                 <IconFileCheck />
               </ActionIcon>
             </Tooltip>

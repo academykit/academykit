@@ -1,8 +1,6 @@
 import ConfirmationModal from "@components/Ui/ConfirmationModal";
 import ProgressBar from "@components/Ui/ProgressBar";
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
 import {
   Anchor,
   Avatar,
@@ -31,12 +29,12 @@ import { getInitials } from "@utils/getInitialName";
 import RoutePath from "@utils/routeConstants";
 import errorType from "@utils/services/axiosError";
 import {
-  IStudentStat,
+  type IStudentStat,
   useGetStudentStatistics,
   usePostStatisticsCertificate,
 } from "@utils/services/manageCourseService";
 import moment from "moment";
-import { Dispatch, SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 import AddTrainee from "./AddTrainee";
@@ -87,25 +85,11 @@ const Rows = ({
   return (
     <Table.Tr key={item.userId}>
       <Table.Td>
-        <Checkbox
-          onChange={() => handelCheckboxChange(item?.userId)}
-          checked={selected.includes(item.userId)}
-        />
+        <Checkbox onChange={() => handelCheckboxChange(item?.userId)} checked={selected.includes(item.userId)} />
       </Table.Td>
       <Table.Td>
-        <Anchor
-          component={Link}
-          to={`${RoutePath.userProfile}/${item.userId}`}
-          size="sm"
-          style={{ display: "flex" }}
-        >
-          <Avatar
-            style={{ cursor: "pointer" }}
-            size={26}
-            mr={8}
-            src={item?.imageUrl}
-            radius={26}
-          >
+        <Anchor component={Link} to={`${RoutePath.userProfile}/${item.userId}`} size="sm" style={{ display: "flex" }}>
+          <Avatar style={{ cursor: "pointer" }} size={26} mr={8} src={item?.imageUrl} radius={26}>
             {!item?.imageUrl && getInitials(item?.fullName ?? "")}
           </Avatar>
 
@@ -125,8 +109,7 @@ const Rows = ({
           {item?.hasCertificateIssued ? (
             <div style={{ marginTop: "10px" }}>
               <Text>
-                {t("issued_on")}{" "}
-                {moment(item?.certificateIssuedDate + "Z").format(DATE_FORMAT)}
+                {t("issued_on")} {moment(item?.certificateIssuedDate + "Z").format(DATE_FORMAT)}
               </Text>
               <Flex justify={"center"} mt={8}>
                 <Tooltip label={t("view_certificate")}>
@@ -140,11 +123,7 @@ const Rows = ({
                   </UnstyledButton>
                 </Tooltip>
                 <Tooltip label={t("download_certificate")}>
-                  <UnstyledButton
-                    onClick={() =>
-                      downloadImage(item.certificateUrl, item.fullName)
-                    }
-                  >
+                  <UnstyledButton onClick={() => downloadImage(item.certificateUrl, item.fullName)}>
                     <IconDownload size={23} color="green" />
                   </UnstyledButton>
                 </Tooltip>
@@ -153,12 +132,7 @@ const Rows = ({
           ) : (
             <>
               <Badge>{t("not_issued")}</Badge>
-              <Button
-                size="xs"
-                mt={10}
-                loading={postUserData.isLoading}
-                onClick={() => handleSubmit([item.userId])}
-              >
+              <Button size="xs" mt={10} loading={postUserData.isLoading} onClick={() => handleSubmit([item.userId])}>
                 {t("issue")}
               </Button>
             </>
@@ -166,11 +140,7 @@ const Rows = ({
         </Flex>
       </Table.Td>
       <Table.Td style={{ textAlign: "center" }}>
-        <Anchor
-          component={Link}
-          to={`${RoutePath.classes}/${course_id}/${item.lessonSlug}`}
-          size="sm"
-        >
+        <Anchor component={Link} to={`${RoutePath.classes}/${course_id}/${item.lessonSlug}`} size="sm">
           {item?.lessonName}
         </Anchor>
       </Table.Td>
@@ -178,11 +148,7 @@ const Rows = ({
   );
 };
 
-const ManageStudents = ({
-  searchParams,
-  pagination,
-  searchComponent,
-}: IWithSearchPagination) => {
+const ManageStudents = ({ searchParams, pagination, searchComponent }: IWithSearchPagination) => {
   const { id } = useParams();
   const course_id = id as string;
 
@@ -311,9 +277,7 @@ const ManageStudents = ({
                     {t("internal_certificate")}
                   </Flex>
                 </Table.Th>
-                <Table.Th style={{ textAlign: "center" }}>
-                  {t("current_lesson")}
-                </Table.Th>
+                <Table.Th style={{ textAlign: "center" }}>{t("current_lesson")}</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -333,11 +297,7 @@ const ManageStudents = ({
         <Box>{t("no_trainees")}</Box>
       )}
 
-      {getStudentStat.data &&
-        pagination(
-          getStudentStat.data?.totalPage,
-          getStudentStat.data.items.length
-        )}
+      {getStudentStat.data && pagination(getStudentStat.data?.totalPage, getStudentStat.data.items.length)}
     </ScrollArea>
   );
 };

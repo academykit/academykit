@@ -1,15 +1,10 @@
 import useAuth from "@hooks/useAuth";
 import { Avatar, Box, Divider, Group, Menu, Text } from "@mantine/core";
-import {
-  IconLock,
-  IconLogout,
-  IconPencil,
-  IconUser,
-} from "@tabler/icons-react";
+import { IconLock, IconLogout, IconPencil, IconUser } from "@tabler/icons-react";
 import { UserRole } from "@utils/enums";
 import { getInitials } from "@utils/getInitialName";
-import { IUser } from "@utils/services/types";
-import { FC } from "react";
+import type { IUser } from "@utils/services/types";
+import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -19,10 +14,7 @@ type Props = {
   direction?: any;
 };
 
-const UserProfileMenu: FC<Props> = ({
-  user: { fullName, id, imageUrl, role },
-  size = "md",
-}) => {
+const UserProfileMenu: FC<Props> = ({ user: { fullName, id, imageUrl, role }, size = "md" }) => {
   const auth = useAuth();
   const { t } = useTranslation();
 
@@ -39,14 +31,7 @@ const UserProfileMenu: FC<Props> = ({
         <Menu.Target>
           {auth?.auth && (
             <div>
-              <Avatar
-                my={3}
-                src={imageUrl}
-                c="cyan"
-                radius={10000}
-                size={size}
-                style={{ cursor: "pointer" }}
-              >
+              <Avatar my={3} src={imageUrl} c="cyan" radius={10000} size={size} style={{ cursor: "pointer" }}>
                 {!imageUrl && getInitials(fullName ?? "")}
               </Avatar>
             </div>
@@ -89,11 +74,7 @@ const UserProfileMenu: FC<Props> = ({
           >
             <Text size={size}>{t("Account")}</Text>
           </Menu.Item>
-          <Menu.Item
-            onClick={auth?.logout}
-            style={{ width: "100%" }}
-            leftSection={<IconLogout size={14} />}
-          >
+          <Menu.Item onClick={auth?.logout} style={{ width: "100%" }} leftSection={<IconLogout size={14} />}>
             <Text size={size}>{t("Logout")}</Text>
           </Menu.Item>
         </Menu.Dropdown>

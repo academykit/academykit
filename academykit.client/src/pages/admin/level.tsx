@@ -1,17 +1,6 @@
 import DeleteModal from "@components/Ui/DeleteModal";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  ActionIcon,
-  Box,
-  Button,
-  Drawer,
-  Group,
-  Paper,
-  Table,
-  Text,
-  TextInput,
-  Title,
-} from "@mantine/core";
+import { ActionIcon, Box, Button, Drawer, Group, Paper, Table, Text, TextInput, Title } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
@@ -23,7 +12,7 @@ import {
   useUpdateLevelSetting,
 } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
-import { IUser } from "@utils/services/types";
+import type { IUser } from "@utils/services/types";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
@@ -149,10 +138,7 @@ const Level = () => {
 
   return (
     <>
-      <Group
-        style={{ justifyContent: "space-between", alignItems: "center" }}
-        mb={15}
-      >
+      <Group style={{ justifyContent: "space-between", alignItems: "center" }} mb={15}>
         <Title>{t("levels")}</Title>
         {!opened && (
           <Button
@@ -217,10 +203,7 @@ const Level = () => {
             />
 
             <Group mt={10}>
-              <Button
-                type="submit"
-                loading={updateLevel.isLoading || postLevel.isLoading}
-              >
+              <Button type="submit" loading={updateLevel.isLoading || postLevel.isLoading}>
                 {t("submit")}
               </Button>
             </Group>
@@ -229,13 +212,7 @@ const Level = () => {
       </Drawer>
 
       <Paper>
-        <Table
-          striped
-          highlightOnHover
-          withTableBorder
-          withColumnBorders
-          style={{ marginTop: "10px" }}
-        >
+        <Table striped highlightOnHover withTableBorder withColumnBorders style={{ marginTop: "10px" }}>
           <Table.Thead>
             <Table.Tr>
               <Table.Th>{t("name")}</Table.Th>

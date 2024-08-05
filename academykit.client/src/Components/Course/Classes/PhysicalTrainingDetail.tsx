@@ -30,10 +30,7 @@ const PhysicalTrainingDetail = ({
   const startTime = moment(startDate).format("HH:mm A");
   const user = useAuth();
 
-  const updatedTime = moment(startTime, "hh:mm A")
-    .add(5, "hours")
-    .add(45, "minutes")
-    .format("hh:mm A");
+  const updatedTime = moment(startTime, "hh:mm A").add(5, "hours").add(45, "minutes").format("hh:mm A");
 
   const handleAttendance = async () => {
     try {
@@ -61,19 +58,13 @@ const PhysicalTrainingDetail = ({
       </Text>
       {/* Super admin,  admin and trainer of that lesson cannot mark as attend */}
       {!hasAttended
-        ? ((user?.auth?.role === UserRole.Trainer && isTrainee) ||
-            isTrainee) && (
-            <Button
-              onClick={() => handleAttendance()}
-              loading={attendance.isLoading || attendance.isSuccess}
-            >
+        ? ((user?.auth?.role === UserRole.Trainer && isTrainee) || isTrainee) && (
+            <Button onClick={() => handleAttendance()} loading={attendance.isLoading || attendance.isSuccess}>
               {t("mark_as_attended")}
             </Button>
           )
         : user?.auth?.role !== UserRole.Admin &&
-          user?.auth?.role !== UserRole.SuperAdmin && (
-            <Text>{t("attended")}</Text>
-          )}
+          user?.auth?.role !== UserRole.SuperAdmin && <Text>{t("attended")}</Text>}
     </Group>
   );
 };

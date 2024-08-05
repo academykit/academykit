@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import errorType from "./axiosError";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { IPaginated, IUser } from "./types";
+import type { IPaginated, IUser } from "./types";
 
 export interface ISkill {
   id: string;
@@ -12,15 +12,14 @@ export interface ISkill {
   userModel: IUser[];
 }
 
-const getSkills = async (search: string) =>
-  await httpClient.get<IPaginated<ISkill>>(api.skill.list + `?${search}`);
+const getSkills = async (search: string) => await httpClient.get<IPaginated<ISkill>>(api.skill.list + `?${search}`);
 
 export const useSkills = (search: string) => {
   return useQuery({
     queryKey: [api.skill.list, search],
     queryFn: () => getSkills(search),
-    staleTime: Infinity,
-    cacheTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
+    cacheTime: Number.POSITIVE_INFINITY,
     select: (data) => data.data,
   });
 };
@@ -65,8 +64,7 @@ export const useUpdateSkill = () => {
   });
 };
 
-const deleteSkill = async (id: string) =>
-  httpClient.delete(api.skill.update(id));
+const deleteSkill = async (id: string) => httpClient.delete(api.skill.update(id));
 
 export const useDeleteSkill = () => {
   const queryClient = useQueryClient();

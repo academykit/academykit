@@ -51,23 +51,13 @@
   "search.exclude": {
     "**/src/Api/ClientApp/node_modules": true
   },
-  // "prettier.enable": false,
-  // "editor.trimAutoWhitespace": true,
-  // "editor.formatOnSave": true,
-  // "editor.formatOnPaste": false,
-  // "editor.comments.insertSpace": true,
-  "[javascript, typescript]": {
+  "[javascript]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
   "editor.codeActionsOnSave": {
     "source.organizeImports.biome": "explicit",
     "quickfix.biome": "explicit"
   },
-  "typescript.autoClosingTags": true,
-  "typescript.suggest.autoImports": true,
-  "html.autoClosingTags": true,
-  "javascript.autoClosingTags": true,
-  "editor.minimap.maxColumn": 80,
   "csharp.format.enable": true,
   "editor.stickyScroll.enabled": true
 }

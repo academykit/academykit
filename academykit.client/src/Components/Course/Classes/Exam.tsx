@@ -1,25 +1,15 @@
 import TextViewer from "@components/Ui/RichTextViewer";
 import useCustomLayout from "@context/LayoutProvider";
 import useAuth from "@hooks/useAuth";
-import {
-  Box,
-  Button,
-  Card,
-  Container,
-  Grid,
-  Group,
-  Modal,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Box, Button, Card, Container, Grid, Group, Modal, Text, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useMediaQuery, useToggle } from "@mantine/hooks";
 import { CourseUserStatus, QuestionType, UserRole } from "@utils/enums";
 import {
-  ILessonExamStart,
-  ILessonExamSubmit,
-  ILessonStartQuestion,
-  ILessonStartQuestionOption,
+  type ILessonExamStart,
+  type ILessonExamSubmit,
+  type ILessonStartQuestion,
+  type ILessonStartQuestionOption,
   useSubmitExam,
 } from "@utils/services/examService";
 import cx from "clsx";
@@ -61,15 +51,11 @@ const Exam = ({
   };
 
   useEffect(() => {
-    const isAuthorOrTeacher =
-      data.role === CourseUserStatus.Author ||
-      data.role === CourseUserStatus.Teacher;
+    const isAuthorOrTeacher = data.role === CourseUserStatus.Author || data.role === CourseUserStatus.Teacher;
     customLayout.setExamPage && customLayout.setExamPage(true);
     customLayout.setExamPageAction &&
       customLayout.setExamPageAction(
-        auth?.auth &&
-          Number(auth?.auth?.role) >= UserRole.Trainer &&
-          !isAuthorOrTeacher ? (
+        auth?.auth && Number(auth?.auth?.role) >= UserRole.Trainer && !isAuthorOrTeacher ? (
           <ExamCounter
             duration={data.duration}
             onSubmit={() => submitButtonRef.current?.click()}
@@ -78,10 +64,9 @@ const Exam = ({
           />
         ) : (
           <Button onClick={() => navigate(-1)}>{t("close")}</Button>
-        )
+        ),
       );
-    customLayout.setExamPageTitle &&
-      customLayout.setExamPageTitle(<Title>{data.name}</Title>);
+    customLayout.setExamPageTitle && customLayout.setExamPageTitle(<Title>{data.name}</Title>);
     return () => {
       customLayout.setExamPage && customLayout.setExamPage(false);
     };
@@ -96,14 +81,10 @@ const Exam = ({
     }
   };
 
-  const onSubmitHandler = async (
-    values: ILessonStartQuestion<ILessonStartQuestionOption>[]
-  ) => {
+  const onSubmitHandler = async (values: ILessonStartQuestion<ILessonStartQuestionOption>[]) => {
     const finalData: ILessonExamSubmit[] = [];
     values.forEach((x) => {
-      const answers = x.questionOptions
-        .filter((x) => x.isCorrect)
-        .map((x) => x.id);
+      const answers = x.questionOptions.filter((x) => x.isCorrect).map((x) => x.id);
 
       finalData.push({
         questionSetQuestionId: x.questionSetQuestionId,
@@ -125,11 +106,7 @@ const Exam = ({
   return (
     <form onSubmit={form.onSubmit(onSubmitHandler)}>
       {/* confirmation pop-up Modal */}
-      <Modal
-        title={t("submit_exam_confirmation")}
-        opened={showConfirmation}
-        onClose={handleCloseModal}
-      >
+      <Modal title={t("submit_exam_confirmation")} opened={showConfirmation} onClose={handleCloseModal}>
         <Group>
           <Button
             disabled={submitClicked}
@@ -173,11 +150,7 @@ const Exam = ({
       <Grid m={20} className={classes.parentGrid}>
         {/* exam display section */}
         {/* <Grid.Col span={matches ? 9 : 12}> */}
-        <Grid.Col
-          span={matches ? 9 : 9}
-          style={{ maxWidth: "100%" }}
-          className={classes.questionGridCol}
-        >
+        <Grid.Col span={matches ? 9 : 9} style={{ maxWidth: "100%" }} className={classes.questionGridCol}>
           <Box
             style={{
               flexDirection: "column",
@@ -261,11 +234,7 @@ const Exam = ({
 
         {/* question counter section */}
         {/* <Grid.Col span={matches ? 3 : 12} m={0}> */}
-        <Grid.Col
-          span={matches ? 3 : 3}
-          m={0}
-          className={classes.optionsGridCol}
-        >
+        <Grid.Col span={matches ? 3 : 3} m={0} className={classes.optionsGridCol}>
           <Group p={10} className={classes.navigateWrapper}>
             {form.values.map((x, i) => (
               <div
@@ -282,11 +251,8 @@ const Exam = ({
               >
                 <Card
                   className={cx(classes.navigate, {
-                    [classes.visited]:
-                      visited.includes(i) &&
-                      x.questionOptions.filter((x) => x.isCorrect).length <= 0,
-                    [classes.answered]:
-                      x.questionOptions.filter((x) => x.isCorrect).length > 0,
+                    [classes.visited]: visited.includes(i) && x.questionOptions.filter((x) => x.isCorrect).length <= 0,
+                    [classes.answered]: x.questionOptions.filter((x) => x.isCorrect).length > 0,
                     [classes.active]: currentIndex === i,
                   })}
                   radius={10000}

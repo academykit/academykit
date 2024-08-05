@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { QuestionType } from "@utils/enums";
+import type { QuestionType } from "@utils/enums";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
-import { ITag } from "./tagService";
-import { IPaginated, IUser } from "./types";
+import type { ITag } from "./tagService";
+import type { IPaginated, IUser } from "./types";
 
 export interface IQuestion {
   id: string;
@@ -17,9 +17,7 @@ export interface IQuestion {
 }
 
 const getPoolQuestion = async (poolId: string, query: string) =>
-  await httpClient.get<IPaginated<IQuestion>>(
-    api.questions.list(poolId) + `?${query}`
-  );
+  await httpClient.get<IPaginated<IQuestion>>(api.questions.list(poolId) + `?${query}`);
 
 export const useQuestion = (poolId: string, query: string) =>
   useQuery({
@@ -192,9 +190,7 @@ export interface QuestionSetQuestions {
 }
 
 const getQuestionSetQuestions = (identity: string) => {
-  return httpClient.get<QuestionSetQuestions[]>(
-    api.questionSet.getQuestion(identity)
-  );
+  return httpClient.get<QuestionSetQuestions[]>(api.questionSet.getQuestion(identity));
 };
 export const useQuestionSetQuestions = (identity: string) => {
   return useQuery({

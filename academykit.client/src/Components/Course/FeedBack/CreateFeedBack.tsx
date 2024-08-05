@@ -1,21 +1,13 @@
 import { useState, useEffect } from "react";
 import { Box, Button } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
-import {
-  IFeedbackQuestions,
-  useFeedbackQuestion,
-} from "@utils/services/feedbackService";
+import { type IFeedbackQuestions, useFeedbackQuestion } from "@utils/services/feedbackService";
 import EditFeedback from "./EditFeedBack";
 import FeedbackItem from "./FeedbackList";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuestionReorder } from "@utils/services/courseService";
-import {
-  Draggable,
-  Droppable,
-  DragDropContext,
-  DropResult,
-} from "react-beautiful-dnd";
+import { Draggable, Droppable, DragDropContext, type DropResult } from "react-beautiful-dnd";
 import { LessonType } from "@utils/enums";
 
 const CreateFeedback = () => {
@@ -37,18 +29,9 @@ const CreateFeedback = () => {
   };
 
   const items = feedbackData?.map((x, index) => (
-    <Draggable
-      key={x.id}
-      draggableId={x.id}
-      index={index}
-      isDragDisabled={isEditing}
-    >
+    <Draggable key={x.id} draggableId={x.id} index={index} isDragDisabled={isEditing}>
       {(provided) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
+        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
           <FeedbackItem
             key={x.id}
             data={x}
@@ -85,11 +68,7 @@ const CreateFeedback = () => {
         <>
           {feedbackList.data.length > 0 ? (
             <DragDropContext onDragEnd={onDragEnd}>
-              <Droppable
-                droppableId={lessonId as string}
-                direction="vertical"
-                type="feedback"
-              >
+              <Droppable droppableId={lessonId as string} direction="vertical" type="feedback">
                 {(provided) => (
                   <div {...provided.droppableProps} ref={provided.innerRef}>
                     {items}
@@ -103,13 +82,7 @@ const CreateFeedback = () => {
           )}
         </>
       )}
-      {addQuestion && (
-        <EditFeedback
-          onCancel={() => setAddQuestion()}
-          lessonId={lessonId as string}
-          search={""}
-        />
-      )}
+      {addQuestion && <EditFeedback onCancel={() => setAddQuestion()} lessonId={lessonId as string} search={""} />}
       <Button onClick={() => setAddQuestion()} mt={10}>
         {t("add_feedback")}
       </Button>

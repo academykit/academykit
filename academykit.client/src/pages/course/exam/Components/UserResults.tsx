@@ -1,12 +1,5 @@
 import useAuth from "@hooks/useAuth";
-import {
-  ActionIcon,
-  Box,
-  Loader,
-  Table,
-  Title,
-  useMantineTheme,
-} from "@mantine/core";
+import { ActionIcon, Box, Loader, Table, Title, useMantineTheme } from "@mantine/core";
 import { IconEye } from "@tabler/icons-react";
 import { DATE_FORMAT } from "@utils/constants";
 import { UserRole } from "@utils/enums";
@@ -64,9 +57,7 @@ const UserResults = ({
       <Table
         styles={{
           td: {
-            backgroundColor: location.pathname.includes("lessons-stat")
-              ? ""
-              : theme.colors.gray[9],
+            backgroundColor: location.pathname.includes("lessons-stat") ? "" : theme.colors.gray[9],
           },
         }}
         w={"100%"}
@@ -87,9 +78,7 @@ const UserResults = ({
           {result.data?.questionSetSubmissions?.map((r) => (
             <Table.Tr key={r.questionSetSubmissionId}>
               <Table.Td>{r.obtainedMarks}</Table.Td>
-              <Table.Td>
-                {moment(r.submissionDate).format(DATE_FORMAT)}
-              </Table.Td>
+              <Table.Td>{moment(r.submissionDate).format(DATE_FORMAT)}</Table.Td>
               <Table.Td>{r.completeDuration}</Table.Td>
               <Table.Td>
                 {(hasExceededAttempt ||
@@ -97,16 +86,10 @@ const UserResults = ({
                   Number(user?.auth?.role) == UserRole.Admin ||
                   Number(user?.auth?.role) == UserRole.SuperAdmin ||
                   // trainer who is not trainee
-                  (Number(user?.auth?.role) == UserRole.Trainer &&
-                    !isTrainee)) && (
+                  (Number(user?.auth?.role) == UserRole.Trainer && !isTrainee)) && (
                   <ActionIcon
                     component={Link}
-                    to={
-                      RoutePath.exam.resultOne(
-                        lessonId,
-                        r.questionSetSubmissionId
-                      ).route
-                    }
+                    to={RoutePath.exam.resultOne(lessonId, r.questionSetSubmissionId).route}
                     variant="light"
                   >
                     <IconEye />

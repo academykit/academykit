@@ -1,14 +1,11 @@
 import RichTextEditor from "@components/Ui/RichTextEditor/Index";
-import { UseFormReturnType } from "@mantine/form";
+import type { UseFormReturnType } from "@mantine/form";
 import { useDebouncedValue } from "@mantine/hooks";
-import { IAssignmentQuestion } from "@utils/services/assignmentService";
+import type { IAssignmentQuestion } from "@utils/services/assignmentService";
 import { useEffect, useState } from "react";
 
 type Props = {
-  form: UseFormReturnType<
-    IAssignmentQuestion[],
-    (values: IAssignmentQuestion[]) => IAssignmentQuestion[]
-  >;
+  form: UseFormReturnType<IAssignmentQuestion[], (values: IAssignmentQuestion[]) => IAssignmentQuestion[]>;
   currentIndex: number;
 };
 

@@ -20,21 +20,12 @@ import { useForm } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { color } from "@utils/constants";
-import {
-  CourseStatus,
-  CourseUserStatus,
-  CourseUserStatusValue,
-  UserRole,
-} from "@utils/enums";
+import { CourseStatus, CourseUserStatus, CourseUserStatusValue, UserRole } from "@utils/enums";
 import getCourseOgImageUrl from "@utils/getCourseOGImage";
 import RoutePath from "@utils/routeConstants";
 import { useGeneralSetting } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
-import {
-  useCourseDescription,
-  useCourseStatus,
-  useEnrollCourse,
-} from "@utils/services/courseService";
+import { useCourseDescription, useCourseStatus, useEnrollCourse } from "@utils/services/courseService";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 import classes from "../styles/courseDescription.module.css";
@@ -53,8 +44,7 @@ const CourseDescription = () => {
       message: "",
     },
     validate: {
-      message: (value) =>
-        value.length === 0 ? "Rejection message is required!" : null,
+      message: (value) => (value.length === 0 ? "Rejection message is required!" : null),
     },
   });
 
@@ -66,9 +56,7 @@ const CourseDescription = () => {
         message: message ?? "",
       });
       showNotification({
-        message: message
-          ? t("training_rejected_success")
-          : t("training_published_success"),
+        message: message ? t("training_rejected_success") : t("training_published_success"),
       });
     } catch (err) {
       const error = errorType(err);
@@ -110,13 +98,9 @@ const CourseDescription = () => {
     <Center>{t("unable_get_course")}</Center>;
   }
 
-  const firstLessonSlugs = course?.data?.sections?.find(
-    (item) => item.lessons && item?.lessons?.length > 0
-  );
+  const firstLessonSlugs = course?.data?.sections?.find((item) => item.lessons && item?.lessons?.length > 0);
 
-  const slug = firstLessonSlugs?.lessons
-    ? firstLessonSlugs?.lessons[0].slug
-    : "";
+  const slug = firstLessonSlugs?.lessons ? firstLessonSlugs?.lessons[0].slug : "";
 
   const togglePublished = () => {
     togglePublish();
@@ -129,18 +113,11 @@ const CourseDescription = () => {
       <Modal
         opened={confirmPublish}
         onClose={togglePublished}
-        title={
-          isRejected
-            ? t("leave_message_reject")
-            : `${t("publish_confirmation")} "${course.data.name}"${t("?")}`
-        }
+        title={isRejected ? t("leave_message_reject") : `${t("publish_confirmation")} "${course.data.name}"${t("?")}`}
       >
         {!isRejected ? (
           <Group mt={10}>
-            <Button
-              onClick={() => onPublish()}
-              loading={courseStatus.isLoading}
-            >
+            <Button onClick={() => onPublish()} loading={courseStatus.isLoading}>
               {t("publish")}
             </Button>
             <Button
@@ -188,9 +165,7 @@ const CourseDescription = () => {
                 course?.data?.userStatus !== CourseUserStatus.Author ? (
                   <></>
                 ) : (
-                  <Badge ml={10}>
-                    {t(`${CourseUserStatusValue[course?.data?.userStatus]}`)}
-                  </Badge>
+                  <Badge ml={10}>{t(`${CourseUserStatusValue[course?.data?.userStatus]}`)}</Badge>
                 )}
                 {auth?.auth && Number(auth?.auth?.role) <= UserRole.Admin && (
                   <>
@@ -202,11 +177,7 @@ const CourseDescription = () => {
               </>
             </Flex>
 
-            <Group my={4}>
-              {course.data?.user && (
-                <UserShortProfile user={course?.data?.user} size={"md"} />
-              )}
-            </Group>
+            <Group my={4}>{course.data?.user && <UserShortProfile user={course?.data?.user} size={"md"} />}</Group>
             <TextViewer content={course.data?.description} />
           </div>
           <div className={classes.aside}>
@@ -226,14 +197,8 @@ const CourseDescription = () => {
                 {auth?.auth && Number(auth?.auth?.role) <= UserRole.Admin ? (
                   <>
                     {slug && (
-                      <Link
-                        to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}
-                      >
-                        <Button
-                          radius="xl"
-                          size="md"
-                          className={classes.control}
-                        >
+                      <Link to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}>
+                        <Button radius="xl" size="md" className={classes.control}>
                           {t("preview")}
                         </Button>
                       </Link>
@@ -254,14 +219,8 @@ const CourseDescription = () => {
                   course.data?.userStatus === CourseUserStatus.Teacher ? (
                   <>
                     {slug && (
-                      <Link
-                        to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}
-                      >
-                        <Button
-                          radius="xl"
-                          size="md"
-                          className={classes.control}
-                        >
+                      <Link to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}>
+                        <Button radius="xl" size="md" className={classes.control}>
                           {t("preview")}
                         </Button>
                       </Link>
@@ -270,14 +229,8 @@ const CourseDescription = () => {
                 ) : (
                   <>
                     {slug && (
-                      <Link
-                        to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}
-                      >
-                        <Button
-                          radius="xl"
-                          size="md"
-                          className={classes.control}
-                        >
+                      <Link to={`${RoutePath.classes}/${course?.data?.slug}/${slug}/description`}>
+                        <Button radius="xl" size="md" className={classes.control}>
                           {t("watch_course")}
                         </Button>
                       </Link>
@@ -287,12 +240,7 @@ const CourseDescription = () => {
                 {auth?.auth &&
                   Number(auth?.auth?.role) <= UserRole.Admin &&
                   course.data?.status === CourseStatus.Review && (
-                    <Button
-                      onClick={() => togglePublished()}
-                      radius="xl"
-                      size="md"
-                      className={classes.control}
-                    >
+                    <Button onClick={() => togglePublished()} radius="xl" size="md" className={classes.control}>
                       {t("publish")}
                     </Button>
                   )}
@@ -307,8 +255,7 @@ const CourseDescription = () => {
                     </Link>
                   )}
                 {auth?.auth &&
-                  course.data?.status !==
-                    (CourseStatus.Draft || CourseStatus.Review) &&
+                  course.data?.status !== (CourseStatus.Draft || CourseStatus.Review) &&
                   (Number(auth?.auth?.role) <= UserRole.Admin ||
                     course.data?.userStatus === CourseUserStatus.Author ||
                     course.data?.userStatus === CourseUserStatus.Teacher) && (

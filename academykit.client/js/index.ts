@@ -1,9 +1,10 @@
-import { UserRole } from "@utils/enums";
+import type { UserRole } from "@utils/enums";
 
-// eslint-disable-next-line no-var
+// biome-ignore lint/style/noVar: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 declare var ZoomMtg: any;
 
-const BASE_URL = ``;
+const BASE_URL = "";
 const api = (courseId: string, lessonId: string) =>
   `/api/course/${courseId}/lesson/${lessonId}/join`;
 
@@ -38,10 +39,10 @@ const leaveUrl = `/meet/${course}/${lesson}`;
 
 function beginJoin(meetingConfig: IStartExam) {
   ZoomMtg.init({
-    leaveUrl: leaveUrl + "?s=1",
+    leaveUrl: `${leaveUrl}?s=1`,
 
     disableCORP: !window.crossOriginIsolated, // default true
-    success: function () {
+    success: () => {
       ZoomMtg.i18n.load("en");
       ZoomMtg.i18n.reload("en");
       ZoomMtg.join({
@@ -52,26 +53,26 @@ function beginJoin(meetingConfig: IStartExam) {
         userEmail: meetingConfig.user.email,
         passWord: meetingConfig.passcode,
         customerKey: meetingConfig.user.id,
-        success: function () {
+        success: () => {
           console.info("join meeting success");
           ZoomMtg.getCurrentUser({
-            success: function (res: any) {
+            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+            success: (res: any) => {
               console.info("success getCurrentUser", res.result.currentUser);
             },
           });
         },
-        error: function () {
+        error: () => {
           window.location.replace(`${leaveUrl}/?s=4&e=${encodeURIComponent(
-            "Something went wrong while starting meeting."
+            "Something went wrong while starting meeting.",
           )}
         `);
         },
       });
     },
-    error: function () {
-      window.location.replace(`${leaveUrl}/?s=4&e=${encodeURIComponent(
-        "Something went wrong while starting meeting."
-      )}
+    error: () => {
+      window.location
+        .replace(`${leaveUrl}/?s=4&e=${encodeURIComponent("Something went wrong while starting meeting.")}
     `);
     },
   });
@@ -80,26 +81,28 @@ const fetchData = async () => {
   try {
     if (!token) {
       return window.location.replace(`${BASE_URL}/login`);
-    } else if (!course && !lesson) {
-      return window.location.replace(
-        `${leaveUrl}/?e=${encodeURIComponent("Invalid session link")}`
-      );
-    } else {
-      const res = await fetch(api(course, lesson), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!res.ok) throw await res.json();
-      const data = (await res.json()) as IStartExam;
-      beginJoin(data);
     }
-  } catch (err: any) {
-    window.location.replace(`${leaveUrl}/?s=4&e=${encodeURIComponent(
-      err.message ?? "Something went wrong while starting meeting."
-    )}
-    `);
+    if (!course && !lesson) {
+      return window.location.replace(
+        `${leaveUrl}/?e=${encodeURIComponent("Invalid session link")}`,
+      );
+    }
+    const res = await fetch(api(course, lesson), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) throw await res.json();
+    const data = (await res.json()) as IStartExam;
+    beginJoin(data);
+  } catch (err: unknown) {
+    const error = err as Error;
+    window.location.replace(
+      `${leaveUrl}/?s=4&e=${encodeURIComponent(
+        error.message ?? "Something went wrong while starting meeting.",
+      )}`,
+    );
   }
 };
 

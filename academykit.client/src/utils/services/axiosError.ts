@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios, { type AxiosError } from "axios";
 import i18next from "i18next";
 
 export interface ServerError {
@@ -9,9 +9,7 @@ export interface ServerError {
 const errorType = (err: any) => {
   if (axios.isAxiosError(err)) {
     const error = err as AxiosError<ServerError>;
-    return (
-      error.response?.data?.message || (i18next.t("something_wrong") as string)
-    );
+    return error.response?.data?.message || (i18next.t("something_wrong") as string);
   }
   return i18next.t("something_wrong");
 };

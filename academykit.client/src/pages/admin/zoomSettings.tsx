@@ -1,21 +1,9 @@
-import {
-  Box,
-  Button,
-  Container,
-  Group,
-  Paper,
-  Switch,
-  Text,
-  TextInput,
-} from "@mantine/core";
+import { Box, Button, Container, Group, Paper, Switch, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import {
-  useUpdateZoomSetting,
-  useZoomSetting,
-} from "@utils/services/adminService";
+import { useUpdateZoomSetting, useZoomSetting } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
-import { TFunction } from "i18next";
+import type { TFunction } from "i18next";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -180,10 +168,7 @@ const ZoomSettings = () => {
               labelPosition="left"
               onChange={(e) => {
                 setIsChecked(e.currentTarget.checked);
-                form.setFieldValue(
-                  "isRecordingEnabled",
-                  e.currentTarget.checked
-                );
+                form.setFieldValue("isRecordingEnabled", e.currentTarget.checked);
               }}
             />
           </Container>

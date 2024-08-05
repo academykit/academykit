@@ -1,7 +1,7 @@
 /* eslint-disable react/no-children-prop */
 import { ActionIcon } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { ToolbarSlot } from "@react-pdf-viewer/toolbar";
+import type { ToolbarSlot } from "@react-pdf-viewer/toolbar";
 import { IconDownload } from "@tabler/icons-react";
 
 const Download = ({ toolbarSlot }: { toolbarSlot: ToolbarSlot }) => {

@@ -8,15 +8,7 @@ const SubjectiveAnswer = ({ children }: IProps) => {
   };
 
   return (
-    <Paper
-      mb={15}
-      mt={10}
-      p={"sm"}
-      withBorder
-      w={"80vw"}
-      maw={"80vw"}
-      style={{ wordWrap: "break-word" }}
-    >
+    <Paper mb={15} mt={10} p={"sm"} withBorder w={"80vw"} maw={"80vw"} style={{ wordWrap: "break-word" }}>
       <Spoiler maxHeight={30} showLabel="See more" hideLabel="Hide">
         {removeTags(children as string)}
       </Spoiler>

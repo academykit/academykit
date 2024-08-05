@@ -1,21 +1,7 @@
 import UserMemberTable from "@components/Users/UserMemberTable";
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  Box,
-  Button,
-  FileInput,
-  Flex,
-  Group,
-  Loader,
-  Modal,
-  ScrollArea,
-  Tabs,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Box, Button, FileInput, Flex, Group, Loader, Modal, ScrollArea, Tabs, Text, Title } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import lazyWithRetry from "@utils/lazyImportWithReload";
@@ -25,9 +11,7 @@ import { downloadCSVFile, uploadUserCsv } from "@utils/services/fileService";
 import { Suspense, useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
-const AddUpdateUserForm = lazyWithRetry(
-  () => import("../../Components/Users/AddUpdateUserForm")
-);
+const AddUpdateUserForm = lazyWithRetry(() => import("../../Components/Users/AddUpdateUserForm"));
 
 const schema = () => {
   const { t } = useTranslation();
@@ -36,12 +20,7 @@ const schema = () => {
   });
 };
 
-const UsersList = ({
-  searchParams,
-  pagination,
-  searchComponent,
-  sortComponent,
-}: IWithSearchPagination) => {
+const UsersList = ({ searchParams, pagination, searchComponent, sortComponent }: IWithSearchPagination) => {
   const [opened, setOpened] = useState(false);
   const { data, isLoading: loading, isError: error } = useUsers(searchParams);
   const addUser = useAddUser(searchParams);
@@ -160,10 +139,7 @@ const UsersList = ({
         )}
       </Modal>
 
-      <Group
-        style={{ justifyContent: "space-between", alignItems: "center" }}
-        mb={15}
-      >
+      <Group style={{ justifyContent: "space-between", alignItems: "center" }} mb={15}>
         <Title>{t("users")}</Title>
         <div>
           <Button onClick={() => setOpened(true)}>{t("add_user")}</Button>
@@ -182,11 +158,7 @@ const UsersList = ({
           (data.items.length < 1 ? (
             <Box>{t("no_users")}</Box>
           ) : (
-            <UserMemberTable
-              sortComponent={sortComponent}
-              users={data?.items}
-              search={searchParams}
-            />
+            <UserMemberTable sortComponent={sortComponent} users={data?.items} search={searchParams} />
           ))}
       </ScrollArea>
       {data && pagination(data.totalPage, data.items.length)}

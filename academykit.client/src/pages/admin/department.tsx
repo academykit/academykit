@@ -1,7 +1,5 @@
 import DeleteModal from "@components/Ui/DeleteModal";
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   ActionIcon,
@@ -29,7 +27,7 @@ import {
   useUpdateDepartmentSetting,
 } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
-import { IUser } from "@utils/services/types";
+import type { IUser } from "@utils/services/types";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
@@ -47,12 +45,7 @@ const schema = () => {
   });
 };
 
-const Department = ({
-  searchParams,
-  pagination,
-  searchComponent,
-  filterComponent,
-}: IWithSearchPagination) => {
+const Department = ({ searchParams, pagination, searchComponent, filterComponent }: IWithSearchPagination) => {
   const { t } = useTranslation();
   const [opened, { open, close }] = useDisclosure(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -151,10 +144,7 @@ const Department = ({
 
   return (
     <>
-      <Group
-        style={{ justifyContent: "space-between", alignItems: "center" }}
-        mb={15}
-      >
+      <Group style={{ justifyContent: "space-between", alignItems: "center" }} mb={15}>
         <Title>{t("departments")}</Title>
         {!opened && (
           <Button
@@ -246,20 +236,14 @@ const Department = ({
               { value: "false", label: t("inactive") },
             ],
             t("department_status"),
-            "IsActive"
+            "IsActive",
           )}
         </Flex>
       </Flex>
 
       {getDepartment.data && getDepartment.data.totalCount > 0 ? (
         <Paper>
-          <Table
-            striped
-            highlightOnHover
-            withTableBorder
-            withColumnBorders
-            style={{ marginTop: "10px" }}
-          >
+          <Table striped highlightOnHover withTableBorder withColumnBorders style={{ marginTop: "10px" }}>
             <Table.Thead>
               <Table.Tr>
                 <Table.Th>{t("name")}</Table.Th>
@@ -282,11 +266,7 @@ const Department = ({
         <Box mt={10}>{t("no_department")}</Box>
       )}
 
-      {getDepartment.data &&
-        pagination(
-          getDepartment.data?.totalPage,
-          getDepartment.data?.items.length
-        )}
+      {getDepartment.data && pagination(getDepartment.data?.totalPage, getDepartment.data?.items.length)}
     </>
   );
 };

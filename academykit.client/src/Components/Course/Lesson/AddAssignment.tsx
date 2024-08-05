@@ -1,16 +1,7 @@
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 import RichTextEditor from "@components/Ui/RichTextEditor/Index";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  Box,
-  Button,
-  Grid,
-  Group,
-  Paper,
-  Switch,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { Box, Button, Grid, Group, Paper, Switch, Text, Tooltip } from "@mantine/core";
 import { DatePickerInput, TimeInput } from "@mantine/dates";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
@@ -18,11 +9,8 @@ import { IconCalendar } from "@tabler/icons-react";
 import { LessonType } from "@utils/enums";
 import { getDateTime } from "@utils/getDateTime";
 import errorType from "@utils/services/axiosError";
-import {
-  useCreateLesson,
-  useUpdateLesson,
-} from "@utils/services/courseService";
-import { ILessonAssignment } from "@utils/services/types";
+import { useCreateLesson, useUpdateLesson } from "@utils/services/courseService";
+import type { ILessonAssignment } from "@utils/services/types";
 import moment from "moment";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -78,9 +66,7 @@ const AddAssignment = ({
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const [isMandatory, setIsMandatory] = useState<boolean>(
-    item?.isMandatory ?? false
-  );
+  const [isMandatory, setIsMandatory] = useState<boolean>(item?.isMandatory ?? false);
 
   const startDateTime = item?.startDate
     ? moment(item?.startDate + "Z")
@@ -102,8 +88,7 @@ const AddAssignment = ({
       eventStartDate: startDateTime ?? new Date(),
       eventEndDate: endDateTime ?? new Date(),
       endTime: moment(endDateTime).format("HH:mm") ?? moment().format("HH:mm"),
-      startTime:
-        moment(startDateTime).format("HH:mm") ?? moment().format("HH:mm"),
+      startTime: moment(startDateTime).format("HH:mm") ?? moment().format("HH:mm"),
     },
     validate: yupResolver(schema()),
   });
@@ -117,11 +102,8 @@ const AddAssignment = ({
     delete val.startTime;
 
     const startDate =
-      values?.eventStartDate &&
-      getDateTime(values?.eventStartDate, values?.startTime?.toString() ?? "");
-    const endDate =
-      values?.eventEndDate &&
-      getDateTime(values?.eventEndDate, values?.endTime?.toString() ?? "");
+      values?.eventStartDate && getDateTime(values?.eventStartDate, values?.startTime?.toString() ?? "");
+    const endDate = values?.eventEndDate && getDateTime(values?.eventEndDate, values?.endTime?.toString() ?? "");
     try {
       const assignmentData = {
         courseId: slug,
@@ -134,9 +116,7 @@ const AddAssignment = ({
       };
 
       if (!isEditing) {
-        const response = await lesson.mutateAsync(
-          assignmentData as ILessonAssignment
-        );
+        const response = await lesson.mutateAsync(assignmentData as ILessonAssignment);
         form.reset();
         navigate(`${response.data.id}/assignment/add`);
       } else {
@@ -148,9 +128,7 @@ const AddAssignment = ({
       }
       showNotification({
         title: t("success"),
-        message: `${t("assignment")} ${
-          isEditing ? t("edited") : t("added")
-        } ${t("successfully")}`,
+        message: `${t("assignment")} ${isEditing ? t("edited") : t("added")} ${t("successfully")}`,
       });
     } catch (error: any) {
       const err = errorType(error);
@@ -242,10 +220,7 @@ const AddAssignment = ({
             </Grid.Col>
           </Grid>
           <Group mt="md">
-            <Button
-              type="submit"
-              loading={lesson.isLoading || updateLesson.isLoading}
-            >
+            <Button type="submit" loading={lesson.isLoading || updateLesson.isLoading}>
               {t("submit")}
             </Button>
             {!isEditing && (

@@ -2,7 +2,7 @@ import useAuth from "@hooks/useAuth";
 import { ActionIcon, Loader, Menu, ScrollArea, Tabs } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { IconDotsVertical, IconSettings, IconUser } from "@tabler/icons-react";
-import { UserRole } from "@utils/enums";
+import type { UserRole } from "@utils/enums";
 import { getCurrentGroup, routeGroupAdmin } from "@utils/routeGroups";
 import { t } from "i18next";
 import { Suspense } from "react";
@@ -39,21 +39,14 @@ const AdminNavOutlet = ({
 
   const routeSet = (group: string) => {
     // check if the route belongs to the group
-    const currentGroup = getCurrentGroup(
-      location.pathname?.split("/")[2],
-      routeGroupAdmin
-    );
+    const currentGroup = getCurrentGroup(location.pathname?.split("/")[2], routeGroupAdmin);
     return group == currentGroup;
   };
 
   // routing validation
   const routeData = data.filter((x) => {
     if (auth?.auth?.role) {
-      if (
-        x.role >= Number(auth?.auth?.role) &&
-        !x.separator &&
-        routeSet(x.group)
-      ) {
+      if (x.role >= Number(auth?.auth?.role) && !x.separator && routeSet(x.group)) {
         return x;
       }
     }
@@ -83,19 +76,13 @@ const AdminNavOutlet = ({
       >
         <ScrollArea scrollHideDelay={0}>
           <Tabs.List>
-            {routeData
-              .slice(0, isMobileView || isTabletView ? 2 : routeData.length)
-              .map((x) => {
-                return (
-                  <Tabs.Tab
-                    key={x.label}
-                    value={x.to}
-                    leftSection={x.icon ?? <IconUser size={14} />}
-                  >
-                    {x.label}
-                  </Tabs.Tab>
-                );
-              })}
+            {routeData.slice(0, isMobileView || isTabletView ? 2 : routeData.length).map((x) => {
+              return (
+                <Tabs.Tab key={x.label} value={x.to} leftSection={x.icon ?? <IconUser size={14} />}>
+                  {x.label}
+                </Tabs.Tab>
+              );
+            })}
 
             {/* display only when mobile view and contains more than 2 elements */}
             {routeData.length > 2 && (isMobileView || isTabletView) && (

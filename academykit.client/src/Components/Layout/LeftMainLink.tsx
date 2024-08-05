@@ -13,7 +13,7 @@ import { TOKEN_STORAGE } from "@utils/constants";
 import { UserRole } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
 import { adminAndOrgRouteGroups, getCurrentNavGroup } from "@utils/routeGroups";
-import React from "react";
+import type React from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
@@ -63,8 +63,7 @@ function MainLink({
               label={t(`${label}`)}
               mb={5}
               active={
-                href ==
-                "/" + decodeURI(router.pathname.split("/").at(1) as string) // decodeURI for multi-language support
+                href == "/" + decodeURI(router.pathname.split("/").at(1) as string) // decodeURI for multi-language support
               }
             >
               {childRoutes.map((route) => {
@@ -80,13 +79,7 @@ function MainLink({
                         borderRadius: theme.radius.sm,
                       })}
                       label={t(`${route.label}`)}
-                      active={
-                        route.label ==
-                        getCurrentNavGroup(
-                          router.pathname as string,
-                          adminAndOrgRouteGroups
-                        )
-                      }
+                      active={route.label == getCurrentNavGroup(router.pathname as string, adminAndOrgRouteGroups)}
                       target={route.target ?? "_self"}
                     />
                   );
@@ -216,10 +209,7 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
         },
         {
           label: "system",
-          href:
-            RoutePath.settings.hangfire() +
-            "?access_token=" +
-            localStorage.getItem(TOKEN_STORAGE),
+          href: RoutePath.settings.hangfire() + "?access_token=" + localStorage.getItem(TOKEN_STORAGE),
           target: "_blank",
           role: UserRole.Admin,
         },

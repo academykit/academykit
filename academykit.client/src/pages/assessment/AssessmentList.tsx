@@ -1,6 +1,4 @@
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
 import useAuth from "@hooks/useAuth";
 import { Flex, SimpleGrid } from "@mantine/core";
 import { UserRole } from "@utils/enums";
@@ -8,12 +6,7 @@ import { useAssessments } from "@utils/services/assessmentService";
 import { useTranslation } from "react-i18next";
 import AssessmentCard from "./component/AssessmentCard";
 
-const AssessmentList = ({
-  searchComponent,
-  searchParams,
-  pagination,
-  filterComponent,
-}: IWithSearchPagination) => {
+const AssessmentList = ({ searchComponent, searchParams, pagination, filterComponent }: IWithSearchPagination) => {
   const { t } = useTranslation();
   const assessmentData = useAssessments(searchParams);
   const auth = useAuth();
@@ -31,7 +24,7 @@ const AssessmentList = ({
               { value: "5", label: t("rejected") },
             ],
             t("assessment_status"),
-            "assessmentStatus"
+            "assessmentStatus",
           )}
       </Flex>
 
@@ -46,11 +39,7 @@ const AssessmentList = ({
         ))}
       </SimpleGrid>
 
-      {assessmentData.data &&
-        pagination(
-          assessmentData.data?.totalPage,
-          assessmentData.data?.items.length
-        )}
+      {assessmentData.data && pagination(assessmentData.data?.totalPage, assessmentData.data?.items.length)}
     </>
   );
 };

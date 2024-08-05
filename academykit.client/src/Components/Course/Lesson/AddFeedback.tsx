@@ -1,25 +1,13 @@
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 import RichTextEditor from "@components/Ui/RichTextEditor/Index";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  Box,
-  Button,
-  Grid,
-  Group,
-  Paper,
-  Switch,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { Box, Button, Grid, Group, Paper, Switch, Text, Tooltip } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { LessonType } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
-import {
-  useCreateLesson,
-  useUpdateLesson,
-} from "@utils/services/courseService";
-import { ILessonFeedback } from "@utils/services/types";
+import { useCreateLesson, useUpdateLesson } from "@utils/services/courseService";
+import type { ILessonFeedback } from "@utils/services/types";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -51,14 +39,12 @@ const AddFeedback = ({
   const updateLesson = useUpdateLesson(
     // item?.courseId || "",
     // item?.id,
-    slug as string
+    slug as string,
   );
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const [isMandatory, setIsMandatory] = useState<boolean>(
-    item?.isMandatory ?? false
-  );
+  const [isMandatory, setIsMandatory] = useState<boolean>(item?.isMandatory ?? false);
 
   const form = useForm({
     initialValues: {
@@ -80,9 +66,7 @@ const AddFeedback = ({
         isMandatory,
       };
       if (!isEditing) {
-        const response = await lesson.mutateAsync(
-          assignmentData as ILessonFeedback
-        );
+        const response = await lesson.mutateAsync(assignmentData as ILessonFeedback);
         form.reset();
         navigate(`${response.data.id}/feedback`);
       } else {
@@ -94,9 +78,7 @@ const AddFeedback = ({
       }
       showNotification({
         title: t("success"),
-        message: `${t("feedback")} ${isEditing ? t("edited") : t("added")} ${t(
-          "successfully"
-        )}`,
+        message: `${t("feedback")} ${isEditing ? t("edited") : t("added")} ${t("successfully")}`,
       });
     } catch (error: any) {
       const err = errorType(error);
@@ -137,16 +119,10 @@ const AddFeedback = ({
           </Grid>
           <Box my={20}>
             <Text size={"sm"}>{t("feedback_description")}</Text>
-            <RichTextEditor
-              placeholder={t("feedback_description") as string}
-              {...form.getInputProps("description")}
-            />
+            <RichTextEditor placeholder={t("feedback_description") as string} {...form.getInputProps("description")} />
           </Box>
           <Group mt="md">
-            <Button
-              type="submit"
-              loading={lesson.isLoading || updateLesson.isLoading}
-            >
+            <Button type="submit" loading={lesson.isLoading || updateLesson.isLoading}>
               {t("submit")}
             </Button>
             {!isEditing && (

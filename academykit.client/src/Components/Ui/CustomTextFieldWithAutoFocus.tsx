@@ -1,13 +1,11 @@
-import { TextInput, TextInputProps } from "@mantine/core";
-import { FC, useEffect, useRef, useState } from "react";
+import { TextInput, type TextInputProps } from "@mantine/core";
+import { type FC, useEffect, useRef, useState } from "react";
 
 interface ICustomTextFieldWithAutoFocus extends TextInputProps {
   isViewMode?: boolean;
 }
 
-const CustomTextFieldWithAutoFocus: FC<ICustomTextFieldWithAutoFocus> = (
-  props
-) => {
+const CustomTextFieldWithAutoFocus: FC<ICustomTextFieldWithAutoFocus> = (props) => {
   const myRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     myRef?.current?.focus();
@@ -36,9 +34,7 @@ const CustomTextFieldWithAutoFocus: FC<ICustomTextFieldWithAutoFocus> = (
   );
 };
 
-export const DynamicAutoFocusTextField: FC<ICustomTextFieldWithAutoFocus> = (
-  props
-) => {
+export const DynamicAutoFocusTextField: FC<ICustomTextFieldWithAutoFocus> = (props) => {
   const { isViewMode } = props;
   const [isFocused, setIsFocused] = useState(!isViewMode);
   const inputRef = useRef<HTMLInputElement>(null);

@@ -1,23 +1,9 @@
-import {
-  Box,
-  Button,
-  Card,
-  Container,
-  Divider,
-  Group,
-  Loader,
-  Modal,
-  Text,
-} from "@mantine/core";
+import { Box, Button, Card, Container, Divider, Group, Loader, Modal, Text } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { CourseStatus } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
 import errorType from "@utils/services/axiosError";
-import {
-  useCourseDescription,
-  useCourseStatus,
-  useCourseUpdateStatus,
-} from "@utils/services/courseService";
+import { useCourseDescription, useCourseStatus, useCourseUpdateStatus } from "@utils/services/courseService";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
@@ -28,9 +14,7 @@ const Dashboard = () => {
   const course = useCourseDescription(id as string);
   const courseStatus = useCourseStatus(id as string, "");
   const courseUpdateStatus = useCourseUpdateStatus(id as string);
-  const [courseButton, setCourseButton] = useState(
-    course.data?.status === CourseStatus.Published
-  );
+  const [courseButton, setCourseButton] = useState(course.data?.status === CourseStatus.Published);
   const { t } = useTranslation();
   const [opened, setOpened] = useState(false);
 
@@ -99,35 +83,18 @@ const Dashboard = () => {
   if (course.data?.status === CourseStatus.Published) {
     return (
       <Container fluid>
-        <Modal
-          opened={opened}
-          onClose={() => setOpened(false)}
-          title={t("status_change_completed") as string}
-        >
-          <Button
-            loading={courseStatus.isLoading}
-            mr={5}
-            onClick={handleCompleted}
-          >
+        <Modal opened={opened} onClose={() => setOpened(false)} title={t("status_change_completed") as string}>
+          <Button loading={courseStatus.isLoading} mr={5} onClick={handleCompleted}>
             {t("yes")}
           </Button>
-          <Button
-            loading={courseStatus.isLoading}
-            variant="outline"
-            onClick={() => setOpened(false)}
-          >
+          <Button loading={courseStatus.isLoading} variant="outline" onClick={() => setOpened(false)}>
             {t("no")}
           </Button>
         </Modal>
         <Group className={classes.group}>
           <Card shadow={"sm"} className={classes.right}>
             <Box>{t("training_in_published_mode")}</Box>
-            <Button
-              mt={20}
-              component={Link}
-              onClick={onUpdatePublish}
-              to={RoutePath.manageCourse.edit(id).route}
-            >
+            <Button mt={20} component={Link} onClick={onUpdatePublish} to={RoutePath.manageCourse.edit(id).route}>
               {t("update_training")}
             </Button>
           </Card>
@@ -140,11 +107,7 @@ const Dashboard = () => {
 
               <li>{t("lesson_description_added")}</li>
             </ol>
-            <Button
-              loading={courseStatus.isLoading}
-              onClick={onPublish}
-              disabled={courseButton}
-            >
+            <Button loading={courseStatus.isLoading} onClick={onPublish} disabled={courseButton}>
               {t("update_publish")}
             </Button>
           </Card>
@@ -160,9 +123,7 @@ const Dashboard = () => {
           }}
         >
           <Text mb={10}>{t("complete_your_training")}</Text>
-          <Button onClick={() => setOpened(true)}>
-            {t("complete_training")}
-          </Button>
+          <Button onClick={() => setOpened(true)}>{t("complete_training")}</Button>
         </Card>
       </Container>
     );
@@ -185,9 +146,7 @@ const Dashboard = () => {
           }}
         >
           <Text mb={10}>{t("training_rejected")}</Text>
-          <Button onClick={() => onUpdatePublish()}>
-            {t("update_to_draft")}
-          </Button>
+          <Button onClick={() => onUpdatePublish()}>{t("update_to_draft")}</Button>
         </Card>
       </>
     );
@@ -199,11 +158,7 @@ const Dashboard = () => {
         <Group className={classes.group}>
           <Card shadow={"sm"} className={classes.right}>
             <Box>{t("training_in_draft_mode")}</Box>
-            <Button
-              mt={20}
-              component={Link}
-              to={RoutePath.manageCourse.edit(id).route}
-            >
+            <Button mt={20} component={Link} to={RoutePath.manageCourse.edit(id).route}>
               {t("continue_edit")}
             </Button>
           </Card>

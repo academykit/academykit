@@ -1,5 +1,5 @@
 import { Box, Text } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
+import type { UseFormReturnType } from "@mantine/form";
 import { FileAccess, uploadFile } from "@utils/services/fileService";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
@@ -14,7 +14,7 @@ registerPlugin(
   FilePondPluginImageExifOrientation,
   FilePondPluginImagePreview,
   FilePondPluginFileValidateType,
-  FilePondPluginImageValidateSize
+  FilePondPluginImageValidateSize,
 );
 
 const FileUploadLesson = ({
@@ -70,9 +70,7 @@ const FileUploadLesson = ({
       <FilePond
         instantUpload={true}
         files={files}
-        labelIdle={`${t(
-          "drag_and_drop_file"
-        )} <span class="filepond--label-action">${t("browse")}</span>`}
+        labelIdle={`${t("drag_and_drop_file")} <span class="filepond--label-action">${t("browse")}</span>`}
         onaddfile={() => {}}
         onremovefile={() => form.setFieldValue("documentUrl", "")}
         onupdatefiles={setFiles}
@@ -84,15 +82,7 @@ const FileUploadLesson = ({
           remove: null,
           revert: null,
           //processing a file
-          process: async (
-            fieldName,
-            file,
-            metadata,
-            load,
-            error,
-            progress,
-            abort
-          ) => {
+          process: async (fieldName, file, metadata, load, error, progress, abort) => {
             try {
               const res = await uploadFile(file as File, FileAccess.Private);
               load(res.data);
@@ -107,9 +97,7 @@ const FileUploadLesson = ({
             };
           },
           load: async (source, load, error, _progress, abort) => {
-            await fetch(
-              `${source}?cache=${Math.random().toString(36).substring(2, 7)}`
-            )
+            await fetch(`${source}?cache=${Math.random().toString(36).substring(2, 7)}`)
               .then(async (r) => {
                 load(await r.blob());
               })

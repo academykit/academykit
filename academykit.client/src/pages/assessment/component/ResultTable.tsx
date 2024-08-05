@@ -29,12 +29,7 @@ const Row = ({
         <ActionIcon
           variant="light"
           component={Link}
-          to={
-            RoutePath.assessmentExam.resultOne(
-              assessmentId,
-              questionSetSubmissionId
-            ).route
-          }
+          to={RoutePath.assessmentExam.resultOne(assessmentId, questionSetSubmissionId).route}
         >
           <IconEye />
         </ActionIcon>

@@ -13,10 +13,7 @@ const AssessmentLayout = () => {
   return (
     <>
       <Container fluid>
-        <Box
-          my={10}
-          style={{ justifyContent: "space-between", alignItems: "center" }}
-        >
+        <Box my={10} style={{ justifyContent: "space-between", alignItems: "center" }}>
           <Group justify="space-between">
             <Title style={{ flexGrow: 2 }}>{t("assessments")}</Title>
             {role <= UserRole.Trainer && (

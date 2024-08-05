@@ -1,6 +1,6 @@
 import { BRANDING_SCHEME_KEY } from "@utils/constants";
-import generateTints, { BrandingThemeType } from "@utils/services/colorService";
-import { Dispatch, FC, SetStateAction, createContext } from "react";
+import generateTints, { type BrandingThemeType } from "@utils/services/colorService";
+import { type Dispatch, type FC, type SetStateAction, createContext } from "react";
 
 export interface IBrandingContext {
   brandingTheme: string;
@@ -40,8 +40,7 @@ const BrandingProvider: FC<Props> = ({
 }) => {
   const toggleBrandingTheme = (value: string) => {
     // set new color if chosen by user
-    const brandingColors: BrandingThemeType =
-      value == "#0E99AC" ? defaultBranding : generateTints(value, 10);
+    const brandingColors: BrandingThemeType = value == "#0E99AC" ? defaultBranding : generateTints(value, 10);
 
     setBrandingThemeValue(brandingColors);
     setBrandingTheme(value);
@@ -49,9 +48,7 @@ const BrandingProvider: FC<Props> = ({
   };
 
   return (
-    <BrandingContext.Provider
-      value={{ brandingTheme, brandingThemeValue, toggleBrandingTheme }}
-    >
+    <BrandingContext.Provider value={{ brandingTheme, brandingThemeValue, toggleBrandingTheme }}>
       {children}
     </BrandingContext.Provider>
   );

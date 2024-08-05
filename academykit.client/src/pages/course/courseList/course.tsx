@@ -1,6 +1,4 @@
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
 import useAuth from "@hooks/useAuth";
 import { Box, Container, Flex, Loader } from "@mantine/core";
 import { CourseUserStatus, UserRole } from "@utils/enums";
@@ -8,12 +6,7 @@ import { useCourse } from "@utils/services/courseService";
 import { useTranslation } from "react-i18next";
 import CourseList from "./component/List";
 
-const CoursePage = ({
-  filterComponent,
-  searchParams,
-  pagination,
-  searchComponent,
-}: IWithSearchPagination) => {
+const CoursePage = ({ filterComponent, searchParams, pagination, searchComponent }: IWithSearchPagination) => {
   const { data, isLoading } = useCourse(searchParams);
   const auth = useAuth();
   const role = auth?.auth?.role ?? UserRole.Trainee;
@@ -42,11 +35,7 @@ const CoursePage = ({
       <Container fluid>
         <Flex pb={20} justify={"end"} align={"center"}>
           {searchComponent(t("search_trainings") as string)}
-          {filterComponent(
-            filterValue,
-            t("enrollment_status"),
-            "Enrollmentstatus"
-          )}
+          {filterComponent(filterValue, t("enrollment_status"), "Enrollmentstatus")}
         </Flex>
       </Container>
       {data &&

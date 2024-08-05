@@ -1,7 +1,5 @@
 import ProgressBar from "@components/Ui/ProgressBar";
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
 import { Anchor, Box, Loader, Paper, Table, Title } from "@mantine/core";
 import { DATE_FORMAT } from "@utils/constants";
 import RoutePath from "@utils/routeConstants";
@@ -10,10 +8,7 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
-const AttendedTrainings = ({
-  searchParams,
-  pagination,
-}: IWithSearchPagination) => {
+const AttendedTrainings = ({ searchParams, pagination }: IWithSearchPagination) => {
   const { id } = useParams();
   const { data, isLoading } = useMyCourse(id as string, searchParams);
   const { t } = useTranslation();
@@ -37,10 +32,7 @@ const AttendedTrainings = ({
               {data.items.map((x) => (
                 <Table.Tr key={x.id}>
                   <Table.Td>
-                    <Anchor
-                      component={Link}
-                      to={RoutePath.courses.description(x.slug).route}
-                    >
+                    <Anchor component={Link} to={RoutePath.courses.description(x.slug).route}>
                       {x.name}
                     </Anchor>
                   </Table.Td>
@@ -56,12 +48,8 @@ const AttendedTrainings = ({
           </Table>
         )}
       </Paper>
-      {data &&
-        data.totalPage > 1 &&
-        pagination(data.totalPage, data.items.length)}
-      {data && data.totalCount === 0 && (
-        <Box mt={5}>{t("no_trainings_found")}</Box>
-      )}
+      {data && data.totalPage > 1 && pagination(data.totalPage, data.items.length)}
+      {data && data.totalCount === 0 && <Box mt={5}>{t("no_trainings_found")}</Box>}
     </div>
   );
 };

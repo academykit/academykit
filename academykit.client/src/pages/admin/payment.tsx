@@ -1,11 +1,4 @@
-import {
-  Avatar,
-  Container,
-  Group,
-  Paper,
-  Text,
-  TextInput,
-} from "@mantine/core";
+import { Avatar, Container, Group, Paper, Text, TextInput } from "@mantine/core";
 import cx from "clsx";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -43,10 +36,7 @@ const Accordion = ({ items }: any) => {
         withBorder
         shadow={"md"}
       >
-        <div
-          className={classes.accordionLabel}
-          onClick={() => setIsActive(!isActive)}
-        >
+        <div className={classes.accordionLabel} onClick={() => setIsActive(!isActive)}>
           <AccordionLabel {...items} />
         </div>
       </Paper>

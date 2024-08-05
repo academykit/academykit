@@ -1,18 +1,6 @@
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  ActionIcon,
-  Box,
-  Button,
-  Container,
-  Flex,
-  Grid,
-  Image,
-  SimpleGrid,
-  Text,
-  Title,
-  Tooltip,
-} from "@mantine/core";
+import { ActionIcon, Box, Button, Container, Flex, Grid, Image, SimpleGrid, Text, Title, Tooltip } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useForm, yupResolver } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
@@ -20,11 +8,7 @@ import { showNotification } from "@mantine/notifications";
 import { IconCalendar, IconDownload, IconEye } from "@tabler/icons-react";
 import downloadImage from "@utils/downloadImage";
 import errorType from "@utils/services/axiosError";
-import {
-  useAddCertificate,
-  useGetCertificateDetails,
-  useGetSignature,
-} from "@utils/services/courseService";
+import { useAddCertificate, useGetCertificateDetails, useGetSignature } from "@utils/services/courseService";
 import moment from "moment";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -67,10 +51,7 @@ const Certificate = () => {
   useFormErrorHooks(form);
 
   useEffect(() => {
-    if (
-      getCertificateDetails.isSuccess &&
-      getCertificateDetails.data?.status === 200
-    ) {
+    if (getCertificateDetails.isSuccess && getCertificateDetails.data?.status === 200) {
       const data = getCertificateDetails.data;
 
       form.setValues({
@@ -87,9 +68,7 @@ const Certificate = () => {
 
   const [addSignatureForm, setAddSignatureForm] = useToggle();
   const handleSubmit = async (values: any) => {
-    const isEditing = !(
-      getCertificateDetails.isError || !getCertificateDetails.data
-    );
+    const isEditing = !(getCertificateDetails.isError || !getCertificateDetails.data);
     const editData = {
       ...values,
       id: getCertificateDetails.data?.data?.id ?? "",
@@ -102,9 +81,7 @@ const Certificate = () => {
       });
       showNotification({
         title: t("success"),
-        message: `${t("certificate_details")} ${
-          isEditing ? t("updated") : t("added")
-        } ${t("successfully")}`,
+        message: `${t("certificate_details")} ${isEditing ? t("updated") : t("added")} ${t("successfully")}`,
       });
     } catch (error) {
       const err = errorType(error);
@@ -124,8 +101,7 @@ const Certificate = () => {
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <SimpleGrid cols={{ cmd: 1, lg: 2 }} spacing={{ cmd: "sm" }}>
             <Box style={{ width: "300px", margin: "auto" }}>
-              {getCertificateDetails.isSuccess &&
-              getCertificateDetails.data?.data?.sampleUrl ? (
+              {getCertificateDetails.isSuccess && getCertificateDetails.data?.data?.sampleUrl ? (
                 <div style={{ position: "relative", backgroundColor: "black" }}>
                   <Image
                     radius={"md"}
@@ -148,12 +124,7 @@ const Certificate = () => {
                     }}
                   >
                     <Tooltip label={t("view_certificate")}>
-                      <ActionIcon
-                        variant="subtle"
-                        onClick={() => window.open(data?.sampleUrl)}
-                        mr={10}
-                        size="md"
-                      >
+                      <ActionIcon variant="subtle" onClick={() => window.open(data?.sampleUrl)} mr={10} size="md">
                         <IconEye />
                       </ActionIcon>
                     </Tooltip>
@@ -161,10 +132,7 @@ const Certificate = () => {
                       <ActionIcon
                         variant="subtle"
                         onClick={() => {
-                          downloadImage(
-                            data?.sampleUrl ?? "",
-                            data?.title ?? ""
-                          );
+                          downloadImage(data?.sampleUrl ?? "", data?.title ?? "");
                         }}
                       >
                         <IconDownload />
@@ -175,12 +143,11 @@ const Certificate = () => {
               ) : (
                 <Box>{t("certificate_preview_details")}</Box>
               )}
-              {getCertificateDetails.isSuccess &&
-                getCertificateDetails.data?.data?.sampleUrl && (
-                  <Text size={"xs"} c="dimmed">
-                    {t("certificate_note")}
-                  </Text>
-                )}
+              {getCertificateDetails.isSuccess && getCertificateDetails.data?.data?.sampleUrl && (
+                <Text size={"xs"} c="dimmed">
+                  {t("certificate_note")}
+                </Text>
+              )}
             </Box>
 
             <Container fluid w={"100%"}>
@@ -252,11 +219,7 @@ const Certificate = () => {
           />
         ) : (
           getSignature.data &&
-          getSignature.data?.length < 3 && (
-            <Button onClick={() => setAddSignatureForm()}>
-              {t("add_more")}
-            </Button>
-          )
+          getSignature.data?.length < 3 && <Button onClick={() => setAddSignatureForm()}>{t("add_more")}</Button>
         )}
       </Box>
     </>

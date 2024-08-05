@@ -1,21 +1,11 @@
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
 import { Box, Button } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { LessonType } from "@utils/enums";
-import {
-  IAssignmentQuestion,
-  useAssignmentQuestion,
-} from "@utils/services/assignmentService";
+import { type IAssignmentQuestion, useAssignmentQuestion } from "@utils/services/assignmentService";
 import { useQuestionReorder } from "@utils/services/courseService";
 import { useEffect, useState } from "react";
-import {
-  DragDropContext,
-  Draggable,
-  DropResult,
-  Droppable,
-} from "react-beautiful-dnd";
+import { DragDropContext, Draggable, type DropResult, Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import AssignmentItem from "./Component/AssignmentItem";
@@ -40,18 +30,9 @@ const CreateAssignment = ({ searchParams }: IWithSearchPagination) => {
   };
 
   const items = lessonData?.map((x, index) => (
-    <Draggable
-      key={x.id}
-      draggableId={x.id}
-      index={index}
-      isDragDisabled={isEditing}
-    >
+    <Draggable key={x.id} draggableId={x.id} index={index} isDragDisabled={isEditing}>
       {(provided) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
+        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
           <AssignmentItem
             key={x.id}
             data={x}
@@ -88,11 +69,7 @@ const CreateAssignment = ({ searchParams }: IWithSearchPagination) => {
         <>
           {questionList.data.length > 0 ? (
             <DragDropContext onDragEnd={onDragEnd}>
-              <Droppable
-                droppableId={lessonId as string}
-                direction="vertical"
-                type="assignment"
-              >
+              <Droppable droppableId={lessonId as string} direction="vertical" type="assignment">
                 {(provided) => (
                   <div {...provided.droppableProps} ref={provided.innerRef}>
                     {items}
@@ -105,11 +82,7 @@ const CreateAssignment = ({ searchParams }: IWithSearchPagination) => {
             <Box mt={10}>{t("no_assignment_questions")}</Box>
           )}
           {addQuestion && (
-            <EditAssignment
-              onCancel={() => setAddQuestion()}
-              lessonId={lessonId as string}
-              search={searchParams}
-            />
+            <EditAssignment onCancel={() => setAddQuestion()} lessonId={lessonId as string} search={searchParams} />
           )}
 
           {!addQuestion && (
@@ -117,12 +90,7 @@ const CreateAssignment = ({ searchParams }: IWithSearchPagination) => {
               <Button mt={10} onClick={() => setAddQuestion()}>
                 {t("add_question")}
               </Button>
-              <Button
-                ml={10}
-                variant="outline"
-                onClick={() => navigate(-1)}
-                mt={10}
-              >
+              <Button ml={10} variant="outline" onClick={() => navigate(-1)} mt={10}>
                 {t("go_back_button")}
               </Button>
             </>

@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import { ActionIcon, Group, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { ToolbarSlot } from "@react-pdf-viewer/toolbar";
+import type { ToolbarSlot } from "@react-pdf-viewer/toolbar";
 import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
 
 const SwitchPage = ({ toolbarSlot }: { toolbarSlot: ToolbarSlot }) => {
@@ -11,11 +11,7 @@ const SwitchPage = ({ toolbarSlot }: { toolbarSlot: ToolbarSlot }) => {
     <Group>
       <toolbarSlot.GoToPreviousPage
         children={(props) => (
-          <ActionIcon
-            size={matchesSmallScreen ? "md" : "sm"}
-            disabled={props.isDisabled}
-            onClick={props.onClick}
-          >
+          <ActionIcon size={matchesSmallScreen ? "md" : "sm"} disabled={props.isDisabled} onClick={props.onClick}>
             <IconArrowUp />
           </ActionIcon>
         )}
@@ -39,11 +35,7 @@ const SwitchPage = ({ toolbarSlot }: { toolbarSlot: ToolbarSlot }) => {
       />
       <toolbarSlot.GoToNextPage
         children={(props) => (
-          <ActionIcon
-            size={matchesSmallScreen ? "md" : "sm"}
-            disabled={props.isDisabled}
-            onClick={props.onClick}
-          >
+          <ActionIcon size={matchesSmallScreen ? "md" : "sm"} disabled={props.isDisabled} onClick={props.onClick}>
             <IconArrowDown />
           </ActionIcon>
         )}

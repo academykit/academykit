@@ -9,7 +9,7 @@ const target = env.ASPNETCORE_HTTPS_PORT
 
 const context = ["/weatherforecast"];
 
-module.exports = function (app) {
+module.exports = (app) => {
   const appProxy = createProxyMiddleware(context, {
     target: target,
     secure: false,

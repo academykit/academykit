@@ -1,4 +1,4 @@
-import { UseFormReturnType } from "@mantine/form";
+import type { UseFormReturnType } from "@mantine/form";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 

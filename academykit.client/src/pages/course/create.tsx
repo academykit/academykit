@@ -7,18 +7,7 @@ import ThumbnailEditor from "@components/Ui/ThumbnailEditor";
 import useAuth from "@hooks/useAuth";
 import useCustomForm from "@hooks/useCustomForm";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
-import {
-  Accordion,
-  ActionIcon,
-  Box,
-  Button,
-  Checkbox,
-  Flex,
-  Group,
-  Loader,
-  Select,
-  Text,
-} from "@mantine/core";
+import { Accordion, ActionIcon, Box, Button, Checkbox, Flex, Group, Loader, Select, Text } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { createFormContext, yupResolver } from "@mantine/form";
 import { useScrollIntoView } from "@mantine/hooks";
@@ -31,15 +20,11 @@ import { useDepartmentSetting } from "@utils/services/adminService";
 import { useAIMaster, useTrainingSuggestion } from "@utils/services/aiService";
 import { useAssessments } from "@utils/services/assessmentService";
 import errorType from "@utils/services/axiosError";
-import {
-  IBaseTrainingEligibility,
-  useCourse,
-  useCreateCourse,
-} from "@utils/services/courseService";
+import { type IBaseTrainingEligibility, useCourse, useCreateCourse } from "@utils/services/courseService";
 import { useAddGroup, useGroups } from "@utils/services/groupService";
 import { useLevels } from "@utils/services/levelService";
 import { useSkills } from "@utils/services/skillService";
-import { ITag, useAddTag, useTags } from "@utils/services/tagService";
+import { type ITag, useAddTag, useTags } from "@utils/services/tagService";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -85,21 +70,18 @@ const schema = () => {
     trainingEligibilities: Yup.array().of(
       Yup.object().shape({
         eligibilityId: Yup.string().required(t("field_required") as string),
-      })
+      }),
     ),
   });
 };
 
-export const [FormProvider, useFormContext, useForm] =
-  createFormContext<FormValues>();
+export const [FormProvider, useFormContext, useForm] = createFormContext<FormValues>();
 
 const CreateCoursePage = () => {
   const aiSuggestion = useTrainingSuggestion();
   const aiStatus = useAIMaster();
   const cForm = useCustomForm();
-  const getDepartments = useDepartmentSetting(
-    queryStringGenerator({ size: 1000 })
-  );
+  const getDepartments = useDepartmentSetting(queryStringGenerator({ size: 1000 }));
   const skillData = useSkills(queryStringGenerator({ size: 1000 }));
   const getAssessments = useAssessments(queryStringGenerator({ size: 1000 }));
   const getTrainings = useCourse(queryStringGenerator({ size: 1000 }));
@@ -108,28 +90,21 @@ const CreateCoursePage = () => {
   const groupAdd = useAddGroup();
   const auth = useAuth();
   const [language] = useState([{ value: "1", label: "English" }]);
-  const { scrollIntoView: scrollToTop, targetRef: refBasic } =
-    useScrollIntoView<HTMLDivElement>({
-      offset: 60,
-    });
+  const { scrollIntoView: scrollToTop, targetRef: refBasic } = useScrollIntoView<HTMLDivElement>({
+    offset: 60,
+  });
 
   const groups = useGroups(
     queryStringGenerator({
       search: searchParamGroup,
       size: 10000,
-    })
+    }),
   );
   const [searchParams] = useSearchParams();
   const groupSlug = searchParams.get("group");
   useEffect(() => {
     if (groups.isSuccess && groups?.data && groupSlug) {
-      form.setFieldValue(
-        "groups",
-        (
-          groups.data &&
-          groups.data.data.items.find((x) => x.slug === groupSlug)
-        )?.id ?? ""
-      );
+      form.setFieldValue("groups", (groups.data && groups.data.data.items.find((x) => x.slug === groupSlug))?.id ?? "");
     }
   }, [groups.isSuccess]);
 
@@ -199,7 +174,7 @@ const CreateCoursePage = () => {
     queryStringGenerator({
       search: searchParam,
       size: 10000,
-    })
+    }),
   );
 
   const [tagsLists, setTagsLists] = useState<ITag[]>([]);
@@ -229,17 +204,11 @@ const CreateCoursePage = () => {
         groupId: data.groups,
         tagIds: data.tags,
         levelId: data.level,
-        language: parseInt(data.language),
+        language: Number.parseInt(data.language),
         name: data.title.trim().split(/ +/).join(" "),
         thumbnailUrl: data.thumbnail,
-        startDate: moment(data.startDate)
-          .add(5, "hour")
-          .add(45, "minute")
-          .toISOString(),
-        endDate: moment(data.endDate)
-          .add(5, "hour")
-          .add(45, "minute")
-          .toISOString(),
+        startDate: moment(data.startDate).add(5, "hour").add(45, "minute").toISOString(),
+        endDate: moment(data.endDate).add(5, "hour").add(45, "minute").toISOString(),
         isUnlimitedEndDate: data.isUnlimitedEndDate,
         trainingEligibilities: data.trainingEligibilities.map((eligibility) => {
           return {
@@ -277,13 +246,7 @@ const CreateCoursePage = () => {
 
   // scroll to error section
   const handleError = (errors: typeof form.errors) => {
-    if (
-      errors.title ||
-      errors.level ||
-      errors.groups ||
-      errors.startDate ||
-      errors.endDate
-    ) {
+    if (errors.title || errors.level || errors.groups || errors.startDate || errors.endDate) {
       scrollToTop({
         alignment: "center",
       });
@@ -296,26 +259,17 @@ const CreateCoursePage = () => {
       <FormProvider form={form}>
         <form onSubmit={form.onSubmit(submitHandler, handleError)}>
           <Box mt={20}>
-            <ThumbnailEditor
-              formContext={useFormContext}
-              label={t("thumbnail") as string}
-            />
+            <ThumbnailEditor formContext={useFormContext} label={t("thumbnail") as string} />
 
-            {aiStatus.data?.isActive &&
-              aiStatus.data.key !== null &&
-              aiStatus.data.key !== "" && (
-                <TitleAndDescriptionSuggestion
-                  title={aiSuggestion.data?.title}
-                  description={aiSuggestion.data?.description}
-                  isLoading={
-                    aiSuggestion.isLoading ||
-                    aiSuggestion.isFetching ||
-                    aiSuggestion.isRefetching
-                  }
-                  refetch={() => aiSuggestion.refetch()}
-                  acceptAnswer={() => acceptAIAnswer()}
-                />
-              )}
+            {aiStatus.data?.isActive && aiStatus.data.key !== null && aiStatus.data.key !== "" && (
+              <TitleAndDescriptionSuggestion
+                title={aiSuggestion.data?.title}
+                description={aiSuggestion.data?.description}
+                isLoading={aiSuggestion.isLoading || aiSuggestion.isFetching || aiSuggestion.isRefetching}
+                refetch={() => aiSuggestion.refetch()}
+                acceptAnswer={() => acceptAIAnswer()}
+              />
+            )}
 
             <Group mt={10} grow ref={refBasic}>
               <CustomTextFieldWithAutoFocus
@@ -330,12 +284,7 @@ const CreateCoursePage = () => {
 
             <Group grow mt={20}>
               {tags.isSuccess ? (
-                <TagMultiSelectCreatable
-                  data={tagsLists ?? []}
-                  mutateAsync={mutAsync}
-                  form={form}
-                  size="lg"
-                />
+                <TagMultiSelectCreatable data={tagsLists ?? []} mutateAsync={mutAsync} form={form} size="lg" />
               ) : (
                 <div>
                   <Loader />
@@ -381,12 +330,7 @@ const CreateCoursePage = () => {
                 <Loader style={{ flexGrow: "0" }} />
               )}
 
-              <Select
-                label={t("Language")}
-                size={"lg"}
-                data={language}
-                {...form.getInputProps("language")}
-              />
+              <Select label={t("Language")} size={"lg"} data={language} {...form.getInputProps("language")} />
             </Group>
 
             <Group grow mt={20}>
@@ -420,136 +364,106 @@ const CreateCoursePage = () => {
 
             <Box mt={20}>
               <Text>{t("description")}</Text>
-              <RichTextEditor
-                placeholder={t("course_description") as string}
-                formContext={useFormContext}
-              />
+              <RichTextEditor placeholder={t("course_description") as string} formContext={useFormContext} />
             </Box>
 
             <Accordion defaultValue="Eligibility" mt={10}>
               <Accordion.Item value="Eligibility">
-                <Accordion.Control>
-                  {t("eligibility_criteria")}
-                </Accordion.Control>
+                <Accordion.Control>{t("eligibility_criteria")}</Accordion.Control>
                 <Accordion.Panel>
                   {form.values.trainingEligibilities.length < 1 && (
                     <Button
                       onClick={() => {
-                        form.insertListItem(
-                          "trainingEligibilities",
-                          { eligibility: 0, eligibilityId: "" },
-                          0
-                        );
+                        form.insertListItem("trainingEligibilities", { eligibility: 0, eligibilityId: "" }, 0);
                       }}
                     >
                       {t("add_eligibility_criteria")}
                     </Button>
                   )}
 
-                  {form.values.trainingEligibilities.map(
-                    (_eligibility, index) => (
-                      <Flex gap={10} key={index} align={"flex-end"} mb={10}>
+                  {form.values.trainingEligibilities.map((_eligibility, index) => (
+                    <Flex gap={10} key={index} align={"flex-end"} mb={10}>
+                      <Select
+                        allowDeselect={false}
+                        label={t("eligibility_type")}
+                        placeholder={t("pick_value") as string}
+                        data={getEligibilityType() ?? []}
+                        {...form.getInputProps(`trainingEligibilities.${index}.eligibility`)}
+                      />
+                      {form.values.trainingEligibilities[index].eligibility == TrainingEligibilityEnum.Department && (
                         <Select
+                          withAsterisk
                           allowDeselect={false}
-                          label={t("eligibility_type")}
+                          label={t("department")}
                           placeholder={t("pick_value") as string}
-                          data={getEligibilityType() ?? []}
-                          {...form.getInputProps(
-                            `trainingEligibilities.${index}.eligibility`
-                          )}
+                          data={getDepartmentDropdown() ?? []}
+                          {...form.getInputProps(`trainingEligibilities.${index}.eligibilityId`)}
                         />
-                        {form.values.trainingEligibilities[index].eligibility ==
-                          TrainingEligibilityEnum.Department && (
-                          <Select
-                            withAsterisk
-                            allowDeselect={false}
-                            label={t("department")}
-                            placeholder={t("pick_value") as string}
-                            data={getDepartmentDropdown() ?? []}
-                            {...form.getInputProps(
-                              `trainingEligibilities.${index}.eligibilityId`
-                            )}
-                          />
-                        )}
+                      )}
 
-                        {form.values.trainingEligibilities[index].eligibility ==
-                          TrainingEligibilityEnum.Training && (
-                          <Select
-                            withAsterisk
-                            allowDeselect={false}
-                            label={t("training")}
-                            placeholder={t("pick_value") as string}
-                            data={getTrainingDropdown() ?? []}
-                            {...form.getInputProps(
-                              `trainingEligibilities.${index}.eligibilityId`
-                            )}
-                          />
-                        )}
+                      {form.values.trainingEligibilities[index].eligibility == TrainingEligibilityEnum.Training && (
+                        <Select
+                          withAsterisk
+                          allowDeselect={false}
+                          label={t("training")}
+                          placeholder={t("pick_value") as string}
+                          data={getTrainingDropdown() ?? []}
+                          {...form.getInputProps(`trainingEligibilities.${index}.eligibilityId`)}
+                        />
+                      )}
 
-                        {form.values.trainingEligibilities[index].eligibility ==
-                          TrainingEligibilityEnum.Skills && (
-                          <Select
-                            withAsterisk
-                            allowDeselect={false}
-                            label={t("skills")}
-                            placeholder={t("pick_value") as string}
-                            data={getSkillDropdown() ?? []}
-                            {...form.getInputProps(
-                              `trainingEligibilities.${index}.eligibilityId`
-                            )}
-                          />
-                        )}
+                      {form.values.trainingEligibilities[index].eligibility == TrainingEligibilityEnum.Skills && (
+                        <Select
+                          withAsterisk
+                          allowDeselect={false}
+                          label={t("skills")}
+                          placeholder={t("pick_value") as string}
+                          data={getSkillDropdown() ?? []}
+                          {...form.getInputProps(`trainingEligibilities.${index}.eligibilityId`)}
+                        />
+                      )}
 
-                        {form.values.trainingEligibilities[index].eligibility ==
-                          TrainingEligibilityEnum.Assessment && (
-                          <Select
-                            withAsterisk
-                            allowDeselect={false}
-                            label={t("assessment")}
-                            placeholder={t("pick_value") as string}
-                            data={getAssessmentDropdown() ?? []}
-                            {...form.getInputProps(
-                              `trainingEligibilities.${index}.eligibilityId`
-                            )}
-                          />
-                        )}
+                      {form.values.trainingEligibilities[index].eligibility == TrainingEligibilityEnum.Assessment && (
+                        <Select
+                          withAsterisk
+                          allowDeselect={false}
+                          label={t("assessment")}
+                          placeholder={t("pick_value") as string}
+                          data={getAssessmentDropdown() ?? []}
+                          {...form.getInputProps(`trainingEligibilities.${index}.eligibilityId`)}
+                        />
+                      )}
 
-                        <ActionIcon
-                          variant="subtle"
-                          onClick={() => {
-                            form.insertListItem(
-                              "trainingEligibilities",
-                              { eligibility: 0, eligibilityId: "" },
-                              index + 1
-                            );
-                          }}
-                        >
-                          <IconPlus />
-                        </ActionIcon>
+                      <ActionIcon
+                        variant="subtle"
+                        onClick={() => {
+                          form.insertListItem(
+                            "trainingEligibilities",
+                            { eligibility: 0, eligibilityId: "" },
+                            index + 1,
+                          );
+                        }}
+                      >
+                        <IconPlus />
+                      </ActionIcon>
 
-                        <ActionIcon
-                          variant="subtle"
-                          c={"red"}
-                          onClick={() => {
-                            form.removeListItem("trainingEligibilities", index);
-                          }}
-                        >
-                          <IconTrash />
-                        </ActionIcon>
-                      </Flex>
-                    )
-                  )}
+                      <ActionIcon
+                        variant="subtle"
+                        c={"red"}
+                        onClick={() => {
+                          form.removeListItem("trainingEligibilities", index);
+                        }}
+                      >
+                        <IconTrash />
+                      </ActionIcon>
+                    </Flex>
+                  ))}
                 </Accordion.Panel>
               </Accordion.Item>
             </Accordion>
 
             <Box mt={20}>
-              <Button
-                disabled={!cForm?.isReady}
-                size="lg"
-                type="submit"
-                loading={isLoading}
-              >
+              <Button disabled={!cForm?.isReady} size="lg" type="submit" loading={isLoading}>
                 {t("submit")}
               </Button>
             </Box>

@@ -16,13 +16,7 @@ const AIChatBox = () => {
           <Loader color="cyan" type="dots" size={20} />
         ) : (
           <>
-            <Paper
-              p={"md"}
-              withBorder
-              w={"fit-content"}
-              maw={"80vw"}
-              style={{ wordBreak: "break-word" }}
-            >
+            <Paper p={"md"} withBorder w={"fit-content"} maw={"80vw"} style={{ wordBreak: "break-word" }}>
               Okay, Im on it.
             </Paper>
 

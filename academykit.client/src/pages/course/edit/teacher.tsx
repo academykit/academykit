@@ -1,8 +1,6 @@
 import DeleteModal from "@components/Ui/DeleteModal";
 import UserShortProfile from "@components/UserShortProfile";
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
 import useAuth from "@hooks/useAuth";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
@@ -28,7 +26,7 @@ import queryStringGenerator from "@utils/queryStringGenerator";
 import { useGetTrainers } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
 import {
-  ICreateCourseTeacher,
+  type ICreateCourseTeacher,
   useCourseTeacher,
   useCreateTeacherCourse,
   useDeleteCourseTeacher,
@@ -80,20 +78,12 @@ const TeacherCards = ({
 
       <Card radius={"lg"} mb={10}>
         <Group py={5} justify="space-between">
-          {user && (
-            <UserShortProfile user={user} size={"md"} page="Trainings" />
-          )}
+          {user && <UserShortProfile user={user} size={"md"} page="Trainings" />}
           <Group>
             <Text color={"dimmed"} size={"sm"}></Text>
-            {auth?.auth &&
-              auth?.auth.id !== user?.id &&
-              user?.id !== courseCreatedBy && (
-                <IconTrash
-                  color="red"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setDeletePopUP(true)}
-                />
-              )}
+            {auth?.auth && auth?.auth.id !== user?.id && user?.id !== courseCreatedBy && (
+              <IconTrash color="red" style={{ cursor: "pointer" }} onClick={() => setDeletePopUP(true)} />
+            )}
           </Group>
         </Group>
       </Card>
@@ -101,11 +91,7 @@ const TeacherCards = ({
   );
 };
 
-const Teacher = ({
-  searchParams,
-  pagination,
-  searchComponent,
-}: IWithSearchPagination) => {
+const Teacher = ({ searchParams, pagination, searchComponent }: IWithSearchPagination) => {
   const { t } = useTranslation();
 
   const form = useForm({
@@ -116,11 +102,7 @@ const Teacher = ({
   });
   useFormErrorHooks(form);
   const slug = useParams();
-  const {
-    data,
-    isLoading: loading,
-    isError: error,
-  } = useCourseTeacher(slug.id as string, searchParams);
+  const { data, isLoading: loading, isError: error } = useCourseTeacher(slug.id as string, searchParams);
   const createTeacher = useCreateTeacherCourse(searchParams);
 
   const [showAddForm, toggleAddForm] = useToggle();
@@ -144,25 +126,14 @@ const Teacher = ({
   };
   const [search, setSearch] = useState("");
   const lessonType = TrainingTypeEnum.Course;
-  const { data: trainers, isLoading } = useGetTrainers(
-    queryStringGenerator({ search }),
-    lessonType,
-    slug.id
-  );
+  const { data: trainers, isLoading } = useGetTrainers(queryStringGenerator({ search }), lessonType, slug.id);
   return (
     <Container fluid>
       <Group style={{ justifyContent: "space-between", alignItems: "center" }}>
         <Title>{t("trainers")}</Title>
-        <Button onClick={() => toggleAddForm()}>
-          {!showAddForm ? t("add_trainer") : t("cancel")}
-        </Button>
+        <Button onClick={() => toggleAddForm()}>{!showAddForm ? t("add_trainer") : t("cancel")}</Button>
       </Group>
-      <Transition
-        mounted={showAddForm}
-        transition={"slide-down"}
-        duration={200}
-        timingFunction="ease"
-      >
+      <Transition mounted={showAddForm} transition={"slide-down"} duration={200} timingFunction="ease">
         {() => (
           <Box mt={10}>
             <form onSubmit={form.onSubmit(onSubmitForm)}>
@@ -171,9 +142,7 @@ const Teacher = ({
                   clearable
                   placeholder={t("enter_email_trainer") as string}
                   searchable
-                  nothingFoundMessage={
-                    isLoading ? "Loading..." : "No Trainers Found!"
-                  }
+                  nothingFoundMessage={isLoading ? "Loading..." : "No Trainers Found!"}
                   data={trainers?.map((e) => e.email) ?? []}
                   onSearchChange={setSearch}
                   searchValue={search}
@@ -200,13 +169,7 @@ const Teacher = ({
           (data.items.length < 1 ? (
             <Box>{t("no_users")}</Box>
           ) : (
-            data.items.map((item) => (
-              <TeacherCards
-                teacher={item}
-                key={item.id}
-                searchParams={searchParams}
-              />
-            ))
+            data.items.map((item) => <TeacherCards teacher={item} key={item.id} searchParams={searchParams} />)
           ))}
       </ScrollArea>
       {data && pagination(data.totalPage, data.items.length)}

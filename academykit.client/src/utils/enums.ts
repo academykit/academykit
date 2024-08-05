@@ -1,6 +1,6 @@
 export enum TrainingTypeEnum {
-  Course,
-  QuestionPool,
+  Course = 0,
+  QuestionPool = 1,
 }
 
 export enum UserRole {

@@ -1,38 +1,17 @@
 import DeleteModal from "@components/Ui/DeleteModal";
-import withSearchPagination, {
-  IWithSearchPagination,
-} from "@hoc/useSearchPagination";
-import {
-  Badge,
-  Box,
-  Button,
-  Center,
-  Container,
-  Flex,
-  Loader,
-  Paper,
-  ScrollArea,
-  Table,
-} from "@mantine/core";
+import withSearchPagination, { type IWithSearchPagination } from "@hoc/useSearchPagination";
+import { Badge, Box, Button, Center, Container, Flex, Loader, Paper, ScrollArea, Table } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { QuestionType } from "@utils/enums";
 import errorType from "@utils/services/axiosError";
-import {
-  IQuestion,
-  useDeleteQuestion,
-  useQuestion,
-} from "@utils/services/questionService";
-import { TFunction } from "i18next";
+import { type IQuestion, useDeleteQuestion, useQuestion } from "@utils/services/questionService";
+import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-const MCQQuestions = ({
-  searchParams,
-  searchComponent,
-  pagination,
-}: IWithSearchPagination) => {
+const MCQQuestions = ({ searchParams, searchComponent, pagination }: IWithSearchPagination) => {
   const { id } = useParams();
   const { data, isLoading, isError } = useQuestion(id as string, searchParams);
   const navigate = useNavigate();
@@ -79,9 +58,7 @@ const MCQQuestions = ({
 
         {data && pagination(data.totalPage, data.items.length)}
         {isError && <Box>{t("something_wrong")}</Box>}
-        {data && data?.totalCount < 1 && (
-          <Box mt={10}>{t("no_question_found")}</Box>
-        )}
+        {data && data?.totalCount < 1 && <Box mt={10}>{t("no_question_found")}</Box>}
       </ScrollArea>
     </Container>
   );
@@ -151,11 +128,7 @@ const QuestionRow = ({
           >
             <IconEdit />
           </Button>
-          <Button
-            onClick={() => setShowDelete()}
-            variant="subtle"
-            color={"red"}
-          >
+          <Button onClick={() => setShowDelete()} variant="subtle" color={"red"}>
             <IconTrash />
           </Button>
         </Center>

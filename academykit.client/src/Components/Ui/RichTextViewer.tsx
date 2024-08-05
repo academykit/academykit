@@ -1,4 +1,4 @@
-import { MantineStyleProp } from "@mantine/core";
+import type { MantineStyleProp } from "@mantine/core";
 import { Link, RichTextEditor } from "@mantine/tiptap";
 import Mathematics from "@tiptap-pro/extension-mathematics";
 import Color from "@tiptap/extension-color";

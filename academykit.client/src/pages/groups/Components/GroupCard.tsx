@@ -4,16 +4,11 @@ import useAuth from "@hooks/useAuth";
 import { Anchor, Button, Card, Group, Menu, Text } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import {
-  IconChevronRight,
-  IconDotsVertical,
-  IconEdit,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconChevronRight, IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
 import { UserRole } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
 import errorType from "@utils/services/axiosError";
-import { IGroup, useDeleteGroup } from "@utils/services/groupService";
+import { type IGroup, useDeleteGroup } from "@utils/services/groupService";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import classes from "../styles/groupCard.module.css";
@@ -54,13 +49,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
         onClose={setDeleteModal}
         onConfirm={handleDelete}
       />
-      <Card
-        className={classes.card}
-        p="md"
-        key={group.id}
-        withBorder
-        radius={"md"}
-      >
+      <Card className={classes.card} p="md" key={group.id} withBorder radius={"md"}>
         <Group justify="space-between">
           <Anchor
             component={Link}
@@ -73,13 +62,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
             <Text truncate>{group.name}</Text>
           </Anchor>
           {auth?.auth && Number(auth.auth?.role) < UserRole.Trainer && (
-            <Menu
-              shadow="md"
-              width={150}
-              trigger="hover"
-              withArrow
-              position="left"
-            >
+            <Menu shadow="md" width={150} trigger="hover" withArrow position="left">
               <Menu.Target>
                 <Button style={{ zIndex: 50 }} variant="subtle" px={4}>
                   <IconDotsVertical />

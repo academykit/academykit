@@ -3,8 +3,9 @@ import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from "@utils/constants";
 import { useLogout, useReAuth } from "@utils/services/authService";
-import { IUserProfile } from "@utils/services/types";
-import React, { FC, createContext, useEffect, useState } from "react";
+import type { IUserProfile } from "@utils/services/types";
+import type React from "react";
+import { type FC, createContext, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next";
 
 export interface IAuthContext {
@@ -25,11 +26,9 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
   const reAuth = useReAuth();
   const useLogoutQuery = useLogout();
   const [loggedIn, setIsLoggedIn] = useState(false);
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem(TOKEN_STORAGE)
-  );
+  const [token, setToken] = useState<string | null>(localStorage.getItem(TOKEN_STORAGE));
   const [refreshToken, setRefreshToken] = useState<string | null>(
-    localStorage.getItem(REFRESH_TOKEN_STORAGE) as string
+    localStorage.getItem(REFRESH_TOKEN_STORAGE) as string,
   );
   const { t } = useTranslation();
 
@@ -94,11 +93,7 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
         setRefreshToken,
       }}
     >
-      <Modal
-        onClose={() => setShowLogout()}
-        opened={showLogout}
-        title={t("logout_confirmation")}
-      >
+      <Modal onClose={() => setShowLogout()} opened={showLogout} title={t("logout_confirmation")}>
         <Group justify="center">
           <Button onClick={confirmLogout}>{t("sure")}</Button>
           <Button variant="outline" onClick={() => setShowLogout()}>

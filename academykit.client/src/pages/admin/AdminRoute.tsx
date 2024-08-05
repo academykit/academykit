@@ -4,14 +4,7 @@ import lazyWithRetry from "@utils/lazyImportWithReload";
 import RoutePath from "@utils/routeConstants";
 import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Navigate,
-  Outlet,
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Navigate, Outlet, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import AdminNav from "./Component/AdminNav";
 import AdminViewCertificate from "./Component/training/adminViewCertificate";
 import CertificateList from "./Component/training/certificateList";
@@ -50,10 +43,7 @@ const AdminRoutesChild = () => {
         <Route path={"/account"} element={<Account />} />
         <Route element={<MyTrainings />}>
           <Route path={"/mycertificate"} element={<MyTrainingInternal />} />
-          <Route
-            path={"/mycertificate/external"}
-            element={<AdminViewCertificate />}
-          />
+          <Route path={"/mycertificate/external"} element={<AdminViewCertificate />} />
         </Route>
         <Route element={<AdminAuthRoute />}>
           <Route path={"/level"} element={<Level />} />
@@ -85,16 +75,10 @@ const MyTrainings = () => {
 
   return (
     <Container fluid>
-      <Tabs
-        my={20}
-        value={location.pathname}
-        onChange={(value) => navigate(`${value}`)}
-      >
+      <Tabs my={20} value={location.pathname} onChange={(value) => navigate(`${value}`)}>
         <Tabs.List>
           <Tabs.Tab value="/settings/mycertificate">{t("internal")}</Tabs.Tab>
-          <Tabs.Tab value="/settings/mycertificate/external">
-            {t("external")}
-          </Tabs.Tab>
+          <Tabs.Tab value="/settings/mycertificate/external">{t("external")}</Tabs.Tab>
         </Tabs.List>
       </Tabs>
       <Suspense fallback={<Loader />}>

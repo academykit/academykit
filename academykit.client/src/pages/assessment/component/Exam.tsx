@@ -2,25 +2,15 @@ import ExamCounter from "@components/Course/Classes/ExamCounter";
 import TextViewer from "@components/Ui/RichTextViewer";
 import useCustomLayout from "@context/LayoutProvider";
 import useAuth from "@hooks/useAuth";
-import {
-  Box,
-  Button,
-  Card,
-  Container,
-  Grid,
-  Group,
-  Modal,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Box, Button, Card, Container, Grid, Group, Modal, Text, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useMediaQuery, useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { QuestionType, UserRole } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
 import {
-  IAssessmentExamDetail,
-  IAssessmentExamSubmit,
+  type IAssessmentExamDetail,
+  type IAssessmentExamSubmit,
   useSubmitAssessmentExam,
 } from "@utils/services/assessmentService";
 import errorType from "@utils/services/axiosError";
@@ -81,10 +71,9 @@ const Exam = ({
           />
         ) : (
           <Button onClick={() => navigate(-1)}>{t("close")}</Button>
-        )
+        ),
       );
-    customLayout.setExamPageTitle &&
-      customLayout.setExamPageTitle(<Title>{data.assessmentName}</Title>);
+    customLayout.setExamPageTitle && customLayout.setExamPageTitle(<Title>{data.assessmentName}</Title>);
     return () => {
       customLayout.setExamPage && customLayout.setExamPage(false);
     };
@@ -94,9 +83,7 @@ const Exam = ({
     try {
       const finalData: IAssessmentExamSubmit[] = [];
       values.forEach((x) => {
-        const answers = x.assessmentQuestionOptions
-          .filter((x) => x.isCorrect)
-          .map((x) => x.optionId);
+        const answers = x.assessmentQuestionOptions.filter((x) => x.isCorrect).map((x) => x.optionId);
 
         finalData.push({
           assessmentQuestionId: x.questionId,
@@ -120,11 +107,7 @@ const Exam = ({
 
   return (
     <>
-      <Modal
-        title={t("submit_exam_confirmation")}
-        opened={showConfirmation}
-        onClose={handleCloseModal}
-      >
+      <Modal title={t("submit_exam_confirmation")} opened={showConfirmation} onClose={handleCloseModal}>
         <Group>
           <Button
             disabled={submitClicked}
@@ -151,19 +134,13 @@ const Exam = ({
       <Modal
         opened={examSubmission.isSuccess}
         onClose={() => {
-          navigate(
-            RoutePath.assessment.description(params.id as string).route,
-            { replace: true }
-          );
+          navigate(RoutePath.assessment.description(params.id as string).route, { replace: true });
         }}
         title={t("submission_success")}
       >
         <Button
           onClick={() => {
-            navigate(
-              RoutePath.assessment.description(params.id as string).route,
-              { replace: true }
-            );
+            navigate(RoutePath.assessment.description(params.id as string).route, { replace: true });
           }}
         >
           {t("close")}
@@ -173,11 +150,7 @@ const Exam = ({
       <form onSubmit={form.onSubmit(onSubmitHandler)}>
         <Grid m={20} className={classes.parentGrid}>
           {/* exam display section */}
-          <Grid.Col
-            span={matches ? 9 : 9}
-            style={{ maxWidth: "100%" }}
-            className={classes.questionGridCol}
-          >
+          <Grid.Col span={matches ? 9 : 9} style={{ maxWidth: "100%" }} className={classes.questionGridCol}>
             <Box
               style={{
                 flexDirection: "column",
@@ -204,15 +177,12 @@ const Exam = ({
                 )}
               </Box>
               <Container className={classes.option}>
-                {questions[currentIndex]?.type ===
-                  QuestionType.MultipleChoice &&
+                {questions[currentIndex]?.type === QuestionType.MultipleChoice &&
                   questions[currentIndex]?.assessmentQuestionOptions && (
                     <AssessmentExamCheckBox
                       currentIndex={currentIndex}
                       form={form}
-                      options={
-                        questions[currentIndex]?.assessmentQuestionOptions
-                      }
+                      options={questions[currentIndex]?.assessmentQuestionOptions}
                     />
                   )}
                 {questions[currentIndex]?.type === QuestionType.SingleChoice &&
@@ -220,9 +190,7 @@ const Exam = ({
                     <AssessmentExamRadio
                       currentIndex={currentIndex}
                       form={form}
-                      options={
-                        questions[currentIndex]?.assessmentQuestionOptions
-                      }
+                      options={questions[currentIndex]?.assessmentQuestionOptions}
                     />
                   )}
               </Container>
@@ -242,10 +210,7 @@ const Exam = ({
               ) : (
                 <div></div>
               )}
-              <button
-                style={{ display: "none" }}
-                ref={submitButtonRef}
-              ></button>
+              <button style={{ display: "none" }} ref={submitButtonRef}></button>
               <Text my={5}>
                 {currentIndex + 1}/{questions.length}
               </Text>
@@ -268,11 +233,7 @@ const Exam = ({
           </Grid.Col>
 
           {/* question counter section */}
-          <Grid.Col
-            span={matches ? 3 : 3}
-            m={0}
-            className={classes.optionsGridCol}
-          >
+          <Grid.Col span={matches ? 3 : 3} m={0} className={classes.optionsGridCol}>
             <Group p={10} className={classes.navigateWrapper}>
               {form.values.map((x, i) => (
                 <div
@@ -290,12 +251,8 @@ const Exam = ({
                   <Card
                     className={cx(classes.navigate, {
                       [classes.visited]:
-                        visited.includes(i) &&
-                        x.assessmentQuestionOptions.filter((x) => x.isCorrect)
-                          .length <= 0,
-                      [classes.answered]:
-                        x.assessmentQuestionOptions.filter((x) => x.isCorrect)
-                          .length > 0,
+                        visited.includes(i) && x.assessmentQuestionOptions.filter((x) => x.isCorrect).length <= 0,
+                      [classes.answered]: x.assessmentQuestionOptions.filter((x) => x.isCorrect).length > 0,
                       [classes.active]: currentIndex === i,
                     })}
                     radius={10000}

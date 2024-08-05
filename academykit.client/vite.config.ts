@@ -1,18 +1,16 @@
+import child_process from "node:child_process";
+import fs, { readFileSync } from "node:fs";
+import path from "node:path";
+import { env } from "node:process";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 import react from "@vitejs/plugin-react";
-import child_process from "child_process";
-import fs, { readFileSync } from "fs";
-import path from "path";
-import { env } from "process";
 import { defineConfig } from "vite";
 import eslintPlugin from "vite-plugin-eslint";
 
 const dir = __dirname;
 
 const baseFolder =
-  env.APPDATA !== undefined && env.APPDATA !== ""
-    ? `${env.APPDATA}/ASP.NET/https`
-    : `${env.HOME}/.aspnet/https`;
+  env.APPDATA !== undefined && env.APPDATA !== "" ? `${env.APPDATA}/ASP.NET/https` : `${env.HOME}/.aspnet/https`;
 
 const certificateName = "academykit.client";
 const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
@@ -23,16 +21,8 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
     0 !==
     child_process.spawnSync(
       "dotnet",
-      [
-        "dev-certs",
-        "https",
-        "--export-path",
-        certFilePath,
-        "--format",
-        "Pem",
-        "--no-password",
-      ],
-      { stdio: "inherit" }
+      ["dev-certs", "https", "--export-path", certFilePath, "--format", "Pem", "--no-password"],
+      { stdio: "inherit" },
     ).status
   ) {
     throw new Error("Could not create certificate.");

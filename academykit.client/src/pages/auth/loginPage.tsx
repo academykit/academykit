@@ -1,23 +1,13 @@
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 import { BrandingContext } from "@context/BrandingThemeContext";
-import {
-  Anchor,
-  Button,
-  Center,
-  Container,
-  Group,
-  Image,
-  Paper,
-  PasswordInput,
-  Title,
-} from "@mantine/core";
+import { Anchor, Button, Center, Container, Group, Image, Paper, PasswordInput, Title } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import RoutePath from "@utils/routeConstants";
 import { useCompanySetting } from "@utils/services/adminService";
 import { useLogin } from "@utils/services/authService";
-import { IUserProfile } from "@utils/services/types";
-import { AxiosError } from "axios";
+import type { IUserProfile } from "@utils/services/types";
+import type { AxiosError } from "axios";
 import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -54,9 +44,7 @@ const LoginPage = () => {
   useEffect(() => {
     if (login.isError) {
       showNotification({
-        message:
-          ((login.error as AxiosError).response?.data as any)?.message ??
-          t("something_wrong"),
+        message: ((login.error as AxiosError).response?.data as any)?.message ?? t("something_wrong"),
         title: t("error"),
         color: "red",
       });
@@ -83,9 +71,7 @@ const LoginPage = () => {
   const companySettings = useCompanySetting();
 
   const setHeader = () => {
-    const info =
-      localStorage.getItem("app-info") &&
-      JSON.parse(localStorage.getItem("app-info") ?? "");
+    const info = localStorage.getItem("app-info") && JSON.parse(localStorage.getItem("app-info") ?? "");
     if (info) {
       let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
       document.title = info.name;
@@ -102,15 +88,13 @@ const LoginPage = () => {
     setHeader();
 
     if (companySettings.isSuccess) {
-      const branding = JSON.parse(
-        companySettings.data.data.customConfiguration ?? "{}"
-      );
+      const branding = JSON.parse(companySettings.data.data.customConfiguration ?? "{}");
       localStorage.setItem(
         "app-info",
         JSON.stringify({
           name: companySettings.data.data.name,
           logo: companySettings.data.data.imageUrl,
-        })
+        }),
       );
       localStorage.setItem("branding", branding.accent);
       localStorage.setItem("version", companySettings.data.data.appVersion);
@@ -123,13 +107,7 @@ const LoginPage = () => {
     <Container size={420} my={40}>
       <Center m={"lg"}>
         <Link to={"/"}>
-          <Image
-            height={50}
-            width={140}
-            src={companySettings?.data?.data?.imageUrl}
-            alt="logo"
-            fit="contain"
-          ></Image>
+          <Image height={50} width={140} src={companySettings?.data?.data?.imageUrl} alt="logo" fit="contain"></Image>
         </Link>
       </Center>
       <Title
@@ -161,13 +139,7 @@ const LoginPage = () => {
           />
           <Group justify="flex-end" mt={10}>
             <Link to={RoutePath.forgotPassword}>
-              <Anchor
-                component="button"
-                ta="end"
-                type="button"
-                c="dimmed"
-                size="xs"
-              >
+              <Anchor component="button" ta="end" type="button" c="dimmed" size="xs">
                 {t("forgot_password")}?
               </Anchor>
             </Link>

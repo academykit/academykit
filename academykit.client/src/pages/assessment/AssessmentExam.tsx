@@ -27,12 +27,7 @@ const AssessmentExam = () => {
         <div>
           <Title>{t("no_question_found")}</Title>
 
-          <Button
-            variant="outline"
-            size="md"
-            mt="xl"
-            onClick={() => navigate("/")}
-          >
+          <Button variant="outline" size="md" mt="xl" onClick={() => navigate("/")}>
             {t("go_back")}
           </Button>
         </div>

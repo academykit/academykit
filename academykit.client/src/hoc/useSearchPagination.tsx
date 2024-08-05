@@ -1,14 +1,11 @@
 import SearchBar from "@components/Ui/SearchBar";
 import { Pagination, Select, UnstyledButton } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
-import {
-  IconArrowsSort,
-  IconChevronDown,
-  IconChevronUp,
-} from "@tabler/icons-react";
+import { IconArrowsSort, IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 import queryStringGenerator from "@utils/queryStringGenerator";
 import moment from "moment";
-import React, { useEffect, useMemo, useState } from "react";
+import type React from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export interface IWithSearchPagination {
@@ -23,7 +20,7 @@ export interface IWithSearchPagination {
       label: string;
     }[],
     placeholder: string,
-    key: string
+    key: string,
   ) => JSX.Element;
   setInitialSearch: React.Dispatch<
     React.SetStateAction<
@@ -33,21 +30,11 @@ export interface IWithSearchPagination {
       }[]
     >
   >;
-  startDateFilterComponent: (
-    placeholder: string,
-    key: string,
-    label?: string
-  ) => JSX.Element;
-  endDateFilterComponent: (
-    placeholder: string,
-    key: string,
-    label?: string
-  ) => JSX.Element;
+  startDateFilterComponent: (placeholder: string, key: string, label?: string) => JSX.Element;
+  endDateFilterComponent: (placeholder: string, key: string, label?: string) => JSX.Element;
 }
 
-const withSearchPagination = <P extends object>(
-  Component: React.FC<P & IWithSearchPagination>
-) => {
+const withSearchPagination = <P extends object>(Component: React.FC<P & IWithSearchPagination>) => {
   const withSearchPagination = (props: P) => {
     const [params, setParams] = useSearchParams();
     const [sort, setSort] = useState(params.get("so") ?? "");
@@ -68,9 +55,7 @@ const withSearchPagination = <P extends object>(
     const pageSize = 12;
     const [itemLength, setItemLength] = useState<number>();
     const [filterValue, setFilterValue] = useState<string>("");
-    const [currentPage, setCurrentPage] = useState(
-      parseInt(params.get("p") ?? "1")
-    );
+    const [currentPage, setCurrentPage] = useState(Number.parseInt(params.get("p") ?? "1"));
     const [startDate, setStartDate] = useState<string>("");
     const [startDateKey, setStartDateKey] = useState<string>("");
 
@@ -78,16 +63,16 @@ const withSearchPagination = <P extends object>(
     const [endDateKey, setEndDateKey] = useState<string>("");
 
     useEffect(() => {
-      if (currentPage !== 1 && itemLength == 0) {
+      if (currentPage !== 1 && itemLength === 0) {
         setPage(currentPage - 1);
       }
-    }, [itemLength]);
+    }, [currentPage, itemLength]);
     const qs = useMemo(() => {
       const [by, type] = sort.split(":");
       const initSearchObject: Record<string, string> = {};
-      initialSearch.forEach((x) => {
+      for (const x of initialSearch) {
         initSearchObject[x.key] = x.value;
-      });
+      }
 
       const qs = queryStringGenerator({
         ...initSearchObject,
@@ -101,29 +86,18 @@ const withSearchPagination = <P extends object>(
         [endDateKey]: endDate,
       });
 
-      !!search && search != "" && params.set("s", search);
+      !!search && search !== "" && params.set("s", search);
       sort && params.set("so", sort);
 
-      pageSize && pageSize != 12 && params.set("si", pageSize);
+      pageSize && pageSize !== 12 && params.set("si", pageSize);
 
-      currentPage &&
-        currentPage != 1 &&
-        params.set("p", currentPage.toString());
+      currentPage && currentPage !== 1 && params.set("p", currentPage.toString());
       startDate && params.set("sd", startDate.toString());
       endDate && params.set("ed", endDate.toString());
 
       setParams(params, { replace: true });
       return qs;
-    }, [
-      currentPage,
-      search,
-      pageSize,
-      sort,
-      filterValue,
-      initialSearch,
-      startDate,
-      endDate,
-    ]);
+    }, [currentPage, search, pageSize, sort, filterValue, initialSearch, startDate, endDate]);
 
     const setSearch = (search: string) => {
       for (const value of params.entries()) {
@@ -135,8 +109,7 @@ const withSearchPagination = <P extends object>(
 
     const sortComponent = (props: { title: string; sortKey: string }) => {
       const sortKey = sort && sort.split(":").length > 0 && sort.split(":")[0];
-      const sortValue =
-        sort && sort.split(":").length > 0 && sort.split(":")[1];
+      const sortValue = sort && sort.split(":").length > 0 && sort.split(":")[1];
       const isAscending = sortKey === props.sortKey && sortValue === "1";
 
       return (
@@ -167,11 +140,7 @@ const withSearchPagination = <P extends object>(
       );
     };
 
-    const filterComponent = (
-      data: { value: string; label: string }[],
-      placeholder: string,
-      key: string
-    ) => {
+    const filterComponent = (data: { value: string; label: string }[], placeholder: string, key: string) => {
       return (
         <Select
           placeholder={placeholder}
@@ -194,30 +163,13 @@ const withSearchPagination = <P extends object>(
 
     const pagination = (totalPage: number, length: number) => {
       setItemLength(length);
-      return totalPage > 1 ? (
-        <Pagination
-          my={20}
-          total={totalPage}
-          value={currentPage}
-          onChange={setPage}
-        />
-      ) : (
-        <></>
-      );
+      return totalPage > 1 ? <Pagination my={20} total={totalPage} value={currentPage} onChange={setPage} /> : <></>;
     };
     const searchComponent = (placeholder?: string) => (
-      <SearchBar
-        search={search ?? ""}
-        setSearch={setSearch}
-        placeholder={placeholder}
-      />
+      <SearchBar search={search ?? ""} setSearch={setSearch} placeholder={placeholder} />
     );
 
-    const startDateFilterComponent = (
-      placeholder: string,
-      key: string,
-      label?: string
-    ) => {
+    const startDateFilterComponent = (placeholder: string, key: string, label?: string) => {
       return (
         <DatePickerInput
           clearable
@@ -234,11 +186,7 @@ const withSearchPagination = <P extends object>(
       );
     };
 
-    const endDateFilterComponent = (
-      placeholder: string,
-      key: string,
-      label?: string
-    ) => {
+    const endDateFilterComponent = (placeholder: string, key: string, label?: string) => {
       return (
         <DatePickerInput
           clearable

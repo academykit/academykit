@@ -9,7 +9,7 @@ import { UserRole, UserStatus } from "@utils/enums";
 import queryStringGenerator from "@utils/queryStringGenerator";
 import { useDepartmentSetting } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
-import { IUserProfile } from "@utils/services/types";
+import type { IUserProfile } from "@utils/services/types";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
@@ -73,20 +73,17 @@ const AddUpdateUserForm = ({
       search: "",
       size: 200,
       IsActive: true,
-    })
+    }),
   );
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     form.setFieldValue("role", item?.role.toString() ?? "4");
-    item?.departmentId &&
-      form.setFieldValue("departmentId", item?.departmentId.toString() ?? "");
+    item?.departmentId && form.setFieldValue("departmentId", item?.departmentId.toString() ?? "");
     form.setFieldValue(
       "isActive",
-      item?.status === UserStatus.Active || item?.status === UserStatus.Pending
-        ? true
-        : false
+      item?.status === UserStatus.Active || item?.status === UserStatus.Pending ? true : false,
     );
   }, [isEditing]);
 
@@ -235,10 +232,7 @@ const AddUpdateUserForm = ({
 
         {isEditing && item?.status !== UserStatus.Pending && (
           <Grid.Col span={{ xs: 6, lg: 4 }}>
-            <Switch
-              label={t("user_status")}
-              {...form.getInputProps("isActive", { type: "checkbox" })}
-            />
+            <Switch label={t("user_status")} {...form.getInputProps("isActive", { type: "checkbox" })} />
           </Grid.Col>
         )}
       </Grid>

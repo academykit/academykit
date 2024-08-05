@@ -17,13 +17,7 @@ const FeedbackPage = () => {
         <div>
           <Title className={classes.title}>{t("no_question_found")}</Title>
 
-          <Button
-            variant="outline"
-            size="md"
-            mt="xl"
-            onClick={() => navigate(-1)}
-            className={classes.control}
-          >
+          <Button variant="outline" size="md" mt="xl" onClick={() => navigate(-1)} className={classes.control}>
             {t("go_back_button")}
           </Button>
         </div>
@@ -32,11 +26,7 @@ const FeedbackPage = () => {
   }
 
   return (
-    <Container my={50}>
-      {feedback.isSuccess && (
-        <FeedbackForm item={feedback.data} lessonId={id as string} />
-      )}
-    </Container>
+    <Container my={50}>{feedback.isSuccess && <FeedbackForm item={feedback.data} lessonId={id as string} />}</Container>
   );
 };
 

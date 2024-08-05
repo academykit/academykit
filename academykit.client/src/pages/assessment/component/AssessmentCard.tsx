@@ -1,32 +1,12 @@
 import DeleteModal from "@components/Ui/DeleteModal";
 import UserShortProfile from "@components/UserShortProfile";
-import {
-  Anchor,
-  Badge,
-  Button,
-  Card,
-  Flex,
-  Group,
-  List,
-  Menu,
-  Text,
-} from "@mantine/core";
+import { Anchor, Badge, Button, Card, Flex, Group, List, Menu, Text } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import {
-  IconCheck,
-  IconChevronRight,
-  IconDotsVertical,
-  IconEdit,
-  IconTrash,
-  IconX,
-} from "@tabler/icons-react";
+import { IconCheck, IconChevronRight, IconDotsVertical, IconEdit, IconTrash, IconX } from "@tabler/icons-react";
 import { AssessmentStatus, UserRole } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
-import {
-  IAssessmentResponse,
-  useDeleteAssessment,
-} from "@utils/services/assessmentService";
+import { type IAssessmentResponse, useDeleteAssessment } from "@utils/services/assessmentService";
 import { t } from "i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { getAssessmentText } from "../AssessmentDescription";
@@ -139,13 +119,7 @@ const AssessmentCard = ({
           </Anchor>
 
           {getMenuPermission() && (
-            <Menu
-              shadow="md"
-              width={150}
-              trigger="hover"
-              withArrow
-              position="left"
-            >
+            <Menu shadow="md" width={150} trigger="hover" withArrow position="left">
               <Menu.Target>
                 <Button style={{ zIndex: 50 }} variant="subtle" px={4}>
                   <IconDotsVertical />
@@ -209,53 +183,32 @@ const AssessmentCard = ({
 
           <List>
             {data.eligibilityCreationRequestModels.length >= 1 ? (
-              data.eligibilityCreationRequestModels
-                .slice(0, 4)
-                .map((eligibility, index) => (
-                  <List.Item
-                    key={index}
-                    icon={
-                      // show eligibility status icon only if the user is not admin or super-admin
-                      // and it not the owner of the assessment
-                      displayEligibilityStatus() && (
-                        <>
-                          {eligibility.isEligible ? (
-                            <IconCheck size={18} />
-                          ) : (
-                            <IconX size={18} />
-                          )}
-                        </>
-                      )
-                    }
-                  >
-                    <Text lineClamp={1}>{`Must${getAssessmentText(
-                      eligibility
-                    )}`}</Text>
-                  </List.Item>
-                ))
+              data.eligibilityCreationRequestModels.slice(0, 4).map((eligibility, index) => (
+                <List.Item
+                  key={index}
+                  icon={
+                    // show eligibility status icon only if the user is not admin or super-admin
+                    // and it not the owner of the assessment
+                    displayEligibilityStatus() && (
+                      <>{eligibility.isEligible ? <IconCheck size={18} /> : <IconX size={18} />}</>
+                    )
+                  }
+                >
+                  <Text lineClamp={1}>{`Must${getAssessmentText(eligibility)}`}</Text>
+                </List.Item>
+              ))
             ) : (
               <Text>{t("no_eligibility_criteria")}</Text>
             )}
           </List>
           {data.eligibilityCreationRequestModels.length > 4 && (
-            <Anchor
-              component={Link}
-              to={RoutePath.assessment.description(data.slug).route}
-              size={"md"}
-              lineClamp={1}
-            >
+            <Anchor component={Link} to={RoutePath.assessment.description(data.slug).route} size={"md"} lineClamp={1}>
               <Text truncate>{t("see_more")}</Text>
             </Anchor>
           )}
         </Card.Section>
 
-        <Button
-          variant="light"
-          mt={"auto"}
-          onClick={() =>
-            navigate(RoutePath.assessment.description(data.slug).route)
-          }
-        >
+        <Button variant="light" mt={"auto"} onClick={() => navigate(RoutePath.assessment.description(data.slug).route)}>
           {t("watch")}
         </Button>
       </Card>
