@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import errorType from './axiosError';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
-import { IPaginated, IUser } from './types';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import errorType from "./axiosError";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
+import { IPaginated, IUser } from "./types";
 
 export interface IPoolTeacher {
   id: string;
@@ -42,7 +42,7 @@ export const useCreateTeacherPool = (id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ['post' + api.poolTeacher.list],
+    mutationKey: ["post" + api.poolTeacher.list],
     mutationFn: createTeacherPool,
 
     onSuccess: () => {
@@ -59,7 +59,7 @@ const deletePoolTeacher = async (id: string) => {
 export const useDeletePoolTeacher = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['delete' + api.poolTeacher.detail],
+    mutationKey: ["delete" + api.poolTeacher.detail],
     mutationFn: deletePoolTeacher,
 
     onSuccess: () => {
@@ -150,7 +150,7 @@ export const useDeleteQuestionPool = (
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['delete' + api.pool.getOne(identity)],
+    mutationKey: ["delete" + api.pool.getOne(identity)],
     mutationFn: deleteQuestionPool,
 
     onSuccess: () => {

@@ -1,4 +1,4 @@
-import { Title as Heading, Paper, Text } from '@mantine/core';
+import { Title as Heading, Paper, Text } from "@mantine/core";
 import {
   BarElement,
   CategoryScale,
@@ -9,9 +9,9 @@ import {
   Scale,
   Title,
   Tooltip,
-} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import { useTranslation } from 'react-i18next';
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+import { useTranslation } from "react-i18next";
 
 ChartJS.register(
   CategoryScale,
@@ -23,7 +23,7 @@ ChartJS.register(
 );
 
 export const options = {
-  indexAxis: 'y' as const,
+  indexAxis: "y" as const,
   elements: {
     bar: {
       borderWidth: 2,
@@ -33,7 +33,7 @@ export const options = {
   responsive: true,
   plugins: {
     legend: {
-      position: 'top' as const,
+      position: "top" as const,
       onClick: function () {},
     },
   },
@@ -48,7 +48,7 @@ export const options = {
             this.getLabelForValue(tickValue as number).toString().length > 6
               ? this.getLabelForValue(tickValue as number)
                   .toString()
-                  .substring(0, 6) + '...'
+                  .substring(0, 6) + "..."
               : this.getLabelForValue(tickValue as number);
 
           return truncatedValue;
@@ -70,7 +70,7 @@ interface IProps {
     selectedCount: number;
   }[];
   responseCount: number;
-  type: 'SingleChoice' | 'MultipleChoice';
+  type: "SingleChoice" | "MultipleChoice";
 }
 
 const HorizontalBarGraph = ({
@@ -82,7 +82,7 @@ const HorizontalBarGraph = ({
   const { t } = useTranslation();
 
   const removeTags = (value: string) => {
-    return value.replace(/<[^>]*>/g, '');
+    return value.replace(/<[^>]*>/g, "");
   };
 
   const labels = feedbackOptions.map((option) => removeTags(option.option));
@@ -91,10 +91,10 @@ const HorizontalBarGraph = ({
     labels,
     datasets: [
       {
-        label: 'Options',
+        label: "Options",
         data: feedbackOptions.map((option) => option.selectedCount),
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
     ],
   };
@@ -103,9 +103,9 @@ const HorizontalBarGraph = ({
     <>
       <Heading order={4}>{name}</Heading>
       <Text fz="sm" c="dimmed">
-        {t('responses')}: {responseCount} ({t(`${type}`)})
+        {t("responses")}: {responseCount} ({t(`${type}`)})
       </Text>
-      <Paper mb={10} p="sm" h={300} withBorder style={{ position: 'relative' }}>
+      <Paper mb={10} p="sm" h={300} withBorder style={{ position: "relative" }}>
         <Bar options={options} data={data} />
       </Paper>
     </>

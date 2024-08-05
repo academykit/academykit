@@ -1,14 +1,14 @@
-import TextViewer from '@components/Ui/RichTextViewer';
-import { Box, Card, Group, Title } from '@mantine/core';
-import { UseFormReturnType } from '@mantine/form';
+import TextViewer from "@components/Ui/RichTextViewer";
+import { Box, Card, Group, Title } from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
 
 import {
   IFeedbackOptions,
   IFeedbackQuestions,
-} from '@utils/services/feedbackService';
-import cx from 'clsx';
-import { useTranslation } from 'react-i18next';
-import classes from '../../styles/feedbackList.module.css';
+} from "@utils/services/feedbackService";
+import cx from "clsx";
+import { useTranslation } from "react-i18next";
+import classes from "../../styles/feedbackList.module.css";
 
 type Props = {
   form: UseFormReturnType<
@@ -25,22 +25,22 @@ const FeedbackCheckBoxType = ({ options, form, currentIndex }: Props) => {
   return (
     <Box mt={10} px={20} className={classes.option}>
       <Group>
-        <Title size={'xs'}>
-          {t('options')} ({t('multiple_choice')})
+        <Title size={"xs"}>
+          {t("options")} ({t("multiple_choice")})
         </Title>
       </Group>
       {options.map((option, index) => (
         <label key={option.id} htmlFor={option.id}>
           <input
-            type={'checkbox'}
+            type={"checkbox"}
             id={option.id}
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
             {...form.getInputProps(
               `${currentIndex}.feedbackQuestionOptions.${index}.isSelected`
             )}
           ></input>
           <Card
-            shadow={'md'}
+            shadow={"md"}
             my={10}
             p={10}
             className={cx({
@@ -49,11 +49,11 @@ const FeedbackCheckBoxType = ({ options, form, currentIndex }: Props) => {
                   .isSelected,
             })}
           >
-            <input type={'checkbox'} style={{ display: 'none' }} />
+            <input type={"checkbox"} style={{ display: "none" }} />
             <TextViewer
               styles={{
                 root: {
-                  border: 'none',
+                  border: "none",
                 },
               }}
               content={option.option}

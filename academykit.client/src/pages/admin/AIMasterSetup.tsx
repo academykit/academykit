@@ -1,11 +1,11 @@
-import { Button, Container, Select, Switch, TextInput } from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import { AiModelEnum } from '@utils/enums';
-import { useAIMaster, useUpdateAISetup } from '@utils/services/aiService';
-import errorType from '@utils/services/axiosError';
-import { t } from 'i18next';
-import { useEffect } from 'react';
+import { Button, Container, Select, Switch, TextInput } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import { AiModelEnum } from "@utils/enums";
+import { useAIMaster, useUpdateAISetup } from "@utils/services/aiService";
+import errorType from "@utils/services/axiosError";
+import { t } from "i18next";
+import { useEffect } from "react";
 
 const AIMasterSetup = () => {
   const formData = useAIMaster();
@@ -13,17 +13,17 @@ const AIMasterSetup = () => {
 
   const form = useForm({
     initialValues: {
-      key: '',
+      key: "",
       isActive: false,
-      aiModel: '',
+      aiModel: "",
     },
   });
 
   useEffect(() => {
     form.setValues({
-      key: formData.data?.key ?? '',
+      key: formData.data?.key ?? "",
       isActive: formData.data?.isActive ?? false,
-      aiModel: formData.data?.aiModel ? formData.data.aiModel.toString() : '',
+      aiModel: formData.data?.aiModel ? formData.data.aiModel.toString() : "",
     });
   }, [formData.isSuccess]);
 
@@ -33,12 +33,12 @@ const AIMasterSetup = () => {
         data: { ...values, aiModel: Number(values.aiModel) },
       });
       showNotification({
-        message: t('update_ai_setup_success'),
+        message: t("update_ai_setup_success"),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
-        color: 'red',
+        color: "red",
         message: error,
       });
     }
@@ -59,33 +59,33 @@ const AIMasterSetup = () => {
         <Container
           size={450}
           style={{
-            marginLeft: '0px',
+            marginLeft: "0px",
           }}
         >
           <TextInput
             autoFocus
             mb={10}
-            label={t('ai_key')}
-            placeholder={t('enter_ai_key') as string}
-            {...form.getInputProps('key')}
+            label={t("ai_key")}
+            placeholder={t("enter_ai_key") as string}
+            {...form.getInputProps("key")}
           />
 
           <Select
             mb={10}
             clearable
-            label={t('ai_model')}
-            placeholder={t('ai_model_placeholder') as string}
+            label={t("ai_model")}
+            placeholder={t("ai_model_placeholder") as string}
             data={getAIModels()}
-            {...form.getInputProps('aiModel')}
+            {...form.getInputProps("aiModel")}
           />
 
           <Switch
             mb={10}
-            label={t('isActive')}
-            {...form.getInputProps('isActive', { type: 'checkbox' })}
+            label={t("isActive")}
+            {...form.getInputProps("isActive", { type: "checkbox" })}
           />
           <Button loading={updateAISetup.isLoading} type="submit">
-            {t('submit')}
+            {t("submit")}
           </Button>
         </Container>
       </form>

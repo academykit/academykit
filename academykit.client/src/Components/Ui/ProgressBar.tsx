@@ -1,5 +1,5 @@
-import { Group, Progress, Text } from '@mantine/core';
-import classes from './styles/progressBar.module.css';
+import { Group, Progress, Text } from "@mantine/core";
+import classes from "./styles/progressBar.module.css";
 
 const ProgressBar = ({
   total,

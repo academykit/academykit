@@ -1,35 +1,35 @@
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
-import { Box, Button, Grid, Group, Text } from '@mantine/core';
-import { DatePickerInput, TimeInput } from '@mantine/dates';
-import { useForm, yupResolver } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import { LessonType } from '@utils/enums';
-import { getDateTime } from '@utils/getDateTime';
-import errorType from '@utils/services/axiosError';
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+import RichTextEditor from "@components/Ui/RichTextEditor/Index";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
+import { Box, Button, Grid, Group, Text } from "@mantine/core";
+import { DatePickerInput, TimeInput } from "@mantine/dates";
+import { useForm, yupResolver } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import { LessonType } from "@utils/enums";
+import { getDateTime } from "@utils/getDateTime";
+import errorType from "@utils/services/axiosError";
 import {
   useCreateLesson,
   useGetCourseLesson,
   useUpdateLesson,
-} from '@utils/services/courseService';
-import { IPhysicalTraining } from '@utils/services/types';
-import moment from 'moment';
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
-import * as Yup from 'yup';
+} from "@utils/services/courseService";
+import { IPhysicalTraining } from "@utils/services/types";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import * as Yup from "yup";
 
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t('physical_name_required') as string),
+    name: Yup.string().required(t("physical_name_required") as string),
     physicalStartDate: Yup.string()
-      .required(t('start_date_required') as string)
-      .typeError(t('start_date_required') as string),
+      .required(t("start_date_required") as string)
+      .typeError(t("start_date_required") as string),
     physicalStartTime: Yup.string()
-      .required(t('start_time_required') as string)
-      .typeError(t('start_time_required') as string),
+      .required(t("start_time_required") as string)
+      .typeError(t("start_time_required") as string),
   });
 };
 
@@ -50,9 +50,9 @@ const AddPhysical = ({
 }) => {
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
-  const [dateTime, setDateTime] = useState<string>('');
+  const [dateTime, setDateTime] = useState<string>("");
   const lessonDetails = useGetCourseLesson(
-    item?.courseId || '',
+    item?.courseId || "",
     item?.id,
     isEditing
   );
@@ -60,10 +60,10 @@ const AddPhysical = ({
 
   const form = useForm({
     initialValues: {
-      name: '',
+      name: "",
       physicalStartDate: new Date(),
-      physicalStartTime: moment(new Date()).format('HH:mm'), // adding current time as default
-      description: '',
+      physicalStartTime: moment(new Date()).format("HH:mm"), // adding current time as default
+      description: "",
     },
     validate: yupResolver(schema()),
   });
@@ -78,15 +78,15 @@ const AddPhysical = ({
   useEffect(() => {
     if (lessonDetails.isSuccess && isEditing) {
       const data = lessonDetails.data;
-      const startDateTime = moment(data.startDate + 'Z')
+      const startDateTime = moment(data.startDate + "Z")
         .local()
         .toDate();
 
       form.setValues({
-        name: data?.name ?? '',
+        name: data?.name ?? "",
         physicalStartDate: startDateTime,
-        physicalStartTime: moment(startDateTime).format('HH:mm'),
-        description: data?.description ?? '',
+        physicalStartTime: moment(startDateTime).format("HH:mm"),
+        description: data?.description ?? "",
       });
     }
   }, [lessonDetails.isSuccess]);
@@ -102,14 +102,14 @@ const AddPhysical = ({
   }, [form.values]);
 
   const handleSubmit = async (values: any) => {
-    const time = moment(values?.physicalStartTime, 'HH:mm').format('HH:mm');
-    const date = moment(values?.physicalStartDate, 'MM/DD/YYYY').format(
-      'MM/DD/YYYY'
+    const time = moment(values?.physicalStartTime, "HH:mm").format("HH:mm");
+    const date = moment(values?.physicalStartDate, "MM/DD/YYYY").format(
+      "MM/DD/YYYY"
     );
 
     try {
       const startDate = isEditing
-        ? moment(date + ' ' + time, 'MM/DD/YYYY HH:mm').toDate()
+        ? moment(date + " " + time, "MM/DD/YYYY HH:mm").toDate()
         : new Date(dateTime).toISOString();
 
       if (isEditing) {
@@ -134,18 +134,18 @@ const AddPhysical = ({
         } as IPhysicalTraining);
       }
       showNotification({
-        message: `${t('capital_lesson')} ${
-          isEditing ? t('edited') : t('added')
-        } ${t('successfully')}`,
-        title: t('success'),
+        message: `${t("capital_lesson")} ${
+          isEditing ? t("edited") : t("added")
+        } ${t("successfully")}`,
+        title: t("success"),
       });
       setAddLessonClick(true);
     } catch (error) {
       const err = errorType(error);
       showNotification({
         message: err,
-        color: 'red',
-        title: t('error'),
+        color: "red",
+        title: t("error"),
       });
     }
   };
@@ -155,9 +155,9 @@ const AddPhysical = ({
       <Grid align="center">
         <Grid.Col span={{ base: 12, lg: 6 }}>
           <CustomTextFieldWithAutoFocus
-            label={t('physical_name')}
-            placeholder={t('physical_name') as string}
-            {...form.getInputProps('name')}
+            label={t("physical_name")}
+            placeholder={t("physical_name") as string}
+            {...form.getInputProps("name")}
             withAsterisk
           />
         </Grid.Col>
@@ -165,23 +165,23 @@ const AddPhysical = ({
       <Group grow>
         <DatePickerInput
           valueFormat="MMM DD, YYYY"
-          placeholder={t('pick_date') as string}
-          label={t('start_date')}
+          placeholder={t("pick_date") as string}
+          label={t("start_date")}
           withAsterisk
-          {...form.getInputProps('physicalStartDate')}
+          {...form.getInputProps("physicalStartDate")}
         />
         <TimeInput
-          label={t('start_time')}
+          label={t("start_time")}
           withAsterisk
-          {...form.getInputProps('physicalStartTime')}
+          {...form.getInputProps("physicalStartTime")}
         />
       </Group>
 
       <Box my={20}>
-        <Text size={'sm'}>{t('description')}</Text>
+        <Text size={"sm"}>{t("description")}</Text>
         <RichTextEditor
-          placeholder={t('physical_name_description') as string}
-          {...form.getInputProps('description')}
+          placeholder={t("physical_name_description") as string}
+          {...form.getInputProps("description")}
         />
       </Box>
       <Group mt="md">
@@ -189,16 +189,16 @@ const AddPhysical = ({
           type="submit"
           loading={lesson.isLoading || updateLesson.isLoading}
         >
-          {t('submit')}
+          {t("submit")}
         </Button>
         {!isEditing && (
           <Button
             onClick={() => {
-              setAddState('');
+              setAddState("");
             }}
             variant="outline"
           >
-            {t('close')}
+            {t("close")}
           </Button>
         )}
       </Group>

@@ -1,17 +1,17 @@
 export const api = {
   auth: {
-    login: '/api/Account/Login',
-    logout: '/api/Account/Logout',
-    refreshToken: '/api/Account/RefreshToken',
-    changePassword: '/api/Account/ChangePassword',
-    forgotPassword: '/api/Account/ForgotPassword',
-    resetToken: '/api/Account/VerifyResetToken',
-    resetPassword: '/api/Account/ResetPassword',
+    login: "/api/Account/Login",
+    logout: "/api/Account/Logout",
+    refreshToken: "/api/Account/RefreshToken",
+    changePassword: "/api/Account/ChangePassword",
+    forgotPassword: "/api/Account/ForgotPassword",
+    resetToken: "/api/Account/VerifyResetToken",
+    resetPassword: "/api/Account/ResetPassword",
     getUser: (userId: string) => `/api/user/${userId}`,
-    changeEmail: '/api/user/changeEmailRequest',
-    resendEmailVerification: '/api/user/resendChangeEmailRequest',
-    verifyChangeEmail: '/api/user/verifyChangeEmail',
-    me: '/api/account',
+    changeEmail: "/api/user/changeEmailRequest",
+    resendEmailVerification: "/api/user/resendChangeEmailRequest",
+    verifyChangeEmail: "/api/user/verifyChangeEmail",
+    me: "/api/account",
     resendEmail: (id: string) => `/api/User/${id}/resendEmail`,
   },
   adminUser: {
@@ -56,7 +56,7 @@ export const api = {
     testEmail: (id: string) => `/api/mailNotification/${id}/checkSendEmail`,
   },
   groups: {
-    list: '/api/Group',
+    list: "/api/Group",
     details: (id: string) => `/api/group/${id}`,
     member: (id: string, query: string) => `/api/Group/${id}/members?${query}`,
     addMember: (id: string) => `/api/group/${id}/addMember`,
@@ -70,7 +70,7 @@ export const api = {
     notMembers: (
       identity: string,
       query: string,
-      departmentId: string | undefined
+      departmentId: string | undefined,
     ) => {
       const url = `/api/group/${identity}/notMembers?${query}`;
       if (departmentId) {
@@ -81,7 +81,7 @@ export const api = {
   },
 
   course: {
-    list: '/api/course',
+    list: "/api/course",
     userList: (id: string) => `/api/course/user/${id}`,
 
     detail: (id: string) => `/api/course/${id}`,
@@ -136,13 +136,13 @@ export const api = {
       `/api/course/${trainingSlug}/lesson/${lessonSlug}/updateShuffle`,
   },
   section: {
-    common: '/api/section',
+    common: "/api/section",
     section: (id: string) => `/api/course/${id}/section`,
     updateSection: (id: string, sectionId: string) =>
       `/api/course/${id}/section/${sectionId}`,
   },
   lesson: {
-    common: '/api/course/lesson',
+    common: "/api/course/lesson",
     addLesson: (courseIdentity: string) =>
       `/api/course/${courseIdentity}/lesson`,
     updateLesson: (courseId: string, lessonId: string) =>
@@ -157,20 +157,20 @@ export const api = {
   physicalTraining: {
     attendance: (identity: string) =>
       `/api/PhysicalLesson/Attendance?Idenity=${identity}`,
-    review: '/api/PhysicalLesson/Review',
+    review: "/api/PhysicalLesson/Review",
   },
   tags: {
-    list: '/api/tag',
+    list: "/api/tag",
   },
   levels: {
-    list: '/api/level',
+    list: "/api/level",
   },
   pool: {
-    list: '/api/questionPool',
+    list: "/api/questionPool",
     getOne: (poolId: string) => `/api/questionPool/${poolId}`,
   },
   courseTeacher: {
-    list: '/api/courseTeacher',
+    list: "/api/courseTeacher",
     detail: (id: string) => `/api/courseTeacher/${id}`,
   },
   questions: {
@@ -183,7 +183,7 @@ export const api = {
       `/api/questionpool/${poolId}/question/${quesitonId}`,
   },
   questionSet: {
-    common: '/api/questionset',
+    common: "/api/questionset",
     addQuestion: (identity: string) =>
       `/api/questionSet/${identity}/addquestion`,
     getQuestion: (identity: string) => `/api/questionset/${identity}/questions`,
@@ -196,11 +196,11 @@ export const api = {
     detail: (id: string) => `/api/questionPoolTeacher/${id}`,
   },
   assignment: {
-    add: '/api/assignment',
+    add: "/api/assignment",
     list: (lessonId: string, search?: string) =>
       search
-        ? '/api/Assignment' + `?${search}&LessonIdentity=${lessonId}`
-        : '/api/Assignment' + `?LessonIdentity=${lessonId}`,
+        ? "/api/Assignment" + `?${search}&LessonIdentity=${lessonId}`
+        : "/api/Assignment" + `?LessonIdentity=${lessonId}`,
     listOne: (id: string) => `/api/Assignment/${id}`,
     submitAssignment: (id: string) => `/api/assignment/${id}/submissions`,
     assignmentReview: (id: string, userId: string) =>
@@ -210,18 +210,18 @@ export const api = {
       `/api/assignment/${lessonId}/review/${id}`,
   },
   feedback: {
-    add: '/api/feedback',
+    add: "/api/feedback",
     list: (lessonId: string, search?: string) =>
       search
-        ? '/api/feedback' + `?${search}&LessonIdentity=${lessonId}`
-        : '/api/feedback' + `?LessonIdentity=${lessonId}`,
+        ? "/api/feedback" + `?${search}&LessonIdentity=${lessonId}`
+        : "/api/feedback" + `?LessonIdentity=${lessonId}`,
     listOne: (id: string) => `/api/feedback/${id}`,
     submitFeedback: (id: string) => `/api/feedback/${id}/submissions`,
     userFeedback: (lessonId: string, userId: string, search?: string) =>
       search
-        ? '/api/feedback' +
+        ? "/api/feedback" +
           `?${search}&LessonIdentity=${lessonId}&UserId=${userId}`
-        : '/api/feedback' + `?LessonIdentity=${lessonId}&UserId=${userId}`,
+        : "/api/feedback" + `?LessonIdentity=${lessonId}&UserId=${userId}`,
     exportFeedback: (lessonId: string) => `/api/Feedback/${lessonId}/export`,
     graph: (id: string) => `/api/Feedback/${id}/chart`,
   },
@@ -244,12 +244,12 @@ export const api = {
       `/api/course/${courseId}/lesson/${lessonId}/meetingreport/${userId}`,
   },
   watchHistory: {
-    create: '/api/watchHistory',
+    create: "/api/watchHistory",
     updateUser: (userId: string) => `/api/watchHistory/pass/${userId}`,
   },
   fileStorage: {
-    getFileStorageSetting: '/api/media/setting',
-    updateFileStorageSetting: '/api/media/setting',
+    getFileStorageSetting: "/api/media/setting",
+    updateFileStorageSetting: "/api/media/setting",
     getFileStorageSettingValue: (type: string) =>
       `/api/media/settingvalue?type=${type}`,
   },
@@ -260,7 +260,7 @@ export const api = {
     getRepliesList: (
       courseId: string,
       commentId: string,
-      replyCount?: number
+      replyCount?: number,
     ) =>
       `/api/course/${courseId}/comments/${commentId}?page=1&size=${replyCount}`,
     repliesList: (courseId: string, commentId: string) =>
@@ -275,7 +275,7 @@ export const api = {
       `/api/Enrollment/User?CourseIdentity=${courseIdentity}&${query}`,
   },
   externalCertificate: {
-    add: '/api/certificate/external',
+    add: "/api/certificate/external",
     user: (id?: string) => `/api/certificate/external/${id}`,
     list: `/api/certificate/review`,
     updateStatus: (id?: string) => `/api/certificate/${id}/verify`,
@@ -283,11 +283,11 @@ export const api = {
     internal: `/api/certificate/internal`,
   },
   skill: {
-    list: '/api/skills',
+    list: "/api/skills",
     update: (skillId: string) => `/api/skills/${skillId}`,
   },
   assessment: {
-    list: '/api/assessment',
+    list: "/api/assessment",
     getSingle: (id: string) => `/api/assessment/${id}`,
     update: (id: string) => `/api/assessment/${id}`,
     updateStatus: `/api/assessment/status`,
@@ -296,12 +296,12 @@ export const api = {
       `/api/assessmentExam/${assessmentId}/getStudentResults/${userId}`,
     getOneAssessmentResult: (
       assessmentId: string,
-      assessmentSubmissionId: string
+      assessmentSubmissionId: string,
     ) =>
       `/api/assessmentExam/${assessmentId}/getResultDetail/${assessmentSubmissionId}/detail`,
   },
   assessmentQuestion: {
-    list: '/api/assessmentQuestion',
+    list: "/api/assessmentQuestion",
     getSingle: (id: string) => `/api/assessmentQuestion/${id}`,
     update: (id: string) => `/api/assessmentQuestion/${id}`,
     getExam: (id: string) => `/api/assessmentQuestion/${id}/examQuestion`,

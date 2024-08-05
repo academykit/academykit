@@ -1,14 +1,14 @@
-import { Box, Text, Tooltip } from '@mantine/core';
-import { UseFormReturnType } from '@mantine/form';
-import { FileAccess, uploadVideo } from '@utils/services/fileService';
-import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
-import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
-import FilePondPluginImageValidateSize from 'filepond-plugin-image-validate-size';
-import 'filepond/dist/filepond.min.css';
-import { useEffect, useState } from 'react';
-import { FilePond, registerPlugin } from 'react-filepond';
-import { useTranslation } from 'react-i18next';
+import { Box, Text, Tooltip } from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import { FileAccess, uploadVideo } from "@utils/services/fileService";
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import FilePondPluginImageValidateSize from "filepond-plugin-image-validate-size";
+import "filepond/dist/filepond.min.css";
+import { useEffect, useState } from "react";
+import { FilePond, registerPlugin } from "react-filepond";
+import { useTranslation } from "react-i18next";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -34,7 +34,7 @@ const LessonVideoUpload = ({
         {
           source: currentVideo,
           options: {
-            type: 'local',
+            type: "local",
           },
         },
       ]);
@@ -43,43 +43,43 @@ const LessonVideoUpload = ({
   const form = formContext();
   const [files, setFiles] = useState<any>([]);
   const filePondProps = {
-    labelInvalidField: t('Field contains invalid files'),
-    labelFileWaitingForSize: t('Waiting for size'),
-    labelFileSizeNotAvailable: t('Size not available'),
-    labelFileLoading: t('Loading'),
-    labelFileLoadError: t('Error during load'),
-    labelFileProcessing: t('Processing'),
-    labelFileProcessingComplete: t('Processing complete'),
-    labelFileProcessingAborted: t('Processing aborted'),
-    labelFileProcessingError: t('Error during processing'),
-    labelFileProcessingRevertError: t('Error during revert'),
-    labelFileRemoveError: t('Error during removal'),
-    labelTapToCancel: t('Tap to cancel'),
-    labelTapToRetry: t('Tap to retry'),
-    labelTapToUndo: t('Tap to undo'),
-    labelButtonRemoveItem: t('Remove'),
-    labelButtonAbortItemLoad: t('Abort'),
-    labelButtonRetryItemLoad: t('Retry'),
-    labelButtonAbortItemProcessing: t('Abort'),
-    labelButtonUndoItemProcessing: t('Undo'),
-    labelButtonRetryItemProcessing: t('Retry'),
-    labelButtonProcessItem: t('Process'),
+    labelInvalidField: t("Field contains invalid files"),
+    labelFileWaitingForSize: t("Waiting for size"),
+    labelFileSizeNotAvailable: t("Size not available"),
+    labelFileLoading: t("Loading"),
+    labelFileLoadError: t("Error during load"),
+    labelFileProcessing: t("Processing"),
+    labelFileProcessingComplete: t("Processing complete"),
+    labelFileProcessingAborted: t("Processing aborted"),
+    labelFileProcessingError: t("Error during processing"),
+    labelFileProcessingRevertError: t("Error during revert"),
+    labelFileRemoveError: t("Error during removal"),
+    labelTapToCancel: t("Tap to cancel"),
+    labelTapToRetry: t("Tap to retry"),
+    labelTapToUndo: t("Tap to undo"),
+    labelButtonRemoveItem: t("Remove"),
+    labelButtonAbortItemLoad: t("Abort"),
+    labelButtonRetryItemLoad: t("Retry"),
+    labelButtonAbortItemProcessing: t("Abort"),
+    labelButtonUndoItemProcessing: t("Undo"),
+    labelButtonRetryItemProcessing: t("Retry"),
+    labelButtonProcessItem: t("Process"),
   };
 
   return (
-    <Tooltip multiline label={t('acceptable_files')} w={320}>
+    <Tooltip multiline label={t("acceptable_files")} w={320}>
       <Box my={marginy} style={{ maxWidth: 470 }} pos="relative">
         <FilePond
           files={files}
           onaddfile={() => {}}
-          onremovefile={() => form.setFieldValue('videoUrl', '')}
+          onremovefile={() => form.setFieldValue("videoUrl", "")}
           fileValidateTypeLabelExpectedTypes="Expected .mp4 .avi .mov"
           chunkSize={2 * 1024 * 1024} // 2MB
           acceptedFileTypes={[
-            'video/mp4',
-            'video/avi',
-            'video/mov',
-            'video/quicktime',
+            "video/mp4",
+            "video/avi",
+            "video/mov",
+            "video/quicktime",
           ]}
           onupdatefiles={setFiles}
           allowMultiple={false}
@@ -101,9 +101,9 @@ const LessonVideoUpload = ({
               try {
                 const res = await uploadVideo(file as File, FileAccess.Private);
                 load(res.data);
-                form.setFieldValue('videoUrl', res.data);
+                form.setFieldValue("videoUrl", res.data);
               } catch (e) {
-                error('Unable to upload file');
+                error("Unable to upload file");
               }
               return {
                 abort: () => {
@@ -129,13 +129,13 @@ const LessonVideoUpload = ({
           }}
           name="files"
           labelIdle={`${t(
-            'video_drag_drop'
-          )} <span class="filepond--label-action">${t('browse')}</span>`}
+            "video_drag_drop"
+          )} <span class="filepond--label-action">${t("browse")}</span>`}
           {...filePondProps}
         />
-        {form.errors['videoUrl'] && (
-          <Text color={'red'} size={'xs'} pos="absolute" top={'100%'}>
-            {form.errors['videoUrl']}
+        {form.errors["videoUrl"] && (
+          <Text color={"red"} size={"xs"} pos="absolute" top={"100%"}>
+            {form.errors["videoUrl"]}
           </Text>
         )}
       </Box>

@@ -1,8 +1,8 @@
-import UserShortProfile from '@components/UserShortProfile';
-import { Table } from '@mantine/core';
-import { LessonStatDetails } from '@utils/services/manageCourseService';
-import StudentLessonDetails from './StudentDetails';
-import LessonStatusColor from './StudentDetails/LessonStatusColor';
+import UserShortProfile from "@components/UserShortProfile";
+import { Table } from "@mantine/core";
+import { LessonStatDetails } from "@utils/services/manageCourseService";
+import StudentLessonDetails from "./StudentDetails";
+import LessonStatusColor from "./StudentDetails/LessonStatusColor";
 
 const CourseLessonDetails = ({
   element,

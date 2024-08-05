@@ -1,12 +1,12 @@
 import withSearchPagination, {
   IWithSearchPagination,
-} from '@hoc/useSearchPagination';
-import useAuth from '@hooks/useAuth';
-import { Flex, SimpleGrid } from '@mantine/core';
-import { UserRole } from '@utils/enums';
-import { useAssessments } from '@utils/services/assessmentService';
-import { useTranslation } from 'react-i18next';
-import AssessmentCard from './component/AssessmentCard';
+} from "@hoc/useSearchPagination";
+import useAuth from "@hooks/useAuth";
+import { Flex, SimpleGrid } from "@mantine/core";
+import { UserRole } from "@utils/enums";
+import { useAssessments } from "@utils/services/assessmentService";
+import { useTranslation } from "react-i18next";
+import AssessmentCard from "./component/AssessmentCard";
 
 const AssessmentList = ({
   searchComponent,
@@ -20,18 +20,18 @@ const AssessmentList = ({
 
   return (
     <>
-      <Flex pb={20} justify={'end'} align={'center'}>
-        {searchComponent(t('search_assessments') as string)}
+      <Flex pb={20} justify={"end"} align={"center"}>
+        {searchComponent(t("search_assessments") as string)}
         {auth?.auth?.role !== UserRole.Trainee &&
           filterComponent(
             [
-              { value: '1', label: t('Draft') },
-              { value: '2', label: t('review') },
-              { value: '3', label: t('Published') },
-              { value: '5', label: t('rejected') },
+              { value: "1", label: t("Draft") },
+              { value: "2", label: t("review") },
+              { value: "3", label: t("Published") },
+              { value: "5", label: t("rejected") },
             ],
-            t('assessment_status'),
-            'assessmentStatus'
+            t("assessment_status"),
+            "assessmentStatus"
           )}
       </Flex>
 
@@ -41,7 +41,7 @@ const AssessmentList = ({
             key={assessmentData.id}
             data={assessmentData}
             userRole={auth?.auth?.role as UserRole}
-            currentUser={(auth?.auth?.id as string) ?? ''}
+            currentUser={(auth?.auth?.id as string) ?? ""}
           />
         ))}
       </SimpleGrid>

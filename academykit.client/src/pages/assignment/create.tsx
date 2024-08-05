@@ -1,25 +1,25 @@
 import withSearchPagination, {
   IWithSearchPagination,
-} from '@hoc/useSearchPagination';
-import { Box, Button } from '@mantine/core';
-import { useToggle } from '@mantine/hooks';
-import { LessonType } from '@utils/enums';
+} from "@hoc/useSearchPagination";
+import { Box, Button } from "@mantine/core";
+import { useToggle } from "@mantine/hooks";
+import { LessonType } from "@utils/enums";
 import {
   IAssignmentQuestion,
   useAssignmentQuestion,
-} from '@utils/services/assignmentService';
-import { useQuestionReorder } from '@utils/services/courseService';
-import { useEffect, useState } from 'react';
+} from "@utils/services/assignmentService";
+import { useQuestionReorder } from "@utils/services/courseService";
+import { useEffect, useState } from "react";
 import {
   DragDropContext,
   Draggable,
   DropResult,
   Droppable,
-} from 'react-beautiful-dnd';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
-import AssignmentItem from './Component/AssignmentItem';
-import EditAssignment from './Component/EditAssignment';
+} from "react-beautiful-dnd";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import AssignmentItem from "./Component/AssignmentItem";
+import EditAssignment from "./Component/EditAssignment";
 
 const CreateAssignment = ({ searchParams }: IWithSearchPagination) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -102,7 +102,7 @@ const CreateAssignment = ({ searchParams }: IWithSearchPagination) => {
               </Droppable>
             </DragDropContext>
           ) : (
-            <Box mt={10}>{t('no_assignment_questions')}</Box>
+            <Box mt={10}>{t("no_assignment_questions")}</Box>
           )}
           {addQuestion && (
             <EditAssignment
@@ -115,7 +115,7 @@ const CreateAssignment = ({ searchParams }: IWithSearchPagination) => {
           {!addQuestion && (
             <>
               <Button mt={10} onClick={() => setAddQuestion()}>
-                {t('add_question')}
+                {t("add_question")}
               </Button>
               <Button
                 ml={10}
@@ -123,7 +123,7 @@ const CreateAssignment = ({ searchParams }: IWithSearchPagination) => {
                 onClick={() => navigate(-1)}
                 mt={10}
               >
-                {t('go_back_button')}
+                {t("go_back_button")}
               </Button>
             </>
           )}

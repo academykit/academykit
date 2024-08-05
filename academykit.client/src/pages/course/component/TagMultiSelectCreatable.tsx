@@ -6,14 +6,14 @@ import {
   Pill,
   PillsInput,
   useCombobox,
-} from '@mantine/core';
-import { UseFormReturnType } from '@mantine/form';
-import { UseMutateAsyncFunction } from '@tanstack/react-query';
-import { IFullCourse } from '@utils/services/courseService';
-import { ITag } from '@utils/services/tagService';
-import { AxiosResponse } from 'axios';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+} from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import { UseMutateAsyncFunction } from "@tanstack/react-query";
+import { IFullCourse } from "@utils/services/courseService";
+import { ITag } from "@utils/services/tagService";
+import { AxiosResponse } from "axios";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   mutateAsync: UseMutateAsyncFunction<
@@ -31,44 +31,44 @@ interface IProps {
 export default function TagMultiSelectCreatable({
   mutateAsync,
   form,
-  size = 'sm',
+  size = "sm",
   data, // dropdown options
   existingTags,
   readOnly = false,
 }: IProps) {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
-    onDropdownOpen: () => combobox.updateSelectedOptionIndex('active'),
+    onDropdownOpen: () => combobox.updateSelectedOptionIndex("active"),
   });
   const { t } = useTranslation();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [value, setValue] = useState<ITag[]>([]); // current selected values
 
   const exactOptionMatch = data?.some((item) => item.name === search);
 
   const handleValueSelect = (val: string) => {
-    if (val === '$create') {
+    if (val === "$create") {
       // create new tag and add tag-name to state list,
       // add IDs to the form
       mutateAsync(search).then((res) => {
         setValue((current) => [...current, res.data]);
-        form.setFieldValue('tags', [...form.values.tags, res.data.id]);
+        form.setFieldValue("tags", [...form.values.tags, res.data.id]);
       });
-      setSearch('');
+      setSearch("");
     } else {
       setValue((current) =>
         current.some((item) => item.id === val)
           ? current.filter((v) => v.id !== val)
           : [...current, data!.find((item) => item.id === val)!]
       );
-      form.setFieldValue('tags', [...form.values.tags, val]);
+      form.setFieldValue("tags", [...form.values.tags, val]);
     }
   };
 
   const handleValueRemove = (pillId: string) => {
     setValue((current) => current.filter((v) => v.id !== pillId));
     form.setFieldValue(
-      'tags',
+      "tags",
       form.values.tags.filter((v: any) => v !== pillId)
     );
   };
@@ -123,7 +123,7 @@ export default function TagMultiSelectCreatable({
     >
       <Combobox.DropdownTarget>
         <PillsInput
-          label={t('tags')}
+          label={t("tags")}
           onClick={() => {
             if (!readOnly) {
               combobox.openDropdown();
@@ -132,8 +132,8 @@ export default function TagMultiSelectCreatable({
           size={size}
           styles={{
             input: {
-              cursor: readOnly ? 'text' : '',
-              border: readOnly ? 'none' : '',
+              cursor: readOnly ? "text" : "",
+              border: readOnly ? "none" : "",
             },
           }}
         >
@@ -142,7 +142,7 @@ export default function TagMultiSelectCreatable({
 
             <Combobox.EventsTarget>
               <PillsInput.Field
-                {...form.getInputProps('tags')}
+                {...form.getInputProps("tags")}
                 onFocus={() => {
                   if (!readOnly) {
                     combobox.openDropdown();
@@ -150,7 +150,7 @@ export default function TagMultiSelectCreatable({
                 }}
                 onBlur={() => combobox.closeDropdown()}
                 value={search}
-                placeholder={t('tags_placeholder') as string}
+                placeholder={t("tags_placeholder") as string}
                 onChange={(event) => {
                   if (!readOnly) {
                     combobox.updateSelectedOptionIndex();
@@ -159,7 +159,7 @@ export default function TagMultiSelectCreatable({
                 }}
                 onKeyDown={(event) => {
                   if (!readOnly) {
-                    if (event.key === 'Backspace' && search.length === 0) {
+                    if (event.key === "Backspace" && search.length === 0) {
                       event.preventDefault();
                       handleValueRemove(value[value.length - 1].id);
                     }
@@ -182,7 +182,7 @@ export default function TagMultiSelectCreatable({
           {exactOptionMatch &&
             search.trim().length > 0 &&
             options?.length === 0 && (
-              <Combobox.Empty>{t('no_data')}</Combobox.Empty>
+              <Combobox.Empty>{t("no_data")}</Combobox.Empty>
             )}
         </Combobox.Options>
       </Combobox.Dropdown>

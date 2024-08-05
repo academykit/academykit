@@ -1,10 +1,10 @@
-import TextViewer from '@components/Ui/RichTextViewer';
-import { Box, Card, Group, Title } from '@mantine/core';
-import { UseFormReturnType } from '@mantine/form';
-import { IAssessmentExam } from '@utils/services/assessmentService';
-import cx from 'clsx';
-import { t } from 'i18next';
-import classes from '../styles/assessmentQuestion.module.css';
+import TextViewer from "@components/Ui/RichTextViewer";
+import { Box, Card, Group, Title } from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import { IAssessmentExam } from "@utils/services/assessmentService";
+import cx from "clsx";
+import { t } from "i18next";
+import classes from "../styles/assessmentQuestion.module.css";
 
 type Props = {
   form: UseFormReturnType<
@@ -25,22 +25,22 @@ const AssessmentExamCheckBox = ({ form, options, currentIndex }: Props) => {
   return (
     <Box mt={10} px={20} className={classes.option}>
       <Group>
-        <Title size={'xs'} mb={5}>
-          {t('options')} ({t('multiple_choice')})
+        <Title size={"xs"} mb={5}>
+          {t("options")} ({t("multiple_choice")})
         </Title>
       </Group>
       {options.map((option, index) => (
         <label key={option.optionId} htmlFor={option.optionId}>
           <input
-            type={'checkbox'}
+            type={"checkbox"}
             id={option.optionId}
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
             {...form.getInputProps(
               `${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`
             )}
           ></input>
           <Card
-            shadow={'md'}
+            shadow={"md"}
             my={10}
             p={10}
             className={cx({
@@ -52,7 +52,7 @@ const AssessmentExamCheckBox = ({ form, options, currentIndex }: Props) => {
             <TextViewer
               styles={{
                 root: {
-                  border: 'none',
+                  border: "none",
                 },
               }}
               content={option.option}

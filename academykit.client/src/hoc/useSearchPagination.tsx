@@ -1,15 +1,15 @@
-import SearchBar from '@components/Ui/SearchBar';
-import { Pagination, Select, UnstyledButton } from '@mantine/core';
-import { DatePickerInput } from '@mantine/dates';
+import SearchBar from "@components/Ui/SearchBar";
+import { Pagination, Select, UnstyledButton } from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
 import {
   IconArrowsSort,
   IconChevronDown,
   IconChevronUp,
-} from '@tabler/icons-react';
-import queryStringGenerator from '@utils/queryStringGenerator';
-import moment from 'moment';
-import React, { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+} from "@tabler/icons-react";
+import queryStringGenerator from "@utils/queryStringGenerator";
+import moment from "moment";
+import React, { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export interface IWithSearchPagination {
   searchParams: string;
@@ -23,7 +23,7 @@ export interface IWithSearchPagination {
       label: string;
     }[],
     placeholder: string,
-    key: string
+    key: string,
   ) => JSX.Element;
   setInitialSearch: React.Dispatch<
     React.SetStateAction<
@@ -36,22 +36,22 @@ export interface IWithSearchPagination {
   startDateFilterComponent: (
     placeholder: string,
     key: string,
-    label?: string
+    label?: string,
   ) => JSX.Element;
   endDateFilterComponent: (
     placeholder: string,
     key: string,
-    label?: string
+    label?: string,
   ) => JSX.Element;
 }
 
 const withSearchPagination = <P extends object>(
-  Component: React.FC<P & IWithSearchPagination>
+  Component: React.FC<P & IWithSearchPagination>,
 ) => {
   const withSearchPagination = (props: P) => {
     const [params, setParams] = useSearchParams();
-    const [sort, setSort] = useState(params.get('so') ?? '');
-    const [filterKey, setFilterKey] = useState<string>('');
+    const [sort, setSort] = useState(params.get("so") ?? "");
+    const [filterKey, setFilterKey] = useState<string>("");
     const [initialSearch, setInitialSearch] = useState<
       {
         key: string;
@@ -59,23 +59,23 @@ const withSearchPagination = <P extends object>(
       }[]
     >([
       {
-        key: '',
-        value: '',
+        key: "",
+        value: "",
       },
     ]);
 
-    const search = params.get('s') ?? null;
+    const search = params.get("s") ?? null;
     const pageSize = 12;
     const [itemLength, setItemLength] = useState<number>();
-    const [filterValue, setFilterValue] = useState<string>('');
+    const [filterValue, setFilterValue] = useState<string>("");
     const [currentPage, setCurrentPage] = useState(
-      parseInt(params.get('p') ?? '1')
+      parseInt(params.get("p") ?? "1"),
     );
-    const [startDate, setStartDate] = useState<string>('');
-    const [startDateKey, setStartDateKey] = useState<string>('');
+    const [startDate, setStartDate] = useState<string>("");
+    const [startDateKey, setStartDateKey] = useState<string>("");
 
-    const [endDate, setEndDate] = useState<string>('');
-    const [endDateKey, setEndDateKey] = useState<string>('');
+    const [endDate, setEndDate] = useState<string>("");
+    const [endDateKey, setEndDateKey] = useState<string>("");
 
     useEffect(() => {
       if (currentPage !== 1 && itemLength == 0) {
@@ -83,7 +83,7 @@ const withSearchPagination = <P extends object>(
       }
     }, [itemLength]);
     const qs = useMemo(() => {
-      const [by, type] = sort.split(':');
+      const [by, type] = sort.split(":");
       const initSearchObject: Record<string, string> = {};
       initialSearch.forEach((x) => {
         initSearchObject[x.key] = x.value;
@@ -101,16 +101,16 @@ const withSearchPagination = <P extends object>(
         [endDateKey]: endDate,
       });
 
-      !!search && search != '' && params.set('s', search);
-      sort && params.set('so', sort);
+      !!search && search != "" && params.set("s", search);
+      sort && params.set("so", sort);
 
-      pageSize && pageSize != 12 && params.set('si', pageSize);
+      pageSize && pageSize != 12 && params.set("si", pageSize);
 
       currentPage &&
         currentPage != 1 &&
-        params.set('p', currentPage.toString());
-      startDate && params.set('sd', startDate.toString());
-      endDate && params.set('ed', endDate.toString());
+        params.set("p", currentPage.toString());
+      startDate && params.set("sd", startDate.toString());
+      endDate && params.set("ed", endDate.toString());
 
       setParams(params, { replace: true });
       return qs;
@@ -127,41 +127,41 @@ const withSearchPagination = <P extends object>(
 
     const setSearch = (search: string) => {
       for (const value of params.entries()) {
-        if (value[0] !== 's') params.delete(value[0]);
+        if (value[0] !== "s") params.delete(value[0]);
       }
-      params.set('s', search);
+      params.set("s", search);
       setParams(params);
     };
 
     const sortComponent = (props: { title: string; sortKey: string }) => {
-      const sortKey = sort && sort.split(':').length > 0 && sort.split(':')[0];
+      const sortKey = sort && sort.split(":").length > 0 && sort.split(":")[0];
       const sortValue =
-        sort && sort.split(':').length > 0 && sort.split(':')[1];
-      const isAscending = sortKey === props.sortKey && sortValue === '1';
+        sort && sort.split(":").length > 0 && sort.split(":")[1];
+      const isAscending = sortKey === props.sortKey && sortValue === "1";
 
       return (
         <UnstyledButton
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            fontWeight: 'bold',
-            color: '#495057',
-            fontSize: 'inherit',
+            display: "flex",
+            alignItems: "center",
+            fontWeight: "bold",
+            color: "#495057",
+            fontSize: "inherit",
           }}
           onClick={() => {
-            setSort(() => props.sortKey + `:${!isAscending ? '1' : '0'}`);
+            setSort(() => props.sortKey + `:${!isAscending ? "1" : "0"}`);
           }}
         >
           {props.title}
 
           {props.sortKey === sortKey ? (
             isAscending ? (
-              <IconChevronUp style={{ marginLeft: '10px' }} size={20} />
+              <IconChevronUp style={{ marginLeft: "10px" }} size={20} />
             ) : (
-              <IconChevronDown style={{ marginLeft: '10px' }} size={20} />
+              <IconChevronDown style={{ marginLeft: "10px" }} size={20} />
             )
           ) : (
-            <IconArrowsSort style={{ marginLeft: '10px' }} size={20} />
+            <IconArrowsSort style={{ marginLeft: "10px" }} size={20} />
           )}
         </UnstyledButton>
       );
@@ -170,18 +170,18 @@ const withSearchPagination = <P extends object>(
     const filterComponent = (
       data: { value: string; label: string }[],
       placeholder: string,
-      key: string
+      key: string,
     ) => {
       return (
         <Select
           placeholder={placeholder}
           ml={5}
           clearable
-          maw={'184px'}
+          maw={"184px"}
           value={filterValue}
           data={data}
           onChange={(value) => {
-            setFilterValue(() => value ?? '');
+            setFilterValue(() => value ?? "");
             setFilterKey(() => key);
           }}
         />
@@ -207,7 +207,7 @@ const withSearchPagination = <P extends object>(
     };
     const searchComponent = (placeholder?: string) => (
       <SearchBar
-        search={search ?? ''}
+        search={search ?? ""}
         setSearch={setSearch}
         placeholder={placeholder}
       />
@@ -216,7 +216,7 @@ const withSearchPagination = <P extends object>(
     const startDateFilterComponent = (
       placeholder: string,
       key: string,
-      label?: string
+      label?: string,
     ) => {
       return (
         <DatePickerInput
@@ -237,7 +237,7 @@ const withSearchPagination = <P extends object>(
     const endDateFilterComponent = (
       placeholder: string,
       key: string,
-      label?: string
+      label?: string,
     ) => {
       return (
         <DatePickerInput

@@ -1,11 +1,11 @@
-import { ActionIcon, Table, Title } from '@mantine/core';
-import { IconEye } from '@tabler/icons-react';
-import { DATE_FORMAT } from '@utils/constants';
-import RoutePath from '@utils/routeConstants';
-import { useGetStudentResult } from '@utils/services/assessmentService';
-import { t } from 'i18next';
-import moment from 'moment';
-import { Link } from 'react-router-dom';
+import { ActionIcon, Table, Title } from "@mantine/core";
+import { IconEye } from "@tabler/icons-react";
+import { DATE_FORMAT } from "@utils/constants";
+import RoutePath from "@utils/routeConstants";
+import { useGetStudentResult } from "@utils/services/assessmentService";
+import { t } from "i18next";
+import moment from "moment";
+import { Link } from "react-router-dom";
 
 const Row = ({
   obtainedMark,
@@ -55,16 +55,16 @@ const ResultTable = ({
   return (
     <>
       <Title order={4} mb={10}>
-        {t('previous_result')}
+        {t("previous_result")}
       </Title>
 
       <Table withTableBorder withColumnBorders striped>
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>{t('obtained')}</Table.Th>
-            <Table.Th>{t('submission_date')}</Table.Th>
-            <Table.Th>{t('completed_duration')}</Table.Th>
-            <Table.Th>{t('action')}</Table.Th>
+            <Table.Th>{t("obtained")}</Table.Th>
+            <Table.Th>{t("submission_date")}</Table.Th>
+            <Table.Th>{t("completed_duration")}</Table.Th>
+            <Table.Th>{t("action")}</Table.Th>
           </Table.Tr>
         </Table.Thead>
 

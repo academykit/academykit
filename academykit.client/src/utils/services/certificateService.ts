@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ICertificateList } from './manageCourseService';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
-import { IPaginated, IUser } from './types';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ICertificateList } from "./manageCourseService";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
+import { IPaginated, IUser } from "./types";
 
 export interface ExternalCertificatePost {
   name: string;
@@ -35,7 +35,7 @@ const getExternalCertificate = () => {
 
 export const useGetExternalCertificate = (isEnabled: boolean) => {
   return useQuery({
-    queryKey: ['certificate', api.externalCertificate.add],
+    queryKey: ["certificate", api.externalCertificate.add],
     queryFn: () => getExternalCertificate(),
     select: (data) => data.data,
     enabled: isEnabled,
@@ -49,12 +49,12 @@ const addCertificate = (data: ExternalCertificatePost) => {
 export const useAddCertificate = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['post' + api.externalCertificate.add],
+    mutationKey: ["post" + api.externalCertificate.add],
     mutationFn: addCertificate,
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['certificate', api.externalCertificate.add],
+        queryKey: ["certificate", api.externalCertificate.add],
       });
     },
   });
@@ -73,12 +73,12 @@ const updateCertificate = ({
 export const useUpdateCertificate = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.externalCertificate.add],
+    mutationKey: ["update" + api.externalCertificate.add],
     mutationFn: updateCertificate,
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['certificate', api.externalCertificate.add],
+        queryKey: ["certificate", api.externalCertificate.add],
       });
     },
   });
@@ -91,12 +91,12 @@ const deleteCertificate = ({ id }: { id: string }) => {
 export const useDeleteCertificate = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['delete' + api.externalCertificate.add],
+    mutationKey: ["delete" + api.externalCertificate.add],
     mutationFn: deleteCertificate,
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['certificate', api.externalCertificate.add],
+        queryKey: ["certificate", api.externalCertificate.add],
       });
     },
   });
@@ -142,7 +142,7 @@ const updateCertificateStatus = ({
   status: CertificateStatus;
 }) =>
   httpClient.patch(
-    api.externalCertificate.updateStatus(id) + '?status=' + status
+    api.externalCertificate.updateStatus(id) + "?status=" + status
   );
 export const useUpdateCertificateStatus = (id: string, search: string) => {
   const queryClient = useQueryClient();

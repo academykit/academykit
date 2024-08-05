@@ -1,9 +1,9 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { CourseStatus, CourseUserStatus, QuestionType } from '@utils/enums';
-import { IQuestion } from './questionService';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
-import { IUser } from './types';
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { CourseStatus, CourseUserStatus, QuestionType } from "@utils/enums";
+import { IQuestion } from "./questionService";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
+import { IUser } from "./types";
 
 export interface ILessonStartQuestionOption {
   id: string;
@@ -62,7 +62,7 @@ const postExamSubmit = ({
 
 export const useSubmitExam = () =>
   useMutation({
-    mutationKey: ['submitExam'],
+    mutationKey: ["submitExam"],
     mutationFn: postExamSubmit,
   });
 

@@ -1,7 +1,7 @@
-import { Check, Cross } from '@components/Icons';
-import { Flex, Loader, TextInput, UnstyledButton } from '@mantine/core';
-import React from 'react';
-import classes from './styles/inlineInput.module.css';
+import { Check, Cross } from "@components/Icons";
+import { Flex, Loader, TextInput, UnstyledButton } from "@mantine/core";
+import React from "react";
+import classes from "./styles/inlineInput.module.css";
 
 type InlineInputProps = {
   disabled?: boolean;
@@ -17,7 +17,7 @@ const InlineInput: React.FC<React.PropsWithChildren<InlineInputProps>> = ({
   ...props
 }) => {
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div style={{ display: "flex", alignItems: "center" }}>
       <TextInput autoFocus placeholder={placeholder} {...props} />
       {!isLoading ? (
         <>
@@ -29,7 +29,7 @@ const InlineInput: React.FC<React.PropsWithChildren<InlineInputProps>> = ({
           </div>
         </>
       ) : (
-        <Flex align={'center'} ml={10}>
+        <Flex align={"center"} ml={10}>
           <Loader />
         </Flex>
       )}

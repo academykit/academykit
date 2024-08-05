@@ -1,5 +1,5 @@
-import DeleteModal from '@components/Ui/DeleteModal';
-import TextViewer from '@components/Ui/RichTextViewer';
+import DeleteModal from "@components/Ui/DeleteModal";
+import TextViewer from "@components/Ui/RichTextViewer";
 import {
   Box,
   Button,
@@ -10,18 +10,18 @@ import {
   Select,
   Text,
   Title,
-} from '@mantine/core';
-import { useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { IconDragDrop, IconEdit, IconTrash } from '@tabler/icons-react';
-import { QuestionType } from '@utils/enums';
+} from "@mantine/core";
+import { useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { IconDragDrop, IconEdit, IconTrash } from "@tabler/icons-react";
+import { QuestionType } from "@utils/enums";
 import {
   IAssignmentQuestion,
   useDeleteAssignmentQuestion,
-} from '@utils/services/assignmentService';
-import errorType from '@utils/services/axiosError';
-import { useTranslation } from 'react-i18next';
-import EditAssignment from './EditAssignment';
+} from "@utils/services/assignmentService";
+import errorType from "@utils/services/axiosError";
+import { useTranslation } from "react-i18next";
+import EditAssignment from "./EditAssignment";
 
 const AssignmentItem = ({
   data,
@@ -50,13 +50,13 @@ const AssignmentItem = ({
     try {
       await deleteQuestion.mutateAsync({ assignmentId: data.id });
       showNotification({
-        message: t('delete_assignment_question_success'),
+        message: t("delete_assignment_question_success"),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
     setConfirmDelete();
@@ -75,16 +75,16 @@ const AssignmentItem = ({
     );
   }
   return (
-    <Flex gap={'lg'}>
+    <Flex gap={"lg"}>
       <DeleteModal
-        title={t('delete_assignment_question_confirmation')}
+        title={t("delete_assignment_question_confirmation")}
         open={confirmDelete}
         onClose={setConfirmDelete}
         onConfirm={deleteHandler}
       />
 
-      <Paper shadow={'lg'} style={{ width: '100%' }} my={20} withBorder p={20}>
-        <Flex justify={'space-between'}>
+      <Paper shadow={"lg"} style={{ width: "100%" }} my={20} withBorder p={20}>
+        <Flex justify={"space-between"}>
           <Title>{data.name}</Title>
           <Group>
             <IconDragDrop />
@@ -105,7 +105,7 @@ const AssignmentItem = ({
         </Flex>
         {data.description && (
           <Box my={10}>
-            <Text>{t('description')}</Text>
+            <Text>{t("description")}</Text>
             <TextViewer
               key={data.id + data.description}
               content={data.description}
@@ -114,14 +114,14 @@ const AssignmentItem = ({
         )}
         {data?.hints && (
           <Box my={10}>
-            <Text size={'sm'}>{t('hint')}</Text>
+            <Text size={"sm"}>{t("hint")}</Text>
             <TextViewer key={data.id + data.hints} content={data?.hints} />
           </Box>
         )}
         <Select
           mt={20}
-          placeholder={t('question_type') as string}
-          label={t('question_type')}
+          placeholder={t("question_type") as string}
+          label={t("question_type")}
           data={getQuestionType()}
           value={data.type.toString()}
           onChange={() => {}}
@@ -131,12 +131,12 @@ const AssignmentItem = ({
           {(data.type === QuestionType.MultipleChoice ||
             data.type === QuestionType.SingleChoice) && (
             <>
-              <Text>{t('options')}</Text>
+              <Text>{t("options")}</Text>
               {data.assignmentQuestionOptions?.map((x) => (
                 <Flex
-                  align={'center'}
-                  justify={'center'}
-                  gap={'md'}
+                  align={"center"}
+                  justify={"center"}
+                  gap={"md"}
                   my={10}
                   key={x.id}
                 >

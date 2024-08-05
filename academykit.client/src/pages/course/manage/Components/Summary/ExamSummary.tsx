@@ -1,9 +1,9 @@
-import { Box, Grid, Paper, SimpleGrid } from '@mantine/core';
-import { useGetExamSummary } from '@utils/services/examService';
-import { useTranslation } from 'react-i18next';
-import Ranking from '../Ranking';
-import SummaryCard from '../SummaryCard';
-import TopThreeStudents from './TopThreeStudents';
+import { Box, Grid, Paper, SimpleGrid } from "@mantine/core";
+import { useGetExamSummary } from "@utils/services/examService";
+import { useTranslation } from "react-i18next";
+import Ranking from "../Ranking";
+import SummaryCard from "../SummaryCard";
+import TopThreeStudents from "./TopThreeStudents";
 
 interface ExamSummaryProps {
   courseIdentity: string;
@@ -41,24 +41,24 @@ const ExamSummary = ({ courseIdentity, lessonId }: ExamSummaryProps) => {
       <Box>
         <SimpleGrid
           cols={{ base: 1, sm: 2, lg: 5 }}
-          spacing={{ base: 5, sm: 'xl' }}
-          verticalSpacing={{ base: 'md', sm: 'xl' }}
+          spacing={{ base: 5, sm: "xl" }}
+          verticalSpacing={{ base: "md", sm: "xl" }}
           mb={15}
         >
           <SummaryCard
-            title={t('total_attendees')}
+            title={t("total_attendees")}
             count={examStatus.totalAttend}
           />
           <SummaryCard
-            title={t('total_passed')}
+            title={t("total_passed")}
             count={examStatus.passStudents}
           />
           <SummaryCard
-            title={t('total_failed')}
+            title={t("total_failed")}
             count={examStatus.failStudents}
           />
           <SummaryCard
-            title={t('average')}
+            title={t("average")}
             count={Number(examStatus.averageMarks.toPrecision(3))}
           />
         </SimpleGrid>
@@ -67,9 +67,9 @@ const ExamSummary = ({ courseIdentity, lessonId }: ExamSummaryProps) => {
           <Grid.Col
             span={6}
             order={{ base: 2, sm: 2, lg: 1 }}
-            miw={{ base: '100%', sm: '100%', md: '50%', lg: '50%' }}
+            miw={{ base: "100%", sm: "100%", md: "50%", lg: "50%" }}
           >
-            <Box h={'100%'}>
+            <Box h={"100%"}>
               <Ranking
                 title="most_wrong_answered_questions"
                 data={mostWrongAnsQues}
@@ -81,15 +81,15 @@ const ExamSummary = ({ courseIdentity, lessonId }: ExamSummaryProps) => {
           <Grid.Col
             span={6}
             order={{ base: 1, sm: 1, lg: 2 }}
-            miw={{ base: '100%', sm: '100%', md: '50%', lg: '50%' }}
+            miw={{ base: "100%", sm: "100%", md: "50%", lg: "50%" }}
           >
             <TopThreeStudents
               students={[firstStudent, secondStudent, thirdStudent]}
               totalMarks={totalMarks}
             />
 
-            <Paper p={'md'} mb={10}>
-              <ol start={4} style={{ paddingLeft: '18px', margin: 0 }}>
+            <Paper p={"md"} mb={10}>
+              <ol start={4} style={{ paddingLeft: "18px", margin: 0 }}>
                 {otherStudents.map((student) => (
                   <li key={student.id}>{student.fullName}</li>
                 ))}

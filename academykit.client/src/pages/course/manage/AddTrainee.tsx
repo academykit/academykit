@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Avatar,
   Box,
@@ -8,22 +8,22 @@ import {
   Loader,
   MultiSelect,
   Text,
-} from '@mantine/core';
-import { useForm, yupResolver } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import errorType from '@utils/services/axiosError';
-import { useAddTrainee, useGetTrainee } from '@utils/services/courseService';
-import { INotMember } from '@utils/services/groupService';
-import { forwardRef, useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
-import * as Yup from 'yup';
+} from "@mantine/core";
+import { useForm, yupResolver } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import errorType from "@utils/services/axiosError";
+import { useAddTrainee, useGetTrainee } from "@utils/services/courseService";
+import { INotMember } from "@utils/services/groupService";
+import { forwardRef, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import * as Yup from "yup";
 
 interface IAddTrainee {
   email: string[];
 }
 
-interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
+interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
   firstName: string;
   imageUrl: string;
   email: string;
@@ -49,7 +49,7 @@ const SelectUserItem = forwardRef<HTMLDivElement, ItemProps>(
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    email: Yup.array().min(1, t('one_email_required') as string),
+    email: Yup.array().min(1, t("one_email_required") as string),
   });
 };
 
@@ -61,7 +61,7 @@ const AddTrainee = ({
 }) => {
   const { t } = useTranslation();
   const { id } = useParams();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [data, setData] = useState<INotMember[]>([]);
 
   const addTrainee = useAddTrainee(id as string);
@@ -90,7 +90,7 @@ const AddTrainee = ({
       });
       const mergedData = [...data, ...t];
       setData([
-        ...new Map(mergedData.map((item) => [item['email'], item])).values(),
+        ...new Map(mergedData.map((item) => [item["email"], item])).values(),
       ]);
     }
   }, [nonTrainee.isSuccess]);
@@ -107,14 +107,14 @@ const AddTrainee = ({
         });
       }
       showNotification({
-        message: response.data?.message ?? t('add_trainee_success'),
+        message: response.data?.message ?? t("add_trainee_success"),
       });
       onCancel();
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -125,27 +125,27 @@ const AddTrainee = ({
         <MultiSelect
           tabIndex={0}
           autoComplete="off"
-          placeholder={t('email_address') as string}
+          placeholder={t("email_address") as string}
           ref={ref}
           searchable
           data={data}
           mb={10}
-          label={t('email_address')}
+          label={t("email_address")}
           withAsterisk
           name="email"
           size="md"
           nothingFoundMessage={
-            nonTrainee.isLoading ? <Loader /> : <Box>{t('User Not found')}</Box>
+            nonTrainee.isLoading ? <Loader /> : <Box>{t("User Not found")}</Box>
           }
           onSearchChange={(d) => {
             setSearch(d);
           }}
-          {...form.getInputProps('email')}
+          {...form.getInputProps("email")}
         />
 
-        <Group mt={'lg'} justify="flex-end">
+        <Group mt={"lg"} justify="flex-end">
           <Button mr={10} type="submit" size="md">
-            {t('submit')}
+            {t("submit")}
           </Button>
         </Group>
       </form>

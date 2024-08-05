@@ -1,5 +1,5 @@
-import { Button, Group, Modal } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
+import { Button, Group, Modal } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 
 const DeleteModal = ({
   onClose,
@@ -17,7 +17,7 @@ const DeleteModal = ({
   const { t } = useTranslation();
   return (
     <Modal
-      styles={{ header: { alignItems: 'start' } }}
+      styles={{ header: { alignItems: "start" } }}
       title={title}
       opened={open}
       onClose={() => onClose()}
@@ -31,10 +31,10 @@ const DeleteModal = ({
             onConfirm();
           }}
         >
-          {t('confirm')}
+          {t("confirm")}
         </Button>
         <Button variant="outline" onClick={() => onClose()}>
-          {t('cancel')}
+          {t("cancel")}
         </Button>
       </Group>
     </Modal>

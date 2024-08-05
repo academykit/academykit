@@ -1,6 +1,6 @@
-import UserProfileMenu from '@components/UserProfileMenu';
-import useCustomLayout from '@context/LayoutProvider';
-import useAuth from '@hooks/useAuth';
+import UserProfileMenu from "@components/UserProfileMenu";
+import useCustomLayout from "@context/LayoutProvider";
+import useAuth from "@hooks/useAuth";
 import {
   AppShell,
   Box,
@@ -12,33 +12,33 @@ import {
   ThemeIcon,
   useMantineColorScheme,
   useMantineTheme,
-} from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import { IconInfoSquare } from '@tabler/icons-react';
-import { UserRole } from '@utils/enums';
-import { useGeneralSetting } from '@utils/services/adminService';
-import { IUser } from '@utils/services/types';
-import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link, Outlet } from 'react-router-dom';
-import { AppFooter } from './AppFooter';
-import { LeftMainLinks } from './LeftMainLink';
-import classes from './styles/layout.module.css';
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconInfoSquare } from "@tabler/icons-react";
+import { UserRole } from "@utils/enums";
+import { useGeneralSetting } from "@utils/services/adminService";
+import { IUser } from "@utils/services/types";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, Outlet } from "react-router-dom";
+import { AppFooter } from "./AppFooter";
+import { LeftMainLinks } from "./LeftMainLink";
+import classes from "./styles/layout.module.css";
 
 const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
   const settings = useGeneralSetting();
 
   const setHeader = () => {
     const info =
-      localStorage.getItem('app-info') &&
-      JSON.parse(localStorage.getItem('app-info') ?? '');
+      localStorage.getItem("app-info") &&
+      JSON.parse(localStorage.getItem("app-info") ?? "");
     if (info) {
       let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
       document.title = info.name;
       if (!link) {
-        link = document.createElement('link');
-        link.rel = 'icon';
-        document.getElementsByTagName('head')[0].appendChild(info.logo);
+        link = document.createElement("link");
+        link.rel = "icon";
+        document.getElementsByTagName("head")[0].appendChild(info.logo);
       }
       link.href = info.logo;
     }
@@ -49,11 +49,11 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
 
     if (settings.isSuccess) {
       localStorage.setItem(
-        'app-info',
+        "app-info",
         JSON.stringify({
           name: settings.data.data.companyName,
           logo: settings.data.data.logoUrl,
-        })
+        }),
       );
       setHeader();
     }
@@ -64,12 +64,12 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
   const [opened, { toggle }] = useDisclosure(false);
   const footerMenu = {
     icon: <IconInfoSquare size={16} />,
-    color: 'blue',
-    label: 'help',
-    href: 'https://docs.academykit.co/',
+    color: "blue",
+    label: "help",
+    href: "https://docs.academykit.co/",
     replace: true,
     role: UserRole.Trainee,
-    target: '_blank',
+    target: "_blank",
   };
   const layout = useCustomLayout();
   const { t } = useTranslation();
@@ -81,14 +81,14 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
       styles={(theme) => ({
         main: {
           backgroundColor:
-            colorScheme === 'dark'
+            colorScheme === "dark"
               ? theme.colors.dark[8]
               : theme.colors.gray[0],
         },
       })}
       header={{ height: 60 }}
-      navbar={{ width: 210, breakpoint: 'sm', collapsed: { mobile: !opened } }}
-      padding={'md'}
+      navbar={{ width: 210, breakpoint: "sm", collapsed: { mobile: !opened } }}
+      padding={"md"}
     >
       <AppShell.Header>
         {layout.meetPage ? (
@@ -96,10 +96,10 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
         ) : layout.examPage ? (
           <Group
             style={{
-              justifyContent: 'space-between',
-              width: '100%',
-              alignItems: 'center',
-              padding: '8px 16px 0 16px',
+              justifyContent: "space-between",
+              width: "100%",
+              alignItems: "center",
+              padding: "8px 16px 0 16px",
             }}
           >
             <Box>{layout.examPageTitle}</Box>
@@ -114,7 +114,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
                 hiddenFrom="sm"
                 size="sm"
               />
-              <Link to="/" style={{ marginTop: '5px' }}>
+              <Link to="/" style={{ marginTop: "5px" }}>
                 <img height={50} src={settings.data?.data?.logoUrl} alt="" />
               </Link>
             </Group>
@@ -123,7 +123,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
                 user={
                   {
                     email: auth.auth.email,
-                    fullName: auth.auth.firstName + ' ' + auth.auth.lastName,
+                    fullName: auth.auth.firstName + " " + auth.auth.lastName,
                     id: auth.auth.id,
                     role: auth.auth.role,
                     imageUrl: auth.auth.imageUrl,
@@ -159,7 +159,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
               }
               style={{
                 padding: theme.spacing.xs,
-                borderTop: '0.0125rem solid',
+                borderTop: "0.0125rem solid",
               }}
             />
           )}
@@ -170,7 +170,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
         <Outlet />
       </AppShell.Main>
 
-      <AppFooter name={settings.data?.data?.companyName ?? ''}></AppFooter>
+      <AppFooter name={settings.data?.data?.companyName ?? ""}></AppFooter>
     </AppShell>
   );
 };

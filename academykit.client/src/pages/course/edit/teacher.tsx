@@ -1,10 +1,10 @@
-import DeleteModal from '@components/Ui/DeleteModal';
-import UserShortProfile from '@components/UserShortProfile';
+import DeleteModal from "@components/Ui/DeleteModal";
+import UserShortProfile from "@components/UserShortProfile";
 import withSearchPagination, {
   IWithSearchPagination,
-} from '@hoc/useSearchPagination';
-import useAuth from '@hooks/useAuth';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+} from "@hoc/useSearchPagination";
+import useAuth from "@hooks/useAuth";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Box,
   Button,
@@ -18,32 +18,32 @@ import {
   Text,
   Title,
   Transition,
-} from '@mantine/core';
-import { useForm, yupResolver } from '@mantine/form';
-import { useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { IconTrash } from '@tabler/icons-react';
-import { TrainingTypeEnum } from '@utils/enums';
-import queryStringGenerator from '@utils/queryStringGenerator';
-import { useGetTrainers } from '@utils/services/adminService';
-import errorType from '@utils/services/axiosError';
+} from "@mantine/core";
+import { useForm, yupResolver } from "@mantine/form";
+import { useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { IconTrash } from "@tabler/icons-react";
+import { TrainingTypeEnum } from "@utils/enums";
+import queryStringGenerator from "@utils/queryStringGenerator";
+import { useGetTrainers } from "@utils/services/adminService";
+import errorType from "@utils/services/axiosError";
 import {
   ICreateCourseTeacher,
   useCourseTeacher,
   useCreateTeacherCourse,
   useDeleteCourseTeacher,
-} from '@utils/services/courseService';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
-import * as Yup from 'yup';
+} from "@utils/services/courseService";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import * as Yup from "yup";
 
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
     email: Yup.string()
-      .email(t('invalid_email') as string)
-      .required(t('email_required') as string),
+      .email(t("invalid_email") as string)
+      .required(t("email_required") as string),
   });
 };
 
@@ -59,11 +59,11 @@ const TeacherCards = ({
   const handleDelete = async () => {
     try {
       await deleteTeacher.mutateAsync(id);
-      showNotification({ message: t('trainer_deleted') });
+      showNotification({ message: t("trainer_deleted") });
       setDeletePopUP(false);
     } catch (err) {
       const error = errorType(err);
-      showNotification({ message: error, color: 'red' });
+      showNotification({ message: error, color: "red" });
     }
   };
   const [deletePopup, setDeletePopUP] = useState(false);
@@ -72,25 +72,25 @@ const TeacherCards = ({
   return (
     <>
       <DeleteModal
-        title={`${t('delete_trainer?')}`}
+        title={`${t("delete_trainer?")}`}
         open={deletePopup}
         onClose={() => setDeletePopUP(false)}
         onConfirm={handleDelete}
       />
 
-      <Card radius={'lg'} mb={10}>
+      <Card radius={"lg"} mb={10}>
         <Group py={5} justify="space-between">
           {user && (
-            <UserShortProfile user={user} size={'md'} page="Trainings" />
+            <UserShortProfile user={user} size={"md"} page="Trainings" />
           )}
           <Group>
-            <Text color={'dimmed'} size={'sm'}></Text>
+            <Text color={"dimmed"} size={"sm"}></Text>
             {auth?.auth &&
               auth?.auth.id !== user?.id &&
               user?.id !== courseCreatedBy && (
                 <IconTrash
                   color="red"
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: "pointer" }}
                   onClick={() => setDeletePopUP(true)}
                 />
               )}
@@ -110,7 +110,7 @@ const Teacher = ({
 
   const form = useForm({
     initialValues: {
-      email: '',
+      email: "",
     },
     validate: yupResolver(schema()),
   });
@@ -132,17 +132,17 @@ const Teacher = ({
         email: email,
       });
       showNotification({
-        message: t('add_trainer_success'),
+        message: t("add_trainer_success"),
       });
       form.reset();
 
       toggleAddForm();
     } catch (err) {
       const error = errorType(err);
-      showNotification({ message: error, color: 'red' });
+      showNotification({ message: error, color: "red" });
     }
   };
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const lessonType = TrainingTypeEnum.Course;
   const { data: trainers, isLoading } = useGetTrainers(
     queryStringGenerator({ search }),
@@ -151,45 +151,45 @@ const Teacher = ({
   );
   return (
     <Container fluid>
-      <Group style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-        <Title>{t('trainers')}</Title>
+      <Group style={{ justifyContent: "space-between", alignItems: "center" }}>
+        <Title>{t("trainers")}</Title>
         <Button onClick={() => toggleAddForm()}>
-          {!showAddForm ? t('add_trainer') : t('cancel')}
+          {!showAddForm ? t("add_trainer") : t("cancel")}
         </Button>
       </Group>
       <Transition
         mounted={showAddForm}
-        transition={'slide-down'}
+        transition={"slide-down"}
         duration={200}
         timingFunction="ease"
       >
         {() => (
           <Box mt={10}>
             <form onSubmit={form.onSubmit(onSubmitForm)}>
-              <Group style={{ alignItems: 'start' }}>
+              <Group style={{ alignItems: "start" }}>
                 <Select
                   clearable
-                  placeholder={t('enter_email_trainer') as string}
+                  placeholder={t("enter_email_trainer") as string}
                   searchable
                   nothingFoundMessage={
-                    isLoading ? 'Loading...' : 'No Trainers Found!'
+                    isLoading ? "Loading..." : "No Trainers Found!"
                   }
                   data={trainers?.map((e) => e.email) ?? []}
                   onSearchChange={setSearch}
                   searchValue={search}
-                  {...form.getInputProps('email')}
+                  {...form.getInputProps("email")}
                 />
 
                 <Button loading={createTeacher.isLoading} type="submit">
-                  {t('add')}
+                  {t("add")}
                 </Button>
               </Group>
             </form>
           </Box>
         )}
       </Transition>
-      <Flex my={'lg'} hidden>
-        {searchComponent(t('search_users') as string)}
+      <Flex my={"lg"} hidden>
+        {searchComponent(t("search_users") as string)}
       </Flex>
       {loading && <Loader />}
       {error && <Box>{errorType(error)}</Box>}
@@ -198,7 +198,7 @@ const Teacher = ({
         {data &&
           data?.items &&
           (data.items.length < 1 ? (
-            <Box>{t('no_users')}</Box>
+            <Box>{t("no_users")}</Box>
           ) : (
             data.items.map((item) => (
               <TeacherCards

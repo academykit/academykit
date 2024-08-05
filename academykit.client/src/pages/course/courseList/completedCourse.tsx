@@ -1,13 +1,13 @@
 import withSearchPagination, {
   IWithSearchPagination,
-} from '@hoc/useSearchPagination';
-import useAuth from '@hooks/useAuth';
-import { Box, Container, Flex, Loader } from '@mantine/core';
-import { CourseStatus, UserRole } from '@utils/enums';
-import { useCourse } from '@utils/services/courseService';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import CourseList from './component/List';
+} from "@hoc/useSearchPagination";
+import useAuth from "@hooks/useAuth";
+import { Box, Container, Flex, Loader } from "@mantine/core";
+import { CourseStatus, UserRole } from "@utils/enums";
+import { useCourse } from "@utils/services/courseService";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import CourseList from "./component/List";
 
 const CompletedCourseList = ({
   setInitialSearch,
@@ -18,7 +18,7 @@ const CompletedCourseList = ({
   useEffect(() => {
     setInitialSearch([
       {
-        key: 'Status',
+        key: "Status",
         value: CourseStatus.Completed.toString(),
       },
     ]);
@@ -42,11 +42,11 @@ const CompletedCourseList = ({
         <Flex
           pb={20}
           style={{
-            justifyContent: 'end',
-            alignItems: 'center',
+            justifyContent: "end",
+            alignItems: "center",
           }}
         >
-          {searchComponent(t('search_trainings') as string)}
+          {searchComponent(t("search_trainings") as string)}
         </Flex>
       </Container>
 
@@ -62,7 +62,7 @@ const CompletedCourseList = ({
             <Loader />
           )
         ) : (
-          <Box>{t('no_trainings_found')}</Box>
+          <Box>{t("no_trainings_found")}</Box>
         ))}
       {isLoading && <Loader />}
       {showCompletedList &&

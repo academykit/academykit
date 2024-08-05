@@ -1,11 +1,11 @@
 //manage lessons stat
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { LessonType } from '@utils/enums';
-import errorType from './axiosError';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
-import { IPaginated, IUser } from './types';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { LessonType } from "@utils/enums";
+import errorType from "./axiosError";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
+import { IPaginated, IUser } from "./types";
 
 export interface ILessonStats {
   id: string;

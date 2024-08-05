@@ -1,12 +1,12 @@
-import { TextInput, TextInputProps } from '@mantine/core';
-import { FC, useEffect, useRef, useState } from 'react';
+import { TextInput, TextInputProps } from "@mantine/core";
+import { FC, useEffect, useRef, useState } from "react";
 
 interface ICustomTextFieldWithAutoFocus extends TextInputProps {
   isViewMode?: boolean;
 }
 
 const CustomTextFieldWithAutoFocus: FC<ICustomTextFieldWithAutoFocus> = (
-  props
+  props,
 ) => {
   const myRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -28,7 +28,7 @@ const CustomTextFieldWithAutoFocus: FC<ICustomTextFieldWithAutoFocus> = (
       <TextInput
         ref={myRef}
         {...props}
-        autoComplete={isFocused ? 'on' : 'off'}
+        autoComplete={isFocused ? "on" : "off"}
         onClick={handleClick}
         onBlur={handleBlur}
       />
@@ -37,7 +37,7 @@ const CustomTextFieldWithAutoFocus: FC<ICustomTextFieldWithAutoFocus> = (
 };
 
 export const DynamicAutoFocusTextField: FC<ICustomTextFieldWithAutoFocus> = (
-  props
+  props,
 ) => {
   const { isViewMode } = props;
   const [isFocused, setIsFocused] = useState(!isViewMode);
@@ -61,8 +61,8 @@ export const DynamicAutoFocusTextField: FC<ICustomTextFieldWithAutoFocus> = (
     <>
       <TextInput
         {...props}
-        styles={{ input: { border: isViewMode ? 'none' : '' } }}
-        autoComplete={isFocused ? 'on' : 'off'}
+        styles={{ input: { border: isViewMode ? "none" : "" } }}
+        autoComplete={isFocused ? "on" : "off"}
         onClick={handleClick}
         onBlur={handleBlur}
         ref={inputRef}

@@ -1,4 +1,4 @@
-import useAuth from '@hooks/useAuth';
+import useAuth from "@hooks/useAuth";
 import {
   ActionIcon,
   Box,
@@ -6,16 +6,16 @@ import {
   Table,
   Title,
   useMantineTheme,
-} from '@mantine/core';
-import { IconEye } from '@tabler/icons-react';
-import { DATE_FORMAT } from '@utils/constants';
-import { UserRole } from '@utils/enums';
-import RoutePath from '@utils/routeConstants';
-import { useMyResult } from '@utils/services/examService';
-import axios from 'axios';
-import moment from 'moment';
-import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+} from "@mantine/core";
+import { IconEye } from "@tabler/icons-react";
+import { DATE_FORMAT } from "@utils/constants";
+import { UserRole } from "@utils/enums";
+import RoutePath from "@utils/routeConstants";
+import { useMyResult } from "@utils/services/examService";
+import axios from "axios";
+import moment from "moment";
+import { useTranslation } from "react-i18next";
+import { Link, useLocation } from "react-router-dom";
 
 const UserResults = ({
   lessonId,
@@ -33,8 +33,8 @@ const UserResults = ({
 
   const hasExceededAttempt = result.data?.hasExceededAttempt;
   const endDate = result.data?.endDate;
-  const exam_endDate = moment.utc(endDate, 'YYYY-MM-DD[T]HH:mm[Z]');
-  const current_time = moment.utc(moment().toDate(), 'YYYY-MM-DD[T]HH:mm[Z]');
+  const exam_endDate = moment.utc(endDate, "YYYY-MM-DD[T]HH:mm[Z]");
+  const current_time = moment.utc(moment().toDate(), "YYYY-MM-DD[T]HH:mm[Z]");
   const location = useLocation();
 
   if (result.isLoading) {
@@ -45,31 +45,31 @@ const UserResults = ({
       if (result.error.response?.data) {
         return <Box>{(result.error.response?.data as any)?.message}</Box>;
       } else if (result.error.response?.status === 404) {
-        return <Box> {t('no_result')}</Box>;
+        return <Box> {t("no_result")}</Box>;
       } else {
-        return <div>{t('something_wrong')}</div>;
+        return <div>{t("something_wrong")}</div>;
       }
     }
   }
   if (result.data?.attemptCount === 0) {
     return (
-      <Title my={10} size={'sm'}>
-        {t('no_previous_attempt')}
+      <Title my={10} size={"sm"}>
+        {t("no_previous_attempt")}
       </Title>
     );
   }
   return (
     <>
-      <Title mt={20}> {t('previous_result')}</Title>
+      <Title mt={20}> {t("previous_result")}</Title>
       <Table
         styles={{
           td: {
-            backgroundColor: location.pathname.includes('lessons-stat')
-              ? ''
+            backgroundColor: location.pathname.includes("lessons-stat")
+              ? ""
               : theme.colors.gray[9],
           },
         }}
-        w={'100%'}
+        w={"100%"}
         striped
         withTableBorder
         withColumnBorders
@@ -77,10 +77,10 @@ const UserResults = ({
       >
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>{t('obtained')}</Table.Th>
-            <Table.Th>{t('submission_date')}</Table.Th>
-            <Table.Th>{t('completed_duration')}</Table.Th>
-            <Table.Th>{t('actions')}</Table.Th>
+            <Table.Th>{t("obtained")}</Table.Th>
+            <Table.Th>{t("submission_date")}</Table.Th>
+            <Table.Th>{t("completed_duration")}</Table.Th>
+            <Table.Th>{t("actions")}</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>

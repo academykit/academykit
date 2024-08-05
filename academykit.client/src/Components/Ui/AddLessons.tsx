@@ -1,15 +1,15 @@
-import AddAssignment from '@components/Course/Lesson/AddAssignment';
-import AddDocument from '@components/Course/Lesson/AddDocument';
-import AddExam from '@components/Course/Lesson/AddExam';
-import AddFeedback from '@components/Course/Lesson/AddFeedback';
-import AddLecture from '@components/Course/Lesson/AddLecture';
-import AddMeeting from '@components/Course/Lesson/AddMeeting';
-import AddPhysical from '@components/Course/Lesson/AddPhysical';
-import { useSection } from '@context/SectionProvider';
-import { Badge, Button, Tooltip } from '@mantine/core';
-import { TFunction } from 'i18next';
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import AddAssignment from "@components/Course/Lesson/AddAssignment";
+import AddDocument from "@components/Course/Lesson/AddDocument";
+import AddExam from "@components/Course/Lesson/AddExam";
+import AddFeedback from "@components/Course/Lesson/AddFeedback";
+import AddLecture from "@components/Course/Lesson/AddLecture";
+import AddMeeting from "@components/Course/Lesson/AddMeeting";
+import AddPhysical from "@components/Course/Lesson/AddPhysical";
+import { useSection } from "@context/SectionProvider";
+import { Badge, Button, Tooltip } from "@mantine/core";
+import { TFunction } from "i18next";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const LessonAddList = ({
   sectionId,
@@ -20,10 +20,10 @@ const LessonAddList = ({
   t: TFunction;
   sectionId: string;
 }) => {
-  const [addState, setAddState] = React.useState<string>('');
+  const [addState, setAddState] = React.useState<string>("");
   let returnDiv;
   switch (addState) {
-    case 'lecture':
+    case "lecture":
       returnDiv = (
         <AddLecture
           sectionId={sectionId}
@@ -34,25 +34,25 @@ const LessonAddList = ({
         />
       );
       break;
-    case 'mcq':
+    case "mcq":
       returnDiv = (
         <AddExam
           setIsEditing={() => {}}
-          setAddState={() => setAddState('')}
+          setAddState={() => setAddState("")}
           sectionId={sectionId}
         />
       );
       break;
-    case 'assignment':
+    case "assignment":
       returnDiv = (
         <AddAssignment
           setIsEditing={() => {}}
-          setAddState={() => setAddState('')}
+          setAddState={() => setAddState("")}
           sectionId={sectionId}
         />
       );
       break;
-    case 'meeting':
+    case "meeting":
       returnDiv = (
         <AddMeeting
           setIsEditing={() => {}}
@@ -63,7 +63,7 @@ const LessonAddList = ({
         />
       );
       break;
-    case 'feedback':
+    case "feedback":
       returnDiv = (
         <AddFeedback
           setIsEditing={() => {}}
@@ -72,7 +72,7 @@ const LessonAddList = ({
         />
       );
       break;
-    case 'document':
+    case "document":
       returnDiv = (
         <AddDocument
           setIsEditing={() => {}}
@@ -82,7 +82,7 @@ const LessonAddList = ({
         />
       );
       break;
-    case 'physical':
+    case "physical":
       returnDiv = (
         <AddPhysical
           setIsEditing={() => {}}
@@ -100,61 +100,61 @@ const LessonAddList = ({
       {!addState ? (
         <>
           <Badge
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
             variant="outline"
-            onClick={() => setAddState('lecture')}
+            onClick={() => setAddState("lecture")}
           >
-            + {t('video')}
-          </Badge>{' '}
+            + {t("video")}
+          </Badge>{" "}
           <Badge
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
             variant="outline"
-            onClick={() => setAddState('mcq')}
+            onClick={() => setAddState("mcq")}
           >
-            + {t('exam')}
-          </Badge>{' '}
+            + {t("exam")}
+          </Badge>{" "}
           <Badge
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
             variant="outline"
-            onClick={() => setAddState('assignment')}
+            onClick={() => setAddState("assignment")}
           >
-            + {t('assignment')}
-          </Badge>{' '}
+            + {t("assignment")}
+          </Badge>{" "}
           <Badge
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
             variant="outline"
-            onClick={() => setAddState('physical')}
+            onClick={() => setAddState("physical")}
           >
-            + {t('physical_name')}
-          </Badge>{' '}
+            + {t("physical_name")}
+          </Badge>{" "}
           <Badge
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
             variant="outline"
-            onClick={() => setAddState('meeting')}
+            onClick={() => setAddState("meeting")}
           >
-            + {t('live_class')}
-          </Badge>{' '}
+            + {t("live_class")}
+          </Badge>{" "}
           <Badge
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
             variant="outline"
-            onClick={() => setAddState('feedback')}
+            onClick={() => setAddState("feedback")}
           >
-            + {t('feedback')}
-          </Badge>{' '}
+            + {t("feedback")}
+          </Badge>{" "}
           <Badge
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
             variant="outline"
-            onClick={() => setAddState('document')}
+            onClick={() => setAddState("document")}
           >
-            + {t('document')}
-          </Badge>{' '}
+            + {t("document")}
+          </Badge>{" "}
           <Badge
             color="red"
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
             variant="outline"
             onClick={() => setAddLessonClick(true)}
           >
-            X {t('close')}
+            X {t("close")}
           </Badge>
         </>
       ) : (
@@ -170,13 +170,13 @@ const AddLesson = ({ sectionId }: { sectionId: string }) => {
   const { t } = useTranslation();
 
   return (
-    <div style={{ marginTop: '10px', marginBottom: '10px' }}>
+    <div style={{ marginTop: "10px", marginBottom: "10px" }}>
       {addLessonClick ? (
         <Tooltip
           position="right"
           multiline
           w={220}
-          label={t('click_to_see_options')}
+          label={t("click_to_see_options")}
         >
           <Button
             variant="outline"
@@ -187,7 +187,7 @@ const AddLesson = ({ sectionId }: { sectionId: string }) => {
               section?.setIsAddSection(false);
             }}
           >
-            {t('add_lesson')}
+            {t("add_lesson")}
           </Button>
         </Tooltip>
       ) : (

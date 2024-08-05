@@ -1,4 +1,4 @@
-import React, { createContext, FC, useContext, useState } from 'react';
+import React, { createContext, FC, useContext, useState } from "react";
 
 interface ILayoutContext {
   examPage: boolean;
@@ -25,10 +25,10 @@ export const LayoutProvider: FC<React.PropsWithChildren> = ({ children }) => {
   const [meetPage, setMeetPage] = useState<boolean>(false);
 
   const [examPageTitle, setExamPageTitle] = useState<JSX.Element>(
-    initialState.examPageTitle
+    initialState.examPageTitle,
   );
   const [examPageAction, setExamPageAction] = useState<JSX.Element>(
-    initialState.examPageAction
+    initialState.examPageAction,
   );
 
   return (

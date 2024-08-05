@@ -1,14 +1,14 @@
-import ProgressBar from '@components/Ui/ProgressBar';
+import ProgressBar from "@components/Ui/ProgressBar";
 import withSearchPagination, {
   IWithSearchPagination,
-} from '@hoc/useSearchPagination';
-import { Anchor, Box, Loader, Paper, Table, Title } from '@mantine/core';
-import { DATE_FORMAT } from '@utils/constants';
-import RoutePath from '@utils/routeConstants';
-import { useMyCourse } from '@utils/services/courseService';
-import moment from 'moment';
-import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+} from "@hoc/useSearchPagination";
+import { Anchor, Box, Loader, Paper, Table, Title } from "@mantine/core";
+import { DATE_FORMAT } from "@utils/constants";
+import RoutePath from "@utils/routeConstants";
+import { useMyCourse } from "@utils/services/courseService";
+import moment from "moment";
+import { useTranslation } from "react-i18next";
+import { Link, useParams } from "react-router-dom";
 
 const AttendedTrainings = ({
   searchParams,
@@ -21,16 +21,16 @@ const AttendedTrainings = ({
   return (
     <div>
       <Title mt={10} size={30} mb={10}>
-        {t('attended_trainings')}{' '}
+        {t("attended_trainings")}{" "}
       </Title>
       <Paper>
         {data && data.totalCount > 0 && (
           <Table striped withTableBorder withColumnBorders highlightOnHover>
             <Table.Thead>
               <Table.Tr>
-                <Table.Th>{t('title')}</Table.Th>
-                <Table.Th>{t('enrolled_date')}</Table.Th>
-                <Table.Th>{t('progress')}</Table.Th>
+                <Table.Th>{t("title")}</Table.Th>
+                <Table.Th>{t("enrolled_date")}</Table.Th>
+                <Table.Th>{t("progress")}</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -60,7 +60,7 @@ const AttendedTrainings = ({
         data.totalPage > 1 &&
         pagination(data.totalPage, data.items.length)}
       {data && data.totalCount === 0 && (
-        <Box mt={5}>{t('no_trainings_found')}</Box>
+        <Box mt={5}>{t("no_trainings_found")}</Box>
       )}
     </div>
   );

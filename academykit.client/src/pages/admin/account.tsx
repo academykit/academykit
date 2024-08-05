@@ -1,5 +1,5 @@
-import useAuth from '@hooks/useAuth';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import useAuth from "@hooks/useAuth";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Button,
   Container,
@@ -7,15 +7,15 @@ import {
   PasswordInput,
   SimpleGrid,
   TextInput,
-} from '@mantine/core';
-import { useForm, yupResolver } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import { useChangeEmail, useChangePassword } from '@utils/services/authService';
-import errorType from '@utils/services/axiosError';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
+} from "@mantine/core";
+import { useForm, yupResolver } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import { useChangeEmail, useChangePassword } from "@utils/services/authService";
+import errorType from "@utils/services/axiosError";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 
 export interface IPasswordResetRequest {
   currentPassword: string;
@@ -34,18 +34,18 @@ const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
     currentPassword: Yup.string()
-      .required(t('current_password_required') as string)
-      .label(t('current_password')),
+      .required(t("current_password_required") as string)
+      .label(t("current_password")),
     newPassword: Yup.string()
-      .min(8, t('password_length_required') as string)
-      .matches(/[0-9]/, t('password_number_required') as string)
-      .matches(/[a-z]/, t('password_lowercase_required') as string)
-      .matches(/[A-Z]/, t('password_uppercase_required') as string)
-      .matches(/[^\w]/, t('password_symbol_required') as string)
-      .required(t('new_password_required') as string),
+      .min(8, t("password_length_required") as string)
+      .matches(/[0-9]/, t("password_number_required") as string)
+      .matches(/[a-z]/, t("password_lowercase_required") as string)
+      .matches(/[A-Z]/, t("password_uppercase_required") as string)
+      .matches(/[^\w]/, t("password_symbol_required") as string)
+      .required(t("new_password_required") as string),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref('newPassword'), null], t('password_match') as string)
-      .required(t('password_confirm_required') as string),
+      .oneOf([Yup.ref("newPassword"), null], t("password_match") as string)
+      .required(t("password_confirm_required") as string),
   });
 };
 
@@ -53,19 +53,19 @@ const changeEmailSchema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
     oldEmail: Yup.string()
-      .email(t('invalid_email') as string)
-      .required(t('email_required') as string),
+      .email(t("invalid_email") as string)
+      .required(t("email_required") as string),
     newEmail: Yup.string()
       .trim()
       .lowercase()
-      .email(t('invalid_email') as string)
-      .required(t('email_required') as string),
+      .email(t("invalid_email") as string)
+      .required(t("email_required") as string),
     confirmEmail: Yup.string()
       .trim()
       .lowercase()
-      .oneOf([Yup.ref('newEmail'), null], t('email_must_match') as string)
-      .required(t('confirm_email_required') as string),
-    password: Yup.string().required(t('password_required') as string),
+      .oneOf([Yup.ref("newEmail"), null], t("email_must_match") as string)
+      .required(t("confirm_email_required") as string),
+    password: Yup.string().required(t("password_required") as string),
   });
 };
 
@@ -94,9 +94,9 @@ const Account = () => {
 
   const form = useForm({
     initialValues: {
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: '',
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
     },
     validate: yupResolver(schema()),
   });
@@ -104,10 +104,10 @@ const Account = () => {
 
   const changeEmailForm = useForm({
     initialValues: {
-      oldEmail: '',
-      newEmail: '',
-      confirmEmail: '',
-      password: '',
+      oldEmail: "",
+      newEmail: "",
+      confirmEmail: "",
+      password: "",
     },
     validate: yupResolver(changeEmailSchema()),
   });
@@ -117,14 +117,14 @@ const Account = () => {
       await mutateAsync(value);
       form.reset();
       showNotification({
-        message: t('change_password_success'),
+        message: t("change_password_success"),
       });
     } catch (err) {
       const error = errorType(err);
       form.reset();
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -132,13 +132,13 @@ const Account = () => {
   const onChangeEmail = async (values: IChangeEmailRequest) => {
     try {
       const response = await changeEmail.mutateAsync(values);
-      navigate('/verify?token=' + response?.data?.resendToken);
+      navigate("/verify?token=" + response?.data?.resendToken);
     } catch (error) {
       const err = errorType(error);
       showNotification({
         message: err,
-        title: t('error'),
-        color: 'red',
+        title: t("error"),
+        color: "red",
       });
     }
   };
@@ -150,96 +150,96 @@ const Account = () => {
           changeEmailForm.reset();
           setOpened(false);
         }}
-        title={t('change_email_address')}
+        title={t("change_email_address")}
       >
         <form onSubmit={changeEmailForm.onSubmit(onChangeEmail)}>
           <TextInput
             withAsterisk
             mb={10}
-            label={t('current_email')}
+            label={t("current_email")}
             name="oldEmail"
-            placeholder={t('enter_email') as string}
-            {...changeEmailForm.getInputProps('oldEmail')}
+            placeholder={t("enter_email") as string}
+            {...changeEmailForm.getInputProps("oldEmail")}
           />
           <PasswordInput
-            placeholder={t('enter_password') as string}
+            placeholder={t("enter_password") as string}
             withAsterisk
             mb={10}
             name="password"
-            label={t('your_password')}
-            {...changeEmailForm.getInputProps('password')}
+            label={t("your_password")}
+            {...changeEmailForm.getInputProps("password")}
           />
           <TextInput
             withAsterisk
             mb={10}
             name="newEmail"
-            label={t('new_email')}
-            placeholder={t('your_new_email') as string}
-            {...changeEmailForm.getInputProps('newEmail')}
+            label={t("new_email")}
+            placeholder={t("your_new_email") as string}
+            {...changeEmailForm.getInputProps("newEmail")}
           />
           <TextInput
             withAsterisk
             mb={10}
             name="confirmEmail"
-            label={t('confirm_new_email')}
-            placeholder={t('confirm_your_new_email') as string}
-            {...changeEmailForm.getInputProps('confirmEmail')}
+            label={t("confirm_new_email")}
+            placeholder={t("confirm_your_new_email") as string}
+            {...changeEmailForm.getInputProps("confirmEmail")}
           />
           <Button type="submit" mt={10} loading={changeEmail.isLoading}>
-            {t('change_email')}
+            {t("change_email")}
           </Button>
         </form>
       </Modal>
       <SimpleGrid cols={{ base: 1, md: 1, lg: 2 }}>
-        <form onSubmit={form.onSubmit(onSubmitForm)} style={{ width: '100%' }}>
+        <form onSubmit={form.onSubmit(onSubmitForm)} style={{ width: "100%" }}>
           <Container
             fluid
             style={{
-              marginLeft: '0px',
+              marginLeft: "0px",
             }}
           >
             <PasswordInput
               mb={10}
               withAsterisk
               name="currentPassword"
-              label={t('current_password')}
-              placeholder={t('enter_current_password') as string}
-              {...form.getInputProps('currentPassword')}
+              label={t("current_password")}
+              placeholder={t("enter_current_password") as string}
+              {...form.getInputProps("currentPassword")}
             />
             <PasswordInput
               mb={10}
               name="newPassword"
               withAsterisk
-              label={t('new_password')}
-              placeholder={t('enter_new_password') as string}
-              {...form.getInputProps('newPassword')}
+              label={t("new_password")}
+              placeholder={t("enter_new_password") as string}
+              {...form.getInputProps("newPassword")}
             />
             <PasswordInput
               mb={10}
               withAsterisk
               name="confirmPassword"
-              placeholder={t('confirm_new_password') as string}
-              label={t('confirm_password')}
-              {...form.getInputProps('confirmPassword')}
+              placeholder={t("confirm_new_password") as string}
+              label={t("confirm_password")}
+              {...form.getInputProps("confirmPassword")}
             />
             <Button type="submit" loading={isLoading}>
-              {t('save')}
+              {t("save")}
             </Button>
           </Container>
         </form>
         {/* email section */}
 
-        <Container fluid style={{ width: '100%' }}>
+        <Container fluid style={{ width: "100%" }}>
           <TextInput
-            label={t('your_email')}
+            label={t("your_email")}
             disabled
             style={{
-              marginBottom: '15px',
+              marginBottom: "15px",
             }}
-            placeholder={t('placeholder_email') as string}
+            placeholder={t("placeholder_email") as string}
             value={auth?.auth?.email}
           />
-          <Button onClick={() => setOpened(true)}> {t('change_email')} </Button>
+          <Button onClick={() => setOpened(true)}> {t("change_email")} </Button>
         </Container>
       </SimpleGrid>
     </>

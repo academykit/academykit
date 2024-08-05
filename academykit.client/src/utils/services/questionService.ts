@@ -1,9 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { QuestionType } from '@utils/enums';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
-import { ITag } from './tagService';
-import { IPaginated, IUser } from './types';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { QuestionType } from "@utils/enums";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
+import { ITag } from "./tagService";
+import { IPaginated, IUser } from "./types";
 
 export interface IQuestion {
   id: string;
@@ -103,7 +103,7 @@ export const useAddQuestionQuestionSet = (identity: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ['post' + api.questionSet.common],
+    mutationKey: ["post" + api.questionSet.common],
     mutationFn: addQueSet,
 
     onSuccess: () => {

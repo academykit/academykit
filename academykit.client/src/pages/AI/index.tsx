@@ -1,18 +1,18 @@
-import useAuth from '@hooks/useAuth';
-import { ActionIcon, Box, Loader, ScrollArea, Textarea } from '@mantine/core';
-import { IconSend } from '@tabler/icons-react';
+import useAuth from "@hooks/useAuth";
+import { ActionIcon, Box, Loader, ScrollArea, Textarea } from "@mantine/core";
+import { IconSend } from "@tabler/icons-react";
 import {
   KeyboardEvent,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
-} from 'react';
-import { useTranslation } from 'react-i18next';
-import AIChatBox from './components/AIChatBox';
-import FirstChat from './components/FirstChat';
-import ScrollToBottom from './components/ScrollToBottom';
-import UserChatBox from './components/UserChatBox';
+} from "react";
+import { useTranslation } from "react-i18next";
+import AIChatBox from "./components/AIChatBox";
+import FirstChat from "./components/FirstChat";
+import ScrollToBottom from "./components/ScrollToBottom";
+import UserChatBox from "./components/UserChatBox";
 
 const KnowledgeBase = () => {
   const { t } = useTranslation();
@@ -24,7 +24,7 @@ const KnowledgeBase = () => {
   const [scrollPosition, onScrollPositionChange] = useState({ x: 0, y: 0 });
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
+    if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
     }
   };
@@ -32,7 +32,7 @@ const KnowledgeBase = () => {
   const scrollToBottom = () =>
     viewport.current!.scrollTo({
       top: viewport.current!.scrollHeight,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
 
   useEffect(() => {
@@ -57,12 +57,12 @@ const KnowledgeBase = () => {
   }, [viewport]);
 
   return (
-    <Box pos={'relative'} h={'90vh'}>
+    <Box pos={"relative"} h={"90vh"}>
       {isFirstTime && <FirstChat />}
 
       {!isFirstTime && (
         <ScrollArea.Autosize
-          mah={'88vh'}
+          mah={"88vh"}
           scrollHideDelay={0}
           viewportRef={viewport}
           onScrollPositionChange={onScrollPositionChange}
@@ -82,7 +82,7 @@ const KnowledgeBase = () => {
 
       {!isAtBottom && <ScrollToBottom scrollToBottom={scrollToBottom} />}
 
-      <Box pos={'absolute'} bottom={0} w={'100%'}>
+      <Box pos={"absolute"} bottom={0} w={"100%"}>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -90,14 +90,14 @@ const KnowledgeBase = () => {
         >
           <Textarea
             autoFocus
-            placeholder={t('enter_prompt') as string}
+            placeholder={t("enter_prompt") as string}
             rightSection={
               isLoading ? (
                 <Loader color="cyan" type="dots" size={18} />
               ) : (
                 <ActionIcon
                   variant="transparent"
-                  c={'gray'}
+                  c={"gray"}
                   mr={20}
                   type="submit"
                 >

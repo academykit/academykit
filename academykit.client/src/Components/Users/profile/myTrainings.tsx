@@ -10,17 +10,17 @@ import {
   Table,
   Title,
   Tooltip,
-} from '@mantine/core';
-import { IconEdit } from '@tabler/icons-react';
-import { DATE_FORMAT } from '@utils/constants';
-import { CourseLanguage, UserRole } from '@utils/enums';
-import RoutePath from '@utils/routeConstants';
-import { useReAuth } from '@utils/services/authService';
-import { useCourse } from '@utils/services/courseService';
-import moment from 'moment';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+} from "@mantine/core";
+import { IconEdit } from "@tabler/icons-react";
+import { DATE_FORMAT } from "@utils/constants";
+import { CourseLanguage, UserRole } from "@utils/enums";
+import RoutePath from "@utils/routeConstants";
+import { useReAuth } from "@utils/services/authService";
+import { useCourse } from "@utils/services/courseService";
+import moment from "moment";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useParams } from "react-router-dom";
 
 const MyTrainings = () => {
   const auth = useReAuth();
@@ -36,7 +36,7 @@ const MyTrainings = () => {
       {auth.data && Number(auth.data?.role) !== UserRole.Trainee && (
         <div>
           <Title mt={20} size={30} mb={10}>
-            {t('my_trainings')}
+            {t("my_trainings")}
           </Title>
 
           <ScrollArea>
@@ -44,12 +44,12 @@ const MyTrainings = () => {
               <Table striped withTableBorder withColumnBorders highlightOnHover>
                 <Table.Thead>
                   <Table.Tr>
-                    <Table.Th>{t('title')}</Table.Th>
-                    <Table.Th>{t('created_date')}</Table.Th>
+                    <Table.Th>{t("title")}</Table.Th>
+                    <Table.Th>{t("created_date")}</Table.Th>
                     <Table.Th>
-                      {t('Language')} / {t('level')}
+                      {t("Language")} / {t("level")}
                     </Table.Th>
-                    <Table.Th>{t('action')}</Table.Th>
+                    <Table.Th>{t("action")}</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
@@ -71,14 +71,14 @@ const MyTrainings = () => {
                         <Table.Td>
                           <Badge color="pink" variant="light">
                             {CourseLanguage[x.language]}
-                          </Badge>{' '}
-                          /{' '}
+                          </Badge>{" "}
+                          /{" "}
                           <Badge color="blue" variant="light">
                             {x?.levelName}
                           </Badge>
                         </Table.Td>
                         <Table.Td>
-                          <Tooltip label={t('edit_this_course')}>
+                          <Tooltip label={t("edit_this_course")}>
                             <ActionIcon
                               component={Link}
                               to={RoutePath.manageCourse.edit(x.slug).route}
@@ -110,7 +110,7 @@ const MyTrainings = () => {
           }
 
           {authorCourse.data && authorCourse.data.totalCount === 0 && (
-            <Box mt={5}>{t('no_trainings_found')}</Box>
+            <Box mt={5}>{t("no_trainings_found")}</Box>
           )}
         </div>
       )}

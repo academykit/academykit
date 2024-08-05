@@ -1,22 +1,22 @@
-import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from '@utils/constants';
-import { LanguageString } from '@utils/enums';
-import { BASE_URL } from '@utils/env';
+import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from "@utils/constants";
+import { LanguageString } from "@utils/enums";
+import { BASE_URL } from "@utils/env";
 import axios, {
   AxiosDefaults,
   AxiosError,
   AxiosRequestConfig,
   AxiosResponse,
-} from 'axios';
-import { api } from './service-api';
+} from "axios";
+import { api } from "./service-api";
 
 type RequestData = Record<string, any>;
 
 const THREE_MINUTES = 3 * 60 * 1000;
-const baseURL = '/';
+const baseURL = "/";
 const baseConfig = {
   baseURL,
   timeout: THREE_MINUTES,
-  'Content-Type': 'Application/json',
+  "Content-Type": "Application/json",
 };
 /**
  * Axios HTTP Client
@@ -38,7 +38,7 @@ export const httpClient = {
   post: <T>(
     url: string,
     data: RequestData,
-    config?: AxiosRequestConfig<RequestData>
+    config?: AxiosRequestConfig<RequestData>,
   ) =>
     axiosInstance.post<T>(url, data, {
       ...baseConfig,
@@ -49,7 +49,7 @@ export const httpClient = {
   put: <T>(
     url: string,
     data: RequestData,
-    config?: AxiosRequestConfig<RequestData>
+    config?: AxiosRequestConfig<RequestData>,
   ) =>
     axiosInstance.put<T>(url, data, {
       ...baseConfig,
@@ -59,7 +59,7 @@ export const httpClient = {
   patch: <T>(
     url: string,
     data?: RequestData,
-    config?: AxiosRequestConfig<RequestData>
+    config?: AxiosRequestConfig<RequestData>,
   ) =>
     axiosInstance.patch<T>(url, data, {
       ...baseConfig,
@@ -74,30 +74,30 @@ export const httpClient = {
 
 axiosInstance.interceptors.request.use(
   async function (config: AxiosRequestConfig) {
-    const token = localStorage.getItem('token');
-    const lang = localStorage.getItem('lang');
+    const token = localStorage.getItem("token");
+    const lang = localStorage.getItem("lang");
 
     if (config.headers) {
-      config.headers['Accept-Language'] =
-        LanguageString[lang as keyof typeof LanguageString] ?? 'en-US';
+      config.headers["Accept-Language"] =
+        LanguageString[lang as keyof typeof LanguageString] ?? "en-US";
     }
 
     if (token && config.headers) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     config.data = filterFalseyValues(config.data);
     if (
       config.headers &&
-      config.headers['content-type'] === 'multipart/form-data'
+      config.headers["content-type"] === "multipart/form-data"
     ) {
       config.data = toFormData(config.data);
-      delete config.headers['formData'];
+      delete config.headers["formData"];
     }
     if (config.data) {
       for (const key in config.data) {
         // Check if the value is a string
 
-        if (typeof config.data[key] === 'string') {
+        if (typeof config.data[key] === "string") {
           // Trim the string value
           config.data[key] = config.data[key].trim();
         }
@@ -107,7 +107,7 @@ axiosInstance.interceptors.request.use(
   },
   function (error: any) {
     return Promise.reject(error);
-  }
+  },
 );
 
 interface IFailedRequestQueue {
@@ -133,7 +133,7 @@ function handleRefreshToken(refreshToken: string) {
     })
     .catch((error) => {
       const { message } = error.response.data;
-      if (message === 'REFRESH_TOKEN_INVALID') {
+      if (message === "REFRESH_TOKEN_INVALID") {
         localStorage.removeItem(REFRESH_TOKEN_STORAGE);
         localStorage.removeItem(TOKEN_STORAGE);
       }
@@ -151,7 +151,7 @@ function handleRefreshToken(refreshToken: string) {
 
 export function setAuthorizationHeader(
   request: AxiosDefaults | AxiosRequestConfig | any,
-  token: string
+  token: string,
 ) {
   request.headers.Authorization = `Bearer ${token}`;
 }
@@ -166,7 +166,7 @@ axiosInstance.interceptors.response.use(
     if (error?.response?.status === 401) {
       const originalConfig = error.config;
       const refreshToken = localStorage.getItem(
-        REFRESH_TOKEN_STORAGE
+        REFRESH_TOKEN_STORAGE,
       ) as string;
       !isRefreshing && handleRefreshToken(refreshToken);
 
@@ -183,7 +183,7 @@ axiosInstance.interceptors.response.use(
       });
     }
     return Promise.reject(error);
-  }
+  },
 );
 /**
  * Remove empty, null and undefined values
@@ -192,7 +192,7 @@ axiosInstance.interceptors.response.use(
  */
 export function filterFalseyValues(obj: Record<string, any>) {
   for (const propName in obj) {
-    if (['', null, undefined].includes(obj[propName])) {
+    if (["", null, undefined].includes(obj[propName])) {
       delete obj[propName];
     } else if (
       obj[propName] instanceof Object &&

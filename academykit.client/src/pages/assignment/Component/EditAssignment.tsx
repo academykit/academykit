@@ -1,5 +1,5 @@
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import RichTextEditor from "@components/Ui/RichTextEditor/Index";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Box,
   Button,
@@ -13,39 +13,39 @@ import {
   Text,
   TextInput,
   UnstyledButton,
-} from '@mantine/core';
-import { createFormContext, yupResolver } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import { IconPlus, IconTrash } from '@tabler/icons-react';
-import { QuestionType } from '@utils/enums';
+} from "@mantine/core";
+import { createFormContext, yupResolver } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
+import { QuestionType } from "@utils/enums";
 import {
   IAssignmentQuestion,
   ICreateAssignment,
   useAddAssignmentQuestion,
   useEditAssignmentQuestion,
-} from '@utils/services/assignmentService';
-import errorType from '@utils/services/axiosError';
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import * as Yup from 'yup';
+} from "@utils/services/assignmentService";
+import errorType from "@utils/services/axiosError";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import * as Yup from "yup";
 
 const schema = () => {
   const { t } = useTranslation();
 
   return Yup.object().shape({
-    name: Yup.string().required(t('question_title_required') as string),
+    name: Yup.string().required(t("question_title_required") as string),
     type: Yup.string()
-      .required(t('question_type_required') as string)
+      .required(t("question_type_required") as string)
       .nullable(),
 
     answers: Yup.array()
-      .when(['type'], {
+      .when(["type"], {
         is: QuestionType.MultipleChoice.toString(),
         then: Yup.array()
-          .min(2, t('more_option_required') as string)
+          .min(2, t("more_option_required") as string)
           .test(
-            t('test'),
-            t('one_option_selected_on_multiple_choice') as string,
+            t("test"),
+            t("one_option_selected_on_multiple_choice") as string,
             function (value: any) {
               const a = value?.filter((x: any) => x.isCorrect).length > 0;
               return a;
@@ -55,25 +55,25 @@ const schema = () => {
             Yup.object().shape({
               option: Yup.string()
                 .trim()
-                .required(t('option_required') as string)
+                .required(t("option_required") as string)
                 .test(
-                  t('test_option_format'),
-                  t('option_required') as string,
+                  t("test_option_format"),
+                  t("option_required") as string,
                   function (value: any) {
                     // Check if the value is "<p></p>"
-                    return value !== '<p></p>';
+                    return value !== "<p></p>";
                   }
                 ),
             })
           ),
       })
-      .when(['type'], {
+      .when(["type"], {
         is: QuestionType.SingleChoice.toString(),
         then: Yup.array()
-          .min(2, t('more_option_required') as string)
+          .min(2, t("more_option_required") as string)
           .test(
-            t('test'),
-            t('one_option_selected_on_single_choice') as string,
+            t("test"),
+            t("one_option_selected_on_single_choice") as string,
             function (value: any) {
               const length: number =
                 value && value.filter((e: any) => e.isCorrect).length;
@@ -84,13 +84,13 @@ const schema = () => {
             Yup.object().shape({
               option: Yup.string()
                 .trim()
-                .required(t('option_required') as string)
+                .required(t("option_required") as string)
                 .test(
-                  t('test_option_format_single'),
-                  t('option_required') as string,
+                  t("test_option_format_single"),
+                  t("option_required") as string,
                   function (value: any) {
                     // Check if the value is "<p></p>"
-                    return value !== '<p></p>';
+                    return value !== "<p></p>";
                   }
                 ),
             })
@@ -115,15 +115,15 @@ const EditAssignment = ({
   const form = useForm({
     initialValues: {
       lessonId: lessonId,
-      name: assignmentQuestion ? assignmentQuestion.name : '',
-      description: assignmentQuestion ? assignmentQuestion.description : '',
-      hints: assignmentQuestion ? assignmentQuestion?.hints || '' : '',
-      type: assignmentQuestion ? assignmentQuestion.type.toString() : '',
+      name: assignmentQuestion ? assignmentQuestion.name : "",
+      description: assignmentQuestion ? assignmentQuestion.description : "",
+      hints: assignmentQuestion ? assignmentQuestion?.hints || "" : "",
+      type: assignmentQuestion ? assignmentQuestion.type.toString() : "",
       answers: assignmentQuestion?.assignmentQuestionOptions?.map((x) => ({
         option: x.option,
         isCorrect: x.isCorrect ?? false,
         isSelected: x.isSelected,
-      })) ?? [{ option: '', isCorrect: false, isSelected: false }],
+      })) ?? [{ option: "", isCorrect: false, isSelected: false }],
     },
     validate: yupResolver(schema()),
   });
@@ -164,12 +164,12 @@ const EditAssignment = ({
           assignmentId: assignmentQuestion.id,
         });
         showNotification({
-          message: t('edit_assignment_question_success'),
+          message: t("edit_assignment_question_success"),
         });
       } else {
         await addAssignmentQuestion.mutateAsync({ data });
         showNotification({
-          message: t('add_assignment_question_success'),
+          message: t("add_assignment_question_success"),
         });
       }
       form.reset();
@@ -178,7 +178,7 @@ const EditAssignment = ({
       const error = errorType(err);
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -189,55 +189,55 @@ const EditAssignment = ({
         <form onSubmit={form.onSubmit(onSubmit)}>
           <Paper p={20} withBorder mt={20}>
             <TextInput
-              size={'lg'}
+              size={"lg"}
               withAsterisk
-              label={t('title_question')}
-              placeholder={t('enter_question_title') as string}
-              {...form.getInputProps('name')}
+              label={t("title_question")}
+              placeholder={t("enter_question_title") as string}
+              {...form.getInputProps("name")}
             ></TextInput>
             <Box mt={20}>
-              <Text size={'lg'}>{t('description')}</Text>
+              <Text size={"lg"}>{t("description")}</Text>
               <RichTextEditor
-                placeholder={t('question_description') as string}
+                placeholder={t("question_description") as string}
                 formContext={useFormContext}
                 label="description"
               />
             </Box>
 
             <Box mt={20}>
-              <Text size={'lg'}>{t('hint')}</Text>
+              <Text size={"lg"}>{t("hint")}</Text>
               <RichTextEditor
-                placeholder={t('question_hint') as string}
+                placeholder={t("question_hint") as string}
                 formContext={useFormContext}
                 label="hints"
               />
             </Box>
             <Select
               mt={20}
-              placeholder={t('select_question_type') as string}
+              placeholder={t("select_question_type") as string}
               withAsterisk
-              size={'lg'}
-              label={t('question_type')}
-              {...form.getInputProps('type')}
+              size={"lg"}
+              label={t("question_type")}
+              {...form.getInputProps("type")}
               data={data}
               onClick={() => {
                 assignmentQuestion &&
-                  form.setFieldValue('answers', [
-                    { option: '', isCorrect: false, isSelected: false },
+                  form.setFieldValue("answers", [
+                    { option: "", isCorrect: false, isSelected: false },
                   ]);
               }}
             ></Select>
             {(form.values.type === QuestionType.MultipleChoice.toString() ||
               form.values.type === QuestionType.SingleChoice.toString()) && (
               <Box>
-                <Text mt={20}>{t('options')}</Text>
+                <Text mt={20}>{t("options")}</Text>
                 {form.values.answers &&
                   form.values.answers.map((_x, i) => (
                     <div
                       key={i}
-                      style={{ marginBottom: '30px', marginTop: '10px' }}
+                      style={{ marginBottom: "30px", marginTop: "10px" }}
                     >
-                      <Flex gap={'md'} align="center">
+                      <Flex gap={"md"} align="center">
                         {QuestionType.MultipleChoice.toString() ===
                         form.values.type ? (
                           <Checkbox
@@ -260,10 +260,10 @@ const EditAssignment = ({
                             // {...form.getInputProps(`answers.${i}.isCorrect`)}
                           ></Radio>
                         )}
-                        <div style={{ width: '80%' }}>
+                        <div style={{ width: "80%" }}>
                           <RichTextEditor
                             // style={{width:100}}
-                            placeholder={t('option_placeholder') as string}
+                            placeholder={t("option_placeholder") as string}
                             label={`answers.${i}.option`}
                             formContext={useFormContext}
                           ></RichTextEditor>
@@ -272,9 +272,9 @@ const EditAssignment = ({
                           ml={10}
                           onClick={() => {
                             form.insertListItem(
-                              'answers',
+                              "answers",
                               {
-                                option: '',
+                                option: "",
                                 isCorrect: false,
                               },
                               i + 1
@@ -288,7 +288,7 @@ const EditAssignment = ({
                             <UnstyledButton
                               ml={10}
                               onClick={() => {
-                                form.removeListItem('answers', i);
+                                form.removeListItem("answers", i);
                               }}
                             >
                               <IconTrash color="red" />
@@ -297,8 +297,8 @@ const EditAssignment = ({
                       </Flex>
                     </div>
                   ))}
-                {typeof form.errors[`answers`] === 'string' && (
-                  <span style={{ color: 'red' }}>{form.errors[`answers`]}</span>
+                {typeof form.errors[`answers`] === "string" && (
+                  <span style={{ color: "red" }}>{form.errors[`answers`]}</span>
                 )}
               </Box>
             )}
@@ -310,7 +310,7 @@ const EditAssignment = ({
                   addAssignmentQuestion.isLoading || editAssignment.isLoading
                 }
               >
-                {t('save')}
+                {t("save")}
               </Button>
               <Button
                 size="sm"
@@ -318,7 +318,7 @@ const EditAssignment = ({
                 onClick={onCancel}
                 variant="outline"
               >
-                {t('cancel')}
+                {t("cancel")}
               </Button>
             </Group>
           </Paper>

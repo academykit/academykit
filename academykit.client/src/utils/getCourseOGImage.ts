@@ -1,10 +1,10 @@
-import { IUser } from './services/types';
+import { IUser } from "./services/types";
 
 const getCourseOgImageUrl = ({
   author,
   title,
   thumbnailUrl,
-  theme = 'light',
+  theme = "light",
   companyName,
   companyLogo,
 }: {
@@ -15,17 +15,17 @@ const getCourseOgImageUrl = ({
   companyName?: string;
   companyLogo?: string;
 }) => {
-  return thumbnailUrl && thumbnailUrl !== ''
+  return thumbnailUrl && thumbnailUrl !== ""
     ? thumbnailUrl
     : `/api/utility/ogimage?title=${encodeURIComponent(
         title
       )}&author=${encodeURIComponent(
-        author.fullName ?? ''
+        author.fullName ?? ""
       )}&image=${encodeURIComponent(
-        author.imageUrl ?? ''
+        author.imageUrl ?? ""
       )}&theme=${theme}&company=${encodeURIComponent(
-        companyName ?? ''
-      )}&logo=${encodeURIComponent(companyLogo ?? '')}`;
+        companyName ?? ""
+      )}&logo=${encodeURIComponent(companyLogo ?? "")}`;
 };
 
 export default getCourseOgImageUrl;

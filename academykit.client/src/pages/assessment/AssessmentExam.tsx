@@ -1,9 +1,9 @@
-import { Button, Container, Loader, Title } from '@mantine/core';
-import { useAssessmentExamQuestions } from '@utils/services/assessmentService';
-import { t } from 'i18next';
-import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import Exam from './component/Exam';
+import { Button, Container, Loader, Title } from "@mantine/core";
+import { useAssessmentExamQuestions } from "@utils/services/assessmentService";
+import { t } from "i18next";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import Exam from "./component/Exam";
 
 const AssessmentExam = () => {
   const navigate = useNavigate();
@@ -25,15 +25,15 @@ const AssessmentExam = () => {
     return (
       <Container fluid>
         <div>
-          <Title>{t('no_question_found')}</Title>
+          <Title>{t("no_question_found")}</Title>
 
           <Button
             variant="outline"
             size="md"
             mt="xl"
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
           >
-            {t('go_back')}
+            {t("go_back")}
           </Button>
         </div>
       </Container>

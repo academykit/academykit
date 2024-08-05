@@ -12,14 +12,14 @@ import {
   Table,
   Title,
   Tooltip,
-} from '@mantine/core';
-import { IconCheck, IconDownload, IconEye } from '@tabler/icons-react';
-import { useProfileAuth } from '@utils/services/authService';
-import { ICertificateList } from '@utils/services/manageCourseService';
-import { TFunction } from 'i18next';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+} from "@mantine/core";
+import { IconCheck, IconDownload, IconEye } from "@tabler/icons-react";
+import { useProfileAuth } from "@utils/services/authService";
+import { ICertificateList } from "@utils/services/manageCourseService";
+import { TFunction } from "i18next";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 const RowsCompleted = ({
   item,
@@ -39,12 +39,12 @@ const RowsCompleted = ({
       <Table.Td>{item?.percentage}%</Table.Td>
       <Table.Td>
         {item?.hasCertificateIssued ? (
-          <Badge color="cyan">{t('yes')}</Badge>
+          <Badge color="cyan">{t("yes")}</Badge>
         ) : (
-          <Badge color="cyan">{t('no')}</Badge>
+          <Badge color="cyan">{t("no")}</Badge>
         )}
       </Table.Td>
-      <Table.Td style={{ width: '19%', height: '100px' }}>
+      <Table.Td style={{ width: "19%", height: "100px" }}>
         <Modal
           opened={opened}
           size="xl"
@@ -53,7 +53,7 @@ const RowsCompleted = ({
         >
           <Image src={item?.certificateUrl}></Image>
         </Modal>
-        <div style={{ position: 'relative', width: '150px', height: '100px' }}>
+        <div style={{ position: "relative", width: "150px", height: "100px" }}>
           <Anchor onClick={() => setOpened((v) => !v)}>
             <Image
               width={150}
@@ -64,28 +64,28 @@ const RowsCompleted = ({
             />
           </Anchor>
           <Flex
-            justify={'center'}
-            align={'center'}
+            justify={"center"}
+            align={"center"}
             style={{
-              position: 'absolute',
+              position: "absolute",
               left: 0,
               bottom: 0,
               right: 0,
               top: 0,
-              width: '100%',
-              height: '100%',
+              width: "100%",
+              height: "100%",
             }}
           >
             <CopyButton value={item?.certificateUrl} timeout={2000}>
               {({ copied, copy }) => (
                 <Tooltip
-                  label={copied ? t('copied') : t('copy')}
+                  label={copied ? t("copied") : t("copy")}
                   withArrow
                   position="right"
                 >
                   <ActionIcon
                     variant="subtle"
-                    color={copied ? 'teal' : 'gray'}
+                    color={copied ? "teal" : "gray"}
                     onClick={copy}
                   >
                     {copied ? (
@@ -113,7 +113,7 @@ const InternalCertificate = () => {
   const { t } = useTranslation();
   return (
     <>
-      <Title mt={'xl'}>{t('internal_certificate')}</Title>
+      <Title mt={"xl"}>{t("internal_certificate")}</Title>
       {data && data?.certificates.length > 0 ? (
         <ScrollArea>
           <Paper mt={10}>
@@ -127,10 +127,10 @@ const InternalCertificate = () => {
             >
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th>{t('training_name')}</Table.Th>
-                  <Table.Th>{t('completion')}</Table.Th>
-                  <Table.Th>{t('is_issued')}</Table.Th>
-                  <Table.Th>{t('certificate_url')}</Table.Th>
+                  <Table.Th>{t("training_name")}</Table.Th>
+                  <Table.Th>{t("completion")}</Table.Th>
+                  <Table.Th>{t("is_issued")}</Table.Th>
+                  <Table.Th>{t("certificate_url")}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -143,7 +143,7 @@ const InternalCertificate = () => {
           </Paper>
         </ScrollArea>
       ) : (
-        <Box mt={10}>{t('no_certificate')}</Box>
+        <Box mt={10}>{t("no_certificate")}</Box>
       )}
     </>
   );

@@ -1,7 +1,7 @@
-import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
-import { BrandingContext } from '@context/BrandingThemeContext';
-import useCustomForm from '@hooks/useCustomForm';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import ThumbnailEditor from "@components/Ui/ThumbnailEditor";
+import { BrandingContext } from "@context/BrandingThemeContext";
+import useCustomForm from "@hooks/useCustomForm";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   ActionIcon,
   Button,
@@ -10,35 +10,35 @@ import {
   Text,
   TextInput,
   Textarea,
-} from '@mantine/core';
-import { createFormContext, yupResolver } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import { IconRefresh } from '@tabler/icons-react';
-import { PHONE_VALIDATION } from '@utils/constants';
+} from "@mantine/core";
+import { createFormContext, yupResolver } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import { IconRefresh } from "@tabler/icons-react";
+import { PHONE_VALIDATION } from "@utils/constants";
 import {
   useGeneralSetting,
   useUpdateGeneralSetting,
-} from '@utils/services/adminService';
-import errorType from '@utils/services/axiosError';
-import { useContext, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import * as Yup from 'yup';
+} from "@utils/services/adminService";
+import errorType from "@utils/services/axiosError";
+import { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import * as Yup from "yup";
 
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    companyName: Yup.string().required(t('company_name_required') as string),
+    companyName: Yup.string().required(t("company_name_required") as string),
     companyAddress: Yup.string().required(
-      t('company_address_required') as string
+      t("company_address_required") as string
     ),
     companyContactNumber: Yup.string()
-      .required(t('contact_number_required') as string)
+      .required(t("contact_number_required") as string)
       .matches(PHONE_VALIDATION, {
-        message: t('enter_valid_phone'),
+        message: t("enter_valid_phone"),
         excludeEmptyString: true,
       }),
-    emailSignature: Yup.string().required(t('signature_required') as string),
-    logoUrl: Yup.string().required(t('company_logo_required') as string),
+    emailSignature: Yup.string().required(t("signature_required") as string),
+    logoUrl: Yup.string().required(t("company_logo_required") as string),
   });
 };
 
@@ -61,7 +61,7 @@ const GeneralSettings = () => {
   const data = generalSettings.data?.data;
   const { t } = useTranslation();
   const context = useContext(BrandingContext);
-  const [color, setColor] = useState(context?.brandingTheme ?? '#0E99AC');
+  const [color, setColor] = useState(context?.brandingTheme ?? "#0E99AC");
 
   const toggleBrandingTheme = context?.toggleBrandingTheme;
 
@@ -71,21 +71,21 @@ const GeneralSettings = () => {
 
   useEffect(() => {
     form.setValues({
-      logoUrl: data?.logoUrl || '',
-      companyName: data?.companyName || '',
-      companyAddress: data?.companyAddress || '',
-      companyContactNumber: data?.companyContactNumber || '',
-      emailSignature: data?.emailSignature || '',
+      logoUrl: data?.logoUrl || "",
+      companyName: data?.companyName || "",
+      companyAddress: data?.companyAddress || "",
+      companyContactNumber: data?.companyContactNumber || "",
+      emailSignature: data?.emailSignature || "",
     });
   }, [generalSettings.isSuccess]);
 
   const form = useForm({
     initialValues: {
-      logoUrl: '',
-      companyName: '',
-      companyAddress: '',
-      companyContactNumber: '',
-      emailSignature: '',
+      logoUrl: "",
+      companyName: "",
+      companyAddress: "",
+      companyContactNumber: "",
+      emailSignature: "",
     },
     validate: yupResolver(schema()),
   });
@@ -99,8 +99,8 @@ const GeneralSettings = () => {
       };
       await updateGeneral.mutateAsync(values);
       showNotification({
-        title: t('successful'),
-        message: t('setting_updated'),
+        title: t("successful"),
+        message: t("setting_updated"),
       });
       window.scrollTo(0, 0);
       toggleBrandingTheme && toggleBrandingTheme(color);
@@ -109,7 +109,7 @@ const GeneralSettings = () => {
 
       showNotification({
         message: err,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -120,43 +120,43 @@ const GeneralSettings = () => {
         <Container
           size={450}
           style={{
-            marginLeft: '0px',
+            marginLeft: "0px",
           }}
         >
-          {t('company_logo')} <sup style={{ color: 'red' }}>*</sup>
+          {t("company_logo")} <sup style={{ color: "red" }}>*</sup>
           <ThumbnailEditor
             formContext={useFormContext}
-            label={t('image') as string}
+            label={t("image") as string}
             FormField="logoUrl"
             currentThumbnail={data?.logoUrl}
           />
           <Text c="dimmed" size="xs">
-            {t('image_dimension')}
+            {t("image_dimension")}
           </Text>
           <TextInput
-            label={t('company_name')}
+            label={t("company_name")}
             withAsterisk
             mt={20}
             name="companyName"
-            placeholder={t('enter_company_name') as string}
-            {...form.getInputProps('companyName')}
+            placeholder={t("enter_company_name") as string}
+            {...form.getInputProps("companyName")}
           />
           <TextInput
             mt={10}
-            label={t('company_address')}
+            label={t("company_address")}
             withAsterisk
             name="companyAddress"
-            placeholder={t('enter_company_address') as string}
-            {...form.getInputProps('companyAddress')}
+            placeholder={t("enter_company_address") as string}
+            {...form.getInputProps("companyAddress")}
           />
           <TextInput
             mt={10}
-            label={t('company_contact')}
+            label={t("company_contact")}
             withAsterisk
-            type={'number'}
+            type={"number"}
             name="ContactNumber"
-            placeholder={t('enter_company_contact') as string}
-            {...form.getInputProps('companyContactNumber')}
+            placeholder={t("enter_company_contact") as string}
+            {...form.getInputProps("companyContactNumber")}
           />
           <ColorInput
             mt={10}
@@ -168,7 +168,7 @@ const GeneralSettings = () => {
             rightSection={
               <ActionIcon
                 variant="subtle"
-                onClick={() => handleColorChange('#0E99AC')}
+                onClick={() => handleColorChange("#0E99AC")}
               >
                 <IconRefresh size="1rem" />
               </ActionIcon>
@@ -176,11 +176,11 @@ const GeneralSettings = () => {
           />
           <Textarea
             mt={10}
-            label={t('mail_signature')}
+            label={t("mail_signature")}
             withAsterisk
             name="signature"
-            placeholder={t('enter_mail_signature') as string}
-            {...form.getInputProps('emailSignature')}
+            placeholder={t("enter_mail_signature") as string}
+            {...form.getInputProps("emailSignature")}
           />
           <Button
             disabled={!cForm?.isReady}
@@ -188,7 +188,7 @@ const GeneralSettings = () => {
             type="submit"
             loading={updateGeneral.isLoading}
           >
-            {t('submit')}
+            {t("submit")}
           </Button>
         </Container>
       </form>

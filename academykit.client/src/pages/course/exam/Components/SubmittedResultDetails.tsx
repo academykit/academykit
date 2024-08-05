@@ -1,5 +1,5 @@
-import TextViewer from '@components/Ui/RichTextViewer';
-import UserShortProfile from '@components/UserShortProfile';
+import TextViewer from "@components/Ui/RichTextViewer";
+import UserShortProfile from "@components/UserShortProfile";
 import {
   Box,
   Button,
@@ -13,20 +13,20 @@ import {
   Title,
   UnstyledButton,
   useMantineTheme,
-} from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
-import { IconCircleCheck, IconSquareRoundedX } from '@tabler/icons-react';
+} from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
+import { IconCircleCheck, IconSquareRoundedX } from "@tabler/icons-react";
 import {
   ILessonResultQuestionOption,
   ILessonStartQuestion,
-} from '@utils/services/examService';
-import { IUser } from '@utils/services/types';
-import cx from 'clsx';
-import moment from 'moment';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import classes from '../../styles/submittedResult.module.css';
-import SubmitResultHeader from './SubmitResultHeader';
+} from "@utils/services/examService";
+import { IUser } from "@utils/services/types";
+import cx from "clsx";
+import moment from "moment";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import classes from "../../styles/submittedResult.module.css";
+import SubmitResultHeader from "./SubmitResultHeader";
 
 const SubmittedResultDetails = ({
   questions,
@@ -58,7 +58,7 @@ const SubmittedResultDetails = ({
           <Group justify="space-between">
             <div>
               <Title>{name}</Title>
-              <Text>{moment(submissionDate + 'Z').fromNow()}</Text>
+              <Text>{moment(submissionDate + "Z").fromNow()}</Text>
             </div>
             <UserShortProfile user={user}></UserShortProfile>
             <SubmitResultHeader
@@ -71,7 +71,7 @@ const SubmittedResultDetails = ({
       </Grid.Col>
       <Grid.Col
         span={matches ? 9 : 12}
-        style={{ maxWidth: '100%' }}
+        style={{ maxWidth: "100%" }}
         className={classes.examContainer}
       >
         <ScrollArea>
@@ -80,10 +80,10 @@ const SubmittedResultDetails = ({
               p={10}
               pb={20}
               style={{
-                flexDirection: 'column',
-                width: '100%',
-                justifyContent: 'start',
-                alignContent: 'start',
+                flexDirection: "column",
+                width: "100%",
+                justifyContent: "start",
+                alignContent: "start",
               }}
             >
               <Group justify="space-between" ta="center">
@@ -93,7 +93,7 @@ const SubmittedResultDetails = ({
                 <TextViewer
                   key={currentIndex}
                   content={questions[currentIndex]?.description}
-                  styles={{ wordBreak: 'break-all' }}
+                  styles={{ wordBreak: "break-all" }}
                 />
               )}
             </Box>
@@ -105,7 +105,7 @@ const SubmittedResultDetails = ({
                     [classes.active]: x.isSelected,
                   })}
                   id={x.id}
-                  shadow={'lg'}
+                  shadow={"lg"}
                   my={5}
                 >
                   <Grid justify="start" align="center">
@@ -114,8 +114,8 @@ const SubmittedResultDetails = ({
                         key={x.id}
                         styles={{
                           root: {
-                            border: 'none',
-                            background: 'transparent',
+                            border: "none",
+                            background: "transparent",
                           },
                         }}
                         content={x.value}
@@ -152,15 +152,15 @@ const SubmittedResultDetails = ({
 
           {questions[currentIndex].hints && (
             <Card p={10} my={10} shadow="lg" withBorder>
-              <Text size={'lg'} mb={10}>
+              <Text size={"lg"} mb={10}>
                 Hints:
               </Text>
               <TextViewer
                 key={questions[currentIndex].id}
                 styles={{
                   root: {
-                    border: 'none',
-                    background: 'transparent',
+                    border: "none",
+                    background: "transparent",
                   },
                 }}
                 content={questions[currentIndex].hints}
@@ -176,7 +176,7 @@ const SubmittedResultDetails = ({
               }}
               w={100}
             >
-              {t('previous')}
+              {t("previous")}
             </Button>
           ) : (
             <div></div>
@@ -191,7 +191,7 @@ const SubmittedResultDetails = ({
               }}
               w={100}
             >
-              {t('next')}
+              {t("next")}
             </Button>
           ) : (
             <div></div>
@@ -211,9 +211,9 @@ const SubmittedResultDetails = ({
                 setCurrentIndex(i);
               }}
               style={{
-                outline: 'none',
-                border: 'none',
-                backgroundColor: 'none',
+                outline: "none",
+                border: "none",
+                backgroundColor: "none",
               }}
             >
               <Card

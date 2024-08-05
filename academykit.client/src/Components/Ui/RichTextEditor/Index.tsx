@@ -1,21 +1,21 @@
-import { UseFormReturnType } from '@mantine/form';
+import { UseFormReturnType } from "@mantine/form";
 
-import { Box, Text } from '@mantine/core';
-import { Link, RichTextEditor } from '@mantine/tiptap';
-import Mathematics from '@tiptap-pro/extension-mathematics';
-import Color from '@tiptap/extension-color';
-import Highlight from '@tiptap/extension-highlight';
-import Placeholder from '@tiptap/extension-placeholder';
-import SubScript from '@tiptap/extension-subscript';
-import Superscript from '@tiptap/extension-superscript';
-import TextAlign from '@tiptap/extension-text-align';
-import TextStyle from '@tiptap/extension-text-style';
-import Underline from '@tiptap/extension-underline';
-import { useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import 'katex/dist/katex.min.css';
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Box, Text } from "@mantine/core";
+import { Link, RichTextEditor } from "@mantine/tiptap";
+import Mathematics from "@tiptap-pro/extension-mathematics";
+import Color from "@tiptap/extension-color";
+import Highlight from "@tiptap/extension-highlight";
+import Placeholder from "@tiptap/extension-placeholder";
+import SubScript from "@tiptap/extension-subscript";
+import Superscript from "@tiptap/extension-superscript";
+import TextAlign from "@tiptap/extension-text-align";
+import TextStyle from "@tiptap/extension-text-style";
+import Underline from "@tiptap/extension-underline";
+import { useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import "katex/dist/katex.min.css";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 // import { YoutubeVideoControl } from './Controls/YoutubeVideoControl';
 
 type IProps = {
@@ -38,7 +38,7 @@ const TextEditor = ({
   sx,
 }: IProps) => {
   const { t } = useTranslation();
-  const cPlaceholder = t(placeholder ?? '');
+  const cPlaceholder = t(placeholder ?? "");
   const form = formContext && formContext();
 
   const editor = useEditor({
@@ -48,28 +48,28 @@ const TextEditor = ({
       Superscript,
       SubScript,
       Highlight,
-      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      TextAlign.configure({ types: ["heading", "paragraph"] }),
       StarterKit,
       Placeholder.configure({ placeholder: cPlaceholder }),
       Mathematics,
       TextStyle,
       Color,
     ],
-    content: form ? form.values[label ?? 'description'] : value,
+    content: form ? form.values[label ?? "description"] : value,
     onUpdate: ({ editor }) => {
       const data = editor.getHTML();
-      if (form) form?.setFieldValue(label ?? 'description', editor.getHTML());
+      if (form) form?.setFieldValue(label ?? "description", editor.getHTML());
       if (onChange) onChange(data);
     },
   });
 
   useMemo(() => {
     const textValue =
-      form?.getInputProps(label ?? 'description').value ?? value;
+      form?.getInputProps(label ?? "description").value ?? value;
     if (editor && textValue !== editor.getHTML()) {
       editor.commands.setContent(textValue);
     }
-  }, [form?.getInputProps(label ?? 'description').value, value, editor]);
+  }, [form?.getInputProps(label ?? "description").value, value, editor]);
 
   // const handleImageUpload = useCallback(
   //   (file: File): Promise<string> =>
@@ -129,28 +129,28 @@ const TextEditor = ({
 
           <RichTextEditor.ColorPicker
             colors={[
-              '#25262b',
-              '#868e96',
-              '#fa5252',
-              '#e64980',
-              '#be4bdb',
-              '#7950f2',
-              '#4c6ef5',
-              '#228be6',
-              '#15aabf',
-              '#12b886',
-              '#40c057',
-              '#82c91e',
-              '#fab005',
-              '#fd7e14',
+              "#25262b",
+              "#868e96",
+              "#fa5252",
+              "#e64980",
+              "#be4bdb",
+              "#7950f2",
+              "#4c6ef5",
+              "#228be6",
+              "#15aabf",
+              "#12b886",
+              "#40c057",
+              "#82c91e",
+              "#fab005",
+              "#fd7e14",
             ]}
           />
           {/* <YoutubeVideoControl></YoutubeVideoControl> */}
         </RichTextEditor.Toolbar>
         <RichTextEditor.Content />
       </RichTextEditor>
-      <Text c="red" size={'md'} mt={5}>
-        {form ? form.errors[label ?? 'description'] : error}
+      <Text c="red" size={"md"} mt={5}>
+        {form ? form.errors[label ?? "description"] : error}
       </Text>
     </Box>
   );

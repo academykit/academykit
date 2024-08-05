@@ -1,6 +1,6 @@
-import { httpClient } from './service-axios';
-import { api } from './service-api';
-import { useQuery } from '@tanstack/react-query';
+import { httpClient } from "./service-axios";
+import { api } from "./service-api";
+import { useQuery } from "@tanstack/react-query";
 
 export interface IStartExam {
   slug: string;

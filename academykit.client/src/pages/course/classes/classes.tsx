@@ -1,10 +1,10 @@
-import AssignmentDetails from '@components/Course/Classes/AssignmentDetails';
-import ExamDetails from '@components/Course/Classes/ExamDetails';
-import FeedbackDetails from '@components/Course/Classes/FeedbackDetails';
-import PhysicalTrainingDetail from '@components/Course/Classes/PhysicalTrainingDetail';
-import CourseContent from '@components/Course/CourseDescription/CourseContent/CourseContent';
-import Meetings from '@components/Course/Meetings';
-import useAuth from '@hooks/useAuth';
+import AssignmentDetails from "@components/Course/Classes/AssignmentDetails";
+import ExamDetails from "@components/Course/Classes/ExamDetails";
+import FeedbackDetails from "@components/Course/Classes/FeedbackDetails";
+import PhysicalTrainingDetail from "@components/Course/Classes/PhysicalTrainingDetail";
+import CourseContent from "@components/Course/CourseDescription/CourseContent/CourseContent";
+import Meetings from "@components/Course/Meetings";
+import useAuth from "@hooks/useAuth";
 import {
   AspectRatio,
   Box,
@@ -14,58 +14,58 @@ import {
   Grid,
   Loader,
   Tabs,
-} from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { IconFileDescription, IconMessage } from '@tabler/icons-react';
-import { CourseUserStatus, LessonType, UserRole } from '@utils/enums';
-import lazyWithRetry from '@utils/lazyImportWithReload';
-import RoutePath from '@utils/routeConstants';
-import errorType from '@utils/services/axiosError';
+} from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { IconFileDescription, IconMessage } from "@tabler/icons-react";
+import { CourseUserStatus, LessonType, UserRole } from "@utils/enums";
+import lazyWithRetry from "@utils/lazyImportWithReload";
+import RoutePath from "@utils/routeConstants";
+import errorType from "@utils/services/axiosError";
 import {
   useCourseDescription,
   useGetCourseLesson,
-} from '@utils/services/courseService';
-import { useWatchHistory } from '@utils/services/watchHistory';
-import { AxiosError } from 'axios';
-import cx from 'clsx';
-import { Suspense, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
-import classes from '../styles/classes.module.css';
+} from "@utils/services/courseService";
+import { useWatchHistory } from "@utils/services/watchHistory";
+import { AxiosError } from "axios";
+import cx from "clsx";
+import { Suspense, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
+import classes from "../styles/classes.module.css";
 const VideoPlayer = lazyWithRetry(
-  () => import('@components/VideoPlayer/VideoPlayer')
+  () => import("@components/VideoPlayer/VideoPlayer")
 );
 
 const PdfViewer = lazyWithRetry(
-  () => import('@components/Course/Classes/PdfViewer')
+  () => import("@components/Course/Classes/PdfViewer")
 );
 
 const Classes = () => {
   const navigate = useNavigate();
   const matches = useMediaQuery(`(min-width: 62em)`);
   const params = useParams();
-  const tab = params['*'];
+  const tab = params["*"];
   const { t } = useTranslation();
   const [, setVideoState] = useState<
-    | 'loading'
-    | 'completed'
-    | 'loaded'
-    | 'playing'
-    | 'paused'
-    | 'viewing'
-    | 'buffering'
-  >('loading');
+    | "loading"
+    | "completed"
+    | "loaded"
+    | "playing"
+    | "paused"
+    | "viewing"
+    | "buffering"
+  >("loading");
 
   const { data, isLoading } = useCourseDescription(params.id as string);
   const auth = useAuth();
   const watchHistory = useWatchHistory(
     params.id as string,
-    params.lessonId === '1' ? undefined : params.lessonId
+    params.lessonId === "1" ? undefined : params.lessonId
   );
   const courseLesson = useGetCourseLesson(
     params.id as string,
-    params.lessonId === '1' ? undefined : params.lessonId
+    params.lessonId === "1" ? undefined : params.lessonId
   );
 
   const goToNextLesson = (nextLesson: string) =>
@@ -73,8 +73,8 @@ const Classes = () => {
   const onCourseEnded = async (nextLesson: string) => {
     try {
       await watchHistory.mutateAsync({
-        courseId: courseLesson.data?.courseId ?? '',
-        lessonId: courseLesson.data?.id ?? '',
+        courseId: courseLesson.data?.courseId ?? "",
+        lessonId: courseLesson.data?.id ?? "",
       });
       if (nextLesson) {
         goToNextLesson(nextLesson);
@@ -83,7 +83,7 @@ const Classes = () => {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -93,7 +93,7 @@ const Classes = () => {
     Number(auth?.auth?.role) !== UserRole.SuperAdmin &&
     data?.userStatus === CourseUserStatus.NotEnrolled
   ) {
-    navigate('/404', { replace: true });
+    navigate("/404", { replace: true });
   }
 
   if (isLoading) {
@@ -112,16 +112,16 @@ const Classes = () => {
   return (
     <Box p={0}>
       <Grid className={classes.wrapper}>
-        <Grid.Col p={0} m={'auto'} span={matches ? 8 : 12}>
+        <Grid.Col p={0} m={"auto"} span={matches ? 8 : 12}>
           <Suspense fallback={<Loader />}>
             {courseLesson.isLoading && (
               <Box
                 className={classes.videoSection}
                 style={{
-                  display: 'flex',
-                  overflowY: 'hidden',
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  display: "flex",
+                  overflowY: "hidden",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
                 <Box>
@@ -145,7 +145,7 @@ const Classes = () => {
                         currentLesson[0].slug
                       }/description`}
                     >
-                      {t('view_previous_lesson')}
+                      {t("view_previous_lesson")}
                     </Button>
                   )}
               </Box>
@@ -177,7 +177,7 @@ const Classes = () => {
             {courseLesson.data?.type === LessonType.LiveClass && (
               <Box
                 className={cx(classes.videoSection, classes.meetingSection)}
-                style={{ overflowY: 'hidden' }}
+                style={{ overflowY: "hidden" }}
               >
                 <Meetings data={courseLesson.data} />
               </Box>
@@ -185,12 +185,12 @@ const Classes = () => {
             {courseLesson.data?.type == LessonType.Exam && (
               <Box
                 className={classes.videoSection}
-                style={{ overflowY: 'hidden' }}
+                style={{ overflowY: "hidden" }}
               >
                 <ExamDetails
                   id={params.id as string}
                   lessonId={
-                    params.lessonId === '1' ? undefined : params.lessonId
+                    params.lessonId === "1" ? undefined : params.lessonId
                   }
                 />
               </Box>
@@ -238,7 +238,7 @@ const Classes = () => {
             <CourseContent
               user={data?.user}
               courseName={data?.name}
-              courseSlug={data?.slug || ''}
+              courseSlug={data?.slug || ""}
               duration={data?.duration || 0}
               sections={data?.sections || []}
               enrollmentStatus={data?.userStatus || 0}
@@ -250,7 +250,7 @@ const Classes = () => {
         <Box>
           <Tabs
             defaultChecked={true}
-            defaultValue={t('description')}
+            defaultValue={t("description")}
             value={tab}
             onChange={(value) =>
               navigate(`${value}`, { preventScrollReset: true })
@@ -261,13 +261,13 @@ const Classes = () => {
                 value="description"
                 leftSection={<IconFileDescription size={14} />}
               >
-                {t('description')}
+                {t("description")}
               </Tabs.Tab>
               <Tabs.Tab
                 value="comments"
                 leftSection={<IconMessage size={14} />}
               >
-                {t('comments')}
+                {t("comments")}
               </Tabs.Tab>
             </Tabs.List>
 

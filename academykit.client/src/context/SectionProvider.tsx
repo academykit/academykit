@@ -1,5 +1,5 @@
-import { useMediaQuery } from '@mantine/hooks';
-import { createContext, useContext, useState } from 'react';
+import { useMediaQuery } from "@mantine/hooks";
+import { createContext, useContext, useState } from "react";
 
 interface ISectionContext {
   setIsAddSection: any;

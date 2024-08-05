@@ -1,5 +1,5 @@
-import FileUpload from '@components/Ui/FileUpload';
-import { useParams } from 'react-router-dom';
+import FileUpload from "@components/Ui/FileUpload";
+import { useParams } from "react-router-dom";
 
 const AddAssignment = ({
   close,

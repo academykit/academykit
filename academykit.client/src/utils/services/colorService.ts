@@ -25,19 +25,19 @@ const mixColors = (color1: string, color2: string, percent: number) => {
   const mixedG = Math.round(G1 * (1 - p) + G2 * p);
   const mixedB = Math.round(B1 * (1 - p) + B2 * p);
 
-  return `${mixedR.toString(16).padStart(2, '0')}${mixedG
+  return `${mixedR.toString(16).padStart(2, "0")}${mixedG
     .toString(16)
-    .padStart(2, '0')}${mixedB.toString(16).padStart(2, '0')}`;
+    .padStart(2, "0")}${mixedB.toString(16).padStart(2, "0")}`;
 };
 
 const generateTints = (color: string, numTints: number) => {
   const tints = [];
-  const baseColor = color.replace('#', '');
+  const baseColor = color.replace("#", "");
 
   for (let i = 1; i <= numTints; i++) {
     // can be adjusted
     const percent = i * 3;
-    const tintColor = mixColors(baseColor, '000000', percent);
+    const tintColor = mixColors(baseColor, "000000", percent);
     tints.push(`#${tintColor}`);
   }
 

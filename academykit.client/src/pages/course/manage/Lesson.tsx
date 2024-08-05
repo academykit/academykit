@@ -1,7 +1,7 @@
-import ProgressBar from '@components/Ui/ProgressBar';
+import ProgressBar from "@components/Ui/ProgressBar";
 import withSearchPagination, {
   IWithSearchPagination,
-} from '@hoc/useSearchPagination';
+} from "@hoc/useSearchPagination";
 import {
   Anchor,
   Badge,
@@ -13,16 +13,16 @@ import {
   ScrollArea,
   Table,
   Tooltip,
-} from '@mantine/core';
-import { IconEye } from '@tabler/icons-react';
-import { LessonType } from '@utils/enums';
-import RoutePath from '@utils/routeConstants';
+} from "@mantine/core";
+import { IconEye } from "@tabler/icons-react";
+import { LessonType } from "@utils/enums";
+import RoutePath from "@utils/routeConstants";
 import {
   ILessonStats,
   useGetLessonStatistics,
-} from '@utils/services/manageCourseService';
-import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+} from "@utils/services/manageCourseService";
+import { useTranslation } from "react-i18next";
+import { Link, useParams } from "react-router-dom";
 
 const Rows = ({
   item,
@@ -34,7 +34,7 @@ const Rows = ({
   const { t } = useTranslation();
   return (
     <Table.Tr key={item?.id}>
-      <Table.Td style={{ maxWidth: '200px' }}>
+      <Table.Td style={{ maxWidth: "200px" }}>
         <Anchor
           component={Link}
           to={`${RoutePath.classes}/${course_id}/${item.slug}`}
@@ -53,11 +53,11 @@ const Rows = ({
         <Center>
           {item?.isMandatory ? (
             <Badge color="green" variant="outline">
-              {t('yes')}
+              {t("yes")}
             </Badge>
           ) : (
             <Badge color="red" variant="outline">
-              {t('no')}
+              {t("no")}
             </Badge>
           )}
         </Center>
@@ -66,11 +66,11 @@ const Rows = ({
         <Center>
           <Tooltip
             style={{
-              maxWidth: '400px',
-              textOverflow: 'ellipsis',
-              overflow: 'hidden',
+              maxWidth: "400px",
+              textOverflow: "ellipsis",
+              overflow: "hidden",
             }}
-            label={`${t('view_details_for')} ${item.name} ${t('lesson')}`}
+            label={`${t("view_details_for")} ${item.name} ${t("lesson")}`}
           >
             <Button
               component={Link}
@@ -105,13 +105,13 @@ function TableReviews({ searchParams, pagination }: IWithSearchPagination) {
     getLessonStatistics.data.items &&
     getLessonStatistics.data?.items?.length === 0
   )
-    return <Box>{t('no_lessons')}</Box>;
+    return <Box>{t("no_lessons")}</Box>;
 
   return (
     <ScrollArea>
       <Paper>
         <Table
-          cellSpacing={''}
+          cellSpacing={""}
           style={{ minWidth: 800 }}
           verticalSpacing="xs"
           styles={{}}
@@ -122,16 +122,16 @@ function TableReviews({ searchParams, pagination }: IWithSearchPagination) {
         >
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>{t('lesson_name')}</Table.Th>
-              <Table.Th>{t('lesson_type')}</Table.Th>
+              <Table.Th>{t("lesson_name")}</Table.Th>
+              <Table.Th>{t("lesson_type")}</Table.Th>
               <Table.Th>
-                <Center>{t('progress')}</Center>
+                <Center>{t("progress")}</Center>
               </Table.Th>
               <Table.Th>
-                <Center>{t('is_mandatory')}</Center>
+                <Center>{t("is_mandatory")}</Center>
               </Table.Th>
               <Table.Th>
-                <Center>{t('action')}</Center>
+                <Center>{t("action")}</Center>
               </Table.Th>
             </Table.Tr>
           </Table.Thead>

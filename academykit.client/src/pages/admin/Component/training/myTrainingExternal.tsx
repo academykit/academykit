@@ -1,9 +1,9 @@
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import DeleteModal from '@components/Ui/DeleteModal';
-import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
-import useAuth from '@hooks/useAuth';
-import useCustomForm from '@hooks/useCustomForm';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+import DeleteModal from "@components/Ui/DeleteModal";
+import ThumbnailEditor from "@components/Ui/ThumbnailEditor";
+import useAuth from "@hooks/useAuth";
+import useCustomForm from "@hooks/useCustomForm";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   ActionIcon,
   Badge,
@@ -17,49 +17,49 @@ import {
   NumberInput,
   Text,
   TextInput,
-} from '@mantine/core';
-import { DatePickerInput } from '@mantine/dates';
-import { createFormContext, yupResolver } from '@mantine/form';
-import { useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
+} from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
+import { createFormContext, yupResolver } from "@mantine/form";
+import { useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
 import {
   IconDownload,
   IconEdit,
   IconEye,
   IconTrash,
-} from '@tabler/icons-react';
-import downloadImage from '@utils/downloadImage';
-import { UserRole } from '@utils/enums';
-import errorType from '@utils/services/axiosError';
+} from "@tabler/icons-react";
+import downloadImage from "@utils/downloadImage";
+import { UserRole } from "@utils/enums";
+import errorType from "@utils/services/axiosError";
 import {
   CertificateStatus,
   useAddCertificate,
   useDeleteCertificate,
   useGetExternalCertificate,
   useUpdateCertificate,
-} from '@utils/services/certificateService';
-import moment from 'moment';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
-import * as Yup from 'yup';
+} from "@utils/services/certificateService";
+import moment from "moment";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import * as Yup from "yup";
 
 const [FormProvider, useFormContext, useForm] = createFormContext();
 
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t('certificate_name_required') as string),
+    name: Yup.string().required(t("certificate_name_required") as string),
     duration: Yup.number()
-      .required(t('duration_in_hour') as string)
-      .typeError(t('invalid_duration') as string),
+      .required(t("duration_in_hour") as string)
+      .typeError(t("invalid_duration") as string),
     range: Yup.array()
-      .min(2, t('start_end_date_required') as string)
-      .of(Yup.string().required(t('start_end_date_required') as string))
+      .min(2, t("start_end_date_required") as string)
+      .of(Yup.string().required(t("start_end_date_required") as string))
       .test(
         // checking if array contains null values
-        'not-null-values',
-        t('start_end_date_required') as string,
+        "not-null-values",
+        t("start_end_date_required") as string,
         (arr) => {
           return arr !== undefined && arr.every((element) => element !== null);
         }
@@ -78,16 +78,16 @@ const MyTrainingExternal = () => {
   const [idd, setIdd] = useState<any>();
   const [updates, setUpdates] = useState(false);
   const [deleteCertificate, setDeleteCertificate] = useState(false);
-  const [deleteCertificateId, setDeleteCertificateId] = useState('');
+  const [deleteCertificateId, setDeleteCertificateId] = useState("");
   const { t } = useTranslation();
 
   const form = useForm({
     initialValues: {
-      name: '',
+      name: "",
       duration: 0,
-      location: '',
-      institute: '',
-      imageUrl: '',
+      location: "",
+      institute: "",
+      imageUrl: "",
       range: [],
       optionalCost: 0.0,
     },
@@ -113,10 +113,10 @@ const MyTrainingExternal = () => {
   const handleSubmit = async (data: any) => {
     data = {
       ...data,
-      startDate: moment(data.range[0] + 'Z')
+      startDate: moment(data.range[0] + "Z")
         .local()
         .toDate(),
-      endDate: moment(data.range[1] + 'Z')
+      endDate: moment(data.range[1] + "Z")
         .local()
         .toDate(),
     };
@@ -128,15 +128,15 @@ const MyTrainingExternal = () => {
       }
       showNotification({
         message: updates
-          ? t('training_certificate_edited')
-          : t('training_certificate_added'),
+          ? t("training_certificate_edited")
+          : t("training_certificate_added"),
       });
       form.reset();
     } catch (error) {
       form.reset();
       const err = errorType(error);
       showNotification({
-        color: 'red',
+        color: "red",
         message: err,
       });
     }
@@ -149,19 +149,19 @@ const MyTrainingExternal = () => {
     try {
       await certificateDelete.mutateAsync({ id: deleteCertificateId });
       showNotification({
-        message: t('certificate_delete_success'),
+        message: t("certificate_delete_success"),
       });
       setDeleteCertificate(false);
-      setDeleteCertificateId('');
+      setDeleteCertificateId("");
     } catch (error) {
       form.reset();
       const err = errorType(error);
       showNotification({
-        color: 'red',
+        color: "red",
         message: err,
       });
       setDeleteCertificate(false);
-      setDeleteCertificateId('');
+      setDeleteCertificateId("");
     }
   };
 
@@ -176,7 +176,7 @@ const MyTrainingExternal = () => {
         onConfirm={handleDelete}
       />
       <Modal
-        title={t('add_certificate')}
+        title={t("add_certificate")}
         opened={showConfirmation}
         onClose={() => {
           setShowConfirmation();
@@ -186,7 +186,7 @@ const MyTrainingExternal = () => {
         }}
         styles={{
           title: {
-            fontWeight: 'bold',
+            fontWeight: "bold",
           },
         }}
       >
@@ -194,65 +194,65 @@ const MyTrainingExternal = () => {
           {showConfirmation && (
             <form onSubmit={form.onSubmit(handleSubmit)}>
               <CustomTextFieldWithAutoFocus
-                label={t('name')}
+                label={t("name")}
                 name="name"
-                placeholder={t('Name of Training') as string}
+                placeholder={t("Name of Training") as string}
                 withAsterisk
-                {...form.getInputProps('name')}
+                {...form.getInputProps("name")}
               />
               <TextInput
                 withAsterisk
-                label={t('duration_hour')}
-                placeholder={t('Duration of Training') as string}
+                label={t("duration_hour")}
+                placeholder={t("Duration of Training") as string}
                 name="duration"
-                {...form.getInputProps('duration')}
+                {...form.getInputProps("duration")}
               />
               <DatePickerInput
                 allowSingleDateInRange
                 maxDate={new Date()}
                 required
                 valueFormat="MMM DD, YYYY"
-                label={t('start_end_date')}
-                placeholder={t('date_range') as string}
+                label={t("start_end_date")}
+                placeholder={t("date_range") as string}
                 type="range"
-                {...form.getInputProps('range')}
+                {...form.getInputProps("range")}
               />
               <NumberInput
-                label={t('optional_cost')}
-                placeholder={t('enter_optional_cost') as string}
+                label={t("optional_cost")}
+                placeholder={t("enter_optional_cost") as string}
                 name="optionalCost"
                 decimalScale={2}
-                {...form.getInputProps('optionalCost')}
+                {...form.getInputProps("optionalCost")}
                 min={0}
               />
               <TextInput
-                label={t('location')}
-                placeholder={t('Location of Training') as string}
+                label={t("location")}
+                placeholder={t("Location of Training") as string}
                 name="location"
-                {...form.getInputProps('location')}
+                {...form.getInputProps("location")}
               />
               <TextInput
-                label={t('institute')}
-                placeholder={t('Name of institute') as string}
+                label={t("institute")}
+                placeholder={t("Name of institute") as string}
                 name="institute"
-                {...form.getInputProps('institute')}
+                {...form.getInputProps("institute")}
               />
-              <Text>{t('certificate_image')}</Text>
+              <Text>{t("certificate_image")}</Text>
               <ThumbnailEditor
                 formContext={useFormContext}
-                label={t('certificate_image') as string}
+                label={t("certificate_image") as string}
                 FormField="imageUrl"
                 currentThumbnail={idd?.imageUrl}
               />
               <Text c="dimmed" size="xs">
-                {t('image_dimension')}
+                {t("image_dimension")}
               </Text>
               <Button
                 disabled={!cForm?.isReady}
                 type="submit"
                 loading={addCertificate.isLoading}
               >
-                {t('submit')}
+                {t("submit")}
               </Button>
             </form>
           )}
@@ -261,26 +261,26 @@ const MyTrainingExternal = () => {
 
       <Group justify="flex-end">
         <Button onClick={() => setShowConfirmation()}>
-          {t('add_certificate')}
+          {t("add_certificate")}
         </Button>
       </Group>
       {certificateList.isSuccess && certificateList.data?.length <= 0 && (
-        <Box>{t('no_external_training')}</Box>
+        <Box>{t("no_external_training")}</Box>
       )}
       {certificateList.isSuccess &&
         certificateList.data.map((x) => (
           <Card key={x.id} withBorder mt={10}>
-            <Flex justify={'space-between'}>
+            <Flex justify={"space-between"}>
               <Box>
                 <Flex>
-                  <Text fw={'bold'}>
+                  <Text fw={"bold"}>
                     {x.name}
                     <Badge
                       variant="light"
                       color={
-                        CertificateStatus[x.status] == 'Rejected'
-                          ? 'red'
-                          : 'cyan'
+                        CertificateStatus[x.status] == "Rejected"
+                          ? "red"
+                          : "cyan"
                       }
                       ml={20}
                     >
@@ -327,28 +327,28 @@ const MyTrainingExternal = () => {
                 </Text>
               </Box>
               <Box
-                style={{ width: 150, marginTop: 'auto', marginBottom: 'auto' }}
+                style={{ width: 150, marginTop: "auto", marginBottom: "auto" }}
               >
                 {x.imageUrl && (
-                  <div style={{ position: 'relative' }}>
+                  <div style={{ position: "relative" }}>
                     <Image
-                      src={x.imageUrl || ''}
+                      src={x.imageUrl || ""}
                       radius="md"
                       style={{
-                        opacity: '0.5',
+                        opacity: "0.5",
                       }}
                     />
                     <div
                       style={{
-                        position: 'absolute',
+                        position: "absolute",
                         left: 0,
                         bottom: 0,
                         right: 0,
-                        margin: 'auto',
+                        margin: "auto",
                         top: 0,
-                        width: '45px',
-                        height: '30px',
-                        display: 'flex',
+                        width: "45px",
+                        height: "30px",
+                        display: "flex",
                       }}
                     >
                       <ActionIcon
@@ -360,7 +360,7 @@ const MyTrainingExternal = () => {
                       </ActionIcon>
                       <ActionIcon
                         onClick={() =>
-                          downloadImage(x.imageUrl, x.user.fullName ?? '')
+                          downloadImage(x.imageUrl, x.user.fullName ?? "")
                         }
                         variant="subtle"
                       >
@@ -375,9 +375,9 @@ const MyTrainingExternal = () => {
               Number(auth.auth.role) <= UserRole.Admin &&
               auth.auth.id !== x.user.id && (
                 <Box mt={10}>
-                  <Button>{t('approve')}</Button>
-                  <Button ml={10} variant="outline" color={'red'}>
-                    {t('reject')}
+                  <Button>{t("approve")}</Button>
+                  <Button ml={10} variant="outline" color={"red"}>
+                    {t("reject")}
                   </Button>
                 </Box>
               )}

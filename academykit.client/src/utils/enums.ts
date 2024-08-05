@@ -45,10 +45,10 @@ export enum FeedbackType {
 }
 
 export enum ReadableEnum {
-  SingleChoice = 'Single Choice',
-  MultipleChoice = 'Multiple Choice',
-  LiveClass = 'Live Class',
-  RecordedVideo = 'Recordings',
+  SingleChoice = "Single Choice",
+  MultipleChoice = "Multiple Choice",
+  LiveClass = "Live Class",
+  RecordedVideo = "Recordings",
 }
 
 export enum LessonType {
@@ -87,10 +87,10 @@ export enum CourseUserStatus {
   Teacher = 4,
 }
 export const CourseUserStatusValue = {
-  [CourseUserStatus.Author]: 'Author',
-  [CourseUserStatus.Enrolled]: 'Enrolled',
-  [CourseUserStatus.NotEnrolled]: 'Not Enrolled',
-  [CourseUserStatus.Teacher]: 'Trainer',
+  [CourseUserStatus.Author]: "Author",
+  [CourseUserStatus.Enrolled]: "Enrolled",
+  [CourseUserStatus.NotEnrolled]: "Not Enrolled",
+  [CourseUserStatus.Teacher]: "Trainer",
 };
 
 export enum EFileStorageType {
@@ -109,9 +109,9 @@ export enum LessonFileType {
 }
 
 export enum LanguageString {
-  ne = 'ne-NP',
-  en = 'en-US',
-  ja = 'ja-JP',
+  ne = "ne-NP",
+  en = "en-US",
+  ja = "ja-JP",
 }
 
 export enum SeverityType {

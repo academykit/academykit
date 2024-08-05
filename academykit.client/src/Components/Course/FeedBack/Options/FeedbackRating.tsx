@@ -1,7 +1,7 @@
-import { Rating } from '@mantine/core';
-import { UseFormReturnType } from '@mantine/form';
-import { IFeedbackQuestions } from '@utils/services/feedbackService';
-import { useEffect, useState } from 'react';
+import { Rating } from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import { IFeedbackQuestions } from "@utils/services/feedbackService";
+import { useEffect, useState } from "react";
 
 type Props = {
   form: UseFormReturnType<
@@ -23,7 +23,7 @@ const FeedbackRating = ({ form, currentIndex, readOnly }: Props) => {
     <Rating
       value={value}
       onChange={setValue}
-      size={'xl'}
+      size={"xl"}
       mt={10}
       readOnly={readOnly}
     />

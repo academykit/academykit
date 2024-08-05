@@ -1,5 +1,5 @@
-import { Badge, Card, Group, Image, Text } from '@mantine/core';
-import classes from './styles/session.module.css';
+import { Badge, Card, Group, Image, Text } from "@mantine/core";
+import classes from "./styles/session.module.css";
 
 function SessionCard() {
   return (

@@ -1,5 +1,5 @@
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import { BrandingContext } from '@context/BrandingThemeContext';
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+import { BrandingContext } from "@context/BrandingThemeContext";
 import {
   Anchor,
   Button,
@@ -10,35 +10,35 @@ import {
   Paper,
   PasswordInput,
   Title,
-} from '@mantine/core';
-import { useForm, yupResolver } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import RoutePath from '@utils/routeConstants';
-import { useCompanySetting } from '@utils/services/adminService';
-import { useLogin } from '@utils/services/authService';
-import { IUserProfile } from '@utils/services/types';
-import { AxiosError } from 'axios';
-import { useContext, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import * as Yup from 'yup';
-import useAuth from '../../hooks/useAuth';
+} from "@mantine/core";
+import { useForm, yupResolver } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import RoutePath from "@utils/routeConstants";
+import { useCompanySetting } from "@utils/services/adminService";
+import { useLogin } from "@utils/services/authService";
+import { IUserProfile } from "@utils/services/types";
+import { AxiosError } from "axios";
+import { useContext, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import * as Yup from "yup";
+import useAuth from "../../hooks/useAuth";
 
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
     email: Yup.string()
       .trim()
-      .email(t('invalid_email') as string)
-      .required(t('email_required') as string),
+      .email(t("invalid_email") as string)
+      .required(t("email_required") as string),
   });
 };
 
 const LoginPage = () => {
   const form = useForm({
     initialValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
     validate: yupResolver(schema()),
   });
@@ -56,9 +56,9 @@ const LoginPage = () => {
       showNotification({
         message:
           ((login.error as AxiosError).response?.data as any)?.message ??
-          t('something_wrong'),
-        title: t('error'),
-        color: 'red',
+          t("something_wrong"),
+        title: t("error"),
+        color: "red",
       });
       login.reset();
     }
@@ -68,15 +68,15 @@ const LoginPage = () => {
       auth?.setIsLoggedIn(true);
       auth?.setAuth({
         imageUrl: login.data.data.imageUrl,
-        mobileNumber: '',
+        mobileNumber: "",
         firstName: login.data.data.firstName,
         lastName: login.data.data.firstName,
         id: login.data.data.userId,
         email: login.data.data.email,
       } as IUserProfile);
       showNotification({
-        message: t('login_success'),
-        title: t('successful'),
+        message: t("login_success"),
+        title: t("successful"),
       });
     }
   }, [login.isError, login.isSuccess]);
@@ -84,15 +84,15 @@ const LoginPage = () => {
 
   const setHeader = () => {
     const info =
-      localStorage.getItem('app-info') &&
-      JSON.parse(localStorage.getItem('app-info') ?? '');
+      localStorage.getItem("app-info") &&
+      JSON.parse(localStorage.getItem("app-info") ?? "");
     if (info) {
       let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
       document.title = info.name;
       if (!link) {
-        link = document.createElement('link');
-        link.rel = 'icon';
-        document.getElementsByTagName('head')[0].appendChild(info.logo);
+        link = document.createElement("link");
+        link.rel = "icon";
+        document.getElementsByTagName("head")[0].appendChild(info.logo);
       }
       link.href = info.logo;
     }
@@ -103,26 +103,26 @@ const LoginPage = () => {
 
     if (companySettings.isSuccess) {
       const branding = JSON.parse(
-        companySettings.data.data.customConfiguration ?? '{}'
+        companySettings.data.data.customConfiguration ?? "{}",
       );
       localStorage.setItem(
-        'app-info',
+        "app-info",
         JSON.stringify({
           name: companySettings.data.data.name,
           logo: companySettings.data.data.imageUrl,
-        })
+        }),
       );
-      localStorage.setItem('branding', branding.accent);
-      localStorage.setItem('version', companySettings.data.data.appVersion);
-      context?.toggleBrandingTheme(branding.accent ?? '#0E99AC'); // set the accent after fetching
+      localStorage.setItem("branding", branding.accent);
+      localStorage.setItem("version", companySettings.data.data.appVersion);
+      context?.toggleBrandingTheme(branding.accent ?? "#0E99AC"); // set the accent after fetching
       setHeader();
     }
   }, [companySettings.isSuccess]);
 
   return (
     <Container size={420} my={40}>
-      <Center m={'lg'}>
-        <Link to={'/'}>
+      <Center m={"lg"}>
+        <Link to={"/"}>
           <Image
             height={50}
             width={140}
@@ -139,23 +139,23 @@ const LoginPage = () => {
           fontWeight: 900,
         })}
       >
-        {t('welcome_back')}!
+        {t("welcome_back")}!
       </Title>
       <form onSubmit={form.onSubmit(onFormSubmit)}>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <CustomTextFieldWithAutoFocus
-            {...form.getInputProps('email')}
-            autoComplete={'username'}
-            label={t('email')}
-            type={'email'}
-            placeholder={t('your_email') as string}
+            {...form.getInputProps("email")}
+            autoComplete={"username"}
+            label={t("email")}
+            type={"email"}
+            placeholder={t("your_email") as string}
             name="email"
           />
           <PasswordInput
-            {...form.getInputProps('password')}
-            label={t('password')}
-            autoComplete={'password'}
-            placeholder={t('your_password') as string}
+            {...form.getInputProps("password")}
+            label={t("password")}
+            autoComplete={"password"}
+            placeholder={t("your_password") as string}
             mt="md"
             name="password"
           />
@@ -168,12 +168,12 @@ const LoginPage = () => {
                 c="dimmed"
                 size="xs"
               >
-                {t('forgot_password')}?
+                {t("forgot_password")}?
               </Anchor>
             </Link>
           </Group>
           <Button loading={login.isLoading} fullWidth mt="xl" type="submit">
-            {t('sign_in')}
+            {t("sign_in")}
           </Button>
         </Paper>
       </form>

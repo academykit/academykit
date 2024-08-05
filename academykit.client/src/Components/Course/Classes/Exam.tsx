@@ -1,6 +1,6 @@
-import TextViewer from '@components/Ui/RichTextViewer';
-import useCustomLayout from '@context/LayoutProvider';
-import useAuth from '@hooks/useAuth';
+import TextViewer from "@components/Ui/RichTextViewer";
+import useCustomLayout from "@context/LayoutProvider";
+import useAuth from "@hooks/useAuth";
 import {
   Box,
   Button,
@@ -11,25 +11,25 @@ import {
   Modal,
   Text,
   Title,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useMediaQuery, useToggle } from '@mantine/hooks';
-import { CourseUserStatus, QuestionType, UserRole } from '@utils/enums';
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useMediaQuery, useToggle } from "@mantine/hooks";
+import { CourseUserStatus, QuestionType, UserRole } from "@utils/enums";
 import {
   ILessonExamStart,
   ILessonExamSubmit,
   ILessonStartQuestion,
   ILessonStartQuestionOption,
   useSubmitExam,
-} from '@utils/services/examService';
-import cx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
-import ExamCounter from './ExamCounter';
-import ExamCheckBox from './ExamOptions/ExamCheckBox';
-import ExamRadio from './ExamOptions/ExamRadio';
-import classes from './style/exam.module.css';
+} from "@utils/services/examService";
+import cx from "clsx";
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
+import ExamCounter from "./ExamCounter";
+import ExamCheckBox from "./ExamOptions/ExamCheckBox";
+import ExamRadio from "./ExamOptions/ExamRadio";
+import classes from "./style/exam.module.css";
 
 const Exam = ({
   data,
@@ -77,7 +77,7 @@ const Exam = ({
             onClick={() => setShowConfirmation()}
           />
         ) : (
-          <Button onClick={() => navigate(-1)}>{t('close')}</Button>
+          <Button onClick={() => navigate(-1)}>{t("close")}</Button>
         )
       );
     customLayout.setExamPageTitle &&
@@ -87,7 +87,7 @@ const Exam = ({
     };
   }, [customLayout.examPage]);
 
-  const matches = useMediaQuery('(min-width: 56.25em)');
+  const matches = useMediaQuery("(min-width: 56.25em)");
   const [visited, setVisited] = useState<number[]>([]);
 
   const onQuestionVisit = (index: number) => {
@@ -126,7 +126,7 @@ const Exam = ({
     <form onSubmit={form.onSubmit(onSubmitHandler)}>
       {/* confirmation pop-up Modal */}
       <Modal
-        title={t('submit_exam_confirmation')}
+        title={t("submit_exam_confirmation")}
         opened={showConfirmation}
         onClose={handleCloseModal}
       >
@@ -138,7 +138,7 @@ const Exam = ({
               submitButtonRef && submitButtonRef.current?.click();
             }}
           >
-            {t('submit')}
+            {t("submit")}
           </Button>
           <Button
             variant="outline"
@@ -148,7 +148,7 @@ const Exam = ({
               setShowConfirmation();
             }}
           >
-            {t('cancel')}
+            {t("cancel")}
           </Button>
         </Group>
       </Modal>
@@ -157,16 +157,16 @@ const Exam = ({
       <Modal
         opened={examSubmission.isSuccess}
         onClose={() => {
-          navigate(location.state + '?invalidate=true' ?? '/');
+          navigate(location.state + "?invalidate=true" ?? "/");
         }}
-        title={t('submission_success')}
+        title={t("submission_success")}
       >
         <Button
           onClick={() => {
-            navigate(location.state + '?invalidate=true' ?? '/');
+            navigate(location.state + "?invalidate=true" ?? "/");
           }}
         >
-          {t('close')}
+          {t("close")}
         </Button>
       </Modal>
 
@@ -175,23 +175,23 @@ const Exam = ({
         {/* <Grid.Col span={matches ? 9 : 12}> */}
         <Grid.Col
           span={matches ? 9 : 9}
-          style={{ maxWidth: '100%' }}
+          style={{ maxWidth: "100%" }}
           className={classes.questionGridCol}
         >
           <Box
             style={{
-              flexDirection: 'column',
-              overflow: 'auto',
+              flexDirection: "column",
+              overflow: "auto",
             }}
           >
             <Box
               p={10}
               pb={20}
               style={{
-                flexDirection: 'column',
-                width: '100%',
-                justifyContent: 'start',
-                alignContent: 'start',
+                flexDirection: "column",
+                width: "100%",
+                justifyContent: "start",
+                alignContent: "start",
               }}
             >
               <Title mb={20}>{questions[currentIndex]?.name}</Title>
@@ -199,7 +199,7 @@ const Exam = ({
                 <TextViewer
                   key={currentIndex}
                   content={questions[currentIndex]?.description}
-                  styles={{ wordBreak: 'break-all' }}
+                  styles={{ wordBreak: "break-all" }}
                 />
               )}
             </Box>
@@ -232,12 +232,12 @@ const Exam = ({
                 }}
                 w={100}
               >
-                {t('previous')}
+                {t("previous")}
               </Button>
             ) : (
               <div></div>
             )}
-            <button style={{ display: 'none' }} ref={submitButtonRef}></button>
+            <button style={{ display: "none" }} ref={submitButtonRef}></button>
             <Text my={5}>
               {currentIndex + 1}/{questions.length}
             </Text>
@@ -251,7 +251,7 @@ const Exam = ({
                 }}
                 w={100}
               >
-                {t('next')}
+                {t("next")}
               </Button>
             ) : (
               <div></div>
@@ -275,9 +275,9 @@ const Exam = ({
                   setCurrentIndex(i);
                 }}
                 style={{
-                  outline: 'none',
-                  border: 'none',
-                  backgroundColor: 'none',
+                  outline: "none",
+                  border: "none",
+                  backgroundColor: "none",
                 }}
               >
                 <Card

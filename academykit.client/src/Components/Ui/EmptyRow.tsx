@@ -1,5 +1,5 @@
-import { Table, Text } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
+import { Table, Text } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 
 const EmptyRow = ({
   colspan,

@@ -1,5 +1,5 @@
-import DeleteModal from '@components/Ui/DeleteModal';
-import useAuth from '@hooks/useAuth';
+import DeleteModal from "@components/Ui/DeleteModal";
+import useAuth from "@hooks/useAuth";
 import {
   Anchor,
   AspectRatio,
@@ -14,9 +14,9 @@ import {
   Menu,
   Text,
   useMantineTheme,
-} from '@mantine/core';
-import { useMediaQuery, useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
+} from "@mantine/core";
+import { useMediaQuery, useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
 import {
   IconCalendar,
   IconChevronRight,
@@ -25,24 +25,24 @@ import {
   IconSettings,
   IconTrash,
   IconUsers,
-} from '@tabler/icons-react';
-import { DATE_FORMAT, color } from '@utils/constants';
+} from "@tabler/icons-react";
+import { DATE_FORMAT, color } from "@utils/constants";
 import {
   CourseLanguage,
   CourseStatus,
   CourseUserStatus,
   CourseUserStatusValue,
   UserRole,
-} from '@utils/enums';
-import getCourseOgImageUrl from '@utils/getCourseOGImage';
-import RoutePath from '@utils/routeConstants';
-import { useGeneralSetting } from '@utils/services/adminService';
-import errorType from '@utils/services/axiosError';
-import { ICourse, useDeleteCourse } from '@utils/services/courseService';
-import moment from 'moment';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import classes from './styles/horizontalCard.module.css';
+} from "@utils/enums";
+import getCourseOgImageUrl from "@utils/getCourseOGImage";
+import RoutePath from "@utils/routeConstants";
+import { useGeneralSetting } from "@utils/services/adminService";
+import errorType from "@utils/services/axiosError";
+import { ICourse, useDeleteCourse } from "@utils/services/courseService";
+import moment from "moment";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import classes from "./styles/horizontalCard.module.css";
 
 const CourseCardHorizontal = ({
   course,
@@ -57,14 +57,14 @@ const CourseCardHorizontal = ({
     try {
       await deleteCourse.mutateAsync(course.id);
       showNotification({
-        title: t('success'),
-        message: t('delete_course_success'),
+        title: t("success"),
+        message: t("delete_course_success"),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
-        color: 'red',
-        title: t('error'),
+        color: "red",
+        title: t("error"),
         message: error as string,
       });
     }
@@ -95,28 +95,28 @@ const CourseCardHorizontal = ({
 
       <Card
         my={10}
-        radius={'md'}
+        radius={"md"}
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: 0,
           left: 0,
-          width: '100%',
-          overflow: 'visible',
+          width: "100%",
+          overflow: "visible",
         }}
       >
         <DeleteModal
-          title={`${t('want_to_delete')} "${course.name}" ${t('course?')}`}
+          title={`${t("want_to_delete")} "${course.name}" ${t("course?")}`}
           open={deleteModal}
           onClose={setDeleteModal}
           onConfirm={handleDelete}
         />
 
-        <Flex gap={'lg'} className={classes.inner}>
+        <Flex gap={"lg"} className={classes.inner}>
           <Center>
             <Box
               style={{
-                heigh: matches ? '100px' : '300px',
-                width: !matchesSmall ? '220px' : matches ? '240px' : '300px',
+                heigh: matches ? "100px" : "300px",
+                width: !matchesSmall ? "220px" : matches ? "240px" : "300px",
               }}
             >
               <AspectRatio ratio={16 / 9}>
@@ -138,13 +138,13 @@ const CourseCardHorizontal = ({
           </Center>
           <Group
             style={{
-              width: '100%',
-              flexDirection: 'column',
-              justifyContent: 'space-around',
-              alignItems: 'stretch',
+              width: "100%",
+              flexDirection: "column",
+              justifyContent: "space-around",
+              alignItems: "stretch",
             }}
           >
-            <Group style={{ justifyContent: 'space-between' }}>
+            <Group style={{ justifyContent: "space-between" }}>
               <Group gap={10}>
                 <Badge color="pink" variant="light">
                   {t(`${CourseLanguage[course.language]}`)}
@@ -191,14 +191,14 @@ const CourseCardHorizontal = ({
                     </Button>
                   </Menu.Target>
                   <Menu.Dropdown>
-                    <Menu.Label>{t('manage')}</Menu.Label>
+                    <Menu.Label>{t("manage")}</Menu.Label>
                     <Menu.Item
                       leftSection={<IconSettings size={14} />}
                       component={Link}
                       to={RoutePath.manageCourse.manage(course.slug).route}
                       rightSection={<IconChevronRight size={12} stroke={1.5} />}
                     >
-                      {t('statistics')}
+                      {t("statistics")}
                     </Menu.Item>
                     <Menu.Item
                       leftSection={<IconGraph size={14} />}
@@ -206,7 +206,7 @@ const CourseCardHorizontal = ({
                       to={RoutePath.manageCourse.lessonsStat(course.slug).route}
                       rightSection={<IconChevronRight size={12} stroke={1.5} />}
                     >
-                      {t('lesson_stats')}
+                      {t("lesson_stats")}
                     </Menu.Item>
                     <Menu.Item
                       leftSection={<IconUsers size={14} />}
@@ -214,7 +214,7 @@ const CourseCardHorizontal = ({
                       to={RoutePath.manageCourse.student(course.slug).route}
                       rightSection={<IconChevronRight size={12} stroke={1.5} />}
                     >
-                      {t('trainee')}
+                      {t("trainee")}
                     </Menu.Item>
                     <Menu.Divider />
                     <Menu.Item
@@ -222,7 +222,7 @@ const CourseCardHorizontal = ({
                       leftSection={<IconTrash size={14} />}
                       onClick={() => setDeleteModal()}
                     >
-                      {t('delete')}
+                      {t("delete")}
                     </Menu.Item>
                   </Menu.Dropdown>
                 </Menu>
@@ -233,11 +233,11 @@ const CourseCardHorizontal = ({
               to={RoutePath.courses.description(course.slug).route}
               size="lg"
               fw="bold"
-              maw={{ base: '100%', md: 400, lg: 600 }}
+              maw={{ base: "100%", md: 400, lg: 600 }}
               style={{
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
               }}
             >
               {course.name}
@@ -259,21 +259,21 @@ const CourseCardHorizontal = ({
                     .format("H[h] mm[m] ss[s]")}
                 </Text>
               </Group> */}
-              <Group style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <Group style={{ justifyContent: "center", alignItems: "center" }}>
                 {!matches ? (
                   <IconCalendar />
                 ) : (
-                  <Text c="dimmed">{t('created_on')}</Text>
+                  <Text c="dimmed">{t("created_on")}</Text>
                 )}
-                <Text c={'dimmed'}>
+                <Text c={"dimmed"}>
                   {moment(course.createdOn).format(DATE_FORMAT)}
-                </Text>{' '}
+                </Text>{" "}
                 <Badge
                   h={34}
-                  title={t('group')}
+                  title={t("group")}
                   component={Link}
-                  to={'/groups/' + course.groupId}
-                  style={{ maxWidth: '230px', cursor: 'pointer' }}
+                  to={"/groups/" + course.groupId}
+                  style={{ maxWidth: "230px", cursor: "pointer" }}
                   leftSection={<IconUsers size={14} />}
                   variant="light"
                 >

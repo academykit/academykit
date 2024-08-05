@@ -1,5 +1,5 @@
-import DeleteModal from '@components/Ui/DeleteModal';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import DeleteModal from "@components/Ui/DeleteModal";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   ActionIcon,
   Box,
@@ -11,22 +11,22 @@ import {
   Text,
   TextInput,
   Title,
-} from '@mantine/core';
-import { useForm, yupResolver } from '@mantine/form';
-import { useDisclosure } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { IconPencil, IconTrash } from '@tabler/icons-react';
+} from "@mantine/core";
+import { useForm, yupResolver } from "@mantine/form";
+import { useDisclosure } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { IconPencil, IconTrash } from "@tabler/icons-react";
 import {
   useDeleteLevelSetting,
   useLevelSetting,
   usePostLevelSetting,
   useUpdateLevelSetting,
-} from '@utils/services/adminService';
-import errorType from '@utils/services/axiosError';
-import { IUser } from '@utils/services/types';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import * as Yup from 'yup';
+} from "@utils/services/adminService";
+import errorType from "@utils/services/axiosError";
+import { IUser } from "@utils/services/types";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import * as Yup from "yup";
 
 interface ILevel<T> {
   id: string;
@@ -37,14 +37,14 @@ interface ILevel<T> {
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t('level_name_required') as string),
+    name: Yup.string().required(t("level_name_required") as string),
   });
 };
 
 const editSchema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    eName: Yup.string().required(t('level_name_required') as string),
+    eName: Yup.string().required(t("level_name_required") as string),
   });
 };
 
@@ -59,7 +59,7 @@ const Level = () => {
 
   const form = useForm({
     initialValues: {
-      name: '',
+      name: "",
     },
     validate: yupResolver(schema()),
   });
@@ -89,13 +89,13 @@ const Level = () => {
       try {
         await deleteLevel.mutateAsync(item.id);
         showNotification({
-          message: t('delete_level'),
+          message: t("delete_level"),
         });
       } catch (error) {
         const err = errorType(error);
         showNotification({
           message: err,
-          color: 'red',
+          color: "red",
         });
       }
       setOpened(false);
@@ -105,7 +105,7 @@ const Level = () => {
       <Table.Tr key={item.id}>
         {opened && (
           <DeleteModal
-            title={`${t('want_to_delete')} "${item?.name}" ${t('level?')}`}
+            title={`${t("want_to_delete")} "${item?.name}" ${t("level?")}`}
             open={opened}
             onClose={() => setOpened(false)}
             onConfirm={handleDelete}
@@ -150,10 +150,10 @@ const Level = () => {
   return (
     <>
       <Group
-        style={{ justifyContent: 'space-between', alignItems: 'center' }}
+        style={{ justifyContent: "space-between", alignItems: "center" }}
         mb={15}
       >
-        <Title>{t('levels')}</Title>
+        <Title>{t("levels")}</Title>
         {!opened && (
           <Button
             onClick={() => {
@@ -161,7 +161,7 @@ const Level = () => {
               form.reset();
             }}
           >
-            {t('add_level')}
+            {t("add_level")}
           </Button>
         )}
       </Group>
@@ -185,12 +185,12 @@ const Level = () => {
                   });
                   form.reset();
                   showNotification({
-                    message: t('update_success'),
+                    message: t("update_success"),
                   });
                 } else {
                   await postLevel.mutateAsync(values);
                   showNotification({
-                    message: t('add_level_success'),
+                    message: t("add_level_success"),
                   });
                   form.reset();
                 }
@@ -198,9 +198,9 @@ const Level = () => {
                 const err = errorType(error);
 
                 showNotification({
-                  title: t('error'),
+                  title: t("error"),
                   message: err,
-                  color: 'red',
+                  color: "red",
                 });
               } finally {
                 close();
@@ -209,11 +209,11 @@ const Level = () => {
             })}
           >
             <TextInput
-              label={t('level_name')}
+              label={t("level_name")}
               name="levelName"
               withAsterisk
-              placeholder={t('level_name_placeholder') as string}
-              {...form.getInputProps('name')}
+              placeholder={t("level_name_placeholder") as string}
+              {...form.getInputProps("name")}
             />
 
             <Group mt={10}>
@@ -221,7 +221,7 @@ const Level = () => {
                 type="submit"
                 loading={updateLevel.isLoading || postLevel.isLoading}
               >
-                {t('submit')}
+                {t("submit")}
               </Button>
             </Group>
           </form>
@@ -234,14 +234,14 @@ const Level = () => {
           highlightOnHover
           withTableBorder
           withColumnBorders
-          style={{ marginTop: '10px' }}
+          style={{ marginTop: "10px" }}
         >
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>{t('name')}</Table.Th>
+              <Table.Th>{t("name")}</Table.Th>
 
               <Table.Th>
-                <Text ta="center">{t('actions')}</Text>
+                <Text ta="center">{t("actions")}</Text>
               </Table.Th>
             </Table.Tr>
           </Table.Thead>

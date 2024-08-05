@@ -1,6 +1,6 @@
-import TextViewer from '@components/Ui/RichTextViewer';
-import UserShortProfile from '@components/UserShortProfile';
-import useAuth from '@hooks/useAuth';
+import TextViewer from "@components/Ui/RichTextViewer";
+import UserShortProfile from "@components/UserShortProfile";
+import useAuth from "@hooks/useAuth";
 import {
   Button,
   Card,
@@ -11,15 +11,15 @@ import {
   Paper,
   Text,
   Title,
-} from '@mantine/core';
-import { useToggle } from '@mantine/hooks';
-import { QuestionType, UserRole } from '@utils/enums';
-import { useAssignmentReview } from '@utils/services/assignmentService';
-import cx from 'clsx';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
-import classes from '../styles/radioType.module.css';
-import AssignmentReviewForm from './Component/AssignmentReviewForm';
+} from "@mantine/core";
+import { useToggle } from "@mantine/hooks";
+import { QuestionType, UserRole } from "@utils/enums";
+import { useAssignmentReview } from "@utils/services/assignmentService";
+import cx from "clsx";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import classes from "../styles/radioType.module.css";
+import AssignmentReviewForm from "./Component/AssignmentReviewForm";
 
 const AssignmentResult = () => {
   const [showReviewBox, setShowReviewBox] = useToggle();
@@ -42,8 +42,8 @@ const AssignmentResult = () => {
         onClose={() => setShowReviewBox()}
         title={
           getAssignment.data?.assignmentReview?.review
-            ? t('edit_assignment_review')
-            : t('review_assignment')
+            ? t("edit_assignment_review")
+            : t("review_assignment")
         }
       >
         {showReviewBox && (
@@ -61,7 +61,7 @@ const AssignmentResult = () => {
           {x.description && (
             <>
               <Text mt={15} fw="bold">
-                {t('description')}
+                {t("description")}
               </Text>
               <TextViewer content={x.description}></TextViewer>
             </>
@@ -69,21 +69,21 @@ const AssignmentResult = () => {
 
           {x.hints && (
             <>
-              <Text fw="bold">{t('hint')}</Text>
+              <Text fw="bold">{t("hint")}</Text>
               <TextViewer content={x.hints} />
             </>
           )}
           {x.type === QuestionType.Subjective ? (
             <>
-              <Text fw="bold">{t('answers')}</Text>
-              <TextViewer content={x.answer ?? ''} />
+              <Text fw="bold">{t("answers")}</Text>
+              <TextViewer content={x.answer ?? ""} />
             </>
           ) : (
             x.assignmentQuestionOptions &&
             x.assignmentQuestionOptions.map((option) => (
               <Card
                 key={option.id}
-                shadow={'md'}
+                shadow={"md"}
                 my={10}
                 p={10}
                 className={cx({
@@ -92,11 +92,11 @@ const AssignmentResult = () => {
                   [classes.correct]: option.isCorrect,
                 })}
               >
-                <input type={'checkbox'} style={{ display: 'none' }} />
+                <input type={"checkbox"} style={{ display: "none" }} />
                 <TextViewer
                   styles={{
                     root: {
-                      border: 'none',
+                      border: "none",
                     },
                   }}
                   content={option.option}
@@ -108,22 +108,22 @@ const AssignmentResult = () => {
       ))}
       {getAssignment.data.assignmentReview && (
         <Paper p={20}>
-          <Title>{t('review')}</Title>
+          <Title>{t("review")}</Title>
           <Group>
             <UserShortProfile
-              size={'md'}
+              size={"md"}
               user={getAssignment.data?.assignmentReview?.teacher}
             />
-            <Paper withBorder shadow={'xl'} px={40} py={20} mx={20}>
+            <Paper withBorder shadow={"xl"} px={40} py={20} mx={20}>
               <Group>
-                <Text> {t('mark')}</Text>
-                <Text c={'dimmed'}>
+                <Text> {t("mark")}</Text>
+                <Text c={"dimmed"}>
                   {getAssignment.data?.assignmentReview?.mark}/100
                 </Text>
               </Group>
               <Group>
-                <Text>{t('review')}</Text>
-                <Text c={'dimmed'}>
+                <Text>{t("review")}</Text>
+                <Text c={"dimmed"}>
                   {getAssignment.data?.assignmentReview?.review}
                 </Text>
               </Group>
@@ -136,8 +136,8 @@ const AssignmentResult = () => {
         {auth?.auth && Number(auth?.auth?.role) <= UserRole.Trainer && (
           <Button onClick={() => setShowReviewBox()}>
             {getAssignment.data?.assignmentReview?.review
-              ? t('edit_review')
-              : t('add_review')}
+              ? t("edit_review")
+              : t("add_review")}
           </Button>
         )}
         <Button
@@ -146,7 +146,7 @@ const AssignmentResult = () => {
             navigate(-1);
           }}
         >
-          {t('go_back_button')}
+          {t("go_back_button")}
         </Button>
       </Group>
     </Container>

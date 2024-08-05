@@ -1,101 +1,101 @@
-import NotRequiredAuth from '@components/Auth/NotRequireAuth';
-import RequireAuth from '@components/Auth/RequireAuth';
-import Layout from '@components/Layout/Layout';
-import PrivacyLayout from '@components/Layout/PrivacyLayout';
-import ChangeEmail from '@components/Users/ChangeEmail';
-import ZoomMettingMessage from '@components/ZoomMeeting';
-import NavProvider from '@context/NavContext';
-import { Loader } from '@mantine/core';
-import UnAuthorize from '@pages/401';
-import Forbidden from '@pages/403';
-import NotFound from '@pages/404';
-import ServerError from '@pages/500';
-import AboutPage from '@pages/about';
-import AssessmentLayout from '@pages/assessment/AssessmentLayout';
-import ConfirmToken from '@pages/auth/confirmToken';
-import LoginPage from '@pages/auth/loginPage';
-import TeamsRoute from '@pages/groups/details/Route';
-import PrivacyPage from '@pages/privacy';
-import TermsPage from '@pages/terms';
-import Verify from '@pages/verify';
-import lazyWithRetry from '@utils/lazyImportWithReload';
-import RoutePath from '@utils/routeConstants';
-import { Suspense } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import AdminAuthRoute from './AdminRoute';
-import TeacherRouteGuard from './TeacherRoute';
+import NotRequiredAuth from "@components/Auth/NotRequireAuth";
+import RequireAuth from "@components/Auth/RequireAuth";
+import Layout from "@components/Layout/Layout";
+import PrivacyLayout from "@components/Layout/PrivacyLayout";
+import ChangeEmail from "@components/Users/ChangeEmail";
+import ZoomMettingMessage from "@components/ZoomMeeting";
+import NavProvider from "@context/NavContext";
+import { Loader } from "@mantine/core";
+import UnAuthorize from "@pages/401";
+import Forbidden from "@pages/403";
+import NotFound from "@pages/404";
+import ServerError from "@pages/500";
+import AboutPage from "@pages/about";
+import AssessmentLayout from "@pages/assessment/AssessmentLayout";
+import ConfirmToken from "@pages/auth/confirmToken";
+import LoginPage from "@pages/auth/loginPage";
+import TeamsRoute from "@pages/groups/details/Route";
+import PrivacyPage from "@pages/privacy";
+import TermsPage from "@pages/terms";
+import Verify from "@pages/verify";
+import lazyWithRetry from "@utils/lazyImportWithReload";
+import RoutePath from "@utils/routeConstants";
+import { Suspense } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import AdminAuthRoute from "./AdminRoute";
+import TeacherRouteGuard from "./TeacherRoute";
 
 const MyFeedback = lazyWithRetry(
-  () => import('@pages/course/feedback/myfeedback')
+  () => import("@pages/course/feedback/myfeedback"),
 );
 const ClassesRoute = lazyWithRetry(
-  () => import('@pages/course/classes/classesRoute')
+  () => import("@pages/course/classes/classesRoute"),
 );
 
 const AssignmentResult = lazyWithRetry(
-  () => import('@pages/course/assignment/result')
+  () => import("@pages/course/assignment/result"),
 );
 const ForgotPassword = lazyWithRetry(
-  () => import('@pages/auth/forgotPassword')
+  () => import("@pages/auth/forgotPassword"),
 );
 const FeedbackResult = lazyWithRetry(
-  () => import('@pages/course/feedback/result')
+  () => import("@pages/course/feedback/result"),
 );
 
-const Dashboard = lazyWithRetry(() => import('@pages/user/dashboard'));
+const Dashboard = lazyWithRetry(() => import("@pages/user/dashboard"));
 
-const CreateCoursePage = lazyWithRetry(() => import('@pages/course/create'));
-const GroupsPage = lazyWithRetry(() => import('@pages/groups'));
+const CreateCoursePage = lazyWithRetry(() => import("@pages/course/create"));
+const GroupsPage = lazyWithRetry(() => import("@pages/groups"));
 
-const UsersList = lazyWithRetry(() => import('@pages/admin/users'));
-const MCQPool = lazyWithRetry(() => import('@pages/pool'));
-const MCQPoolRoute = lazyWithRetry(() => import('@pages/pool/details/Route'));
+const UsersList = lazyWithRetry(() => import("@pages/admin/users"));
+const MCQPool = lazyWithRetry(() => import("@pages/pool"));
+const MCQPoolRoute = lazyWithRetry(() => import("@pages/pool/details/Route"));
 const CourseListRoute = lazyWithRetry(
-  () => import('@pages/course/courseList/Route')
+  () => import("@pages/course/courseList/Route"),
 );
 const AssessmentListRoute = lazyWithRetry(
-  () => import('@pages/assessment/AssessmentRoute')
+  () => import("@pages/assessment/AssessmentRoute"),
 );
 const AssessmentExam = lazyWithRetry(
-  () => import('@pages/assessment/AssessmentExam')
+  () => import("@pages/assessment/AssessmentExam"),
 );
-const CourseRoute = lazyWithRetry(() => import('@pages/course/edit/Route'));
+const CourseRoute = lazyWithRetry(() => import("@pages/course/edit/Route"));
 const AssessmentDetailRoutes = lazyWithRetry(
-  () => import('@pages/assessment/Assessment Details/AssessmentDetailRoutes')
+  () => import("@pages/assessment/Assessment Details/AssessmentDetailRoutes"),
 );
-const UserInfo = lazyWithRetry(() => import('@components/Users/UserInfo'));
+const UserInfo = lazyWithRetry(() => import("@components/Users/UserInfo"));
 const UserProfile = lazyWithRetry(
-  () => import('@components/Users/UserProfile')
+  () => import("@components/Users/UserProfile"),
 );
 const UserProfileRoute = lazyWithRetry(
-  () => import('@components/Users/Components/UserProfileRoute')
+  () => import("@components/Users/Components/UserProfileRoute"),
 );
-const Classes = lazyWithRetry(() => import('@pages/course/classes/classes'));
+const Classes = lazyWithRetry(() => import("@pages/course/classes/classes"));
 
-const AdminRoute = lazyWithRetry(() => import('@pages/admin/AdminRoute'));
+const AdminRoute = lazyWithRetry(() => import("@pages/admin/AdminRoute"));
 
-const LessonExam = lazyWithRetry(() => import('@pages/course/exam'));
-const ExamResult = lazyWithRetry(() => import('@pages/course/exam/result'));
+const LessonExam = lazyWithRetry(() => import("@pages/course/exam"));
+const ExamResult = lazyWithRetry(() => import("@pages/course/exam/result"));
 const AssessmentResult = lazyWithRetry(
-  () => import('@pages/assessment/Result/AssessmentResult')
+  () => import("@pages/assessment/Result/AssessmentResult"),
 );
 
 const MeetingRoute = lazyWithRetry(
-  () => import('@components/Course/Meetings/Route')
+  () => import("@components/Course/Meetings/Route"),
 );
 const CourseDescriptionPage = lazyWithRetry(
-  () => import('@pages/course/courseDescription')
+  () => import("@pages/course/courseDescription"),
 );
 const AssessmentDescription = lazyWithRetry(
-  () => import('@pages/assessment/AssessmentDescription')
+  () => import("@pages/assessment/AssessmentDescription"),
 );
 const CreateAssessment = lazyWithRetry(
-  () => import('@pages/assessment/CreateAssessment')
+  () => import("@pages/assessment/CreateAssessment"),
 );
 
-const AssignmentPage = lazyWithRetry(() => import('@pages/course/assignment'));
-const FeedbackPage = lazyWithRetry(() => import('@pages/course/feedback'));
-const KnowledgeBase = lazyWithRetry(() => import('@pages/AI'));
+const AssignmentPage = lazyWithRetry(() => import("@pages/course/assignment"));
+const FeedbackPage = lazyWithRetry(() => import("@pages/course/feedback"));
+const KnowledgeBase = lazyWithRetry(() => import("@pages/AI"));
 
 const AppRoutes = () => {
   return (
@@ -140,12 +140,12 @@ const MainRoutes = () => {
       <Routes>
         <Route path={RoutePath.userDashboard} element={<Dashboard />} />
         <Route
-          path={RoutePath.courses.courseList + '*'}
+          path={RoutePath.courses.courseList + "*"}
           element={<CourseListRoute />}
         />
         <Route element={<AssessmentLayout />}>
           <Route
-            path={RoutePath.assessment.assessmentList + '*'}
+            path={RoutePath.assessment.assessmentList + "*"}
             element={<AssessmentListRoute />}
           />
         </Route>
@@ -160,7 +160,7 @@ const MainRoutes = () => {
             element={<CreateAssessment />}
           />
           <Route
-            path={RoutePath.manageAssessment.description().signature + '/*'}
+            path={RoutePath.manageAssessment.description().signature + "/*"}
             element={
               <NavProvider>
                 <AssessmentDetailRoutes />
@@ -194,7 +194,7 @@ const MainRoutes = () => {
             element={<CreateCoursePage />}
           />
           <Route
-            path={RoutePath.pool.base + '/:id/*'}
+            path={RoutePath.pool.base + "/:id/*"}
             element={
               <NavProvider>
                 <MCQPoolRoute />
@@ -202,7 +202,7 @@ const MainRoutes = () => {
             }
           />
           <Route
-            path={RoutePath.manageCourse.description().signature + '/*'}
+            path={RoutePath.manageCourse.description().signature + "/*"}
             element={
               <NavProvider>
                 <CourseRoute />
@@ -222,7 +222,7 @@ const MainRoutes = () => {
           <Route path={`*`} element={<UserProfileRoute />} />
         </Route>
         <Route
-          path={'/meet/:courseId/:lessonId'}
+          path={"/meet/:courseId/:lessonId"}
           element={<ZoomMettingMessage />}
         />
         <Route
@@ -231,17 +231,17 @@ const MainRoutes = () => {
         />
         <Route path="/settings/*" element={<AdminRoute />} />
         <Route
-          path={RoutePath.classes + '/:id/:lessonId/*'}
+          path={RoutePath.classes + "/:id/:lessonId/*"}
           element={<Classes />}
         >
           <Route path="*" element={<ClassesRoute />} />
         </Route>
         <Route
-          path={RoutePath.meeting.base + '/*'}
+          path={RoutePath.meeting.base + "/*"}
           element={<MeetingRoute />}
         />
         <Route
-          path={RoutePath.groups.details().signature + '/*'}
+          path={RoutePath.groups.details().signature + "/*"}
           element={
             <NavProvider>
               <TeamsRoute />
@@ -278,7 +278,7 @@ const MainRoutes = () => {
           element={<FeedbackResult />}
         />
         <Route path={RoutePath.knowledge.base} element={<KnowledgeBase />} />
-        <Route path={'*'} element={<NotFound />} />
+        <Route path={"*"} element={<NotFound />} />
       </Routes>
     </Suspense>
   );

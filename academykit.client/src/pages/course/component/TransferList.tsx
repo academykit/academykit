@@ -1,4 +1,4 @@
-import TextViewer from '@components/Ui/RichTextViewer';
+import TextViewer from "@components/Ui/RichTextViewer";
 import {
   ActionIcon,
   Checkbox,
@@ -7,22 +7,22 @@ import {
   Text,
   TextInput,
   useCombobox,
-} from '@mantine/core';
+} from "@mantine/core";
 import {
   IconChevronRight,
   IconChevronsRight,
   IconPlus,
-} from '@tabler/icons-react';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { IQuestionListData } from '../question';
-import classes from './TransferList.module.css';
+} from "@tabler/icons-react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { IQuestionListData } from "../question";
+import classes from "./TransferList.module.css";
 
 interface RenderListProps {
   options: IQuestionListData[];
   onTransfer(options: IQuestionListData[]): void;
   onTransferAll(): void;
-  type: 'forward' | 'backward';
+  type: "forward" | "backward";
   openModal?: () => void;
 }
 
@@ -35,7 +35,7 @@ function RenderList({
 }: RenderListProps) {
   const combobox = useCombobox();
   const [value, setValue] = useState<IQuestionListData[]>([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const { t } = useTranslation();
 
   // find the object which matches the val i.e., value
@@ -66,18 +66,18 @@ function RenderList({
             onChange={() => {}}
             aria-hidden
             tabIndex={-1}
-            style={{ pointerEvents: 'none' }}
+            style={{ pointerEvents: "none" }}
           />
           <div style={{ flex: 1 }}>
             <Text size="sm" fw={500}>
               {item.label}
             </Text>
             {item && item?.description !== null && (
-              <Text lineClamp={3} style={{ overflow: 'hidden' }}>
+              <Text lineClamp={3} style={{ overflow: "hidden" }}>
                 <TextViewer
                   content={item?.description}
                   styles={{
-                    wordBreak: 'break-all',
+                    wordBreak: "break-all",
                   }}
                 />
               </Text>
@@ -92,7 +92,7 @@ function RenderList({
       <Combobox store={combobox} onOptionSubmit={handleValueSelect}>
         <Combobox.EventsTarget>
           <Group wrap="nowrap" gap={0} className={classes.controls}>
-            {type == 'backward' && (
+            {type == "backward" && (
               <ActionIcon
                 variant="default"
                 size={36}
@@ -106,14 +106,14 @@ function RenderList({
               </ActionIcon>
             )}
             <TextInput
-              placeholder={t('search_for_questions') as string}
+              placeholder={t("search_for_questions") as string}
               classNames={{ input: classes.input }}
               value={search}
               onChange={(event) => {
                 setSearch(event.currentTarget.value);
                 combobox.updateSelectedOptionIndex();
               }}
-              style={{ width: '100%' }}
+              style={{ width: "100%" }}
             />
             <ActionIcon
               style={{ borderRadius: 0 }}
@@ -147,7 +147,7 @@ function RenderList({
             {items.length > 0 ? (
               items
             ) : (
-              <Combobox.Empty>{t('no_question_found')}</Combobox.Empty>
+              <Combobox.Empty>{t("no_question_found")}</Combobox.Empty>
             )}
           </Combobox.Options>
         </div>

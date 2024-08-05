@@ -1,8 +1,8 @@
-import { useForm } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import errorType from '@utils/services/axiosError';
-import InlineInput from './InlineInput';
-import { useTranslation } from 'react-i18next';
+import { useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import errorType from "@utils/services/axiosError";
+import InlineInput from "./InlineInput";
+import { useTranslation } from "react-i18next";
 
 const EditNameForm = ({
   item,
@@ -32,8 +32,8 @@ const EditNameForm = ({
             sectionName: values.name,
           });
           showNotification({
-            message: t('section_update_success'),
-            title: t('successful'),
+            message: t("section_update_success"),
+            title: t("successful"),
           });
           setIsEditing(false);
         } catch (error) {
@@ -41,16 +41,16 @@ const EditNameForm = ({
 
           showNotification({
             message: err,
-            title: t('error'),
-            color: 'red',
+            title: t("error"),
+            color: "red",
           });
         }
       })}
     >
       <InlineInput
-        placeholder={t('section_name_placeholder')}
+        placeholder={t("section_name_placeholder")}
         onCloseEdit={() => setIsEditing(false)}
-        {...form.getInputProps('name')}
+        {...form.getInputProps("name")}
       ></InlineInput>
     </form>
   );

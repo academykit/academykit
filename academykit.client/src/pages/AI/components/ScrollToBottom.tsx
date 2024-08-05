@@ -1,5 +1,5 @@
-import { ActionIcon } from '@mantine/core';
-import { IconArrowDown } from '@tabler/icons-react';
+import { ActionIcon } from "@mantine/core";
+import { IconArrowDown } from "@tabler/icons-react";
 
 interface IProps {
   scrollToBottom: () => void;
@@ -8,14 +8,14 @@ interface IProps {
 const ScrollToBottom = ({ scrollToBottom }: IProps) => {
   return (
     <ActionIcon
-      pos={'absolute'}
+      pos={"absolute"}
       bottom={50}
-      left={'50%'}
-      style={{ transform: 'translateX(-50%)' }}
+      left={"50%"}
+      style={{ transform: "translateX(-50%)" }}
       variant="light"
       color="gray"
       radius="xl"
-      size={'lg'}
+      size={"lg"}
       onClick={scrollToBottom}
     >
       <IconArrowDown />

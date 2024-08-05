@@ -1,7 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
-import { AiModelEnum } from '@utils/enums';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
+import { AiModelEnum } from "@utils/enums";
 
 interface ITrainingSuggest {
   title: string;
@@ -43,7 +43,7 @@ const updateAISetup = async ({ data }: { data: IMasterSetup }) =>
 export const useUpdateAISetup = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.ai.aiMasterSetup],
+    mutationKey: ["update" + api.ai.aiMasterSetup],
     mutationFn: updateAISetup,
 
     onSuccess: () => {

@@ -5,10 +5,10 @@ import {
   ScrollArea,
   Text,
   useCombobox,
-} from '@mantine/core';
-import { UseFormReturnType } from '@mantine/form';
-import { IUserProfile } from '@utils/services/types';
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+} from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import { IUserProfile } from "@utils/services/types";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 interface FormValues {
   thumbnail: string;
@@ -48,7 +48,7 @@ const InfiniteScrollSelect = ({
   const viewport = useRef<HTMLDivElement>(null);
 
   const [value, setValue] = useState<string | null>(null);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
 
   const shouldFilterOptions = data.every((item) => item.fullName !== search);
   const filteredOptions = shouldFilterOptions
@@ -87,7 +87,7 @@ const InfiniteScrollSelect = ({
         onOptionSubmit={(val, optionProps) => {
           setValue(optionProps.children as string);
           setSearch(optionProps.children as string);
-          form.setFieldValue('trainerId', val);
+          form.setFieldValue("trainerId", val);
           combobox.closeDropdown();
         }}
       >
@@ -104,7 +104,7 @@ const InfiniteScrollSelect = ({
             onFocus={() => combobox.openDropdown()}
             onBlur={() => {
               combobox.closeDropdown();
-              setSearch(value || '');
+              setSearch(value || "");
             }}
             placeholder={placeholder}
             rightSectionPointerEvents="none"

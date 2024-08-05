@@ -9,16 +9,16 @@ import {
   Title,
   useMantineColorScheme,
   useMantineTheme,
-} from '@mantine/core';
-import { useHover, useMediaQuery } from '@mantine/hooks';
-import { IconCheck } from '@tabler/icons-react';
-import { LessonType } from '@utils/enums';
-import formatDuration from '@utils/formatDuration';
-import RoutePath from '@utils/routeConstants';
-import { ILessons } from '@utils/services/courseService';
-import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
-import classes from '../../styles/lesson.module.css';
+} from "@mantine/core";
+import { useHover, useMediaQuery } from "@mantine/hooks";
+import { IconCheck } from "@tabler/icons-react";
+import { LessonType } from "@utils/enums";
+import formatDuration from "@utils/formatDuration";
+import RoutePath from "@utils/routeConstants";
+import { ILessons } from "@utils/services/courseService";
+import { useTranslation } from "react-i18next";
+import { Link, useParams } from "react-router-dom";
+import classes from "../../styles/lesson.module.css";
 
 const Lesson = ({
   lesson,
@@ -41,24 +41,24 @@ const Lesson = ({
       width={200}
       position="top"
       withArrow
-      shadow={'lg'}
+      shadow={"lg"}
       opened={hovered}
     >
       <Popover.Target>
         <Paper
           my={15}
           radius={10}
-          w={'100%'}
-          shadow={'md'}
+          w={"100%"}
+          shadow={"md"}
           className={classes.paper}
           withBorder
           style={{
             backgroundColor:
               lessonId === lesson.slug
-                ? colorScheme === 'light'
+                ? colorScheme === "light"
                   ? theme.colors.dark[0]
                   : theme.colors.gray[7]
-                : '',
+                : "",
           }}
           component={Link}
           replace={true}
@@ -66,10 +66,10 @@ const Lesson = ({
         >
           <div ref={ref}>
             <Group>
-              <Flex w={'100%'} p={15} direction={'row'}>
-                <Box w={'100%'}>
+              <Flex w={"100%"} p={15} direction={"row"}>
+                <Box w={"100%"}>
                   <Title
-                    c={colorScheme == 'dark' ? '#C1C2C5' : 'dark'}
+                    c={colorScheme == "dark" ? "#C1C2C5" : "dark"}
                     size={matches ? 14 : 13}
                     mb={3}
                   >
@@ -82,9 +82,9 @@ const Lesson = ({
                 {lesson.isCompleted && (
                   <IconCheck
                     style={{
-                      marginLeft: 'auto',
-                      marginTop: 'auto',
-                      marginBottom: 'auto',
+                      marginLeft: "auto",
+                      marginTop: "auto",
+                      marginBottom: "auto",
                     }}
                   />
                 )}
@@ -93,7 +93,7 @@ const Lesson = ({
           </div>
         </Paper>
       </Popover.Target>
-      <Popover.Dropdown style={{ pointerEvents: 'none' }}>
+      <Popover.Dropdown style={{ pointerEvents: "none" }}>
         <Text fw={700} size="md" truncate>
           {lesson.name}
         </Text>
@@ -103,7 +103,7 @@ const Lesson = ({
           lesson.type === LessonType.RecordedVideo ||
           lesson.type === LessonType.Video) && (
           <Text>
-            {t('Duration')}
+            {t("Duration")}
             {formatDuration(lesson.duration, false, t)}
           </Text>
         )}

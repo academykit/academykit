@@ -6,37 +6,37 @@ import {
   Select,
   Title,
   Transition,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import errorType from '@utils/services/axiosError';
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import errorType from "@utils/services/axiosError";
 import {
   useCreateTeacherPool,
   usePoolsTeacher,
-} from '@utils/services/poolService';
+} from "@utils/services/poolService";
 
-import { TrainingTypeEnum } from '@utils/enums';
-import queryStringGenerator from '@utils/queryStringGenerator';
-import { useGetTrainers } from '@utils/services/adminService';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
-import TeacherCard from './Component/TeacherCard';
+import { TrainingTypeEnum } from "@utils/enums";
+import queryStringGenerator from "@utils/queryStringGenerator";
+import { useGetTrainers } from "@utils/services/adminService";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import TeacherCard from "./Component/TeacherCard";
 
 const MCQTeacher = () => {
   const { t } = useTranslation();
 
   const form = useForm({
     initialValues: {
-      email: '',
+      email: "",
     },
     validate: {
-      email: (value) => (!value ? t('trainer_email_required') : null),
+      email: (value) => (!value ? t("trainer_email_required") : null),
     },
   });
   const slug = useParams();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const getPoolsTeacher = usePoolsTeacher(slug.id as string);
   const createPoolTeacher = useCreateTeacherPool(slug.id as string);
   const lessonType = TrainingTypeEnum.QuestionPool;
@@ -53,52 +53,52 @@ const MCQTeacher = () => {
         questionPoolIdentity: slug.id as string,
         email: email,
       });
-      showNotification({ message: 'Trainer added successfully.' });
+      showNotification({ message: "Trainer added successfully." });
 
       toggleAddForm();
     } catch (err) {
       const error = errorType(err);
-      showNotification({ message: error, color: 'red' });
+      showNotification({ message: error, color: "red" });
     }
   };
   return (
     <Container fluid>
-      <Group style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-        <Title>{t('trainers')}</Title>
+      <Group style={{ justifyContent: "space-between", alignItems: "center" }}>
+        <Title>{t("trainers")}</Title>
         <Button
           onClick={() => {
             toggleAddForm();
             form.reset();
           }}
         >
-          {!showAddForm ? t('add_trainer') : t('cancel')}
+          {!showAddForm ? t("add_trainer") : t("cancel")}
         </Button>
       </Group>
       <Transition
         mounted={showAddForm}
-        transition={'slide-down'}
+        transition={"slide-down"}
         duration={200}
         timingFunction="ease"
       >
         {() => (
           <Box mt={10}>
             <form onSubmit={form.onSubmit(onSubmitForm)}>
-              <Group style={{ alignItems: 'start' }}>
+              <Group style={{ alignItems: "start" }}>
                 <Select
                   clearable
-                  placeholder={t('enter_email_trainer') as string}
+                  placeholder={t("enter_email_trainer") as string}
                   searchable
                   nothingFoundMessage={
-                    isLoading ? 'Loading...' : 'No Trainers Found!'
+                    isLoading ? "Loading..." : "No Trainers Found!"
                   }
                   data={trainers?.map((e) => e.email) ?? []}
                   onSearchChange={setSearch}
                   searchValue={search}
-                  {...form.getInputProps('email')}
+                  {...form.getInputProps("email")}
                 />
 
                 <Button type="submit" loading={createPoolTeacher.isLoading}>
-                  {t('add')}
+                  {t("add")}
                 </Button>
               </Group>
             </form>

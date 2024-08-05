@@ -1,12 +1,12 @@
-import useAuth from '@hooks/useAuth';
-import { ActionIcon, Loader, Menu, ScrollArea, Tabs } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
-import { IconDotsVertical, IconSettings, IconUser } from '@tabler/icons-react';
-import { UserRole } from '@utils/enums';
-import { getCurrentGroup, routeGroupAdmin } from '@utils/routeGroups';
-import { t } from 'i18next';
-import { Suspense } from 'react';
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import useAuth from "@hooks/useAuth";
+import { ActionIcon, Loader, Menu, ScrollArea, Tabs } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
+import { IconDotsVertical, IconSettings, IconUser } from "@tabler/icons-react";
+import { UserRole } from "@utils/enums";
+import { getCurrentGroup, routeGroupAdmin } from "@utils/routeGroups";
+import { t } from "i18next";
+import { Suspense } from "react";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const AdminNavOutlet = ({
   data,
@@ -27,12 +27,12 @@ const AdminNavOutlet = ({
   const navigate = useNavigate();
   const location = useLocation();
   const exactLocation = location.pathname;
-  const isMobileView = useMediaQuery('(max-width: 48em)');
-  const isTabletView = useMediaQuery('(min-width: 48em) and (max-width: 64em)');
+  const isMobileView = useMediaQuery("(max-width: 48em)");
+  const isTabletView = useMediaQuery("(min-width: 48em) and (max-width: 64em)");
 
   const getExactLocation = (location: string) => {
-    if (location.split('/')[3] == 'external') {
-      return location.split('/external')[0];
+    if (location.split("/")[3] == "external") {
+      return location.split("/external")[0];
     }
     return location;
   };
@@ -40,7 +40,7 @@ const AdminNavOutlet = ({
   const routeSet = (group: string) => {
     // check if the route belongs to the group
     const currentGroup = getCurrentGroup(
-      location.pathname?.split('/')[2],
+      location.pathname?.split("/")[2],
       routeGroupAdmin
     );
     return group == currentGroup;
@@ -63,10 +63,10 @@ const AdminNavOutlet = ({
     <>
       <Tabs
         defaultChecked={true}
-        defaultValue={location.pathname?.split('/').at(-1) ?? 'settings'}
+        defaultValue={location.pathname?.split("/").at(-1) ?? "settings"}
         value={getExactLocation(exactLocation)}
         onChange={(value) => {
-          if (value == '#') {
+          if (value == "#") {
             // route by menu items
             return;
           } else {
@@ -76,7 +76,7 @@ const AdminNavOutlet = ({
         styles={{
           // make tabs scrollable
           list: {
-            flexWrap: 'nowrap',
+            flexWrap: "nowrap",
           },
         }}
         mb={15}

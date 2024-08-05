@@ -1,7 +1,7 @@
-import ExamCounter from '@components/Course/Classes/ExamCounter';
-import TextViewer from '@components/Ui/RichTextViewer';
-import useCustomLayout from '@context/LayoutProvider';
-import useAuth from '@hooks/useAuth';
+import ExamCounter from "@components/Course/Classes/ExamCounter";
+import TextViewer from "@components/Ui/RichTextViewer";
+import useCustomLayout from "@context/LayoutProvider";
+import useAuth from "@hooks/useAuth";
 import {
   Box,
   Button,
@@ -12,25 +12,25 @@ import {
   Modal,
   Text,
   Title,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useMediaQuery, useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { QuestionType, UserRole } from '@utils/enums';
-import RoutePath from '@utils/routeConstants';
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useMediaQuery, useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { QuestionType, UserRole } from "@utils/enums";
+import RoutePath from "@utils/routeConstants";
 import {
   IAssessmentExamDetail,
   IAssessmentExamSubmit,
   useSubmitAssessmentExam,
-} from '@utils/services/assessmentService';
-import errorType from '@utils/services/axiosError';
-import cx from 'clsx';
-import { t } from 'i18next';
-import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import classes from '../styles/assessmentExam.module.css';
-import AssessmentExamCheckBox from './AssessmentExamCheckBox';
-import AssessmentExamRadio from './AssessmentExamRadio';
+} from "@utils/services/assessmentService";
+import errorType from "@utils/services/axiosError";
+import cx from "clsx";
+import { t } from "i18next";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import classes from "../styles/assessmentExam.module.css";
+import AssessmentExamCheckBox from "./AssessmentExamCheckBox";
+import AssessmentExamRadio from "./AssessmentExamRadio";
 
 const Exam = ({
   data,
@@ -47,7 +47,7 @@ const Exam = ({
   const examSubmission = useSubmitAssessmentExam();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visited, setVisited] = useState<number[]>([]);
-  const matches = useMediaQuery('(min-width: 56.25em)');
+  const matches = useMediaQuery("(min-width: 56.25em)");
   const [submitClicked, setSubmitClicked] = useState(false);
   const [showConfirmation, setShowConfirmation] = useToggle();
 
@@ -80,7 +80,7 @@ const Exam = ({
             onClick={() => setShowConfirmation()}
           />
         ) : (
-          <Button onClick={() => navigate(-1)}>{t('close')}</Button>
+          <Button onClick={() => navigate(-1)}>{t("close")}</Button>
         )
       );
     customLayout.setExamPageTitle &&
@@ -113,7 +113,7 @@ const Exam = ({
       const error = errorType(err);
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -121,7 +121,7 @@ const Exam = ({
   return (
     <>
       <Modal
-        title={t('submit_exam_confirmation')}
+        title={t("submit_exam_confirmation")}
         opened={showConfirmation}
         onClose={handleCloseModal}
       >
@@ -133,7 +133,7 @@ const Exam = ({
               submitButtonRef && submitButtonRef.current?.click();
             }}
           >
-            {t('submit')}
+            {t("submit")}
           </Button>
           <Button
             variant="outline"
@@ -142,7 +142,7 @@ const Exam = ({
               setShowConfirmation();
             }}
           >
-            {t('cancel')}
+            {t("cancel")}
           </Button>
         </Group>
       </Modal>
@@ -156,7 +156,7 @@ const Exam = ({
             { replace: true }
           );
         }}
-        title={t('submission_success')}
+        title={t("submission_success")}
       >
         <Button
           onClick={() => {
@@ -166,7 +166,7 @@ const Exam = ({
             );
           }}
         >
-          {t('close')}
+          {t("close")}
         </Button>
       </Modal>
 
@@ -175,23 +175,23 @@ const Exam = ({
           {/* exam display section */}
           <Grid.Col
             span={matches ? 9 : 9}
-            style={{ maxWidth: '100%' }}
+            style={{ maxWidth: "100%" }}
             className={classes.questionGridCol}
           >
             <Box
               style={{
-                flexDirection: 'column',
-                overflow: 'auto',
+                flexDirection: "column",
+                overflow: "auto",
               }}
             >
               <Box
                 p={10}
                 pb={20}
                 style={{
-                  flexDirection: 'column',
-                  width: '100%',
-                  justifyContent: 'start',
-                  alignContent: 'start',
+                  flexDirection: "column",
+                  width: "100%",
+                  justifyContent: "start",
+                  alignContent: "start",
                 }}
               >
                 <Title mb={20}>{questions[currentIndex]?.questionName}</Title>
@@ -199,7 +199,7 @@ const Exam = ({
                   <TextViewer
                     key={currentIndex}
                     content={questions[currentIndex]?.description}
-                    styles={{ wordBreak: 'break-all' }}
+                    styles={{ wordBreak: "break-all" }}
                   />
                 )}
               </Box>
@@ -237,13 +237,13 @@ const Exam = ({
                   }}
                   w={100}
                 >
-                  {t('previous')}
+                  {t("previous")}
                 </Button>
               ) : (
                 <div></div>
               )}
               <button
-                style={{ display: 'none' }}
+                style={{ display: "none" }}
                 ref={submitButtonRef}
               ></button>
               <Text my={5}>
@@ -259,7 +259,7 @@ const Exam = ({
                   }}
                   w={100}
                 >
-                  {t('next')}
+                  {t("next")}
                 </Button>
               ) : (
                 <div></div>
@@ -282,9 +282,9 @@ const Exam = ({
                     setCurrentIndex(i);
                   }}
                   style={{
-                    outline: 'none',
-                    border: 'none',
-                    backgroundColor: 'none',
+                    outline: "none",
+                    border: "none",
+                    backgroundColor: "none",
                   }}
                 >
                   <Card
