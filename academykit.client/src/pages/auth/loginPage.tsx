@@ -103,14 +103,14 @@ const LoginPage = () => {
 
     if (companySettings.isSuccess) {
       const branding = JSON.parse(
-        companySettings.data.data.customConfiguration ?? "{}",
+        companySettings.data.data.customConfiguration ?? "{}"
       );
       localStorage.setItem(
         "app-info",
         JSON.stringify({
           name: companySettings.data.data.name,
           logo: companySettings.data.data.imageUrl,
-        }),
+        })
       );
       localStorage.setItem("branding", branding.accent);
       localStorage.setItem("version", companySettings.data.data.appVersion);

@@ -84,7 +84,7 @@ function MainLink({
                         route.label ==
                         getCurrentNavGroup(
                           router.pathname as string,
-                          adminAndOrgRouteGroups,
+                          adminAndOrgRouteGroups
                         )
                       }
                       target={route.target ?? "_self"}

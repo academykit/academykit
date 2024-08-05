@@ -16,7 +16,7 @@ export const uploadFile = (file: File, type: number) => {
       headers: {
         "content-type": "multipart/form-data",
       },
-    },
+    }
   );
 };
 export const uploadVideo = (file: File, type: number) => {
@@ -27,7 +27,7 @@ export const uploadVideo = (file: File, type: number) => {
       headers: {
         "content-type": "multipart/form-data",
       },
-    },
+    }
   );
 };
 
@@ -53,7 +53,7 @@ export const uploadUserCsv = (file: File | null) => {
       headers: {
         "content-type": "multipart/form-data",
       },
-    },
+    }
   );
 };
 
@@ -63,7 +63,7 @@ export const downloadCSVFile = async (path: string, fileName: string) => {
     const link = document.createElement("a");
 
     const objRef = window.URL.createObjectURL(
-      new Blob([response.data as Blob], { type: "text/csv; charset=UTF-8" }),
+      new Blob([response.data as Blob], { type: "text/csv; charset=UTF-8" })
     );
     link.href = objRef;
     link.setAttribute("download", `${fileName}.csv`);

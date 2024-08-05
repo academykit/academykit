@@ -23,7 +23,7 @@ export interface IWithSearchPagination {
       label: string;
     }[],
     placeholder: string,
-    key: string,
+    key: string
   ) => JSX.Element;
   setInitialSearch: React.Dispatch<
     React.SetStateAction<
@@ -36,17 +36,17 @@ export interface IWithSearchPagination {
   startDateFilterComponent: (
     placeholder: string,
     key: string,
-    label?: string,
+    label?: string
   ) => JSX.Element;
   endDateFilterComponent: (
     placeholder: string,
     key: string,
-    label?: string,
+    label?: string
   ) => JSX.Element;
 }
 
 const withSearchPagination = <P extends object>(
-  Component: React.FC<P & IWithSearchPagination>,
+  Component: React.FC<P & IWithSearchPagination>
 ) => {
   const withSearchPagination = (props: P) => {
     const [params, setParams] = useSearchParams();
@@ -69,7 +69,7 @@ const withSearchPagination = <P extends object>(
     const [itemLength, setItemLength] = useState<number>();
     const [filterValue, setFilterValue] = useState<string>("");
     const [currentPage, setCurrentPage] = useState(
-      parseInt(params.get("p") ?? "1"),
+      parseInt(params.get("p") ?? "1")
     );
     const [startDate, setStartDate] = useState<string>("");
     const [startDateKey, setStartDateKey] = useState<string>("");
@@ -170,7 +170,7 @@ const withSearchPagination = <P extends object>(
     const filterComponent = (
       data: { value: string; label: string }[],
       placeholder: string,
-      key: string,
+      key: string
     ) => {
       return (
         <Select
@@ -216,7 +216,7 @@ const withSearchPagination = <P extends object>(
     const startDateFilterComponent = (
       placeholder: string,
       key: string,
-      label?: string,
+      label?: string
     ) => {
       return (
         <DatePickerInput
@@ -237,7 +237,7 @@ const withSearchPagination = <P extends object>(
     const endDateFilterComponent = (
       placeholder: string,
       key: string,
-      label?: string,
+      label?: string
     ) => {
       return (
         <DatePickerInput

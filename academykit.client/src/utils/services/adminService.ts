@@ -277,7 +277,7 @@ export const updateDepartmentStatus = (id: string) => {
     mutationFn: (data: { name: string }) => {
       return httpClient.put<ILevel>(
         api.adminUser.updateDepartmentSetting(id),
-        data,
+        data
       );
     },
 
@@ -291,7 +291,7 @@ export const updateDepartmentStatus = (id: string) => {
 
 const getDepartment = async (search: string) =>
   await httpClient.get<IPaginated<IDepartmentSetting>>(
-    api.adminUser.getDepartmentSettings + `?${search}`,
+    api.adminUser.getDepartmentSettings + `?${search}`
   );
 
 export const useDepartmentSetting = (search: string) => {
@@ -311,7 +311,7 @@ export const usePostDepartmentSetting = () => {
     mutationFn: (data: { name: string; isActive: boolean }) => {
       return httpClient.post<IDepartmentSetting>(
         api.adminUser.getDepartmentSettings,
-        data,
+        data
       );
     },
 
@@ -347,7 +347,7 @@ export const useDeleteDepartmentSetting = () => {
 
 export const useUpdateDepartmentSettingStatus = (
   id: string,
-  status: boolean,
+  status: boolean
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -421,7 +421,7 @@ export const useUpdateZoomSetting = (id: string | undefined) => {
     }) => {
       return httpClient.put<IZoomSetting>(
         api.adminUser.updateZoomSettings(id),
-        data,
+        data
       );
     },
 
@@ -454,7 +454,7 @@ export const useUpdateSMTPSetting = (id: string | undefined) => {
     mutationFn: (data: ISMTPSettingUpdate) => {
       return httpClient.put<ISMTPSetting>(
         api.adminUser.updateSMTPSettings(id),
-        data,
+        data
       );
     },
 
@@ -514,7 +514,7 @@ export const useZoomLicense = () => {
 
     queryFn: () => {
       return httpClient.get<IPaginated<IZoomLicense<IUser>>>(
-        api.adminUser.getZoomLicense,
+        api.adminUser.getZoomLicense
       );
     },
 
@@ -526,7 +526,7 @@ export const useZoomLicense = () => {
 const getActiveZoomLicense = (
   startDateTime: string,
   duration: number,
-  lessonIdentity?: string,
+  lessonIdentity?: string
 ) => {
   const query = queryStringGenerator({
     startDateTime,
@@ -534,13 +534,13 @@ const getActiveZoomLicense = (
     lessonIdentity,
   });
   return httpClient.get<IZoomLicense<IUser>[]>(
-    api.adminUser.getActiveZoomLicense(query),
+    api.adminUser.getActiveZoomLicense(query)
   );
 };
 export const useActiveZoomLicense = (
   startDateTime: string,
   duration: number,
-  lessonIdentity?: string,
+  lessonIdentity?: string
 ) => {
   return useQuery({
     queryKey: [
@@ -563,7 +563,7 @@ export const updateZoomLicenseStatus = async ({
   status: boolean;
 }) => {
   return await httpClient.patch(
-    api.adminUser.updateZoomLicenseStatus(id, status),
+    api.adminUser.updateZoomLicenseStatus(id, status)
   );
 };
 
@@ -639,7 +639,7 @@ export interface IFileStorageValues {
 }
 const getFileStorageSetting = async () => {
   return await httpClient.get<IFileStorage[]>(
-    api.fileStorage.getFileStorageSetting,
+    api.fileStorage.getFileStorageSetting
   );
 };
 
@@ -670,7 +670,7 @@ export const useGetFileStorageSetting = () => {
 const updateFileStorage = async (data: IFileStorage[]) =>
   await httpClient.put<IFileStorage>(
     api.fileStorage.updateFileStorageSetting,
-    data.filter((x) => x.isActive)[0],
+    data.filter((x) => x.isActive)[0]
   );
 
 export const useUpdateFileStorage = () => {
@@ -710,12 +710,12 @@ interface ITrainerGet {
 
 const getTrainers = async (search: string, lessonType?: number, id?: string) =>
   await httpClient.get<ITrainerGet[]>(
-    api.adminUser.getTrainer(search, lessonType, id),
+    api.adminUser.getTrainer(search, lessonType, id)
   );
 export const useGetTrainers = (
   search: string,
   lessonType?: number,
-  id?: string,
+  id?: string
 ) =>
   useQuery({
     queryKey: [api.adminUser.getTrainer(search, lessonType, id)],
@@ -764,7 +764,7 @@ export const useGetSingleLog = (id: string) => {
 
 const getMailNotification = async (search: string) =>
   httpClient.get<IPaginated<IMailNotification>>(
-    api.adminUser.getMailNotification + `?${search}`,
+    api.adminUser.getMailNotification + `?${search}`
   );
 
 export const useMailNotification = (search: string) => {
@@ -808,7 +808,7 @@ export const usePostMailNotification = () => {
     mutationFn: (data: IPostMailNotification) => {
       return httpClient.post<IMailNotification>(
         api.adminUser.getMailNotification,
-        data,
+        data
       );
     },
 

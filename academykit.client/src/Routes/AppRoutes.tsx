@@ -26,20 +26,20 @@ import AdminAuthRoute from "./AdminRoute";
 import TeacherRouteGuard from "./TeacherRoute";
 
 const MyFeedback = lazyWithRetry(
-  () => import("@pages/course/feedback/myfeedback"),
+  () => import("@pages/course/feedback/myfeedback")
 );
 const ClassesRoute = lazyWithRetry(
-  () => import("@pages/course/classes/classesRoute"),
+  () => import("@pages/course/classes/classesRoute")
 );
 
 const AssignmentResult = lazyWithRetry(
-  () => import("@pages/course/assignment/result"),
+  () => import("@pages/course/assignment/result")
 );
 const ForgotPassword = lazyWithRetry(
-  () => import("@pages/auth/forgotPassword"),
+  () => import("@pages/auth/forgotPassword")
 );
 const FeedbackResult = lazyWithRetry(
-  () => import("@pages/course/feedback/result"),
+  () => import("@pages/course/feedback/result")
 );
 
 const Dashboard = lazyWithRetry(() => import("@pages/user/dashboard"));
@@ -51,24 +51,24 @@ const UsersList = lazyWithRetry(() => import("@pages/admin/users"));
 const MCQPool = lazyWithRetry(() => import("@pages/pool"));
 const MCQPoolRoute = lazyWithRetry(() => import("@pages/pool/details/Route"));
 const CourseListRoute = lazyWithRetry(
-  () => import("@pages/course/courseList/Route"),
+  () => import("@pages/course/courseList/Route")
 );
 const AssessmentListRoute = lazyWithRetry(
-  () => import("@pages/assessment/AssessmentRoute"),
+  () => import("@pages/assessment/AssessmentRoute")
 );
 const AssessmentExam = lazyWithRetry(
-  () => import("@pages/assessment/AssessmentExam"),
+  () => import("@pages/assessment/AssessmentExam")
 );
 const CourseRoute = lazyWithRetry(() => import("@pages/course/edit/Route"));
 const AssessmentDetailRoutes = lazyWithRetry(
-  () => import("@pages/assessment/Assessment Details/AssessmentDetailRoutes"),
+  () => import("@pages/assessment/Assessment Details/AssessmentDetailRoutes")
 );
 const UserInfo = lazyWithRetry(() => import("@components/Users/UserInfo"));
 const UserProfile = lazyWithRetry(
-  () => import("@components/Users/UserProfile"),
+  () => import("@components/Users/UserProfile")
 );
 const UserProfileRoute = lazyWithRetry(
-  () => import("@components/Users/Components/UserProfileRoute"),
+  () => import("@components/Users/Components/UserProfileRoute")
 );
 const Classes = lazyWithRetry(() => import("@pages/course/classes/classes"));
 
@@ -77,20 +77,20 @@ const AdminRoute = lazyWithRetry(() => import("@pages/admin/AdminRoute"));
 const LessonExam = lazyWithRetry(() => import("@pages/course/exam"));
 const ExamResult = lazyWithRetry(() => import("@pages/course/exam/result"));
 const AssessmentResult = lazyWithRetry(
-  () => import("@pages/assessment/Result/AssessmentResult"),
+  () => import("@pages/assessment/Result/AssessmentResult")
 );
 
 const MeetingRoute = lazyWithRetry(
-  () => import("@components/Course/Meetings/Route"),
+  () => import("@components/Course/Meetings/Route")
 );
 const CourseDescriptionPage = lazyWithRetry(
-  () => import("@pages/course/courseDescription"),
+  () => import("@pages/course/courseDescription")
 );
 const AssessmentDescription = lazyWithRetry(
-  () => import("@pages/assessment/AssessmentDescription"),
+  () => import("@pages/assessment/AssessmentDescription")
 );
 const CreateAssessment = lazyWithRetry(
-  () => import("@pages/assessment/CreateAssessment"),
+  () => import("@pages/assessment/CreateAssessment")
 );
 
 const AssignmentPage = lazyWithRetry(() => import("@pages/course/assignment"));

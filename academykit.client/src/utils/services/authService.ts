@@ -153,7 +153,7 @@ export const useChangeEmail = () => {
     }) => {
       return httpClient.put<{ resendToken: string }>(
         api.auth.changeEmail,
-        data,
+        data
       );
     },
   });
