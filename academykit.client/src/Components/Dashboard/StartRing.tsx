@@ -5,8 +5,8 @@ import {
   RingProgress,
   SimpleGrid,
   Text,
-} from '@mantine/core';
-import { IconArrowDownRight, IconArrowUpRight } from '@tabler/icons-react';
+} from "@mantine/core";
+import { IconArrowDownRight, IconArrowUpRight } from "@tabler/icons-react";
 
 interface StatsRingProps {
   data: {
@@ -14,7 +14,7 @@ interface StatsRingProps {
     stats: string;
     progress: number;
     color: string;
-    icon: 'up' | 'down';
+    icon: "up" | "down";
   }[];
 }
 

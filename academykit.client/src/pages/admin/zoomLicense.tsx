@@ -1,5 +1,5 @@
-import DeleteModal from '@components/Ui/DeleteModal';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import DeleteModal from "@components/Ui/DeleteModal";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   ActionIcon,
   Badge,
@@ -14,11 +14,11 @@ import {
   TextInput,
   Title,
   useMantineColorScheme,
-} from '@mantine/core';
-import { useForm, yupResolver } from '@mantine/form';
-import { useDisclosure } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
+} from "@mantine/core";
+import { useForm, yupResolver } from "@mantine/form";
+import { useDisclosure } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
 import {
   IZoomLicense,
   updateZoomLicenseStatus,
@@ -26,12 +26,12 @@ import {
   useDeleteZoomLicense,
   useUpdateZoomLicense,
   useZoomLicense,
-} from '@utils/services/adminService';
-import errorType from '@utils/services/axiosError';
-import { IUser } from '@utils/services/types';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import * as Yup from 'yup';
+} from "@utils/services/adminService";
+import errorType from "@utils/services/axiosError";
+import { IUser } from "@utils/services/types";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import * as Yup from "yup";
 
 interface IZoomLicensePost {
   licenseEmail: string;
@@ -52,21 +52,21 @@ export default function ZoomLicense() {
   const schema = () => {
     return Yup.object().shape({
       licenseEmail: Yup.string()
-        .email(t('invalid_license_email') as string)
-        .required(t('license_email_required') as string),
-      hostId: Yup.string().required(t('host_id_required') as string),
+        .email(t("invalid_license_email") as string)
+        .required(t("license_email_required") as string),
+      hostId: Yup.string().required(t("host_id_required") as string),
       capacity: Yup.number()
         .integer()
         .nullable(false)
-        .min(1, t('capacity_required') as string)
-        .typeError(t('capacity_required') as string),
+        .min(1, t("capacity_required") as string)
+        .typeError(t("capacity_required") as string),
     });
   };
 
   const form = useForm<IZoomLicensePost>({
     initialValues: {
-      licenseEmail: '',
-      hostId: '',
+      licenseEmail: "",
+      hostId: "",
       capacity: 0,
     },
     validate: yupResolver(schema()),
@@ -91,14 +91,14 @@ export default function ZoomLicense() {
       try {
         await deleteZoomLicense.mutateAsync(item.id);
         showNotification({
-          title: t('successful'),
-          message: t('zoom_license_deleted'),
+          title: t("successful"),
+          message: t("zoom_license_deleted"),
         });
       } catch (error) {
         const err = errorType(error);
         showNotification({
           message: err,
-          color: 'red',
+          color: "red",
         });
       }
       setOpened(false);
@@ -109,7 +109,7 @@ export default function ZoomLicense() {
         {opened && (
           <DeleteModal
             key={item.id}
-            title={`${t('zoom_license_delete_confirmation')} "${
+            title={`${t("zoom_license_delete_confirmation")} "${
               item.licenseEmail
             }"?`}
             open={opened}
@@ -127,12 +127,12 @@ export default function ZoomLicense() {
         </Table.Td>
 
         <Table.Td>
-          <Badge variant={colorScheme === 'dark' ? 'light' : 'outline'}>
+          <Badge variant={colorScheme === "dark" ? "light" : "outline"}>
             {item.hostId}
           </Badge>
         </Table.Td>
-        <Table.Td style={{ textAlign: 'center' }}>{item.capacity}</Table.Td>
-        <Table.Td style={{ textAlign: 'center' }}>
+        <Table.Td style={{ textAlign: "center" }}>{item.capacity}</Table.Td>
+        <Table.Td style={{ textAlign: "center" }}>
           <Switch
             checked={isChecked}
             onChange={async () => {
@@ -144,16 +144,16 @@ export default function ZoomLicense() {
                   status: !isChecked,
                 });
                 showNotification({
-                  message: t('status_updated'),
-                  title: t('successful'),
+                  message: t("status_updated"),
+                  title: t("successful"),
                 });
                 getZoomLicense.refetch();
               } catch (error) {
                 const err = errorType(error);
                 showNotification({
                   message: err,
-                  title: t('error'),
-                  color: 'red',
+                  title: t("error"),
+                  color: "red",
                 });
                 setIsChecked(!isChecked);
               }
@@ -190,20 +190,20 @@ export default function ZoomLicense() {
     try {
       if (isEditing) {
         await updateZoomLicense.mutateAsync({
-          id: (editItem?.id as string) ?? '',
+          id: (editItem?.id as string) ?? "",
           data: values,
         });
         showNotification({
-          title: t('successful'),
-          message: t('zoom_license_update_success'),
+          title: t("successful"),
+          message: t("zoom_license_update_success"),
         });
         form.reset();
       } else {
         await addZoomLicense.mutateAsync(values);
         showNotification({
-          title: t('successful'),
+          title: t("successful"),
 
-          message: t('zoom_license_added'),
+          message: t("zoom_license_added"),
         });
         form.reset();
       }
@@ -211,7 +211,7 @@ export default function ZoomLicense() {
       const err = errorType(error);
       showNotification({
         message: err,
-        color: 'red',
+        color: "red",
       });
     } finally {
       close();
@@ -222,17 +222,17 @@ export default function ZoomLicense() {
   return (
     <ScrollArea>
       <Group
-        style={{ justifyContent: 'space-between', alignItems: 'center' }}
+        style={{ justifyContent: "space-between", alignItems: "center" }}
         mb={15}
       >
-        <Title>{t('zoom_licenses')}</Title>
+        <Title>{t("zoom_licenses")}</Title>
         <Button
           onClick={() => {
             open();
             form.reset();
           }}
         >
-          {t('add_license')}
+          {t("add_license")}
         </Button>
       </Group>
 
@@ -247,33 +247,33 @@ export default function ZoomLicense() {
       >
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <TextInput
-            placeholder={t('License_email') as string}
+            placeholder={t("License_email") as string}
             name="licenseEmail"
-            label={t('license_email')}
+            label={t("license_email")}
             withAsterisk
-            {...form.getInputProps('licenseEmail')}
+            {...form.getInputProps("licenseEmail")}
           />
           <TextInput
-            placeholder={t('License_host_Id') as string}
+            placeholder={t("License_host_Id") as string}
             name="hostId"
-            label={t('host_id')}
+            label={t("host_id")}
             withAsterisk
-            {...form.getInputProps('hostId')}
+            {...form.getInputProps("hostId")}
           />
           <TextInput
-            placeholder={t('license_capacity') as string}
+            placeholder={t("license_capacity") as string}
             name="capacity"
-            label={t('capacity')}
-            type={'number'}
+            label={t("capacity")}
+            type={"number"}
             withAsterisk
-            {...form.getInputProps('capacity')}
+            {...form.getInputProps("capacity")}
           />
           <Group mt={10}>
             <Button
               type="submit"
               loading={addZoomLicense.isLoading || updateZoomLicense.isLoading}
             >
-              {t('submit')}
+              {t("submit")}
             </Button>
           </Group>
         </form>
@@ -291,16 +291,16 @@ export default function ZoomLicense() {
         >
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>{t('license_email')}</Table.Th>
-              <Table.Th>{t('host_id')}</Table.Th>
-              <Table.Th style={{ textAlign: 'center' }}>
-                {t('capacity')}
+              <Table.Th>{t("license_email")}</Table.Th>
+              <Table.Th>{t("host_id")}</Table.Th>
+              <Table.Th style={{ textAlign: "center" }}>
+                {t("capacity")}
               </Table.Th>
-              <Table.Th style={{ textAlign: 'center' }}>
-                {t('active_status')}
+              <Table.Th style={{ textAlign: "center" }}>
+                {t("active_status")}
               </Table.Th>
-              <Table.Th style={{ textAlign: 'center' }}>
-                {t('actions')}
+              <Table.Th style={{ textAlign: "center" }}>
+                {t("actions")}
               </Table.Th>
             </Table.Tr>
           </Table.Thead>

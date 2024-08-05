@@ -1,13 +1,13 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AssessmentStatus,
   AssessmentType,
   SkillAssessmentRule,
   UserRole,
-} from '@utils/enums';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
-import { IPaginated, IUser } from './types';
+} from "@utils/enums";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
+import { IPaginated, IUser } from "./types";
 
 interface IAssessmentOption {
   option: string;
@@ -107,7 +107,7 @@ export interface IAssessmentResponse extends IBaseAssessment {
 
 type IPostAssessment = Omit<
   IAssessment,
-  'id' | 'user' | 'slug' | 'assessmentStatus'
+  "id" | "user" | "slug" | "assessmentStatus"
 >;
 
 interface ISingleAssessmentDescription extends IAssessmentResponse {
@@ -210,7 +210,7 @@ export const useGetSingleAssessment = (slug: string) => {
 export const usePostAssessment = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['post' + api.assessment.list],
+    mutationKey: ["post" + api.assessment.list],
 
     mutationFn: (data: IPostAssessment) => {
       return httpClient.post<IAssessment>(api.assessment.list, data);
@@ -235,7 +235,7 @@ const updateAssessmentDetails = async ({
 export const useUpdateAssessment = (slug: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.assessment.getSingle(slug)],
+    mutationKey: ["update" + api.assessment.getSingle(slug)],
     mutationFn: updateAssessmentDetails,
 
     onSuccess: () => {
@@ -252,7 +252,7 @@ const deleteAssessment = async (id: string) =>
 export const useDeleteAssessment = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['delete' + api.assessment.list],
+    mutationKey: ["delete" + api.assessment.list],
     mutationFn: deleteAssessment,
 
     onSuccess: () => {
@@ -289,7 +289,7 @@ interface IPostAssessmentQuestion {
 export const usePostAssessmentQuestion = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['post' + api.assessmentQuestion.list],
+    mutationKey: ["post" + api.assessmentQuestion.list],
 
     mutationFn: ({
       id,
@@ -315,7 +315,7 @@ const deleteAssessmentQuestion = async (id: string) =>
 export const useDeleteAssessmentQuestion = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['delete' + api.assessmentQuestion.list],
+    mutationKey: ["delete" + api.assessmentQuestion.list],
     mutationFn: deleteAssessmentQuestion,
 
     onSuccess: () => {
@@ -337,7 +337,7 @@ const updateAssessmentQuestion = async ({
 export const useUpdateAssessmentQuestion = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.assessmentQuestion.list],
+    mutationKey: ["update" + api.assessmentQuestion.list],
     mutationFn: updateAssessmentQuestion,
 
     onSuccess: () => {
@@ -408,7 +408,7 @@ const updateAssessmentStatus = async (data: IAssessmentStatusUpdate) =>
 export const useUpdateAssessmentStatus = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.assessment.updateStatus],
+    mutationKey: ["update" + api.assessment.updateStatus],
     mutationFn: updateAssessmentStatus,
 
     onSuccess: () => {
@@ -430,7 +430,7 @@ const postAssessmentExam = async ({
 
 export const useSubmitAssessmentExam = () =>
   useMutation({
-    mutationKey: ['submitAssessmentExam'],
+    mutationKey: ["submitAssessmentExam"],
     mutationFn: postAssessmentExam,
   });
 

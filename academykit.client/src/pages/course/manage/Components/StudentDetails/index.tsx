@@ -9,28 +9,28 @@ import {
   Table,
   Textarea,
   Tooltip,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import UserResults from '@pages/course/exam/Components/UserResults';
-import { IconCheck, IconEye } from '@tabler/icons-react';
-import { DATE_FORMAT } from '@utils/constants';
-import { LessonType } from '@utils/enums';
-import formatDuration from '@utils/formatDuration';
-import RoutePath from '@utils/routeConstants';
-import errorType from '@utils/services/axiosError';
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import UserResults from "@pages/course/exam/Components/UserResults";
+import { IconCheck, IconEye } from "@tabler/icons-react";
+import { DATE_FORMAT } from "@utils/constants";
+import { LessonType } from "@utils/enums";
+import formatDuration from "@utils/formatDuration";
+import RoutePath from "@utils/routeConstants";
+import errorType from "@utils/services/axiosError";
 import {
   IReportDetail,
   useGetMeetingReport,
-} from '@utils/services/liveSessionService';
-import { IStudentInfoLesson } from '@utils/services/manageCourseService';
-import { useReviewAttendance } from '@utils/services/physicalTrainingService';
-import { useWatchHistoryUser } from '@utils/services/watchHistory';
-import moment from 'moment';
-import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
-import { getType } from './LessonStatusColor';
+} from "@utils/services/liveSessionService";
+import { IStudentInfoLesson } from "@utils/services/manageCourseService";
+import { useReviewAttendance } from "@utils/services/physicalTrainingService";
+import { useWatchHistoryUser } from "@utils/services/watchHistory";
+import moment from "moment";
+import { useTranslation } from "react-i18next";
+import { Link, useParams } from "react-router-dom";
+import { getType } from "./LessonStatusColor";
 
 const TableRow = ({ values }: { values: IReportDetail }) => {
   const { t } = useTranslation();
@@ -70,11 +70,11 @@ const StudentLessonDetails = ({
   );
   const form = useForm({
     initialValues: {
-      message: '',
+      message: "",
     },
     validate: {
       message: (value) =>
-        value.length === 0 ? 'Rejection message is required!' : null,
+        value.length === 0 ? "Rejection message is required!" : null,
     },
   });
 
@@ -103,20 +103,20 @@ const StudentLessonDetails = ({
     const data = {
       identity: lessonId,
       isPassed: message ? false : true,
-      message: message ?? '',
+      message: message ?? "",
       userId: studentId,
     };
 
     try {
       await attendanceReview.mutateAsync({ data });
       showNotification({
-        message: message ? t('physical_deny') : t('physical_approve'),
+        message: message ? t("physical_deny") : t("physical_approve"),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
     toggleReview();
@@ -126,7 +126,7 @@ const StudentLessonDetails = ({
     switch (type) {
       case LessonType.Exam:
         return (
-          <Tooltip label={t('view_result')}>
+          <Tooltip label={t("view_result")}>
             <ActionIcon
               c="green"
               variant="subtle"
@@ -138,7 +138,7 @@ const StudentLessonDetails = ({
         );
       case LessonType.LiveClass:
         return (
-          <Tooltip label={t('view_live_class_report')}>
+          <Tooltip label={t("view_live_class_report")}>
             <ActionIcon
               c="green"
               variant="subtle"
@@ -150,7 +150,7 @@ const StudentLessonDetails = ({
         );
       case LessonType.Assignment:
         return (
-          <Tooltip label={t('view_assignment_result')}>
+          <Tooltip label={t("view_assignment_result")}>
             <ActionIcon
               component={Link}
               c="green"
@@ -164,7 +164,7 @@ const StudentLessonDetails = ({
 
       case LessonType.Feedback:
         return (
-          <Tooltip label={t('view_feedback')}>
+          <Tooltip label={t("view_feedback")}>
             <ActionIcon
               component={Link}
               c="green"
@@ -177,7 +177,7 @@ const StudentLessonDetails = ({
         );
       case LessonType.RecordedVideo:
         return (
-          <Tooltip label={t('view_live_class_report')}>
+          <Tooltip label={t("view_live_class_report")}>
             <ActionIcon
               c="green"
               variant="subtle"
@@ -195,14 +195,14 @@ const StudentLessonDetails = ({
     try {
       await watchHistory.mutateAsync({ courseId, lessonId, userId: studentId });
       showNotification({
-        message: t('pass_student_success'),
+        message: t("pass_student_success"),
       });
       setConfirmComplete();
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -219,15 +219,15 @@ const StudentLessonDetails = ({
         onClose={() => setExamResultModal()}
         trapFocus={true}
         opened={examResultModal}
-        transitionProps={{ transition: 'slide-up' }}
-        size={'100%'}
+        transitionProps={{ transition: "slide-up" }}
+        size={"100%"}
         styles={{
           inner: {
             paddingLeft: 0,
             paddingRight: 0,
             paddingBottom: 0,
-            paddingTop: '100px',
-            height: '100%',
+            paddingTop: "100px",
+            height: "100%",
           },
         }}
       >
@@ -246,8 +246,8 @@ const StudentLessonDetails = ({
         onClose={toggleReviewed}
         title={
           isRejected
-            ? t('leave_message_reject')
-            : `${t('mark_as_attended')}${t('?')}`
+            ? t("leave_message_reject")
+            : `${t("mark_as_attended")}${t("?")}`
         }
       >
         {!isRejected ? (
@@ -256,7 +256,7 @@ const StudentLessonDetails = ({
               onClick={() => onReview()}
               loading={attendanceReview.isLoading}
             >
-              {t('approve')}
+              {t("approve")}
             </Button>
             <Button
               variant="outline"
@@ -264,18 +264,18 @@ const StudentLessonDetails = ({
                 toggleRejected();
               }}
             >
-              {t('reject')}
+              {t("reject")}
             </Button>
           </Group>
         ) : (
           <form onSubmit={form.onSubmit((value) => onReview(value.message))}>
             <Group>
-              <Textarea {...form.getInputProps('message')} w={'100%'} />
+              <Textarea {...form.getInputProps("message")} w={"100%"} />
               <Button loading={attendanceReview.isLoading} type="submit">
-                {t('submit')}
+                {t("submit")}
               </Button>
               <Button variant="outline" onClick={() => toggleRejected()}>
-                {t('cancel')}
+                {t("cancel")}
               </Button>
             </Group>
           </form>
@@ -285,28 +285,28 @@ const StudentLessonDetails = ({
       <Modal
         opened={confirmComplete}
         onClose={() => setConfirmComplete()}
-        title={`${t('pass_student_confirmation')} "${lessonName}" ${t(
-          'lesson?'
+        title={`${t("pass_student_confirmation")} "${lessonName}" ${t(
+          "lesson?"
         )}`}
       >
         <Group>
-          <Button onClick={onCompletedClick}>{t('confirm')}</Button>
+          <Button onClick={onCompletedClick}>{t("confirm")}</Button>
           <Button onClick={() => setConfirmComplete()} variant="outline">
-            {t('cancel')}
+            {t("cancel")}
           </Button>
         </Group>
       </Modal>
 
       <Modal
-        size={'xl'}
+        size={"xl"}
         scrollAreaComponent={ScrollArea.Autosize}
         opened={liveClassReportModal}
         onClose={() => setLiveClassReportModal()}
-        title={t('meeting_report')}
+        title={t("meeting_report")}
         styles={{
           title: {
-            fontWeight: 'bold',
-            fontSize: '22px',
+            fontWeight: "bold",
+            fontSize: "22px",
           },
         }}
       >
@@ -324,10 +324,10 @@ const StudentLessonDetails = ({
                 >
                   <Table.Thead>
                     <Table.Tr>
-                      <Table.Th>{t('start_date')}</Table.Th>
-                      <Table.Th>{t('join_time')}</Table.Th>
-                      <Table.Th>{t('left_time')}</Table.Th>
-                      <Table.Th>{t('duration')}</Table.Th>
+                      <Table.Th>{t("start_date")}</Table.Th>
+                      <Table.Th>{t("join_time")}</Table.Th>
+                      <Table.Th>{t("left_time")}</Table.Th>
+                      <Table.Th>{t("duration")}</Table.Th>
                     </Table.Tr>
                   </Table.Thead>
 
@@ -338,7 +338,7 @@ const StudentLessonDetails = ({
                   </Table.Tbody>
                 </Table>
               )}
-              {meetingReport.isError && <Box>{t('something_went_wrong')}</Box>}
+              {meetingReport.isError && <Box>{t("something_went_wrong")}</Box>}
             </>
           )}
         </>
@@ -349,12 +349,12 @@ const StudentLessonDetails = ({
         {/* show button when student is failed or has not completed exam */}
         {/* button for other lesson types */}
         {(!isCompleted || !isPassed) && type !== LessonType.Physical && (
-          <Tooltip label={`${t('mark_as')} ${getType(type).true}`}>
+          <Tooltip label={`${t("mark_as")} ${getType(type).true}`}>
             <ActionIcon
               // open different pop up for physical lesson type
               onClick={() => setConfirmComplete()}
               variant="subtle"
-              color={'primary'}
+              color={"primary"}
             >
               {watchHistory.isLoading ? (
                 <Loader variant="oval" />
@@ -367,12 +367,12 @@ const StudentLessonDetails = ({
 
         {/* button for other physical type */}
         {!attendanceReviewed && type == LessonType.Physical && (
-          <Tooltip label={`${t('mark_as')} ${getType(type).true}`}>
+          <Tooltip label={`${t("mark_as")} ${getType(type).true}`}>
             <ActionIcon
               // open different pop up for physical lesson type
               onClick={() => toggleReview()}
               variant="subtle"
-              color={'primary'}
+              color={"primary"}
             >
               {watchHistory.isLoading ? (
                 <Loader variant="oval" />

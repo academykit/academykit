@@ -1,5 +1,5 @@
-import ExternalCertificate from '../Components/ExternalCertificate';
-import InternalCertificate from '../Components/InternalCertificate';
+import ExternalCertificate from "../Components/ExternalCertificate";
+import InternalCertificate from "../Components/InternalCertificate";
 
 const UserCertificates = () => {
   return (

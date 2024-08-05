@@ -1,11 +1,11 @@
-import { DynamicAutoFocusTextField } from '@components/Ui/CustomTextFieldWithAutoFocus';
-import GroupCreatableSelect from '@components/Ui/GroupCreatableSelect';
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
-import TextViewer from '@components/Ui/RichTextViewer';
-import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
-import useAuth from '@hooks/useAuth';
-import useCustomForm from '@hooks/useCustomForm';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import { DynamicAutoFocusTextField } from "@components/Ui/CustomTextFieldWithAutoFocus";
+import GroupCreatableSelect from "@components/Ui/GroupCreatableSelect";
+import RichTextEditor from "@components/Ui/RichTextEditor/Index";
+import TextViewer from "@components/Ui/RichTextViewer";
+import ThumbnailEditor from "@components/Ui/ThumbnailEditor";
+import useAuth from "@hooks/useAuth";
+import useCustomForm from "@hooks/useCustomForm";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Accordion,
   ActionIcon,
@@ -17,33 +17,33 @@ import {
   Loader,
   Select,
   Text,
-} from '@mantine/core';
-import { DatePickerInput } from '@mantine/dates';
-import { createFormContext, yupResolver } from '@mantine/form';
-import { useScrollIntoView } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { IconPlus, IconTrash } from '@tabler/icons-react';
-import { TrainingEligibilityEnum } from '@utils/enums';
-import queryStringGenerator from '@utils/queryStringGenerator';
-import RoutePath from '@utils/routeConstants';
-import { useDepartmentSetting } from '@utils/services/adminService';
-import { useAssessments } from '@utils/services/assessmentService';
-import errorType from '@utils/services/axiosError';
+} from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
+import { createFormContext, yupResolver } from "@mantine/form";
+import { useScrollIntoView } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
+import { TrainingEligibilityEnum } from "@utils/enums";
+import queryStringGenerator from "@utils/queryStringGenerator";
+import RoutePath from "@utils/routeConstants";
+import { useDepartmentSetting } from "@utils/services/adminService";
+import { useAssessments } from "@utils/services/assessmentService";
+import errorType from "@utils/services/axiosError";
 import {
   useCourse,
   useCourseDescription,
   useUpdateCourse,
-} from '@utils/services/courseService';
-import { useAddGroup, useGroups } from '@utils/services/groupService';
-import { useLevels } from '@utils/services/levelService';
-import { useSkills } from '@utils/services/skillService';
-import { ITag, useAddTag, useTags } from '@utils/services/tagService';
-import moment from 'moment';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
-import * as Yup from 'yup';
-import TagMultiSelectCreatable from '../component/TagMultiSelectCreatable';
+} from "@utils/services/courseService";
+import { useAddGroup, useGroups } from "@utils/services/groupService";
+import { useLevels } from "@utils/services/levelService";
+import { useSkills } from "@utils/services/skillService";
+import { ITag, useAddTag, useTags } from "@utils/services/tagService";
+import moment from "moment";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import * as Yup from "yup";
+import TagMultiSelectCreatable from "../component/TagMultiSelectCreatable";
 
 interface FormValues {
   thumbnail: string;
@@ -66,24 +66,24 @@ const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
     title: Yup.string()
-      .required(t('course_title_required') as string)
-      .max(250, t('course_title_must_be_less_than_100') as string),
-    level: Yup.string().required(t('level_required') as string),
-    groups: Yup.string().required(t('group_required') as string),
+      .required(t("course_title_required") as string)
+      .max(250, t("course_title_must_be_less_than_100") as string),
+    level: Yup.string().required(t("level_required") as string),
+    groups: Yup.string().required(t("group_required") as string),
     startDate: Yup.string()
-      .required(t('start_date_required') as string)
-      .typeError(t('start_date_required') as string),
+      .required(t("start_date_required") as string)
+      .typeError(t("start_date_required") as string),
     isUnlimitedEndDate: Yup.boolean(),
-    endDate: Yup.string().when('isUnlimitedEndDate', {
+    endDate: Yup.string().when("isUnlimitedEndDate", {
       is: false,
       then: Yup.string()
-        .required(t('end_date_required') as string)
-        .typeError(t('end_date_required') as string),
+        .required(t("end_date_required") as string)
+        .typeError(t("end_date_required") as string),
       otherwise: Yup.string().nullable(),
     }),
     trainingEligibilities: Yup.array().of(
       Yup.object().shape({
-        eligibilityId: Yup.string().required(t('field_required') as string),
+        eligibilityId: Yup.string().required(t("field_required") as string),
       })
     ),
   });
@@ -109,13 +109,13 @@ const EditCourse = () => {
 
   const form = useForm({
     initialValues: {
-      thumbnail: '',
-      title: '',
-      level: '',
-      groups: '',
-      description: '',
+      thumbnail: "",
+      title: "",
+      level: "",
+      groups: "",
+      description: "",
       tags: [],
-      language: '1',
+      language: "1",
       startDate: null,
       endDate: null,
       isUnlimitedEndDate: false,
@@ -125,14 +125,14 @@ const EditCourse = () => {
   });
   useFormErrorHooks(form);
 
-  const [searchParams] = useState('');
-  const [searchParamsGroup] = useState('');
+  const [searchParams] = useState("");
+  const [searchParamsGroup] = useState("");
   const groupAdd = useAddGroup();
   const auth = useAuth();
 
   const label = useLevels();
   const { data: addTagData, isSuccess, mutateAsync: mutAsync } = useAddTag();
-  const [language] = useState([{ value: '1', label: 'English' }]);
+  const [language] = useState([{ value: "1", label: "English" }]);
 
   const tags = useTags(
     queryStringGenerator({
@@ -195,13 +195,13 @@ const EditCourse = () => {
 
   useEffect(() => {
     if (label.isSuccess) {
-      form.setFieldValue('level', courseSingleData?.levelId);
+      form.setFieldValue("level", courseSingleData?.levelId);
     }
   }, [label.isSuccess, courseIsSuccess]);
 
   useEffect(() => {
     if (groups.isSuccess) {
-      form.setFieldValue('groups', courseSingleData?.groupId as string);
+      form.setFieldValue("groups", courseSingleData?.groupId as string);
     }
   }, [groups.isSuccess, courseIsSuccess]);
 
@@ -210,7 +210,7 @@ const EditCourse = () => {
       // setTagsList(tags.data.items.map((x) => ({ label: x.name, value: x.id })));
       setTagsLists(tags.data.items.map((x) => x));
       courseSingleData?.tags &&
-        form.setFieldValue('tags', [
+        form.setFieldValue("tags", [
           ...(form.values.tags ?? []),
           ...(courseSingleData?.tags?.map((x) => x.tagId) ?? []),
         ]);
@@ -267,12 +267,12 @@ const EditCourse = () => {
         levelId: values.level,
         tagIds: values.tags,
         startDate: moment(values.startDate)
-          .add(5, 'hour')
-          .add(45, 'minute')
+          .add(5, "hour")
+          .add(45, "minute")
           .toISOString(),
         endDate: moment(values.endDate)
-          .add(5, 'hour')
-          .add(45, 'minute')
+          .add(5, "hour")
+          .add(45, "minute")
           .toISOString(),
         isUnlimitedEndDate: values.isUnlimitedEndDate,
         trainingEligibilities: values.trainingEligibilities.map(
@@ -287,14 +287,14 @@ const EditCourse = () => {
       refetch();
       navigator(RoutePath.manageCourse.lessons(slug.id).route);
       showNotification({
-        title: t('success'),
-        message: t('training_update_success'),
+        title: t("success"),
+        message: t("training_update_success"),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -302,7 +302,7 @@ const EditCourse = () => {
   // set endDate as null if unlimited endDate is checked
   useEffect(() => {
     if (form.values.isUnlimitedEndDate) {
-      form.setFieldValue('endDate', null);
+      form.setFieldValue("endDate", null);
     }
   }, [form.values.isUnlimitedEndDate]);
 
@@ -316,7 +316,7 @@ const EditCourse = () => {
       errors.endDate
     ) {
       scrollToTop({
-        alignment: 'center',
+        alignment: "center",
       });
     }
   };
@@ -329,17 +329,17 @@ const EditCourse = () => {
             <ThumbnailEditor
               formContext={useFormContext}
               currentThumbnail={courseSingleData?.thumbnailUrl}
-              label={t('thumbnail') as string}
+              label={t("thumbnail") as string}
               disabled={viewMode}
             />
             <Group mt={10} grow ref={refBasic}>
               <DynamicAutoFocusTextField
                 isViewMode={viewMode}
                 readOnly={viewMode}
-                placeholder={t('title_course') as string}
-                label={t('title')}
+                placeholder={t("title_course") as string}
+                label={t("title")}
                 withAsterisk
-                {...form.getInputProps('title')}
+                {...form.getInputProps("title")}
                 size="lg"
               />
             </Group>
@@ -356,28 +356,28 @@ const EditCourse = () => {
                 />
               ) : (
                 <div>
-                  <Loader size={'xs'} />
+                  <Loader size={"xs"} />
                 </div>
               )}
               {label.isSuccess ? (
                 <Select
                   styles={{
                     input: {
-                      border: viewMode ? 'none' : '',
-                      cursor: viewMode ? 'text !important' : '',
+                      border: viewMode ? "none" : "",
+                      cursor: viewMode ? "text !important" : "",
                     },
                   }}
                   readOnly={viewMode}
                   withAsterisk
                   size="lg"
-                  label={t('level')}
-                  placeholder={t('level_placeholder') as string}
-                  {...form.getInputProps('level')}
+                  label={t("level")}
+                  placeholder={t("level_placeholder") as string}
+                  {...form.getInputProps("level")}
                   data={label.data.map((x) => ({ value: x.id, label: x.name }))}
                 ></Select>
               ) : (
                 <div>
-                  <Loader size={'xs'} />
+                  <Loader size={"xs"} />
                 </div>
               )}
             </Group>
@@ -392,21 +392,21 @@ const EditCourse = () => {
                   readOnly={viewMode}
                 />
               ) : (
-                <Loader style={{ flexGrow: '0' }} />
+                <Loader style={{ flexGrow: "0" }} />
               )}
 
               <Select
                 readOnly={viewMode}
                 styles={{
                   input: {
-                    border: viewMode ? 'none' : '',
-                    cursor: viewMode ? 'text !important' : '',
+                    border: viewMode ? "none" : "",
+                    cursor: viewMode ? "text !important" : "",
                   },
                 }}
-                label={t('Language')}
-                size={'lg'}
+                label={t("Language")}
+                size={"lg"}
                 data={language}
-                {...form.getInputProps('language')}
+                {...form.getInputProps("language")}
               />
             </Group>
 
@@ -414,37 +414,37 @@ const EditCourse = () => {
               <DatePickerInput
                 readOnly={viewMode}
                 withAsterisk
-                label={t('start_date')}
-                placeholder={t('pick_date') as string}
+                label={t("start_date")}
+                placeholder={t("pick_date") as string}
                 size="lg"
-                {...form.getInputProps('startDate')}
+                {...form.getInputProps("startDate")}
               />
 
               <DatePickerInput
                 withAsterisk={!form.values.isUnlimitedEndDate}
                 readOnly={viewMode}
                 disabled={form.values.isUnlimitedEndDate}
-                label={t('end_date')}
-                placeholder={t('pick_date') as string}
+                label={t("end_date")}
+                placeholder={t("pick_date") as string}
                 size="lg"
-                {...form.getInputProps('endDate')}
+                {...form.getInputProps("endDate")}
               />
             </Group>
             <Group grow mt={20}>
               <Checkbox
                 disabled={viewMode}
                 label="Unlimited end date"
-                {...form.getInputProps('isUnlimitedEndDate', {
-                  type: 'checkbox',
+                {...form.getInputProps("isUnlimitedEndDate", {
+                  type: "checkbox",
                 })}
               />
             </Group>
 
             <Box mt={20}>
-              <Text>{t('description')}</Text>
+              <Text>{t("description")}</Text>
               {!viewMode && (
                 <RichTextEditor
-                  placeholder={t('course_description') as string}
+                  placeholder={t("course_description") as string}
                   formContext={useFormContext}
                 />
               )}
@@ -456,7 +456,7 @@ const EditCourse = () => {
             <Accordion defaultValue="Eligibility" mt={10}>
               <Accordion.Item value="Eligibility">
                 <Accordion.Control>
-                  {t('eligibility_criteria')}
+                  {t("eligibility_criteria")}
                 </Accordion.Control>
                 <Accordion.Panel>
                   {form.values.trainingEligibilities.length < 1 && (
@@ -464,24 +464,24 @@ const EditCourse = () => {
                       disabled={viewMode}
                       onClick={() => {
                         form.insertListItem(
-                          'trainingEligibilities',
-                          { eligibility: 0, eligibilityId: '' },
+                          "trainingEligibilities",
+                          { eligibility: 0, eligibilityId: "" },
                           0
                         );
                       }}
                     >
-                      {t('add_eligibility_criteria')}
+                      {t("add_eligibility_criteria")}
                     </Button>
                   )}
 
                   {form.values.trainingEligibilities.map(
                     (_eligibility, index) => (
-                      <Flex gap={10} key={index} align={'flex-end'} mb={10}>
+                      <Flex gap={10} key={index} align={"flex-end"} mb={10}>
                         <Select
                           disabled={viewMode}
                           allowDeselect={false}
-                          label={t('eligibility_type')}
-                          placeholder={t('pick_value') as string}
+                          label={t("eligibility_type")}
+                          placeholder={t("pick_value") as string}
                           data={getEligibilityType() ?? []}
                           {...form.getInputProps(
                             `trainingEligibilities.${index}.eligibility`
@@ -493,8 +493,8 @@ const EditCourse = () => {
                             withAsterisk
                             disabled={viewMode}
                             allowDeselect={false}
-                            label={t('department')}
-                            placeholder={t('pick_value') as string}
+                            label={t("department")}
+                            placeholder={t("pick_value") as string}
                             data={getDepartmentDropdown() ?? []}
                             {...form.getInputProps(
                               `trainingEligibilities.${index}.eligibilityId`
@@ -508,8 +508,8 @@ const EditCourse = () => {
                             disabled={viewMode}
                             withAsterisk
                             allowDeselect={false}
-                            label={t('training')}
-                            placeholder={t('pick_value') as string}
+                            label={t("training")}
+                            placeholder={t("pick_value") as string}
                             data={getTrainingDropdown() ?? []}
                             {...form.getInputProps(
                               `trainingEligibilities.${index}.eligibilityId`
@@ -523,8 +523,8 @@ const EditCourse = () => {
                             disabled={viewMode}
                             withAsterisk
                             allowDeselect={false}
-                            label={t('skills')}
-                            placeholder={t('pick_value') as string}
+                            label={t("skills")}
+                            placeholder={t("pick_value") as string}
                             data={getSkillDropdown() ?? []}
                             {...form.getInputProps(
                               `trainingEligibilities.${index}.eligibilityId`
@@ -538,8 +538,8 @@ const EditCourse = () => {
                             disabled={viewMode}
                             withAsterisk
                             allowDeselect={false}
-                            label={t('assessment')}
-                            placeholder={t('pick_value') as string}
+                            label={t("assessment")}
+                            placeholder={t("pick_value") as string}
                             data={getAssessmentDropdown() ?? []}
                             {...form.getInputProps(
                               `trainingEligibilities.${index}.eligibilityId`
@@ -552,8 +552,8 @@ const EditCourse = () => {
                             variant="subtle"
                             onClick={() => {
                               form.insertListItem(
-                                'trainingEligibilities',
-                                { eligibility: 0, eligibilityId: '' },
+                                "trainingEligibilities",
+                                { eligibility: 0, eligibilityId: "" },
                                 index + 1
                               );
                             }}
@@ -565,10 +565,10 @@ const EditCourse = () => {
                         {!viewMode && (
                           <ActionIcon
                             variant="subtle"
-                            c={'red'}
+                            c={"red"}
                             onClick={() => {
                               form.removeListItem(
-                                'trainingEligibilities',
+                                "trainingEligibilities",
                                 index
                               );
                             }}
@@ -586,7 +586,7 @@ const EditCourse = () => {
             <Box mt={20}>
               {viewMode && (
                 <Button size="lg" onClick={() => setViewMode(false)}>
-                  {t('edit')}
+                  {t("edit")}
                 </Button>
               )}
 
@@ -598,7 +598,7 @@ const EditCourse = () => {
                     type="submit"
                     loading={updateCourse.isLoading}
                   >
-                    {t('submit')}
+                    {t("submit")}
                   </Button>
                   <Button
                     ml={15}
@@ -606,7 +606,7 @@ const EditCourse = () => {
                     onClick={() => setViewMode(true)}
                     variant="outline"
                   >
-                    {t('cancel')}
+                    {t("cancel")}
                   </Button>
                 </>
               )}

@@ -1,8 +1,8 @@
-import AvatarEditor from '@components/Ui/AvatarEditor';
-import { DynamicAutoFocusTextField } from '@components/Ui/CustomTextFieldWithAutoFocus';
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
-import TextViewer from '@components/Ui/RichTextViewer';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import AvatarEditor from "@components/Ui/AvatarEditor";
+import { DynamicAutoFocusTextField } from "@components/Ui/CustomTextFieldWithAutoFocus";
+import RichTextEditor from "@components/Ui/RichTextEditor/Index";
+import TextViewer from "@components/Ui/RichTextViewer";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Button,
   Divider,
@@ -11,17 +11,17 @@ import {
   Text,
   TextInput,
   Title,
-} from '@mantine/core';
-import { createFormContext, yupResolver } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import { PHONE_VALIDATION } from '@utils/constants';
-import { useUpdateUser } from '@utils/services/adminService';
-import { useReAuth } from '@utils/services/authService';
-import errorType from '@utils/services/axiosError';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import * as Yup from 'yup';
+} from "@mantine/core";
+import { createFormContext, yupResolver } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import { PHONE_VALIDATION } from "@utils/constants";
+import { useUpdateUser } from "@utils/services/adminService";
+import { useReAuth } from "@utils/services/authService";
+import errorType from "@utils/services/axiosError";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import * as Yup from "yup";
 
 export interface FormValues {
   email: string;
@@ -42,23 +42,23 @@ const [FormProvider, useFormContext, useForm] = createFormContext<FormValues>();
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    firstName: Yup.string().required(t('first_name_required') as string),
-    lastName: Yup.string().required(t('last_name_required') as string),
+    firstName: Yup.string().required(t("first_name_required") as string),
+    lastName: Yup.string().required(t("last_name_required") as string),
     email: Yup.string()
-      .email(t('invalid_email') as string)
-      .required(t('email_required') as string),
+      .email(t("invalid_email") as string)
+      .required(t("email_required") as string),
     mobileNumber: Yup.string()
       .nullable()
       .notRequired()
       .matches(PHONE_VALIDATION, {
-        message: t('enter_valid_phone'),
+        message: t("enter_valid_phone"),
         excludeEmptyString: true,
       }),
     bio: Yup.string().test(
-      'asdf',
-      t('bio_character_limit') as string,
+      "asdf",
+      t("bio_character_limit") as string,
       function (value: any) {
-        const a = document.createElement('div');
+        const a = document.createElement("div");
         a.innerHTML = value;
         return a.innerText.length <= 200;
       }
@@ -66,31 +66,31 @@ const schema = () => {
   });
 };
 const UserInfo = () => {
-  const userId = localStorage.getItem('id');
+  const userId = localStorage.getItem("id");
   const { data, isSuccess } = useReAuth();
-  const [imageURL, setImageURL] = useState(data?.imageUrl ?? '');
+  const [imageURL, setImageURL] = useState(data?.imageUrl ?? "");
   // const [viewMode, setViewMode] = useState(true);
   const [params, setParams] = useSearchParams();
-  const viewMode = params.get('edit') == '1' ? false : true;
+  const viewMode = params.get("edit") == "1" ? false : true;
 
-  const createEditMode = (editView: '0' | '1') => {
+  const createEditMode = (editView: "0" | "1") => {
     // 0 = view
     // 1 = edit
-    params.set('edit', editView);
+    params.set("edit", editView);
     setParams(params);
   };
 
   const formData = useForm({
     initialValues: {
-      firstName: '',
-      middleName: '',
-      lastName: '',
-      email: '',
-      mobileNumber: '',
-      profession: '',
-      address: '',
-      bio: '',
-      imageUrl: '',
+      firstName: "",
+      middleName: "",
+      lastName: "",
+      email: "",
+      mobileNumber: "",
+      profession: "",
+      address: "",
+      bio: "",
+      imageUrl: "",
       role: 1,
       isActive: false,
     },
@@ -103,17 +103,17 @@ const UserInfo = () => {
       formData.setValues({
         email: data?.email,
         firstName: data?.firstName,
-        middleName: data?.middleName ?? '',
+        middleName: data?.middleName ?? "",
         lastName: data?.lastName,
-        mobileNumber: data?.mobileNumber ?? '',
-        profession: data?.profession ?? '',
-        address: data?.address ?? '',
-        bio: data?.bio ?? '',
+        mobileNumber: data?.mobileNumber ?? "",
+        profession: data?.profession ?? "",
+        address: data?.address ?? "",
+        bio: data?.bio ?? "",
         role: data?.role ?? 1,
         isActive: data?.isActive ?? false,
-        imageUrl: data?.imageUrl ?? '',
+        imageUrl: data?.imageUrl ?? "",
       });
-      setImageURL(data?.imageUrl ?? '');
+      setImageURL(data?.imageUrl ?? "");
     }
   }, [isSuccess, params]); // reset on edit/view mode
 
@@ -128,28 +128,28 @@ const UserInfo = () => {
       await updateUser.mutateAsync({ id: userId as string, data });
       navigator(`/userProfile/${userId as string}`);
       showNotification({
-        title: t('successful'),
-        message: t('update_profile_success'),
+        title: t("successful"),
+        message: t("update_profile_success"),
       });
     } catch (err) {
       const error = errorType(err);
-      showNotification({ message: error, title: t('error'), color: 'red' });
+      showNotification({ message: error, title: t("error"), color: "red" });
     }
   };
 
   return (
-    <Paper shadow={'xl'} radius="md" p="xl" withBorder>
-      <Title>{t('profile_section')}</Title>
+    <Paper shadow={"xl"} radius="md" p="xl" withBorder>
+      <Title>{t("profile_section")}</Title>
       <Divider mb={10} />
-      <Text variant="text" size={'xl'}>
-        {t('introduction')}
+      <Text variant="text" size={"xl"}>
+        {t("introduction")}
       </Text>
-      <div style={{ marginBottom: '3px' }}>{t('recognize_you')}</div>
+      <div style={{ marginBottom: "3px" }}>{t("recognize_you")}</div>
       <FormProvider form={formData}>
         <form onSubmit={formData.onSubmit(handleSubmit)}>
           <AvatarEditor
             url={imageURL}
-            label={t('image') as string}
+            label={t("image") as string}
             formContext={useFormContext}
             disabled={viewMode}
           />
@@ -160,89 +160,89 @@ const UserInfo = () => {
                 isViewMode={viewMode}
                 readOnly={viewMode}
                 withAsterisk
-                label={t('firstname') as string}
-                placeholder={t('your_firstname') as string}
+                label={t("firstname") as string}
+                placeholder={t("your_firstname") as string}
                 name="firstName"
-                {...formData.getInputProps('firstName')}
+                {...formData.getInputProps("firstName")}
               />
             </Grid.Col>
             <Grid.Col span={{ xs: 6, lg: 4 }} mt={7}>
               <TextInput
-                styles={{ input: { border: viewMode ? 'none' : '' } }}
+                styles={{ input: { border: viewMode ? "none" : "" } }}
                 readOnly={viewMode}
-                label={t('middlename') as string}
+                label={t("middlename") as string}
                 name="middleName"
-                placeholder={t('your_middlename') as string}
-                {...formData.getInputProps('middleName')}
+                placeholder={t("your_middlename") as string}
+                {...formData.getInputProps("middleName")}
               />
             </Grid.Col>
             <Grid.Col span={{ xs: 6, lg: 4 }}>
               <TextInput
-                styles={{ input: { border: viewMode ? 'none' : '' } }}
+                styles={{ input: { border: viewMode ? "none" : "" } }}
                 readOnly={viewMode}
                 withAsterisk
-                label={t('lastname')}
+                label={t("lastname")}
                 name="lastName"
-                placeholder={t('your_lastname') as string}
-                {...formData.getInputProps('lastName')}
+                placeholder={t("your_lastname") as string}
+                {...formData.getInputProps("lastName")}
               />
             </Grid.Col>
             <Grid.Col span={{ xs: 6, lg: 4 }}>
               <TextInput
-                styles={{ input: { border: viewMode ? 'none' : '' } }}
+                styles={{ input: { border: viewMode ? "none" : "" } }}
                 withAsterisk
                 disabled
-                label={t('email')}
+                label={t("email")}
                 type="email"
                 name="email"
-                placeholder={t('your_email') as string}
-                {...formData.getInputProps('email')}
+                placeholder={t("your_email") as string}
+                {...formData.getInputProps("email")}
               />
             </Grid.Col>
             <Grid.Col span={{ xs: 6, lg: 4 }} mt={7}>
               <TextInput
-                styles={{ input: { border: viewMode ? 'none' : '' } }}
+                styles={{ input: { border: viewMode ? "none" : "" } }}
                 readOnly={viewMode}
                 name="mobileNumber"
-                label={t('mobilenumber')}
-                placeholder={t('your_number') as string}
-                {...formData.getInputProps('mobileNumber')}
+                label={t("mobilenumber")}
+                placeholder={t("your_number") as string}
+                {...formData.getInputProps("mobileNumber")}
               />
             </Grid.Col>
             <Grid.Col span={{ xs: 6, lg: 4 }} mt={7}>
               <TextInput
-                styles={{ input: { border: viewMode ? 'none' : '' } }}
+                styles={{ input: { border: viewMode ? "none" : "" } }}
                 readOnly={viewMode}
-                label={t('profession')}
+                label={t("profession")}
                 name="profession"
-                placeholder={t('your_profession') as string}
-                {...formData.getInputProps('profession')}
+                placeholder={t("your_profession") as string}
+                {...formData.getInputProps("profession")}
               />
             </Grid.Col>
             <Grid.Col span={{ xs: 6, lg: 4 }}>
               <TextInput
-                styles={{ input: { border: viewMode ? 'none' : '' } }}
+                styles={{ input: { border: viewMode ? "none" : "" } }}
                 readOnly={viewMode}
-                label={t('address')}
-                placeholder={t('your_address') as string}
-                {...formData.getInputProps('address')}
+                label={t("address")}
+                placeholder={t("your_address") as string}
+                {...formData.getInputProps("address")}
               />
             </Grid.Col>
             <Grid.Col span={{ xs: 12, lg: 12 }}>
-              <Text size="sm">{t('bio')}</Text>
+              <Text size="sm">{t("bio")}</Text>
               {!viewMode && (
                 <RichTextEditor
                   error={formData.errors?.bio}
-                  placeholder={t('your_short_description') as string}
-                  {...formData.getInputProps('bio')}
+                  placeholder={t("your_short_description") as string}
+                  {...formData.getInputProps("bio")}
                 />
               )}
               {viewMode && <TextViewer content={data?.bio as string} />}
             </Grid.Col>
             <Grid.Col span={{ lg: 12 }}>
               {viewMode && (
-                <Button onClick={() => createEditMode('1')} type="button">
-                  {t('edit')}
+                <Button onClick={() => createEditMode("1")} type="button">
+                  {t("edit")}
                 </Button>
               )}
 
@@ -251,12 +251,12 @@ const UserInfo = () => {
                   <Button
                     loading={updateUser.isLoading}
                     type="submit"
-                    style={{ marginRight: '10px' }}
+                    style={{ marginRight: "10px" }}
                   >
-                    {t('save')}
+                    {t("save")}
                   </Button>
-                  <Button onClick={() => createEditMode('0')} variant="outline">
-                    {t('cancel')}
+                  <Button onClick={() => createEditMode("0")} variant="outline">
+                    {t("cancel")}
                   </Button>
                 </>
               )}

@@ -1,10 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import errorType from './axiosError';
-import { ICourse } from './courseService';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
-import { IPaginated, IUser, IUserProfile } from './types';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import errorType from "./axiosError";
+import { ICourse } from "./courseService";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
+import { IPaginated, IUser, IUserProfile } from "./types";
 
 export interface IGroup {
   id: string;
@@ -138,7 +138,7 @@ const removeGroupMember = ({
 export const useRemoveGroupMember = (
   id: string,
   query: string,
-  memberId: string
+  memberId: string,
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -162,7 +162,7 @@ const deleteGroup = ({ id }: { id: string }) =>
 export const useDeleteGroup = (id: string, query: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['delete', api.groups.details(id)],
+    mutationKey: ["delete", api.groups.details(id)],
     mutationFn: deleteGroup,
 
     onSuccess: () => {
@@ -175,7 +175,7 @@ export const useDeleteGroup = (id: string, query: string) => {
 
 const getGroupCourse = (id: string, search: string) => {
   return httpClient.get<IPaginated<ICourse>>(
-    api.groups.course(id) + `?${search}`
+    api.groups.course(id) + `?${search}`,
   );
 };
 
@@ -203,7 +203,7 @@ export interface IGroupAttachment {
 }
 const getGroupAttachment = (groupId: string, search: string) => {
   return httpClient.get<IPaginated<IGroupAttachment>>(
-    api.groups.attachment + `?GroupIdentity=${groupId}` + `&${search}`
+    api.groups.attachment + `?GroupIdentity=${groupId}` + `&${search}`,
   );
 };
 
@@ -241,9 +241,9 @@ const addGroupAttachement = ({
     },
     {
       headers: {
-        'content-type': 'multipart/form-data',
+        "content-type": "multipart/form-data",
       },
-    }
+    },
   );
 };
 export const useAddGroupAttachment = (search: string) => {
@@ -275,7 +275,7 @@ const removeGroupAttachment = ({
 export const useRemoveGroupAttachment = (
   id: string,
   fileId: string,
-  search: string
+  search: string,
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -307,16 +307,16 @@ export interface INotMember {
 const getGroupNotMember = (
   id: string,
   query: string,
-  departmentId: string | undefined
+  departmentId: string | undefined,
 ) =>
   httpClient.get<IPaginated<INotMember>>(
-    api.groups.notMembers(id, query, departmentId)
+    api.groups.notMembers(id, query, departmentId),
   );
 
 export const useGroupNotMember = (
   id: string,
   query: string,
-  departmentId: string | undefined
+  departmentId: string | undefined,
 ) =>
   useQuery({
     queryKey: [api.groups.notMembers(id, query, departmentId)],

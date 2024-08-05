@@ -1,20 +1,20 @@
-import { CourseStatus } from '@utils/enums';
+import { CourseStatus } from "@utils/enums";
 import {
   ILessons,
   ISection,
   useLessonReorder,
   useSectionReorder,
-} from '@utils/services/courseService';
+} from "@utils/services/courseService";
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState } from "react";
 import {
   DragDropContext,
   Draggable,
   DropResult,
   Droppable,
-} from 'react-beautiful-dnd';
+} from "react-beautiful-dnd";
 
-import SectionItem from './Section/SectionItem';
+import SectionItem from "./Section/SectionItem";
 
 const CourseSection = ({
   data,
@@ -36,7 +36,7 @@ const CourseSection = ({
     if (!destination) return;
     const newList = [...data];
     switch (type) {
-      case 'section':
+      case "section":
         // eslint-disable-next-line no-case-declarations
         const temp = newList[source.index];
         newList.splice(source.index, 1);

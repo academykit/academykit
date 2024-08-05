@@ -1,6 +1,6 @@
-import { Box, useMantineTheme } from '@mantine/core';
-import Slider from 'rc-slider';
-import React, { FC } from 'react';
+import { Box, useMantineTheme } from "@mantine/core";
+import Slider from "rc-slider";
+import React, { FC } from "react";
 
 interface Props {
   value: number;
@@ -22,7 +22,7 @@ const SeekBar: FC<React.PropsWithChildren<Props>> = ({
   return (
     <Box className={className}>
       <Slider
-        style={{ width: '100%' }}
+        style={{ width: "100%" }}
         min={1}
         max={100}
         value={value}
@@ -30,11 +30,11 @@ const SeekBar: FC<React.PropsWithChildren<Props>> = ({
           backgroundColor: theme.colors[theme.primaryColor][6],
         }}
         handleStyle={{
-          borderColor: '#26ab95',
+          borderColor: "#26ab95",
           backgroundColor: theme.primaryColor,
         }}
         railStyle={{
-          borderColor: '',
+          borderColor: "",
           backgroundColor: theme.primaryColor[4],
           width: `${loadedValue ?? value}%`,
         }}

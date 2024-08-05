@@ -1,8 +1,8 @@
-import DeleteModal from '@components/Ui/DeleteModal';
+import DeleteModal from "@components/Ui/DeleteModal";
 import withSearchPagination, {
   IWithSearchPagination,
-} from '@hoc/useSearchPagination';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+} from "@hoc/useSearchPagination";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   ActionIcon,
   Badge,
@@ -17,22 +17,22 @@ import {
   Text,
   TextInput,
   Title,
-} from '@mantine/core';
-import { useForm, yupResolver } from '@mantine/form';
-import { useDisclosure } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { IconPencil, IconTrash } from '@tabler/icons-react';
+} from "@mantine/core";
+import { useForm, yupResolver } from "@mantine/form";
+import { useDisclosure } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { IconPencil, IconTrash } from "@tabler/icons-react";
 import {
   useDeleteDepartmentSetting,
   useDepartmentSetting,
   usePostDepartmentSetting,
   useUpdateDepartmentSetting,
-} from '@utils/services/adminService';
-import errorType from '@utils/services/axiosError';
-import { IUser } from '@utils/services/types';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import * as Yup from 'yup';
+} from "@utils/services/adminService";
+import errorType from "@utils/services/axiosError";
+import { IUser } from "@utils/services/types";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import * as Yup from "yup";
 
 interface IDepartment<T> {
   id: string;
@@ -43,7 +43,7 @@ interface IDepartment<T> {
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t('department_name_required') as string),
+    name: Yup.string().required(t("department_name_required") as string),
   });
 };
 
@@ -63,7 +63,7 @@ const Department = ({
   const deleteDepartment = useDeleteDepartmentSetting();
 
   const form = useForm({
-    initialValues: { name: '', isActive: true },
+    initialValues: { name: "", isActive: true },
     validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
@@ -75,12 +75,12 @@ const Department = ({
       try {
         await deleteDepartment.mutateAsync(item.id);
         showNotification({
-          message: t('delete_department_success'),
+          message: t("delete_department_success"),
         });
       } catch (error: any) {
         showNotification({
           message: error?.response?.data?.message,
-          color: 'red',
+          color: "red",
         });
       }
     };
@@ -88,7 +88,7 @@ const Department = ({
       <Table.Tr key={item.id}>
         {opened && (
           <DeleteModal
-            title={`${t('sure_to_delete')} "${item?.name}" ${t('department?')}`}
+            title={`${t("sure_to_delete")} "${item?.name}" ${t("department?")}`}
             open={opened}
             onClose={() => setOpened(false)}
             onConfirm={handleDelete}
@@ -96,20 +96,20 @@ const Department = ({
         )}
 
         <Table.Td>
-          <Group gap={'sm'}>
+          <Group gap={"sm"}>
             <Text size="sm" fw={500}>
               {item?.name}
             </Text>
           </Group>
         </Table.Td>
-        <Table.Td style={{ textAlign: 'center' }}>
+        <Table.Td style={{ textAlign: "center" }}>
           {item?.isActive ? (
-            <Badge variant="light" color={'green'}>
-              {t('active')}
+            <Badge variant="light" color={"green"}>
+              {t("active")}
             </Badge>
           ) : (
-            <Badge variant="light" color={'red'}>
-              {t('inactive')}
+            <Badge variant="light" color={"red"}>
+              {t("inactive")}
             </Badge>
           )}
         </Table.Td>
@@ -152,10 +152,10 @@ const Department = ({
   return (
     <>
       <Group
-        style={{ justifyContent: 'space-between', alignItems: 'center' }}
+        style={{ justifyContent: "space-between", alignItems: "center" }}
         mb={15}
       >
-        <Title>{t('departments')}</Title>
+        <Title>{t("departments")}</Title>
         {!opened && (
           <Button
             onClick={() => {
@@ -163,7 +163,7 @@ const Department = ({
               form.reset();
             }}
           >
-            {t('add_department')}
+            {t("add_department")}
           </Button>
         )}
       </Group>
@@ -187,21 +187,21 @@ const Department = ({
                 });
                 form.reset();
                 showNotification({
-                  message: t('update_department_success'),
+                  message: t("update_department_success"),
                 });
               } else {
                 await postDepartment.mutateAsync(values);
                 form.reset();
                 showNotification({
-                  message: t('add_department_success'),
+                  message: t("add_department_success"),
                 });
               }
             } catch (error) {
               const err = errorType(error);
               showNotification({
-                title: t('error'),
+                title: t("error"),
                 message: err,
-                color: 'red',
+                color: "red",
               });
             } finally {
               close();
@@ -210,43 +210,43 @@ const Department = ({
           })}
         >
           <TextInput
-            label={t('department_name')}
+            label={t("department_name")}
             name="departmentName"
             withAsterisk
-            placeholder={t('department_name_placeholder') as string}
-            {...form.getInputProps('name')}
+            placeholder={t("department_name_placeholder") as string}
+            {...form.getInputProps("name")}
             mb={10}
           />
 
           {isEditing && (
             <Switch
-              mt={'lg'}
-              style={{ input: { cursor: 'pointer' } }}
+              mt={"lg"}
+              style={{ input: { cursor: "pointer" } }}
               checked={form.values.isActive}
-              label={t('department_enabled')}
+              label={t("department_enabled")}
               labelPosition="left"
               onChange={(e) => {
-                form.setFieldValue('isActive', e.currentTarget.checked);
+                form.setFieldValue("isActive", e.currentTarget.checked);
               }}
             />
           )}
 
           <Group mt={20}>
-            <Button type="submit">{t('submit')}</Button>
+            <Button type="submit">{t("submit")}</Button>
           </Group>
         </form>
       </Drawer>
 
       <Flex mb={10}>
-        {searchComponent(t('search_department') as string)}
-        <Flex style={{ width: '210px' }}>
+        {searchComponent(t("search_department") as string)}
+        <Flex style={{ width: "210px" }}>
           {filterComponent(
             [
-              { value: 'true', label: t('active') },
-              { value: 'false', label: t('inactive') },
+              { value: "true", label: t("active") },
+              { value: "false", label: t("inactive") },
             ],
-            t('department_status'),
-            'IsActive'
+            t("department_status"),
+            "IsActive"
           )}
         </Flex>
       </Flex>
@@ -258,16 +258,16 @@ const Department = ({
             highlightOnHover
             withTableBorder
             withColumnBorders
-            style={{ marginTop: '10px' }}
+            style={{ marginTop: "10px" }}
           >
             <Table.Thead>
               <Table.Tr>
-                <Table.Th>{t('name')}</Table.Th>
+                <Table.Th>{t("name")}</Table.Th>
                 <Table.Th>
-                  <Text ta="center">{t('department_status')}</Text>
+                  <Text ta="center">{t("department_status")}</Text>
                 </Table.Th>
                 <Table.Th>
-                  <Text ta="center">{t('actions')}</Text>
+                  <Text ta="center">{t("actions")}</Text>
                 </Table.Th>
               </Table.Tr>
             </Table.Thead>
@@ -279,7 +279,7 @@ const Department = ({
           </Table>
         </Paper>
       ) : (
-        <Box mt={10}>{t('no_department')}</Box>
+        <Box mt={10}>{t("no_department")}</Box>
       )}
 
       {getDepartment.data &&

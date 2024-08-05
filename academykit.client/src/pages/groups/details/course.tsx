@@ -1,8 +1,8 @@
-import CourseCard from '@components/Course/CourseCard';
+import CourseCard from "@components/Course/CourseCard";
 import withSearchPagination, {
   IWithSearchPagination,
-} from '@hoc/useSearchPagination';
-import useAuth from '@hooks/useAuth';
+} from "@hoc/useSearchPagination";
+import useAuth from "@hooks/useAuth";
 import {
   Box,
   Button,
@@ -11,12 +11,12 @@ import {
   Group,
   Loader,
   Title,
-} from '@mantine/core';
-import { UserRole } from '@utils/enums';
-import RoutePath from '@utils/routeConstants';
-import { useGroupCourse } from '@utils/services/groupService';
-import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+} from "@mantine/core";
+import { UserRole } from "@utils/enums";
+import RoutePath from "@utils/routeConstants";
+import { useGroupCourse } from "@utils/services/groupService";
+import { useTranslation } from "react-i18next";
+import { Link, useParams } from "react-router-dom";
 
 const GroupCourse = ({
   searchParams,
@@ -34,27 +34,27 @@ const GroupCourse = ({
     <Container fluid>
       <Flex
         my={10}
-        wrap={'wrap'}
-        style={{ justifyContent: 'space-between', alignItems: 'center' }}
+        wrap={"wrap"}
+        style={{ justifyContent: "space-between", alignItems: "center" }}
       >
-        <Title style={{ flexGrow: 2 }}>{t('trainings')}</Title>
+        <Title style={{ flexGrow: 2 }}>{t("trainings")}</Title>
         <Flex
           style={{
-            justifyContent: 'end',
-            alignItems: 'center',
+            justifyContent: "end",
+            alignItems: "center",
           }}
         >
           {auth?.auth && Number(auth.auth?.role) < UserRole.Trainee && (
             <Group justify="flex-end" mb={10}>
               <Link to={RoutePath.courses.create + `?group=${id}`}>
-                <Button>{t('add_new_training')}</Button>
+                <Button>{t("add_new_training")}</Button>
               </Link>
             </Group>
           )}
         </Flex>
       </Flex>
 
-      {searchComponent(t('search_group_trainings') as string)}
+      {searchComponent(t("search_group_trainings") as string)}
       <Flex wrap="wrap" mt={15}>
         {data &&
           data?.items &&
@@ -65,7 +65,7 @@ const GroupCourse = ({
               </div>
             ))
           ) : (
-            <Box>{t('no_trainings_found')}</Box>
+            <Box>{t("no_trainings_found")}</Box>
           ))}
       </Flex>
       {isLoading && <Loader />}

@@ -1,6 +1,6 @@
-import { Box, Title as Heading, ScrollArea, Text } from '@mantine/core';
-import SubjectiveAnswer from './SubjectiveAnswer';
-import { useTranslation } from 'react-i18next';
+import { Box, Title as Heading, ScrollArea, Text } from "@mantine/core";
+import SubjectiveAnswer from "./SubjectiveAnswer";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   name: string;
@@ -18,7 +18,7 @@ const SubjectiveData = ({ name, answers, responseCount }: IProps) => {
       <Box mb={15}>
         <Heading order={4}>{name}</Heading>
         <Text fz="sm" c="dimmed">
-          {t('responses')}: {responseCount}
+          {t("responses")}: {responseCount}
         </Text>
 
         <ScrollArea.Autosize mah={250} placeholder="">

@@ -1,5 +1,5 @@
-import UserShortProfile from '@components/UserShortProfile';
-import useAuth from '@hooks/useAuth';
+import UserShortProfile from "@components/UserShortProfile";
+import useAuth from "@hooks/useAuth";
 import {
   ActionIcon,
   Anchor,
@@ -12,29 +12,29 @@ import {
   Menu,
   Progress,
   Text,
-} from '@mantine/core';
+} from "@mantine/core";
 import {
   IconChevronRight,
   IconDotsVertical,
   IconGraph,
   IconSettings,
-} from '@tabler/icons-react';
-import { UserRole } from '@utils/enums';
-import getCourseOgImageUrl from '@utils/getCourseOGImage';
-import { getInitials } from '@utils/getInitialName';
-import RoutePath from '@utils/routeConstants';
-import { useGeneralSetting } from '@utils/services/adminService';
-import { DashboardCourses } from '@utils/services/dashboardService';
-import { IUser } from '@utils/services/types';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import classes from './styles/trainingCard.module.css';
+} from "@tabler/icons-react";
+import { UserRole } from "@utils/enums";
+import getCourseOgImageUrl from "@utils/getCourseOGImage";
+import { getInitials } from "@utils/getInitialName";
+import RoutePath from "@utils/routeConstants";
+import { useGeneralSetting } from "@utils/services/adminService";
+import { DashboardCourses } from "@utils/services/dashboardService";
+import { IUser } from "@utils/services/types";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import classes from "./styles/trainingCard.module.css";
 
 const StudentAvatar = ({ data }: { data: IUser }) => {
   return (
     <Avatar src={data.imageUrl} radius="xl">
-      {' '}
-      {!data.imageUrl && getInitials(data.fullName ?? '')}
+      {" "}
+      {!data.imageUrl && getInitials(data.fullName ?? "")}
     </Avatar>
   );
 };
@@ -48,8 +48,8 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
   const companyLogo = generalSettings.data?.data.logoUrl;
 
   return (
-    <Card withBorder radius={'md'} p={'sm'} className={classes.card}>
-      <Flex style={{ justifyContent: 'space-between' }}>
+    <Card withBorder radius={"md"} p={"sm"} className={classes.card}>
+      <Flex style={{ justifyContent: "space-between" }}>
         <Box w="180">
           <Image
             src={getCourseOgImageUrl({
@@ -61,7 +61,7 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
             })}
             radius="sm"
             height={100}
-            width={'100%'}
+            width={"100%"}
             fit="contain"
           />
         </Box>
@@ -82,14 +82,14 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
                 </ActionIcon>
               </Menu.Target>
               <Menu.Dropdown>
-                <Menu.Label>{t('manage')}</Menu.Label>
+                <Menu.Label>{t("manage")}</Menu.Label>
                 <Menu.Item
                   leftSection={<IconSettings size={14} />}
                   component={Link}
                   to={RoutePath.manageCourse.manage(data.slug).route}
                   rightSection={<IconChevronRight size={12} stroke={1.5} />}
                 >
-                  {t('statistics')}
+                  {t("statistics")}
                 </Menu.Item>
                 <Menu.Item
                   leftSection={<IconGraph size={14} />}
@@ -97,7 +97,7 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
                   to={RoutePath.manageCourse.lessonsStat(data.slug).route}
                   rightSection={<IconChevronRight size={12} stroke={1.5} />}
                 >
-                  {t('lesson_stats')}
+                  {t("lesson_stats")}
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>
@@ -110,18 +110,18 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
         size="lg"
         mt="md"
         truncate="end"
-        maw={'100%'}
+        maw={"100%"}
       >
         {data.name}
       </Anchor>
       {Number(role) === UserRole.Trainee && (
         <div>
           <Text c="dimmed" fz="sm" mt="md">
-            {t('progress')}
+            {t("progress")}
           </Text>
           <Progress
             value={data.percentage}
-            aria-label={t('progress') as string}
+            aria-label={t("progress") as string}
             mt={5}
             size="md"
           ></Progress>
@@ -132,13 +132,13 @@ const TrainingCards = ({ data }: { data: DashboardCourses }) => {
         <Group justify="space-between" mt="xs">
           <UserShortProfile user={data.user} size="xs" />
           {Number(role) !== UserRole.Trainee && (
-            <Avatar.Group spacing={'sm'}>
+            <Avatar.Group spacing={"sm"}>
               {data.students?.length > 0 ? (
                 data.students.slice(0, 3).map((x) => {
                   return <StudentAvatar data={x} key={x.id} />;
                 })
               ) : (
-                <Text size="xs">{t('no_user_enrolled')}</Text>
+                <Text size="xs">{t("no_user_enrolled")}</Text>
               )}
               {data.students?.length > 3 && (
                 <Avatar

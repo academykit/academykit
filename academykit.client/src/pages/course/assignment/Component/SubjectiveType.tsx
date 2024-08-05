@@ -1,8 +1,8 @@
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
-import { UseFormReturnType } from '@mantine/form';
-import { useDebouncedValue } from '@mantine/hooks';
-import { IAssignmentQuestion } from '@utils/services/assignmentService';
-import { useEffect, useState } from 'react';
+import RichTextEditor from "@components/Ui/RichTextEditor/Index";
+import { UseFormReturnType } from "@mantine/form";
+import { useDebouncedValue } from "@mantine/hooks";
+import { IAssignmentQuestion } from "@utils/services/assignmentService";
+import { useEffect, useState } from "react";
 
 type Props = {
   form: UseFormReturnType<
@@ -13,7 +13,7 @@ type Props = {
 };
 
 const SubjectiveType = ({ form, currentIndex }: Props) => {
-  const [value, setValue] = useState(form.values[currentIndex]?.answer || '');
+  const [value, setValue] = useState(form.values[currentIndex]?.answer || "");
   const [debounced] = useDebouncedValue(value, 100, { leading: true });
   useEffect(() => {
     form.setFieldValue(`${currentIndex}.answer`, debounced);

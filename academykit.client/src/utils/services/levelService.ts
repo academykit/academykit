@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import errorType from './axiosError';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
-import { IUser } from './types';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import errorType from "./axiosError";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
+import { IUser } from "./types";
 
 export interface ILevel {
   id: string;

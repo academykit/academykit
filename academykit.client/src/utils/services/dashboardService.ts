@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
-import { IPaginated, IUser } from './types';
+import { useQuery } from "@tanstack/react-query";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
+import { IPaginated, IUser } from "./types";
 
 export interface DashboardStats {
   totalUsers: number;

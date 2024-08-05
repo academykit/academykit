@@ -1,16 +1,16 @@
-import Admin from '@components/Dashboard/Admin';
-import EventCard from '@components/Dashboard/EventCard';
-import Trainers from '@components/Dashboard/Trainers';
-import { User } from '@components/Dashboard/User';
-import useAuth from '@hooks/useAuth';
-import { Card, Container, Grid, ScrollArea, Text } from '@mantine/core';
-import { UserRole } from '@utils/enums';
+import Admin from "@components/Dashboard/Admin";
+import EventCard from "@components/Dashboard/EventCard";
+import Trainers from "@components/Dashboard/Trainers";
+import { User } from "@components/Dashboard/User";
+import useAuth from "@hooks/useAuth";
+import { Card, Container, Grid, ScrollArea, Text } from "@mantine/core";
+import { UserRole } from "@utils/enums";
 import {
   useDashboard,
   useDashboardCourse,
   useUpcomingDashboardDetail,
-} from '@utils/services/dashboardService';
-import { useTranslation } from 'react-i18next';
+} from "@utils/services/dashboardService";
+import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {
   const dashboard = useDashboard();
@@ -25,13 +25,13 @@ const Dashboard = () => {
 
   return (
     <Container fluid>
-      <Text size="lg" fw="bolder" mb={'sm'}>
-        {t('overview')}
+      <Text size="lg" fw="bolder" mb={"sm"}>
+        {t("overview")}
       </Text>
       <Grid>
         <Grid.Col span={{ sm: 3 }} order={{ sm: 2 }}>
           <Card padding={10}>
-            <Text size="lg" fw="bolder" mb={'sm'}>
+            <Text size="lg" fw="bolder" mb={"sm"}>
               Upcoming Events
             </Text>
             <ScrollArea.Autosize mah={570} offsetScrollbars>

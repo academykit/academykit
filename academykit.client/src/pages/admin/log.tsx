@@ -1,6 +1,6 @@
 import withSearchPagination, {
   IWithSearchPagination,
-} from '@hoc/useSearchPagination';
+} from "@hoc/useSearchPagination";
 import {
   Box,
   Flex,
@@ -13,116 +13,116 @@ import {
   Table,
   Text,
   Title,
-} from '@mantine/core';
-import { IconEye } from '@tabler/icons-react';
-import { SeverityType } from '@utils/enums';
+} from "@mantine/core";
+import { IconEye } from "@tabler/icons-react";
+import { SeverityType } from "@utils/enums";
 import {
   IServerLogs,
   useGetServerLogs,
   useGetSingleLog,
-} from '@utils/services/adminService';
-import { IPaginated } from '@utils/services/types';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+} from "@utils/services/adminService";
+import { IPaginated } from "@utils/services/types";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const serverLogs: IServerLogs[] = [
   {
-    id: '1',
+    id: "1",
     type: 1,
-    message: 'Error occurred',
-    trackBy: 'ABC123',
-    timeStamp: new Date('2023-07-07T10:30:00Z'),
+    message: "Error occurred",
+    trackBy: "ABC123",
+    timeStamp: new Date("2023-07-07T10:30:00Z"),
   },
   {
-    id: '2',
+    id: "2",
     type: 2,
-    message: 'Warning: Disk space low',
-    trackBy: 'DEF456',
-    timeStamp: new Date('2023-07-07T11:45:00Z'),
+    message: "Warning: Disk space low",
+    trackBy: "DEF456",
+    timeStamp: new Date("2023-07-07T11:45:00Z"),
   },
   {
-    id: '3',
+    id: "3",
     type: 1,
-    message: 'Critical issue detected',
-    trackBy: 'GHI789',
-    timeStamp: new Date('2023-07-07T13:15:00Z'),
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
   },
   {
-    id: '4',
+    id: "4",
     type: 1,
-    message: 'Critical issue detected',
-    trackBy: 'GHI789',
-    timeStamp: new Date('2023-07-07T13:15:00Z'),
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
   },
   {
-    id: '5',
+    id: "5",
     type: 1,
-    message: 'Critical issue detected',
-    trackBy: 'GHI789',
-    timeStamp: new Date('2023-07-07T13:15:00Z'),
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
   },
   {
-    id: '6',
+    id: "6",
     type: 1,
-    message: 'Critical issue detected',
-    trackBy: 'GHI789',
-    timeStamp: new Date('2023-07-07T13:15:00Z'),
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
   },
   {
-    id: '7',
+    id: "7",
     type: 1,
-    message: 'Critical issue detected',
-    trackBy: 'GHI789',
-    timeStamp: new Date('2023-07-07T13:15:00Z'),
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
   },
   {
-    id: '8',
+    id: "8",
     type: 1,
-    message: 'Critical issue detected',
-    trackBy: 'GHI789',
-    timeStamp: new Date('2023-07-07T13:15:00Z'),
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
   },
   {
-    id: '9',
+    id: "9",
     type: 1,
-    message: 'Critical issue detected',
-    trackBy: 'GHI789',
-    timeStamp: new Date('2023-07-07T13:15:00Z'),
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
   },
   {
-    id: '10',
+    id: "10",
     type: 1,
-    message: 'Critical issue detected',
-    trackBy: 'GHI789',
-    timeStamp: new Date('2023-07-07T13:15:00Z'),
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
   },
   {
-    id: '11',
+    id: "11",
     type: 1,
-    message: 'Critical issue detected',
-    trackBy: 'GHI789',
-    timeStamp: new Date('2023-07-07T13:15:00Z'),
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
   },
   {
-    id: '12',
+    id: "12",
     type: 1,
-    message: 'Critical issue detected',
-    trackBy: 'GHI789',
-    timeStamp: new Date('2023-07-07T13:15:00Z'),
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
   },
   {
-    id: '13',
+    id: "13",
     type: 1,
-    message: 'Critical issue detected',
-    trackBy: 'GHI789',
-    timeStamp: new Date('2023-07-07T13:15:00Z'),
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
   },
   {
-    id: '14',
+    id: "14",
     type: 1,
-    message: 'Critical issue detected',
-    trackBy: 'GHI789',
-    timeStamp: new Date('2023-07-07T13:15:00Z'),
+    message: "Critical issue detected",
+    trackBy: "GHI789",
+    timeStamp: new Date("2023-07-07T13:15:00Z"),
   },
   // Add more dummy data as needed
 ];
@@ -145,7 +145,7 @@ const DetailFields = ({
   return (
     <Grid.Col span={6}>
       <div>
-        <Text fw={'bold'}>{title}</Text>
+        <Text fw={"bold"}>{title}</Text>
         <Text>{content}</Text>
       </div>
     </Grid.Col>
@@ -160,15 +160,15 @@ const LogDetails = ({ logId }: { logId: string }) => {
     <>
       <Grid>
         <DetailFields
-          title={t('severity')}
-          content={(data && SeverityType[data?.type]) ?? '-'}
+          title={t("severity")}
+          content={(data && SeverityType[data?.type]) ?? "-"}
         />
         <DetailFields
-          title={t('time_stamp')}
-          content={data?.timeStamp.toISOString() ?? '-'}
+          title={t("time_stamp")}
+          content={data?.timeStamp.toISOString() ?? "-"}
         />
-        <DetailFields title={t('message')} content={data?.message ?? '-'} />
-        <DetailFields title={t('faced_by')} content={data?.trackBy ?? '-'} />
+        <DetailFields title={t("message")} content={data?.message ?? "-"} />
+        <DetailFields title={t("faced_by")} content={data?.trackBy ?? "-"} />
       </Grid>
     </>
   );
@@ -182,7 +182,7 @@ const Rows = ({ item }: { item: IServerLogs }) => {
     <>
       <Table.Tr>
         <Modal
-          title={t('log_details')}
+          title={t("log_details")}
           opened={viewLog}
           onClose={() => {
             setViewLog(false);
@@ -223,7 +223,7 @@ const Rows = ({ item }: { item: IServerLogs }) => {
           <Group gap="sm">
             <IconEye
               onClick={() => setViewLog(true)}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: "pointer" }}
             />
           </Group>
         </Table.Td>
@@ -246,29 +246,29 @@ const Log = ({
   return (
     <>
       <Group
-        style={{ justifyContent: 'space-between', alignItems: 'center' }}
+        style={{ justifyContent: "space-between", alignItems: "center" }}
         mb={15}
       >
-        <Title>{t('log')}</Title>
+        <Title>{t("log")}</Title>
       </Group>
 
       {/* Search and Filter section */}
       <Flex mb={10}>
-        {startDateFilterComponent(t('start_date'), 'StartDate')}
-        {endDateFilterComponent(t('end_date'), 'EndDate')}
-        <div style={{ marginRight: '8px' }}>
+        {startDateFilterComponent(t("start_date"), "StartDate")}
+        {endDateFilterComponent(t("end_date"), "EndDate")}
+        <div style={{ marginRight: "8px" }}>
           {filterComponent(
             [
-              { value: '1', label: t('info') },
-              { value: '2', label: t('error') },
-              { value: '3', label: t('warning') },
-              { value: '4', label: t('debug') },
+              { value: "1", label: t("info") },
+              { value: "2", label: t("error") },
+              { value: "3", label: t("warning") },
+              { value: "4", label: t("debug") },
             ],
-            t('severity'),
-            'Severity'
+            t("severity"),
+            "Severity"
           )}
         </div>
-        {searchComponent(t('search_logs') as string)}
+        {searchComponent(t("search_logs") as string)}
       </Flex>
 
       {/* table section */}
@@ -285,11 +285,11 @@ const Log = ({
             >
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th>{t('severity')}</Table.Th>
-                  <Table.Th>{t('time_stamp')}</Table.Th>
-                  <Table.Th>{t('message')}</Table.Th>
-                  <Table.Th>{t('faced_by')}</Table.Th>
-                  <Table.Th>{t('actions')}</Table.Th>
+                  <Table.Th>{t("severity")}</Table.Th>
+                  <Table.Th>{t("time_stamp")}</Table.Th>
+                  <Table.Th>{t("message")}</Table.Th>
+                  <Table.Th>{t("faced_by")}</Table.Th>
+                  <Table.Th>{t("actions")}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -303,7 +303,7 @@ const Log = ({
       ) : getLogData.isLoading ? (
         <Loader />
       ) : (
-        <Box mt={10}>{t('no_logs')}</Box>
+        <Box mt={10}>{t("no_logs")}</Box>
       )}
 
       {getLogData.data &&

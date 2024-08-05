@@ -1,16 +1,16 @@
-import lazyWithRetry from '@utils/lazyImportWithReload';
-import { Route, Routes } from 'react-router-dom';
+import lazyWithRetry from "@utils/lazyImportWithReload";
+import { Route, Routes } from "react-router-dom";
 
 const AssessmentNavLayout = lazyWithRetry(
-  () => import('../component/AssessmentNavLayout')
+  () => import("../component/AssessmentNavLayout")
 );
 const AssessmentQuestionList = lazyWithRetry(
-  () => import('../AssessmentQuestionList')
+  () => import("../AssessmentQuestionList")
 );
-const AssessmentSetting = lazyWithRetry(() => import('../AssessmentSetting'));
-const EditAssessment = lazyWithRetry(() => import('../EditAssessment'));
+const AssessmentSetting = lazyWithRetry(() => import("../AssessmentSetting"));
+const EditAssessment = lazyWithRetry(() => import("../EditAssessment"));
 const ManageAssessmentStudents = lazyWithRetry(
-  () => import('@pages/assessment/ManageAssessmentStudents')
+  () => import("@pages/assessment/ManageAssessmentStudents")
 );
 
 const AssessmentDetailRoutes = () => {

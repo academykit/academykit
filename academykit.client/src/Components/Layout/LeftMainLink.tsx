@@ -1,5 +1,5 @@
-import useAuth from '@hooks/useAuth';
-import { NavLink, ThemeIcon } from '@mantine/core';
+import useAuth from "@hooks/useAuth";
+import { NavLink, ThemeIcon } from "@mantine/core";
 import {
   IconCertificate,
   IconClipboardText,
@@ -8,14 +8,14 @@ import {
   IconSettings,
   IconUser,
   IconUsers,
-} from '@tabler/icons-react';
-import { TOKEN_STORAGE } from '@utils/constants';
-import { UserRole } from '@utils/enums';
-import RoutePath from '@utils/routeConstants';
-import { adminAndOrgRouteGroups, getCurrentNavGroup } from '@utils/routeGroups';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+} from "@tabler/icons-react";
+import { TOKEN_STORAGE } from "@utils/constants";
+import { UserRole } from "@utils/enums";
+import RoutePath from "@utils/routeConstants";
+import { adminAndOrgRouteGroups, getCurrentNavGroup } from "@utils/routeGroups";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useLocation } from "react-router-dom";
 
 type MainLinkProps = {
   icon: React.ReactNode;
@@ -41,7 +41,7 @@ function MainLink({
   href,
   onClose,
   replace,
-  target = '_self',
+  target = "_self",
   childRoutes,
   authRole,
 }: MainLinkProps) {
@@ -50,7 +50,7 @@ function MainLink({
 
   return (
     <>
-      {target === '_self' &&
+      {target === "_self" &&
         (childRoutes ? (
           <>
             <NavLink
@@ -64,7 +64,7 @@ function MainLink({
               mb={5}
               active={
                 href ==
-                '/' + decodeURI(router.pathname.split('/').at(1) as string) // decodeURI for multi-language support
+                "/" + decodeURI(router.pathname.split("/").at(1) as string) // decodeURI for multi-language support
               }
             >
               {childRoutes.map((route) => {
@@ -84,10 +84,10 @@ function MainLink({
                         route.label ==
                         getCurrentNavGroup(
                           router.pathname as string,
-                          adminAndOrgRouteGroups
+                          adminAndOrgRouteGroups,
                         )
                       }
-                      target={route.target ?? '_self'}
+                      target={route.target ?? "_self"}
                     />
                   );
                 }
@@ -101,7 +101,7 @@ function MainLink({
             to={href}
             target={target}
             replace={replace}
-            active={router.pathname.split('/')[1] === href.split('/')[1]}
+            active={router.pathname.split("/")[1] === href.split("/")[1]}
             label={t(`${label}`)}
             leftSection={<ThemeIcon color={color}>{icon}</ThemeIcon>}
             style={(theme) => ({
@@ -111,7 +111,7 @@ function MainLink({
           />
         ))}
 
-      {target !== '_self' && (
+      {target !== "_self" && (
         <NavLink
           component="a"
           href={href}
@@ -138,49 +138,49 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
   const data = [
     {
       icon: <IconDashboard size={16} />,
-      color: 'purple',
-      label: 'dashboard',
-      href: '/',
+      color: "purple",
+      label: "dashboard",
+      href: "/",
       replace: true,
       role: UserRole.Trainee,
     },
     {
       icon: <IconUser size={16} />,
-      color: 'blue',
-      label: 'users',
-      href: '/users',
+      color: "blue",
+      label: "users",
+      href: "/users",
       replace: true,
       role: UserRole.Admin,
     },
     {
       icon: <IconUsers size={16} />,
-      color: 'yellow',
-      label: 'groups',
-      href: '/groups',
+      color: "yellow",
+      label: "groups",
+      href: "/groups",
       replace: true,
       role: UserRole.Trainee,
     },
     {
       icon: <IconCertificate size={16} />,
-      color: 'red',
-      label: 'trainings',
-      href: '/trainings/list',
+      color: "red",
+      label: "trainings",
+      href: "/trainings/list",
       replace: true,
       role: UserRole.Trainee,
     },
     {
       icon: <IconClipboardText size={16} />,
-      color: 'cyan',
-      label: 'assessments',
-      href: '/assessment/list',
+      color: "cyan",
+      label: "assessments",
+      href: "/assessment/list",
       replace: true,
       role: UserRole.Trainee,
     },
     {
       icon: <IconListDetails size={16} />,
-      color: 'violet',
-      label: 'mcq_pools',
-      href: '/pools',
+      color: "violet",
+      label: "mcq_pools",
+      href: "/pools",
       replace: true,
       role: UserRole.Trainer,
     },
@@ -194,33 +194,33 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
     // },
     {
       icon: <IconSettings size={16} />,
-      color: 'teal',
-      label: 'settings',
-      href: '/settings',
+      color: "teal",
+      label: "settings",
+      href: "/settings",
       replace: false,
       role: UserRole.Trainee,
       childRoutes: [
-        { label: 'account', href: '/settings', role: UserRole.Trainee },
+        { label: "account", href: "/settings", role: UserRole.Trainee },
         {
-          label: 'admin',
+          label: "admin",
           href:
             Number(auth?.auth?.role) == UserRole.Admin // admin has no access to general settings
-              ? '/settings/zoomLicense'
-              : '/settings/general',
+              ? "/settings/zoomLicense"
+              : "/settings/general",
           role: UserRole.Admin,
         },
         {
-          label: 'reviews',
-          href: '/settings/certificate',
+          label: "reviews",
+          href: "/settings/certificate",
           role: UserRole.Admin,
         },
         {
-          label: 'system',
+          label: "system",
           href:
             RoutePath.settings.hangfire() +
-            '?access_token=' +
+            "?access_token=" +
             localStorage.getItem(TOKEN_STORAGE),
-          target: '_blank',
+          target: "_blank",
           role: UserRole.Admin,
         },
       ],
@@ -235,12 +235,12 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
             {...link}
             key={link.label}
             onClose={onClose}
-            target={link.label === 'help' ? '_blank' : '_self'}
+            target={link.label === "help" ? "_blank" : "_self"}
             authRole={auth?.auth?.role.toString()}
           />
         );
       }
     }
   });
-  return <div style={{ padding: '5px !important' }}>{links}</div>;
+  return <div style={{ padding: "5px !important" }}>{links}</div>;
 }

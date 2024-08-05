@@ -1,11 +1,11 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { EFileStorageType, MailType } from '@utils/enums';
-import queryStringGenerator from '@utils/queryStringGenerator';
-import axios from 'axios';
-import errorType from './axiosError';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
-import { IAddUser, IPaginated, IUser, IUserProfile } from './types';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { EFileStorageType, MailType } from "@utils/enums";
+import queryStringGenerator from "@utils/queryStringGenerator";
+import axios from "axios";
+import errorType from "./axiosError";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
+import { IAddUser, IPaginated, IUser, IUserProfile } from "./types";
 
 export interface IMailNotification {
   id: string;
@@ -108,7 +108,7 @@ const getUsers = (search: string) => {
 
 export const useUsers = (search: string) =>
   useQuery({
-    queryKey: ['user-list', search],
+    queryKey: ["user-list", search],
 
     queryFn: () => {
       return getUsers(search);
@@ -123,7 +123,7 @@ const updateUser = ({ data, id }: { data: any; id: string }) =>
 export const useUpdateUser = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.auth.getUser],
+    mutationKey: ["update" + api.auth.getUser],
     mutationFn: updateUser,
 
     onSuccess: () => {
@@ -149,12 +149,12 @@ const updateUserStatus = async ({
 export const useUpdateUserStatus = (search: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['user-list', search],
+    mutationKey: ["user-list", search],
     mutationFn: updateUserStatus,
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['user-list', search],
+        queryKey: ["user-list", search],
       });
     },
   });
@@ -171,7 +171,7 @@ export const useAddUser = (search: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['user-list', search],
+        queryKey: ["user-list", search],
       });
     },
   });
@@ -183,12 +183,12 @@ const editUser = async ({ id, data }: { id: string; data: IAddUser }) =>
 export const useEditUser = (id: string, search: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.adminUser.editUsers(id)],
+    mutationKey: ["update" + api.adminUser.editUsers(id)],
     mutationFn: editUser,
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['user-list', search],
+        queryKey: ["user-list", search],
       });
     },
   });
@@ -210,7 +210,7 @@ export const useLevelSetting = () => {
 export const usePostLevelSetting = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['post' + api.adminUser.postLevelSetting],
+    mutationKey: ["post" + api.adminUser.postLevelSetting],
 
     mutationFn: (data: { name: string }) => {
       return httpClient.post<ILevel>(api.adminUser.postLevelSetting, data);
@@ -237,7 +237,7 @@ const updateLevelSetting = async ({
 export const useUpdateLevelSetting = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.adminUser.getLevelSetting],
+    mutationKey: ["update" + api.adminUser.getLevelSetting],
     mutationFn: updateLevelSetting,
 
     onSuccess: () => {
@@ -272,12 +272,12 @@ export const useDeleteLevelSetting = () => {
 export const updateDepartmentStatus = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.adminUser.updateDepartmentSetting(id)],
+    mutationKey: ["update" + api.adminUser.updateDepartmentSetting(id)],
 
     mutationFn: (data: { name: string }) => {
       return httpClient.put<ILevel>(
         api.adminUser.updateDepartmentSetting(id),
-        data
+        data,
       );
     },
 
@@ -291,7 +291,7 @@ export const updateDepartmentStatus = (id: string) => {
 
 const getDepartment = async (search: string) =>
   await httpClient.get<IPaginated<IDepartmentSetting>>(
-    api.adminUser.getDepartmentSettings + `?${search}`
+    api.adminUser.getDepartmentSettings + `?${search}`,
   );
 
 export const useDepartmentSetting = (search: string) => {
@@ -306,12 +306,12 @@ export const useDepartmentSetting = (search: string) => {
 export const usePostDepartmentSetting = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['post' + api.adminUser.getDepartmentSettings],
+    mutationKey: ["post" + api.adminUser.getDepartmentSettings],
 
     mutationFn: (data: { name: string; isActive: boolean }) => {
       return httpClient.post<IDepartmentSetting>(
         api.adminUser.getDepartmentSettings,
-        data
+        data,
       );
     },
 
@@ -347,11 +347,11 @@ export const useDeleteDepartmentSetting = () => {
 
 export const useUpdateDepartmentSettingStatus = (
   id: string,
-  status: boolean
+  status: boolean,
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['patch' + api.adminUser.updateDepartmentStatus(id, status)],
+    mutationKey: ["patch" + api.adminUser.updateDepartmentStatus(id, status)],
 
     mutationFn: () => {
       return httpClient.patch(api.adminUser.updateDepartmentStatus(id, status));
@@ -381,7 +381,7 @@ const updateDepartmentSetting = async ({
 export const useUpdateDepartmentSetting = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.adminUser.getDepartmentSettings],
+    mutationKey: ["update" + api.adminUser.getDepartmentSettings],
     mutationFn: updateDepartmentSetting,
 
     onSuccess: () => {
@@ -409,7 +409,7 @@ export const useZoomSetting = () => {
 export const useUpdateZoomSetting = (id: string | undefined) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.adminUser.getZoomSettings],
+    mutationKey: ["update" + api.adminUser.getZoomSettings],
 
     mutationFn: (data: {
       oAuthAccountId: string;
@@ -421,7 +421,7 @@ export const useUpdateZoomSetting = (id: string | undefined) => {
     }) => {
       return httpClient.put<IZoomSetting>(
         api.adminUser.updateZoomSettings(id),
-        data
+        data,
       );
     },
 
@@ -449,12 +449,12 @@ export const useSMTPSetting = () => {
 export const useUpdateSMTPSetting = (id: string | undefined) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.adminUser.getSMTPSettings],
+    mutationKey: ["update" + api.adminUser.getSMTPSettings],
 
     mutationFn: (data: ISMTPSettingUpdate) => {
       return httpClient.put<ISMTPSetting>(
         api.adminUser.updateSMTPSettings(id),
-        data
+        data,
       );
     },
 
@@ -493,7 +493,7 @@ export const useCompanySetting = () => {
 export const useUpdateGeneralSetting = (id: string | undefined) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.adminUser.getGeneralSettings],
+    mutationKey: ["update" + api.adminUser.getGeneralSettings],
 
     mutationFn: (data: IGeneralSettingUpdate) => {
       return httpClient.put(api.adminUser.updateGeneralSettings(id), data);
@@ -514,7 +514,7 @@ export const useZoomLicense = () => {
 
     queryFn: () => {
       return httpClient.get<IPaginated<IZoomLicense<IUser>>>(
-        api.adminUser.getZoomLicense
+        api.adminUser.getZoomLicense,
       );
     },
 
@@ -526,7 +526,7 @@ export const useZoomLicense = () => {
 const getActiveZoomLicense = (
   startDateTime: string,
   duration: number,
-  lessonIdentity?: string
+  lessonIdentity?: string,
 ) => {
   const query = queryStringGenerator({
     startDateTime,
@@ -534,17 +534,17 @@ const getActiveZoomLicense = (
     lessonIdentity,
   });
   return httpClient.get<IZoomLicense<IUser>[]>(
-    api.adminUser.getActiveZoomLicense(query)
+    api.adminUser.getActiveZoomLicense(query),
   );
 };
 export const useActiveZoomLicense = (
   startDateTime: string,
   duration: number,
-  lessonIdentity?: string
+  lessonIdentity?: string,
 ) => {
   return useQuery({
     queryKey: [
-      'active' + api.adminUser.getZoomLicense,
+      "active" + api.adminUser.getZoomLicense,
       startDateTime,
       duration,
     ],
@@ -563,7 +563,7 @@ export const updateZoomLicenseStatus = async ({
   status: boolean;
 }) => {
   return await httpClient.patch(
-    api.adminUser.updateZoomLicenseStatus(id, status)
+    api.adminUser.updateZoomLicenseStatus(id, status),
   );
 };
 
@@ -595,7 +595,7 @@ const updateZoomLicense = ({ id, data }: { id: string; data: any }) =>
 export const useUpdateZoomLicense = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.adminUser.getZoomLicense],
+    mutationKey: ["update" + api.adminUser.getZoomLicense],
     mutationFn: updateZoomLicense,
 
     onSuccess: () => {
@@ -639,7 +639,7 @@ export interface IFileStorageValues {
 }
 const getFileStorageSetting = async () => {
   return await httpClient.get<IFileStorage[]>(
-    api.fileStorage.getFileStorageSetting
+    api.fileStorage.getFileStorageSetting,
   );
 };
 
@@ -670,7 +670,7 @@ export const useGetFileStorageSetting = () => {
 const updateFileStorage = async (data: IFileStorage[]) =>
   await httpClient.put<IFileStorage>(
     api.fileStorage.updateFileStorageSetting,
-    data.filter((x) => x.isActive)[0]
+    data.filter((x) => x.isActive)[0],
   );
 
 export const useUpdateFileStorage = () => {
@@ -710,12 +710,12 @@ interface ITrainerGet {
 
 const getTrainers = async (search: string, lessonType?: number, id?: string) =>
   await httpClient.get<ITrainerGet[]>(
-    api.adminUser.getTrainer(search, lessonType, id)
+    api.adminUser.getTrainer(search, lessonType, id),
   );
 export const useGetTrainers = (
   search: string,
   lessonType?: number,
-  id?: string
+  id?: string,
 ) =>
   useQuery({
     queryKey: [api.adminUser.getTrainer(search, lessonType, id)],
@@ -740,7 +740,7 @@ const getLogs = async (query: string) => {
 
 export const useGetServerLogs = (query: string) => {
   return useQuery({
-    queryKey: ['logs' + query],
+    queryKey: ["logs" + query],
     queryFn: () => getLogs(query),
 
     //enabled: !!startDateTime && !!duration,
@@ -754,7 +754,7 @@ const getSingleLog = async (id: string) => {
 
 export const useGetSingleLog = (id: string) => {
   return useQuery({
-    queryKey: ['log' + id],
+    queryKey: ["log" + id],
     queryFn: () => getSingleLog(id),
     select: (data) => data.data,
   });
@@ -764,7 +764,7 @@ export const useGetSingleLog = (id: string) => {
 
 const getMailNotification = async (search: string) =>
   httpClient.get<IPaginated<IMailNotification>>(
-    api.adminUser.getMailNotification + `?${search}`
+    api.adminUser.getMailNotification + `?${search}`,
   );
 
 export const useMailNotification = (search: string) => {
@@ -777,7 +777,7 @@ export const useMailNotification = (search: string) => {
   });
 };
 
-type IPostMailNotification = Omit<IMailNotification, 'id'>;
+type IPostMailNotification = Omit<IMailNotification, "id">;
 const updateMailNotificationDetail = ({
   id,
   data,
@@ -789,7 +789,7 @@ const updateMailNotificationDetail = ({
 export const useUpdateMailNotification = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.adminUser.getMailNotification],
+    mutationKey: ["update" + api.adminUser.getMailNotification],
     mutationFn: updateMailNotificationDetail,
 
     onSuccess: () => {
@@ -803,12 +803,12 @@ export const useUpdateMailNotification = () => {
 export const usePostMailNotification = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['post' + api.adminUser.getMailNotification],
+    mutationKey: ["post" + api.adminUser.getMailNotification],
 
     mutationFn: (data: IPostMailNotification) => {
       return httpClient.post<IMailNotification>(
         api.adminUser.getMailNotification,
-        data
+        data,
       );
     },
 
@@ -843,7 +843,7 @@ const testEmail = async ({ id, data }: { id: string; data: any }) =>
 export const useTestEmail = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['test' + api.adminUser.testEmail],
+    mutationKey: ["test" + api.adminUser.testEmail],
     mutationFn: testEmail,
 
     onSuccess: () => {

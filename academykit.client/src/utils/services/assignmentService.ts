@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { QuestionType } from '@utils/enums';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
-import { IPaginated, IUser } from './types';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { QuestionType } from "@utils/enums";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
+import { IPaginated, IUser } from "./types";
 
 interface IAssignmentAttachment {
   assignmentId: string;
@@ -180,12 +180,12 @@ const postAssigmentSubmit = ({
 export const useSubmitAssignment = ({ lessonId }: { lessonId: string }) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['submitAssignment'],
+    mutationKey: ["submitAssignment"],
     mutationFn: postAssigmentSubmit,
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.assignment.list(lessonId, '')],
+        queryKey: [api.assignment.list(lessonId, "")],
       });
     },
   });
@@ -194,7 +194,7 @@ export const useSubmitAssignment = ({ lessonId }: { lessonId: string }) => {
 export interface IAssignmentReview {
   user: IUser;
   lessonId: string;
-  lessonSlug: 'string';
+  lessonSlug: "string";
   assignmentReview: {
     id: string;
     lessonId: string;

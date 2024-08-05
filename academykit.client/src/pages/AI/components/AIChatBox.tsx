@@ -1,13 +1,13 @@
-import { Avatar, Flex, Loader, Paper, Text } from '@mantine/core';
+import { Avatar, Flex, Loader, Paper, Text } from "@mantine/core";
 
 const AIChatBox = () => {
   const isLoading = false;
   return (
     <>
-      <Flex direction={'column'} gap={10} mb={30}>
-        <Flex align={'center'} gap={10}>
-          <Avatar radius="xl" size={'sm'} />
-          <Text size={'sm'} fw="bolder">
+      <Flex direction={"column"} gap={10} mb={30}>
+        <Flex align={"center"} gap={10}>
+          <Avatar radius="xl" size={"sm"} />
+          <Text size={"sm"} fw="bolder">
             Academy Kit AI
           </Text>
         </Flex>
@@ -17,11 +17,11 @@ const AIChatBox = () => {
         ) : (
           <>
             <Paper
-              p={'md'}
+              p={"md"}
               withBorder
-              w={'fit-content'}
-              maw={'80vw'}
-              style={{ wordBreak: 'break-word' }}
+              w={"fit-content"}
+              maw={"80vw"}
+              style={{ wordBreak: "break-word" }}
             >
               Okay, Im on it.
             </Paper>

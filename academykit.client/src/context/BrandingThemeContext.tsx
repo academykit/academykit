@@ -1,6 +1,6 @@
-import { BRANDING_SCHEME_KEY } from '@utils/constants';
-import generateTints, { BrandingThemeType } from '@utils/services/colorService';
-import { Dispatch, FC, SetStateAction, createContext } from 'react';
+import { BRANDING_SCHEME_KEY } from "@utils/constants";
+import generateTints, { BrandingThemeType } from "@utils/services/colorService";
+import { Dispatch, FC, SetStateAction, createContext } from "react";
 
 export interface IBrandingContext {
   brandingTheme: string;
@@ -19,16 +19,16 @@ type Props = {
 };
 
 export const defaultBranding: BrandingThemeType = [
-  '#7AD1DD',
-  '#5FCCDB',
-  '#44CADC',
-  '#2AC9DE',
-  '#1AC2D9',
-  '#11B7CD',
-  '#09ADC3',
-  '#0E99AC',
-  '#128797',
-  '#147885',
+  "#7AD1DD",
+  "#5FCCDB",
+  "#44CADC",
+  "#2AC9DE",
+  "#1AC2D9",
+  "#11B7CD",
+  "#09ADC3",
+  "#0E99AC",
+  "#128797",
+  "#147885",
 ];
 
 const BrandingProvider: FC<Props> = ({
@@ -41,7 +41,7 @@ const BrandingProvider: FC<Props> = ({
   const toggleBrandingTheme = (value: string) => {
     // set new color if chosen by user
     const brandingColors: BrandingThemeType =
-      value == '#0E99AC' ? defaultBranding : generateTints(value, 10);
+      value == "#0E99AC" ? defaultBranding : generateTints(value, 10);
 
     setBrandingThemeValue(brandingColors);
     setBrandingTheme(value);

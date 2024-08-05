@@ -1,9 +1,9 @@
-import moment from 'moment';
+import moment from "moment";
 
 const getDateTime = (startDate: Date, startTime: string) => {
-  const date = moment(startDate).format('DD/MM/YYYY');
+  const date = moment(startDate).format("DD/MM/YYYY");
 
-  const a = moment(`${date} ${startTime}`, 'DD/MM/YYYY HH:mm');
+  const a = moment(`${date} ${startTime}`, "DD/MM/YYYY HH:mm");
 
   return {
     time: a.toDate().toLocaleTimeString(),
@@ -23,7 +23,7 @@ const getDateAndTime = (dates?: string) => {
       date,
     };
   } else {
-    return { time: '', date: '' };
+    return { time: "", date: "" };
   }
 };
 

@@ -1,15 +1,15 @@
-import DeleteModal from '@components/Ui/DeleteModal';
-import UserShortProfile from '@components/UserShortProfile';
-import { Anchor, Button, Card, Group, Menu, Text } from '@mantine/core';
-import { useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons-react';
-import RoutePath from '@utils/routeConstants';
-import errorType from '@utils/services/axiosError';
-import { IPool, useDeleteQuestionPool } from '@utils/services/poolService';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import classes from '../../styles/poolCard.module.css';
+import DeleteModal from "@components/Ui/DeleteModal";
+import UserShortProfile from "@components/UserShortProfile";
+import { Anchor, Button, Card, Group, Menu, Text } from "@mantine/core";
+import { useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
+import RoutePath from "@utils/routeConstants";
+import errorType from "@utils/services/axiosError";
+import { IPool, useDeleteQuestionPool } from "@utils/services/poolService";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import classes from "../../styles/poolCard.module.css";
 
 const PoolCard = ({
   pool: { id: poolId, name, slug, user, questionCount },
@@ -25,14 +25,14 @@ const PoolCard = ({
     try {
       await deletePool.mutateAsync(poolId);
       showNotification({
-        title: t('successful'),
-        message: t('question_pool_delete'),
+        title: t("successful"),
+        message: t("question_pool_delete"),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
-        color: 'red',
-        title: t('error'),
+        color: "red",
+        title: t("error"),
         message: error as string,
       });
     }
@@ -47,14 +47,14 @@ const PoolCard = ({
         onClose={setDeleteModal}
         onConfirm={handleDelete}
       />
-      <Card className={classes.card} p="md" withBorder radius={'md'}>
+      <Card className={classes.card} p="md" withBorder radius={"md"}>
         <Group justify="space-between">
           <Anchor
-            size={'lg'}
+            size={"lg"}
             lineClamp={1}
             component={Link}
             to={RoutePath.pool.questions(slug).route}
-            maw={'80%'}
+            maw={"80%"}
           >
             <Text truncate>{name}</Text>
           </Anchor>
@@ -76,7 +76,7 @@ const PoolCard = ({
                 component={Link}
                 to={RoutePath.pool.details(slug).route}
               >
-                {t('edit')}
+                {t("edit")}
               </Menu.Item>
               <Menu.Divider />
               <Menu.Item
@@ -84,19 +84,19 @@ const PoolCard = ({
                 leftSection={<IconTrash size={14} />}
                 onClick={() => setDeleteModal()}
               >
-                {t('delete')}
+                {t("delete")}
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
         </Group>
-        <Group mt={'sm'}>
-          <UserShortProfile user={user} size={'sm'} />
+        <Group mt={"sm"}>
+          <UserShortProfile user={user} size={"sm"} />
         </Group>
         <Card.Section className={classes.footer}>
           <Group justify="space-between">
             <div>
               <Text size="xs" c="dimmed">
-                {t('total_question')}
+                {t("total_question")}
               </Text>
               <Text fw={500}>{questionCount}</Text>
             </div>

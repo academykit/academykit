@@ -1,6 +1,6 @@
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+import RichTextEditor from "@components/Ui/RichTextEditor/Index";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Box,
   Button,
@@ -14,25 +14,25 @@ import {
   Select,
   Text,
   UnstyledButton,
-} from '@mantine/core';
-import { createFormContext, yupResolver } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import TagMultiSelectCreatable from '@pages/course/component/TagMultiSelectCreatable';
-import { IconPlus, IconTrash } from '@tabler/icons-react';
-import { QuestionType } from '@utils/enums';
-import queryStringGenerator from '@utils/queryStringGenerator';
-import errorType from '@utils/services/axiosError';
-import { usePools } from '@utils/services/poolService';
+} from "@mantine/core";
+import { createFormContext, yupResolver } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import TagMultiSelectCreatable from "@pages/course/component/TagMultiSelectCreatable";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
+import { QuestionType } from "@utils/enums";
+import queryStringGenerator from "@utils/queryStringGenerator";
+import errorType from "@utils/services/axiosError";
+import { usePools } from "@utils/services/poolService";
 import {
   IAddQuestionType,
   useEditQuestion,
   useGetQuestion,
-} from '@utils/services/questionService';
-import { ITag, useAddTag, useTags } from '@utils/services/tagService';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
-import * as Yup from 'yup';
+} from "@utils/services/questionService";
+import { ITag, useAddTag, useTags } from "@utils/services/tagService";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import * as Yup from "yup";
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IAddQuestionType>();
 
@@ -41,16 +41,16 @@ const schema = () => {
   return Yup.object().shape({
     name: Yup.string()
       .trim()
-      .required(t('question_title_required') as string),
+      .required(t("question_title_required") as string),
 
     answers: Yup.array()
-      .when(['type'], {
+      .when(["type"], {
         is: QuestionType.MultipleChoice.toString(),
         then: Yup.array()
-          .min(1, t('option_more_than_one') as string)
+          .min(1, t("option_more_than_one") as string)
           .test(
-            t('test'),
-            t('multiple_choice_option_atleast') as string,
+            t("test"),
+            t("multiple_choice_option_atleast") as string,
             function (value: any) {
               const a = value?.filter((x: any) => x.isCorrect).length > 0;
               return a;
@@ -60,16 +60,16 @@ const schema = () => {
             Yup.object().shape({
               option: Yup.string()
                 .trim()
-                .required(t('option_required') as string),
+                .required(t("option_required") as string),
             })
           ),
       })
-      .when(['type'], {
+      .when(["type"], {
         is: QuestionType.SingleChoice.toString(),
         then: Yup.array()
           .test(
-            t('test'),
-            t('single_choice_option_atleast') as string,
+            t("test"),
+            t("single_choice_option_atleast") as string,
             function (value: any) {
               const length: number =
                 value && value.filter((e: any) => e.isCorrect).length;
@@ -80,7 +80,7 @@ const schema = () => {
             Yup.object().shape({
               option: Yup.string()
                 .trim()
-                .required(t('option_required') as string),
+                .required(t("option_required") as string),
             })
           ),
       }),
@@ -108,18 +108,18 @@ const EditQuestion = () => {
 
   const form = useForm({
     initialValues: {
-      name: '',
-      description: '',
-      hints: '',
+      name: "",
+      description: "",
+      hints: "",
       tags: [],
-      type: '',
-      answers: [{ option: '', isCorrect: false }],
-      questionPoolId: '',
+      type: "",
+      answers: [{ option: "", isCorrect: false }],
+      questionPoolId: "",
     },
     validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
-  const fieldSize = 'md';
+  const fieldSize = "md";
   const getQuestionType = () => {
     return [
       {
@@ -142,19 +142,19 @@ const EditQuestion = () => {
       });
       navigate(-1);
       showNotification({
-        title: t('successful'),
-        message: t('question_edit_success'),
+        title: t("successful"),
+        message: t("question_edit_success"),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
-        title: t('error'),
+        title: t("error"),
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
   };
-  const [searchParams] = useState('');
+  const [searchParams] = useState("");
 
   const tags = useTags(
     queryStringGenerator({
@@ -205,7 +205,7 @@ const EditQuestion = () => {
       // ]);
       setTagsLists([...tagsLists, addTagData.data]);
 
-      form.setFieldValue('tags', [...form.values.tags, addTagData?.data?.id]);
+      form.setFieldValue("tags", [...form.values.tags, addTagData?.data?.id]);
     }
   }, [isSuccess]);
 
@@ -238,14 +238,14 @@ const EditQuestion = () => {
             <CustomTextFieldWithAutoFocus
               size={fieldSize}
               withAsterisk
-              label={t('title_question')}
-              placeholder={t('enter_question_title') as string}
-              {...form.getInputProps('name')}
+              label={t("title_question")}
+              placeholder={t("enter_question_title") as string}
+              {...form.getInputProps("name")}
             />
             <Box mt={20}>
-              <Text size={'md'}>{t('description')}</Text>
+              <Text size={"md"}>{t("description")}</Text>
               <RichTextEditor
-                placeholder={t('question_description') as string}
+                placeholder={t("question_description") as string}
                 label="description"
                 formContext={useFormContext}
               />
@@ -273,10 +273,10 @@ const EditQuestion = () => {
             )}
 
             <Box mt={20}>
-              <Text size={'md'}>{t('hint')}</Text>
+              <Text size={"md"}>{t("hint")}</Text>
               <RichTextEditor
-                placeholder={t('question_hint') as string}
-                label={'hints'}
+                placeholder={t("question_hint") as string}
+                label={"hints"}
                 formContext={useFormContext}
               />
             </Box>
@@ -285,32 +285,32 @@ const EditQuestion = () => {
               withAsterisk
               allowDeselect={false}
               mt={20}
-              placeholder={t('select_pool') as string}
-              size={'lg'}
-              label={t('question_pool')}
+              placeholder={t("select_pool") as string}
+              size={"lg"}
+              label={t("question_pool")}
               data={questionPoolDropdown ?? []}
-              {...form.getInputProps('questionPoolId')}
+              {...form.getInputProps("questionPoolId")}
             />
 
             <Select
               mt={20}
-              placeholder={t('select_question_type') as string}
+              placeholder={t("select_question_type") as string}
               size={fieldSize}
               withAsterisk
-              label={t('question_type')}
+              label={t("question_type")}
               data={getQuestionType()}
-              {...form.getInputProps('type')}
+              {...form.getInputProps("type")}
             ></Select>
 
             {(form.values.type === QuestionType.MultipleChoice.toString() ||
               form.values.type === QuestionType.SingleChoice.toString()) && (
               <Box>
-                <Text mt={20}>{t('options')}</Text>
+                <Text mt={20}>{t("options")}</Text>
                 {form.values.answers.map((x, i) => (
                   <Flex
-                    align={'center'}
-                    justify={'start'}
-                    gap={'md'}
+                    align={"center"}
+                    justify={"start"}
+                    gap={"md"}
                     key={i}
                     mb={30}
                   >
@@ -328,9 +328,9 @@ const EditQuestion = () => {
                         // {...form.getInputProps(`answers.${i}.isCorrect`)}
                       ></Radio>
                     )}
-                    <div style={{ width: '80%' }}>
+                    <div style={{ width: "80%" }}>
                       <RichTextEditor
-                        placeholder={t('option_placeholder') as string}
+                        placeholder={t("option_placeholder") as string}
                         label={`answers.${i}.option`}
                         formContext={useFormContext}
                       ></RichTextEditor>
@@ -338,9 +338,9 @@ const EditQuestion = () => {
                     <UnstyledButton
                       onClick={() => {
                         form.insertListItem(
-                          'answers',
+                          "answers",
                           {
-                            option: '',
+                            option: "",
                             isCorrect: false,
                           },
                           i + 1
@@ -352,27 +352,27 @@ const EditQuestion = () => {
                     {form.values.answers.length > 1 && (
                       <UnstyledButton
                         onClick={() => {
-                          form.removeListItem('answers', i);
+                          form.removeListItem("answers", i);
                         }}
                       >
                         <IconTrash color="red" />
                       </UnstyledButton>
                     )}
-                    {typeof form.errors[`answers.${i}.option`] === 'string' && (
-                      <span style={{ color: 'red' }}>
+                    {typeof form.errors[`answers.${i}.option`] === "string" && (
+                      <span style={{ color: "red" }}>
                         {form.errors[`answers.${i}.option`]}
                       </span>
                     )}
                   </Flex>
                 ))}
-                {typeof form.errors[`answers`] === 'string' && (
-                  <span style={{ color: 'red' }}>{form.errors[`answers`]}</span>
+                {typeof form.errors[`answers`] === "string" && (
+                  <span style={{ color: "red" }}>{form.errors[`answers`]}</span>
                 )}
               </Box>
             )}
             <Group mt={20}>
               <Button size="sm" type="submit" loading={editQuestion.isLoading}>
-                {t('save')}
+                {t("save")}
               </Button>
               <Button
                 type="button"
@@ -380,7 +380,7 @@ const EditQuestion = () => {
                 loading={editQuestion.isLoading}
                 onClick={() => cancelEditing()}
               >
-                {t('cancel')}
+                {t("cancel")}
               </Button>
             </Group>
           </form>

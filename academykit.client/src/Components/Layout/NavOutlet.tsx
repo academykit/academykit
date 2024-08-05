@@ -1,11 +1,11 @@
-import useAuth from '@hooks/useAuth';
-import { ActionIcon, Loader, Menu, ScrollArea, Tabs } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
-import { IconDotsVertical, IconSettings, IconUser } from '@tabler/icons-react';
-import { UserRole } from '@utils/enums';
-import { t } from 'i18next';
-import { Suspense } from 'react';
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import useAuth from "@hooks/useAuth";
+import { ActionIcon, Loader, Menu, ScrollArea, Tabs } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
+import { IconDotsVertical, IconSettings, IconUser } from "@tabler/icons-react";
+import { UserRole } from "@utils/enums";
+import { t } from "i18next";
+import { Suspense } from "react";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const NavOutlet = ({
   data,
@@ -25,23 +25,23 @@ const NavOutlet = ({
   const navigate = useNavigate();
   const location = useLocation();
   const exactLocation = location.pathname;
-  const isMobileView = useMediaQuery('(max-width: 48em)');
-  const isTabletView = useMediaQuery('(min-width: 48em) and (max-width: 64em)');
+  const isMobileView = useMediaQuery("(max-width: 48em)");
+  const isTabletView = useMediaQuery("(min-width: 48em) and (max-width: 64em)");
 
   const getExactLocation = (location: string) => {
     // when user is inspecting lesson details, highlight lesson-stat tab
     if (
-      location.split('/')[5] !== undefined &&
-      location.split('/')[3] !== 'questions'
+      location.split("/")[5] !== undefined &&
+      location.split("/")[3] !== "questions"
     ) {
-      const loc = location.split('/lessons-stat')[0] + '/lessons-stat';
+      const loc = location.split("/lessons-stat")[0] + "/lessons-stat";
       return loc;
     } else if (
       // when user is inspecting create/edit/pull pools, highlight questions tab
-      location.split('/questions')[1] !== '' &&
-      location.split('/')[3] === 'questions'
+      location.split("/questions")[1] !== "" &&
+      location.split("/")[3] === "questions"
     ) {
-      const loc = location.split('/questions')[0] + '/questions';
+      const loc = location.split("/questions")[0] + "/questions";
       return loc;
     }
     return location;
@@ -59,10 +59,10 @@ const NavOutlet = ({
     <>
       <Tabs
         defaultChecked={true}
-        defaultValue={location.pathname?.split('/').at(-1) ?? 'settings'}
+        defaultValue={location.pathname?.split("/").at(-1) ?? "settings"}
         value={getExactLocation(exactLocation)}
         onChange={(value) => {
-          if (value == '#') {
+          if (value == "#") {
             // route by menu items
             return;
           } else {
@@ -72,7 +72,7 @@ const NavOutlet = ({
         styles={{
           // make tabs scrollable
           list: {
-            flexWrap: 'nowrap',
+            flexWrap: "nowrap",
           },
         }}
         mb={15}

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import useAuth from '@hooks/useAuth';
+import useAuth from "@hooks/useAuth";
 import {
   Badge,
   Button,
@@ -7,21 +7,21 @@ import {
   Divider,
   Group,
   useMantineColorScheme,
-} from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { Viewer, Worker } from '@react-pdf-viewer/core';
-import '@react-pdf-viewer/core/lib/styles/index.css';
-import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
-import '@react-pdf-viewer/default-layout/lib/styles/index.css';
-import '@react-pdf-viewer/toolbar/lib/styles/index.css';
-import { ICourseLesson } from '@utils/services/courseService';
-import { useWatchHistory } from '@utils/services/watchHistory';
-import * as React from 'react';
-import { useTranslation } from 'react-i18next';
-import FullScreen from './PdfComponents/FullScreen';
-import SwitchPage from './PdfComponents/SwitchPage';
-import Zoom from './PdfComponents/Zoom';
+} from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { Viewer, Worker } from "@react-pdf-viewer/core";
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+import "@react-pdf-viewer/toolbar/lib/styles/index.css";
+import { ICourseLesson } from "@utils/services/courseService";
+import { useWatchHistory } from "@utils/services/watchHistory";
+import * as React from "react";
+import { useTranslation } from "react-i18next";
+import FullScreen from "./PdfComponents/FullScreen";
+import SwitchPage from "./PdfComponents/SwitchPage";
+import Zoom from "./PdfComponents/Zoom";
 
 interface PdfViewerProps {
   lesson: ICourseLesson;
@@ -30,8 +30,8 @@ interface PdfViewerProps {
 
 const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
   const watchHistory = useWatchHistory(lesson.courseId, lesson.id);
-  const matches = useMediaQuery('(min-width: 991px');
-  const matchesSmallScreen = useMediaQuery('(min-width: 550px');
+  const matches = useMediaQuery("(min-width: 991px");
+  const matchesSmallScreen = useMediaQuery("(min-width: 550px");
   const auth = useAuth();
   const userRole = auth?.auth?.role;
 
@@ -43,8 +43,8 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
     setDisable(true);
     onEnded();
     showNotification({
-      title: t('success'),
-      message: t('mark_pdf_complete'),
+      title: t("success"),
+      message: t("mark_pdf_complete"),
     });
   };
 
@@ -80,11 +80,11 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
                         loading={watchHistory.isLoading}
                         disabled={disable}
                       >
-                        {t('mark_complete')}
+                        {t("mark_complete")}
                       </Button>
                     )
                   ) : (
-                    <Badge>{t('Completed')}</Badge>
+                    <Badge>{t("Completed")}</Badge>
                   )}
                   <FullScreen toolbarSlot={toolbarSlot} />
                   {/* <Download toolbarSlot={toolbarSlot} /> */}
@@ -134,16 +134,16 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
       <div
         className="js-viewer-container"
         style={{
-          border: '1px solid rgba(0, 0, 0, 0.3)',
-          display: 'flex',
-          flexDirection: 'column',
-          height: matches ? '100%' : '405px',
+          border: "1px solid rgba(0, 0, 0, 0.3)",
+          display: "flex",
+          flexDirection: "column",
+          height: matches ? "100%" : "405px",
         }}
       >
         <div
           style={{
             flex: 1,
-            overflow: 'hidden',
+            overflow: "hidden",
           }}
         >
           <Viewer

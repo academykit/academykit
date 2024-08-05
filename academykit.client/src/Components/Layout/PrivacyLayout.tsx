@@ -4,15 +4,15 @@ import {
   Container,
   Group,
   useMantineColorScheme,
-} from '@mantine/core';
-import { useCompanySetting } from '@utils/services/adminService';
-import { Link, Outlet } from 'react-router-dom';
-import { AppFooter } from './AppFooter';
+} from "@mantine/core";
+import { useCompanySetting } from "@utils/services/adminService";
+import { Link, Outlet } from "react-router-dom";
+import { AppFooter } from "./AppFooter";
 
-import UserProfileMenu from '@components/UserProfileMenu';
-import useAuth from '@hooks/useAuth';
-import { IUser } from '@utils/services/types';
-import classes from './styles/layout.module.css';
+import UserProfileMenu from "@components/UserProfileMenu";
+import useAuth from "@hooks/useAuth";
+import { IUser } from "@utils/services/types";
+import classes from "./styles/layout.module.css";
 
 const PrivacyLayout = () => {
   const companySettings = useCompanySetting();
@@ -26,7 +26,7 @@ const PrivacyLayout = () => {
       styles={(theme) => ({
         main: {
           backgroundColor:
-            colorScheme === 'dark'
+            colorScheme === "dark"
               ? theme.colors.dark[8]
               : theme.colors.gray[0],
         },
@@ -35,7 +35,7 @@ const PrivacyLayout = () => {
       <AppShell.Header>
         {
           <Container className={classes.inner} fluid>
-            <Group justify={'space-between'} w={'100%'}>
+            <Group justify={"space-between"} w={"100%"}>
               <Link to="/">
                 <img
                   height={50}
@@ -48,7 +48,7 @@ const PrivacyLayout = () => {
                   user={
                     {
                       email: auth.auth.email,
-                      fullName: auth.auth.firstName + ' ' + auth.auth.lastName,
+                      fullName: auth.auth.firstName + " " + auth.auth.lastName,
                       id: auth.auth.id,
                       role: auth.auth.role,
                       imageUrl: auth.auth.imageUrl,
@@ -56,7 +56,7 @@ const PrivacyLayout = () => {
                   }
                 />
               ) : (
-                <Button component={Link} to={'/login'}>
+                <Button component={Link} to={"/login"}>
                   Login
                 </Button>
               )}
@@ -69,7 +69,7 @@ const PrivacyLayout = () => {
         <Outlet />
       </AppShell.Main>
 
-      <AppFooter name={companySettings.data?.data?.name ?? ''}></AppFooter>
+      <AppFooter name={companySettings.data?.data?.name ?? ""}></AppFooter>
       {/* <AppShell.Footer>
       </AppShell.Footer> */}
     </AppShell>

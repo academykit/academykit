@@ -1,4 +1,4 @@
-import { CourseDescription } from '@components/Course/CourseDescription';
+import { CourseDescription } from "@components/Course/CourseDescription";
 
 const CourseDescriptionPage = () => {
   return <CourseDescription />;

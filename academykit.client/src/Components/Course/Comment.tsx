@@ -1,5 +1,5 @@
-import DeleteModal from '@components/Ui/DeleteModal';
-import useAuth from '@hooks/useAuth';
+import DeleteModal from "@components/Ui/DeleteModal";
+import useAuth from "@hooks/useAuth";
 import {
   Avatar,
   Box,
@@ -9,23 +9,23 @@ import {
   Text,
   Textarea,
   Transition,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { UserRole } from '@utils/enums';
-import errorType from '@utils/services/axiosError';
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { UserRole } from "@utils/enums";
+import errorType from "@utils/services/axiosError";
 import {
   IComment,
   useDeleteComment,
   useEditComment,
-} from '@utils/services/commentService';
-import { IUser } from '@utils/services/types';
-import moment from 'moment';
-import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
-import CommentReplies from './CommentReplies';
-import classes from './styles/comment.module.css';
+} from "@utils/services/commentService";
+import { IUser } from "@utils/services/types";
+import moment from "moment";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import CommentReplies from "./CommentReplies";
+import classes from "./styles/comment.module.css";
 
 const Comment = ({ comment }: { comment: IComment }) => {
   const auth = useAuth();
@@ -61,13 +61,13 @@ const Comment = ({ comment }: { comment: IComment }) => {
         courseId: id as string,
       });
       showNotification({
-        message: t('delete_comment_success'),
+        message: t("delete_comment_success"),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -80,14 +80,14 @@ const Comment = ({ comment }: { comment: IComment }) => {
         content,
       });
       showNotification({
-        message: t('edit_comment_success'),
+        message: t("edit_comment_success"),
       });
       setEdit();
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -98,29 +98,29 @@ const Comment = ({ comment }: { comment: IComment }) => {
     },
   });
 
-  moment.updateLocale('en', {
+  moment.updateLocale("en", {
     relativeTime: {
-      future: 'in %s',
+      future: "in %s",
       past: `%s`,
-      s: `${t('few_seconds_ago')}`,
-      ss: `%d ${t('seconds_ago')}`,
-      m: `%d ${t('minute_ago')}`,
-      mm: `%d ${t('minutes_ago')}`,
-      h: `%d ${t('hour_ago')}`,
-      hh: `%d ${t('hours_ago')}`,
-      d: `%d ${t('day_ago')}`,
-      dd: `%d ${t('days_ago')}`,
-      M: `%d ${t('month_ago')}`,
-      MM: `%d ${t('months_ago')}`,
-      y: `%d ${t('year_ago')}`,
-      yy: `%d ${t('years_ago')}`,
+      s: `${t("few_seconds_ago")}`,
+      ss: `%d ${t("seconds_ago")}`,
+      m: `%d ${t("minute_ago")}`,
+      mm: `%d ${t("minutes_ago")}`,
+      h: `%d ${t("hour_ago")}`,
+      hh: `%d ${t("hours_ago")}`,
+      d: `%d ${t("day_ago")}`,
+      dd: `%d ${t("days_ago")}`,
+      M: `%d ${t("month_ago")}`,
+      MM: `%d ${t("months_ago")}`,
+      y: `%d ${t("year_ago")}`,
+      yy: `%d ${t("years_ago")}`,
     },
   });
 
   return (
-    <Paper withBorder p={10} my={'xs'} radius="md" shadow="md">
+    <Paper withBorder p={10} my={"xs"} radius="md" shadow="md">
       <DeleteModal
-        title={t('delete_comment_confirmation')}
+        title={t("delete_comment_confirmation")}
         open={deleteConfirmation}
         onClose={setDeleteConfirmation}
         onConfirm={onDelete}
@@ -135,7 +135,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
         <div>
           <Text size="sm">{comment.user.fullName}</Text>
           <Text size="xs" c="dimmed">
-            {moment(comment.createdOn + 'Z').fromNow()}
+            {moment(comment.createdOn + "Z").fromNow()}
           </Text>
         </div>
       </Group>
@@ -143,11 +143,11 @@ const Comment = ({ comment }: { comment: IComment }) => {
         <form onSubmit={form.onSubmit(onEdit)}>
           <Textarea
             mt={20}
-            {...form.getInputProps('content')}
-            style={{ minHeight: edit && '5rem' }}
+            {...form.getInputProps("content")}
+            style={{ minHeight: edit && "5rem" }}
             styles={{
               root: {
-                border: 'none',
+                border: "none",
               },
             }}
           />
@@ -157,9 +157,9 @@ const Comment = ({ comment }: { comment: IComment }) => {
               size="sm"
               type="submit"
               disabled={!form.values.content.trim()}
-              style={{ '&[data-disabled]': { pointerEvents: 'all' } }}
+              style={{ "&[data-disabled]": { pointerEvents: "all" } }}
             >
-              {t('save')}
+              {t("save")}
             </Button>
             <Button
               variant="outline"
@@ -169,7 +169,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
                 form.reset();
               }}
             >
-              {t('cancel')}
+              {t("cancel")}
             </Button>
           </Group>
         </form>
@@ -178,16 +178,16 @@ const Comment = ({ comment }: { comment: IComment }) => {
           {comment?.content}
         </Text>
       )}
-      <Box style={{ display: 'flex', justifyContent: 'end' }}>
+      <Box style={{ display: "flex", justifyContent: "end" }}>
         <Button variant="subtle" mx={4} onClick={() => setToggle()}>
           {toggle
-            ? t('hide_reply')
-            : `${t('show_reply')}(${comment.repliesCount}) `}
+            ? t("hide_reply")
+            : `${t("show_reply")}(${comment.repliesCount}) `}
         </Button>
 
         {!edit && showEdit(comment.user, true) && (
           <Button variant="subtle" mx={4} onClick={() => setEdit()}>
-            {t('edit')}
+            {t("edit")}
           </Button>
         )}
         {showEdit(comment.user) && comment.repliesCount <= 0 && (
@@ -198,13 +198,13 @@ const Comment = ({ comment }: { comment: IComment }) => {
             c="red"
             onClick={() => setDeleteConfirmation()}
           >
-            {t('delete')}
+            {t("delete")}
           </Button>
         )}
       </Box>
       <Transition
         mounted={toggle}
-        transition={'pop-top-left'}
+        transition={"pop-top-left"}
         duration={200}
         timingFunction="ease"
       >

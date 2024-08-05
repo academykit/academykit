@@ -1,9 +1,9 @@
-import EmptyRow from '@components/Ui/EmptyRow';
-import UserShortProfile from '@components/UserShortProfile';
+import EmptyRow from "@components/Ui/EmptyRow";
+import UserShortProfile from "@components/UserShortProfile";
 import withSearchPagination, {
   IWithSearchPagination,
-} from '@hoc/useSearchPagination';
-import useAuth from '@hooks/useAuth';
+} from "@hoc/useSearchPagination";
+import useAuth from "@hooks/useAuth";
 import {
   Box,
   Button,
@@ -15,17 +15,17 @@ import {
   ScrollArea,
   Table,
   Tooltip,
-} from '@mantine/core';
-import { useToggle } from '@mantine/hooks';
-import { IconEye, IconTableExport } from '@tabler/icons-react';
+} from "@mantine/core";
+import { useToggle } from "@mantine/hooks";
+import { IconEye, IconTableExport } from "@tabler/icons-react";
 import {
   IAssessmentResult,
   useGetAllResults,
-} from '@utils/services/assessmentService';
-import { downloadCSVFile } from '@utils/services/fileService';
-import { t } from 'i18next';
-import { useParams } from 'react-router-dom';
-import ResultTable from './component/ResultTable';
+} from "@utils/services/assessmentService";
+import { downloadCSVFile } from "@utils/services/fileService";
+import { t } from "i18next";
+import { useParams } from "react-router-dom";
+import ResultTable from "./component/ResultTable";
 
 const Row = ({ data }: { data: IAssessmentResult }) => {
   const [resultModal, toggleResultModal] = useToggle();
@@ -35,7 +35,7 @@ const Row = ({ data }: { data: IAssessmentResult }) => {
       <Modal
         opened={resultModal}
         onClose={() => toggleResultModal()}
-        size={'lg'}
+        size={"lg"}
       >
         <ResultTable assessmentId={data.assessmentId} userId={data.user.id} />
       </Modal>
@@ -49,11 +49,11 @@ const Row = ({ data }: { data: IAssessmentResult }) => {
           <Center>
             <Tooltip
               style={{
-                maxWidth: '400px',
-                textOverflow: 'ellipsis',
-                overflow: 'hidden',
+                maxWidth: "400px",
+                textOverflow: "ellipsis",
+                overflow: "hidden",
               }}
-              label={t('view_result')}
+              label={t("view_result")}
             >
               <Button variant="subtle" onClick={() => toggleResultModal()}>
                 <IconEye />
@@ -78,8 +78,8 @@ const ManageAssessmentStudents = ({
   return (
     <>
       <Flex>
-        <Box mx={3} style={{ width: '100%' }}>
-          {searchComponent(t('search_trainees') as string)}
+        <Box mx={3} style={{ width: "100%" }}>
+          {searchComponent(t("search_trainees") as string)}
         </Box>
       </Flex>
       <Group justify="flex-end" my="md">
@@ -87,10 +87,10 @@ const ManageAssessmentStudents = ({
           rightSection={<IconTableExport size={18} />}
           variant="outline"
           onClick={() =>
-            downloadCSVFile(exportUserCSVSubmission, 'AssessmentStats')
+            downloadCSVFile(exportUserCSVSubmission, "AssessmentStats")
           }
         >
-          {t('export')}
+          {t("export")}
         </Button>
       </Group>
       <Paper mt={10}>
@@ -105,10 +105,10 @@ const ManageAssessmentStudents = ({
           >
             <Table.Thead>
               <Table.Tr>
-                <Table.Th>{t('name')}</Table.Th>
-                <Table.Th>{t('obtained_marks')}</Table.Th>
-                <Table.Th style={{ textAlign: 'center' }}>
-                  {t('actions')}
+                <Table.Th>{t("name")}</Table.Th>
+                <Table.Th>{t("obtained_marks")}</Table.Th>
+                <Table.Th style={{ textAlign: "center" }}>
+                  {t("actions")}
                 </Table.Th>
               </Table.Tr>
             </Table.Thead>

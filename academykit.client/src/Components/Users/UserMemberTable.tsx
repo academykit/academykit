@@ -1,6 +1,6 @@
-import { IAuthContext } from '@context/AuthProvider';
-import { IWithSearchPagination } from '@hoc/useSearchPagination';
-import useAuth from '@hooks/useAuth';
+import { IAuthContext } from "@context/AuthProvider";
+import { IWithSearchPagination } from "@hoc/useSearchPagination";
+import useAuth from "@hooks/useAuth";
 import {
   ActionIcon,
   Avatar,
@@ -12,22 +12,22 @@ import {
   Text,
   Tooltip,
   useMantineColorScheme,
-} from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
-import { IconEdit, IconSend } from '@tabler/icons-react';
-import { UserRole, UserStatus } from '@utils/enums';
-import { getInitials } from '@utils/getInitialName';
-import lazyWithRetry from '@utils/lazyImportWithReload';
-import { useEditUser, useResendEmail } from '@utils/services/adminService';
-import errorType from '@utils/services/axiosError';
-import { IUserProfile } from '@utils/services/types';
-import { TFunction } from 'i18next';
-import { Suspense, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import classes from './styles/memberTable.module.css';
+} from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
+import { IconEdit, IconSend } from "@tabler/icons-react";
+import { UserRole, UserStatus } from "@utils/enums";
+import { getInitials } from "@utils/getInitialName";
+import lazyWithRetry from "@utils/lazyImportWithReload";
+import { useEditUser, useResendEmail } from "@utils/services/adminService";
+import errorType from "@utils/services/axiosError";
+import { IUserProfile } from "@utils/services/types";
+import { TFunction } from "i18next";
+import { Suspense, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import classes from "./styles/memberTable.module.css";
 
-const AddUpdateUserForm = lazyWithRetry(() => import('./AddUpdateUserForm'));
+const AddUpdateUserForm = lazyWithRetry(() => import("./AddUpdateUserForm"));
 
 const UserRow = ({
   item,
@@ -49,15 +49,15 @@ const UserRow = ({
     try {
       await resend.mutateAsync(item.id);
       showNotification({
-        message: t('Email sent successfully!'),
-        title: t('successful'),
+        message: t("Email sent successfully!"),
+        title: t("successful"),
       });
     } catch (error) {
       const err = errorType(error);
       showNotification({
         message: err,
-        title: 'Error!',
-        color: 'red',
+        title: "Error!",
+        color: "red",
       });
     }
   };
@@ -66,10 +66,10 @@ const UserRow = ({
     <Table.Tr key={item?.id}>
       <Table.Td
         style={{
-          width: '122px',
-          maxWidth: '122px',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
+          width: "122px",
+          maxWidth: "122px",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
         }}
       >
         {item.memberId}
@@ -79,8 +79,8 @@ const UserRow = ({
           size={800}
           opened={opened}
           onClose={() => setOpened(false)}
-          title={`${t('edit_user')} ${item?.fullName}`}
-          styles={{ title: { fontWeight: 'bold' } }}
+          title={`${t("edit_user")} ${item?.fullName}`}
+          styles={{ title: { fontWeight: "bold" } }}
         >
           {opened && (
             <Suspense fallback={<Loader />}>
@@ -94,13 +94,13 @@ const UserRow = ({
             </Suspense>
           )}
         </Modal>
-        <div style={{ display: 'flex', textDecoration: 'none' }}>
+        <div style={{ display: "flex", textDecoration: "none" }}>
           <Link
             to={`/userProfile/${item.id}/certificate`}
-            style={{ textDecoration: 'none' }}
+            style={{ textDecoration: "none" }}
           >
             <Avatar size={26} src={item?.imageUrl} radius={26}>
-              {!item?.imageUrl && getInitials(item?.fullName ?? '')}
+              {!item?.imageUrl && getInitials(item?.fullName ?? "")}
             </Avatar>
           </Link>
 
@@ -127,33 +127,33 @@ const UserRow = ({
       </Table.Td>
       <Table.Td>
         {item?.status === UserStatus.Active ? (
-          <Badge variant="light" color={'green'}>
-            {t('active')}
+          <Badge variant="light" color={"green"}>
+            {t("active")}
           </Badge>
         ) : item?.status === UserStatus.InActive ? (
-          <Badge variant="light" color={'red'}>
-            {t('inactive')}
+          <Badge variant="light" color={"red"}>
+            {t("inactive")}
           </Badge>
         ) : (
           <Badge variant="light" color="yellow">
-            {t('pending')}
+            {t("pending")}
           </Badge>
         )}
       </Table.Td>
 
-      <Table.Td style={{ display: 'flex' }}>
+      <Table.Td style={{ display: "flex" }}>
         {item.role !== UserRole.SuperAdmin && auth?.auth?.id !== item.id && (
-          <Tooltip label={t('edit_user_detail')}>
+          <Tooltip label={t("edit_user_detail")}>
             <ActionIcon
               variant="transparent"
               style={{
-                cursor: 'pointer',
-                color: colorScheme === 'dark' ? '#F8F9FA' : '#25262B',
+                cursor: "pointer",
+                color: colorScheme === "dark" ? "#F8F9FA" : "#25262B",
               }}
             >
               <IconEdit
                 onClick={() => setOpened(true)}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: "pointer" }}
                 size={20}
               />
             </ActionIcon>
@@ -161,12 +161,12 @@ const UserRow = ({
         )}
 
         {auth?.auth?.id !== item.id && item.status === UserStatus.Pending && (
-          <Tooltip label={t('resend_email')} onClick={handleResendEmail}>
+          <Tooltip label={t("resend_email")} onClick={handleResendEmail}>
             <ActionIcon
               variant="transparent"
               style={{
-                cursor: 'pointer',
-                color: colorScheme === 'dark' ? '#F8F9FA' : '#25262B',
+                cursor: "pointer",
+                color: colorScheme === "dark" ? "#F8F9FA" : "#25262B",
               }}
             >
               {resend.isLoading ? (
@@ -189,7 +189,7 @@ const UserMemberTable = ({
 }: {
   users: IUserProfile[];
   search: string;
-  sortComponent: Pick<IWithSearchPagination, 'sortComponent'>['sortComponent'];
+  sortComponent: Pick<IWithSearchPagination, "sortComponent">["sortComponent"];
 }) => {
   const auth = useAuth();
   const { t } = useTranslation();
@@ -213,17 +213,17 @@ const UserMemberTable = ({
       >
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>{t('userid')}</Table.Th>
+            <Table.Th>{t("userid")}</Table.Th>
             <Table.Th>
-              {sortComponent({ sortKey: 'firstName', title: t('username') })}
+              {sortComponent({ sortKey: "firstName", title: t("username") })}
             </Table.Th>
-            <Table.Th>{t('role')}</Table.Th>
+            <Table.Th>{t("role")}</Table.Th>
             <Table.Th>
-              {sortComponent({ sortKey: 'email', title: t('email') })}
+              {sortComponent({ sortKey: "email", title: t("email") })}
             </Table.Th>
-            <Table.Th>{t('phone_number')}</Table.Th>
-            <Table.Th>{t('active_status')}</Table.Th>
-            <Table.Th>{t('actions')}</Table.Th>
+            <Table.Th>{t("phone_number")}</Table.Th>
+            <Table.Th>{t("active_status")}</Table.Th>
+            <Table.Th>{t("actions")}</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>{Rows(auth)}</Table.Tbody>

@@ -10,26 +10,26 @@ import {
   PasswordInput,
   TextInput,
   Transition,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import RoutePath from '@utils/routeConstants';
-import { useCompanySetting } from '@utils/services/adminService';
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import RoutePath from "@utils/routeConstants";
+import { useCompanySetting } from "@utils/services/adminService";
 import {
   useLogin,
   useResetPassword,
   useResetPasswordToken,
-} from '@utils/services/authService';
-import errorType from '@utils/services/axiosError';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth';
+} from "@utils/services/authService";
+import errorType from "@utils/services/axiosError";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 const ConfirmToken = () => {
   const navigate = useNavigate();
-  const [passwordReset, setPasswordReset] = useState('');
+  const [passwordReset, setPasswordReset] = useState("");
   const { t } = useTranslation();
 
   const { mutateAsync } = useResetPasswordToken();
@@ -37,14 +37,14 @@ const ConfirmToken = () => {
 
   const form = useForm({
     initialValues: {
-      token: '',
+      token: "",
     },
   });
 
   const passwordForm = useForm({
     initialValues: {
-      confirmPassword: '',
-      newPassword: '',
+      confirmPassword: "",
+      newPassword: "",
     },
   });
 
@@ -58,7 +58,7 @@ const ConfirmToken = () => {
     token: string;
     email?: string | null;
   }) => {
-    values = { ...values, email: params.get('email') };
+    values = { ...values, email: params.get("email") };
     try {
       const response = await mutateAsync(values);
       setPasswordReset(response.data.token as string);
@@ -72,8 +72,8 @@ const ConfirmToken = () => {
 
       showNotification({
         message: err,
-        title: t('error'),
-        color: 'red',
+        title: t("error"),
+        color: "red",
       });
     }
   };
@@ -88,7 +88,7 @@ const ConfirmToken = () => {
         passwordChangeToken: passwordReset,
       });
       showNotification({
-        message: t('password_reset'),
+        message: t("password_reset"),
       });
       navigate(RoutePath.login);
     } catch (error) {
@@ -96,7 +96,7 @@ const ConfirmToken = () => {
 
       showNotification({
         message: err,
-        color: 'red',
+        color: "red",
       });
     }
     // setTimeout(() => , 700);
@@ -111,15 +111,15 @@ const ConfirmToken = () => {
 
   const setHeader = () => {
     const info =
-      localStorage.getItem('app-info') &&
-      JSON.parse(localStorage.getItem('app-info') ?? '');
+      localStorage.getItem("app-info") &&
+      JSON.parse(localStorage.getItem("app-info") ?? "");
     if (info) {
       let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
       document.title = info.name;
       if (!link) {
-        link = document.createElement('link');
-        link.rel = 'icon';
-        document.getElementsByTagName('head')[0].appendChild(info.logo);
+        link = document.createElement("link");
+        link.rel = "icon";
+        document.getElementsByTagName("head")[0].appendChild(info.logo);
       }
       link.href = info.logo;
     }
@@ -130,20 +130,20 @@ const ConfirmToken = () => {
 
     if (companySettings.isSuccess) {
       localStorage.setItem(
-        'app-info',
+        "app-info",
         JSON.stringify({
           name: companySettings.data.data.name,
           logo: companySettings.data.data.imageUrl,
-        })
+        }),
       );
       setHeader();
     }
   }, [companySettings.isSuccess]);
 
   return (
-    <Container size={470} my={40} style={{ position: 'relative' }}>
-      <Center m={'lg'}>
-        <Link to={'/'}>
+    <Container size={470} my={40} style={{ position: "relative" }}>
+      <Center m={"lg"}>
+        <Link to={"/"}>
           <Image
             height={100}
             width={100}
@@ -152,7 +152,7 @@ const ConfirmToken = () => {
         </Link>
       </Center>
 
-      <Box style={{ position: 'absolute', width: '100%' }}>
+      <Box style={{ position: "absolute", width: "100%" }}>
         <Transition
           mounted={!toggle}
           transition="fade"
@@ -164,9 +164,9 @@ const ConfirmToken = () => {
               <form onSubmit={form.onSubmit(onFormSubmit)}>
                 <Paper withBorder shadow="md" p={30} mt={30} radius="md">
                   <TextInput
-                    {...form.getInputProps('token')}
-                    label={t('token')}
-                    placeholder={t('add_token_email') as string}
+                    {...form.getInputProps("token")}
+                    label={t("token")}
+                    placeholder={t("add_token_email") as string}
                     required
                   />
 
@@ -179,7 +179,7 @@ const ConfirmToken = () => {
                         c="dimmed"
                         size="xs"
                       >
-                        {t('want_login')}
+                        {t("want_login")}
                       </Anchor>
                     </Link>
                   </Group>
@@ -189,7 +189,7 @@ const ConfirmToken = () => {
                     mt="xl"
                     type="submit"
                   >
-                    {t('proceed')}
+                    {t("proceed")}
                   </Button>
                 </Paper>
               </form>
@@ -198,7 +198,7 @@ const ConfirmToken = () => {
         </Transition>
       </Box>
 
-      <Box style={{ position: 'absolute', width: '100%' }}>
+      <Box style={{ position: "absolute", width: "100%" }}>
         <Transition
           mounted={toggle}
           transition="pop"
@@ -210,17 +210,17 @@ const ConfirmToken = () => {
               <form onSubmit={passwordForm.onSubmit(onPasswordFormSubmit)}>
                 <Paper withBorder shadow="md" p={30} mt={30} radius="md">
                   <PasswordInput
-                    {...passwordForm.getInputProps('newPassword')}
-                    label={t('password')}
-                    placeholder={t('add_new_password') as string}
+                    {...passwordForm.getInputProps("newPassword")}
+                    label={t("password")}
+                    placeholder={t("add_new_password") as string}
                     required
                   />
 
                   <PasswordInput
                     mt={20}
-                    {...passwordForm.getInputProps('confirmPassword')}
-                    label={t('confirm_password')}
-                    placeholder={t('repeat_password') as string}
+                    {...passwordForm.getInputProps("confirmPassword")}
+                    label={t("confirm_password")}
+                    placeholder={t("repeat_password") as string}
                     required
                   />
 
@@ -233,7 +233,7 @@ const ConfirmToken = () => {
                         c="dimmed"
                         size="xs"
                       >
-                        {t('want_login')}?
+                        {t("want_login")}?
                       </Anchor>
                     </Link>
                   </Group>
@@ -243,7 +243,7 @@ const ConfirmToken = () => {
                     mt="xl"
                     type="submit"
                   >
-                    {t('proceed')}
+                    {t("proceed")}
                   </Button>
                 </Paper>
               </form>

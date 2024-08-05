@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import useAuth from '@hooks/useAuth';
-import { Accordion, Box, Text, Title } from '@mantine/core';
-import { CourseUserStatus, UserRole } from '@utils/enums';
-import { ISection } from '@utils/services/courseService';
-import { useTranslation } from 'react-i18next';
-import Lesson from './Lesson';
+import useAuth from "@hooks/useAuth";
+import { Accordion, Box, Text, Title } from "@mantine/core";
+import { CourseUserStatus, UserRole } from "@utils/enums";
+import { ISection } from "@utils/services/courseService";
+import { useTranslation } from "react-i18next";
+import Lesson from "./Lesson";
 
 const Sessions = ({
   section,
@@ -37,9 +37,9 @@ const Sessions = ({
       <Accordion>
         <Accordion.Item value={section?.id}>
           <Accordion.Control>
-            <Title size={'h6'}>{section?.name}</Title>
-            <Text size={'md'} c={'dimmed'}>
-              {section.lessons?.length} {t('Lesson')}
+            <Title size={"h6"}>{section?.name}</Title>
+            <Text size={"md"} c={"dimmed"}>
+              {section.lessons?.length} {t("Lesson")}
             </Text>
           </Accordion.Control>
           <Accordion.Panel>
@@ -47,7 +47,7 @@ const Sessions = ({
               my={20}
               mx={10}
               style={{
-                pointerEvents: canClickLessons ? 'none' : 'auto',
+                pointerEvents: canClickLessons ? "none" : "auto",
               }}
             >
               {section.lessons?.map((x, i) => (

@@ -5,14 +5,14 @@ import {
   InputBase,
   MantineSize,
   useCombobox,
-} from '@mantine/core';
-import { UseFormReturnType } from '@mantine/form';
-import { UseMutationResult } from '@tanstack/react-query';
-import { IPool } from '@utils/services/poolService';
-import { IAddQuestionType } from '@utils/services/questionService';
-import { AxiosResponse } from 'axios';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+} from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import { UseMutationResult } from "@tanstack/react-query";
+import { IPool } from "@utils/services/poolService";
+import { IAddQuestionType } from "@utils/services/questionService";
+import { AxiosResponse } from "axios";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   size?: MantineSize;
@@ -29,13 +29,13 @@ interface IProps {
   api: UseMutationResult<AxiosResponse<IPool, any>, unknown, string, unknown>;
 }
 
-export function CreatablePoolSelect({ data, form, api, size = 'sm' }: IProps) {
+export function CreatablePoolSelect({ data, form, api, size = "sm" }: IProps) {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
   const { t } = useTranslation();
   const [value, setValue] = useState<string | null>(null);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
 
   const exactOptionMatch = data?.some((item) => item.label === search);
   const filteredOptions = exactOptionMatch
@@ -58,12 +58,12 @@ export function CreatablePoolSelect({ data, form, api, size = 'sm' }: IProps) {
       store={combobox}
       withinPortal={false}
       onOptionSubmit={(val, optionProps) => {
-        if (val === '$create') {
+        if (val === "$create") {
           setValue(search);
           api
             .mutateAsync(search)
             .then((res: any) =>
-              form.setFieldValue('questionPoolId', res.data.id)
+              form.setFieldValue("questionPoolId", res.data.id)
             );
         } else {
           // TODO: find a way to access the label
@@ -73,7 +73,7 @@ export function CreatablePoolSelect({ data, form, api, size = 'sm' }: IProps) {
           setSearch(
             optionProps!.children!.props!.children[1].props.children as string
           );
-          form.setFieldValue('questionPoolId', val);
+          form.setFieldValue("questionPoolId", val);
         }
         combobox.closeDropdown();
       }}
@@ -83,7 +83,7 @@ export function CreatablePoolSelect({ data, form, api, size = 'sm' }: IProps) {
           mt={20}
           withAsterisk
           rightSection={<Combobox.Chevron />}
-          {...form.getInputProps('questionPoolId')}
+          {...form.getInputProps("questionPoolId")}
           value={search}
           onChange={(event) => {
             combobox.openDropdown();
@@ -94,10 +94,10 @@ export function CreatablePoolSelect({ data, form, api, size = 'sm' }: IProps) {
           onFocus={() => combobox.openDropdown()}
           onBlur={() => {
             combobox.closeDropdown();
-            setSearch(value || '');
+            setSearch(value || "");
           }}
-          placeholder={t('select_pool') as string}
-          label={t('question_pool')}
+          placeholder={t("select_pool") as string}
+          label={t("question_pool")}
           rightSectionPointerEvents="none"
           size={size}
         />

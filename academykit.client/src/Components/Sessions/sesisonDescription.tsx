@@ -11,13 +11,13 @@ import {
   Text,
   ThemeIcon,
   Title,
-} from '@mantine/core';
-import { IconCheck } from '@tabler/icons-react';
-import RoutePath from '@utils/routeConstants';
-import { Link } from 'react-router-dom';
-import classes from './styles/session.module.css';
+} from "@mantine/core";
+import { IconCheck } from "@tabler/icons-react";
+import RoutePath from "@utils/routeConstants";
+import { Link } from "react-router-dom";
+import classes from "./styles/session.module.css";
 
-const image = 'https://ui.mantine.dev/_next/static/media/image.9a65bd94.svg';
+const image = "https://ui.mantine.dev/_next/static/media/image.9a65bd94.svg";
 
 const SessionDescription = () => {
   return (
@@ -43,7 +43,7 @@ const SessionDescription = () => {
                 size={60}
               /> */}
             </Group>
-            <Text mt={'md'} fw={750}>
+            <Text mt={"md"} fw={750}>
               Description
             </Text>
             <Text c="dimmed" mt="sm">
@@ -81,14 +81,14 @@ const SessionDescription = () => {
             </AspectRatio>
             <Center>
               <Group my={30}>
-                <Link to={RoutePath.classes + '/1'}>
+                <Link to={RoutePath.classes + "/1"}>
                   <Button radius="xl" size="md" className={classes.control}>
                     Enroll Now Rs.(500)
                   </Button>
                 </Link>
               </Group>
             </Center>
-            <Text ta="center" fw={200} style={{ marginBottom: '50px' }}>
+            <Text ta="center" fw={200} style={{ marginBottom: "50px" }}>
               Pay here to enroll in this live session
             </Text>
           </div>

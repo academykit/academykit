@@ -1,8 +1,8 @@
-import ConfirmationModal from '@components/Ui/ConfirmationModal';
-import ProgressBar from '@components/Ui/ProgressBar';
+import ConfirmationModal from "@components/Ui/ConfirmationModal";
+import ProgressBar from "@components/Ui/ProgressBar";
 import withSearchPagination, {
   IWithSearchPagination,
-} from '@hoc/useSearchPagination';
+} from "@hoc/useSearchPagination";
 import {
   Anchor,
   Avatar,
@@ -21,25 +21,25 @@ import {
   Title,
   Tooltip,
   UnstyledButton,
-} from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { IconDownload, IconEye, IconPlus } from '@tabler/icons-react';
-import { DATE_FORMAT } from '@utils/constants';
-import downloadImage from '@utils/downloadImage';
-import { getInitials } from '@utils/getInitialName';
-import RoutePath from '@utils/routeConstants';
-import errorType from '@utils/services/axiosError';
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { IconDownload, IconEye, IconPlus } from "@tabler/icons-react";
+import { DATE_FORMAT } from "@utils/constants";
+import downloadImage from "@utils/downloadImage";
+import { getInitials } from "@utils/getInitialName";
+import RoutePath from "@utils/routeConstants";
+import errorType from "@utils/services/axiosError";
 import {
   IStudentStat,
   useGetStudentStatistics,
   usePostStatisticsCertificate,
-} from '@utils/services/manageCourseService';
-import moment from 'moment';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
-import AddTrainee from './AddTrainee';
+} from "@utils/services/manageCourseService";
+import moment from "moment";
+import { Dispatch, SetStateAction, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useParams } from "react-router-dom";
+import AddTrainee from "./AddTrainee";
 
 const Rows = ({
   item,
@@ -64,13 +64,13 @@ const Rows = ({
         issueAll: false,
         identity: course_id,
       });
-      showNotification({ message: t('certificate_issue_success') });
+      showNotification({ message: t("certificate_issue_success") });
     } catch (error) {
       const err = errorType(error);
 
       showNotification({
-        title: t('error'),
-        color: 'red',
+        title: t("error"),
+        color: "red",
         message: err,
       });
     }
@@ -97,16 +97,16 @@ const Rows = ({
           component={Link}
           to={`${RoutePath.userProfile}/${item.userId}`}
           size="sm"
-          style={{ display: 'flex' }}
+          style={{ display: "flex" }}
         >
           <Avatar
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
             size={26}
             mr={8}
             src={item?.imageUrl}
             radius={26}
           >
-            {!item?.imageUrl && getInitials(item?.fullName ?? '')}
+            {!item?.imageUrl && getInitials(item?.fullName ?? "")}
           </Avatar>
 
           {item?.fullName}
@@ -116,20 +116,20 @@ const Rows = ({
         <ProgressBar total={100} positive={item?.percentage} />
         <UnstyledButton component={Link} to={item.userId}>
           <Badge color="green" variant="outline" mt={10}>
-            {t('view')}
+            {t("view")}
           </Badge>
         </UnstyledButton>
       </Table.Td>
       <Table.Td>
-        <Flex direction={'column'} justify={'center'} align={'center'}>
+        <Flex direction={"column"} justify={"center"} align={"center"}>
           {item?.hasCertificateIssued ? (
-            <div style={{ marginTop: '10px' }}>
+            <div style={{ marginTop: "10px" }}>
               <Text>
-                {t('issued_on')}{' '}
-                {moment(item?.certificateIssuedDate + 'Z').format(DATE_FORMAT)}
+                {t("issued_on")}{" "}
+                {moment(item?.certificateIssuedDate + "Z").format(DATE_FORMAT)}
               </Text>
-              <Flex justify={'center'} mt={8}>
-                <Tooltip label={t('view_certificate')}>
+              <Flex justify={"center"} mt={8}>
+                <Tooltip label={t("view_certificate")}>
                   <UnstyledButton
                     mr="sm"
                     onClick={() => {
@@ -139,7 +139,7 @@ const Rows = ({
                     <IconEye size={23} color="green" />
                   </UnstyledButton>
                 </Tooltip>
-                <Tooltip label={t('download_certificate')}>
+                <Tooltip label={t("download_certificate")}>
                   <UnstyledButton
                     onClick={() =>
                       downloadImage(item.certificateUrl, item.fullName)
@@ -152,20 +152,20 @@ const Rows = ({
             </div>
           ) : (
             <>
-              <Badge>{t('not_issued')}</Badge>
+              <Badge>{t("not_issued")}</Badge>
               <Button
                 size="xs"
                 mt={10}
                 loading={postUserData.isLoading}
                 onClick={() => handleSubmit([item.userId])}
               >
-                {t('issue')}
+                {t("issue")}
               </Button>
             </>
           )}
         </Flex>
       </Table.Td>
-      <Table.Td style={{ textAlign: 'center' }}>
+      <Table.Td style={{ textAlign: "center" }}>
         <Anchor
           component={Link}
           to={`${RoutePath.classes}/${course_id}/${item.lessonSlug}`}
@@ -201,13 +201,13 @@ const ManageStudents = ({
         issueAll: true,
         identity: course_id,
       });
-      showNotification({ message: t('certificate_issue_success_all') });
+      showNotification({ message: t("certificate_issue_success_all") });
     } catch (error) {
       const err = errorType(error);
 
       showNotification({
-        title: t('error'),
-        color: 'red',
+        title: t("error"),
+        color: "red",
         message: err,
       });
     }
@@ -220,13 +220,13 @@ const ManageStudents = ({
         issueAll: false,
         identity: course_id,
       });
-      showNotification({ message: t('certificate_issue_success') });
+      showNotification({ message: t("certificate_issue_success") });
     } catch (error) {
       const err = errorType(error);
 
       showNotification({
-        title: t('error'),
-        color: 'red',
+        title: t("error"),
+        color: "red",
         message: err,
       });
     }
@@ -237,27 +237,27 @@ const ManageStudents = ({
   return (
     <ScrollArea>
       <ConfirmationModal
-        title={t('sure_to_issue_certificate_everyone')}
+        title={t("sure_to_issue_certificate_everyone")}
         open={openMoal}
         onClose={() => setOpenModal(false)}
         onConfirm={handleIssueAll}
       />
       <ConfirmationModal
-        title={t('sure_to_issue_certificate')}
+        title={t("sure_to_issue_certificate")}
         open={submitModal}
         onClose={() => setSubmitModal(false)}
         onConfirm={handleSubmit}
       />
-      <Group justify="space-between" mb={'lg'}>
-        <Title>{t('trainee')}</Title>
+      <Group justify="space-between" mb={"lg"}>
+        <Title>{t("trainee")}</Title>
         <Flex>
           <Button mr={20} leftSection={<IconPlus size={15} />} onClick={open}>
-            {t('add_trainee')}
+            {t("add_trainee")}
           </Button>
           <Drawer
             opened={opened}
             onClose={close}
-            title={t('add_trainee')}
+            title={t("add_trainee")}
             overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
           >
             <AddTrainee onCancel={close} searchParams={searchParams} />
@@ -270,7 +270,7 @@ const ManageStudents = ({
               mr={20}
               loading={selected.length !== 0 && postUserData.isLoading}
             >
-              {t('issue_certificate')}
+              {t("issue_certificate")}
             </Button>
           )}
 
@@ -280,15 +280,15 @@ const ManageStudents = ({
               disabled={selected.length > 0}
               onClick={() => setOpenModal(true)}
             >
-              {t('issue_certificates_to_all')}
+              {t("issue_certificates_to_all")}
             </Button>
           )}
         </Flex>
       </Group>
 
-      <div style={{ display: 'flex' }}>
-        <Box mx={3} style={{ width: '100%' }}>
-          {searchComponent(t('search_trainees') as string)}
+      <div style={{ display: "flex" }}>
+        <Box mx={3} style={{ width: "100%" }}>
+          {searchComponent(t("search_trainees") as string)}
         </Box>
       </div>
       {getStudentStat.data && getStudentStat.data?.totalCount > 0 ? (
@@ -304,15 +304,15 @@ const ManageStudents = ({
             <Table.Thead>
               <Table.Tr>
                 <Table.Th></Table.Th>
-                <Table.Th>{t('name')}</Table.Th>
-                <Table.Th>{t('progress')}</Table.Th>
+                <Table.Th>{t("name")}</Table.Th>
+                <Table.Th>{t("progress")}</Table.Th>
                 <Table.Th>
-                  <Flex align={'center'} direction={'column'}>
-                    {t('internal_certificate')}
+                  <Flex align={"center"} direction={"column"}>
+                    {t("internal_certificate")}
                   </Flex>
                 </Table.Th>
-                <Table.Th style={{ textAlign: 'center' }}>
-                  {t('current_lesson')}
+                <Table.Th style={{ textAlign: "center" }}>
+                  {t("current_lesson")}
                 </Table.Th>
               </Table.Tr>
             </Table.Thead>
@@ -330,7 +330,7 @@ const ManageStudents = ({
           </Table>
         </Paper>
       ) : (
-        <Box>{t('no_trainees')}</Box>
+        <Box>{t("no_trainees")}</Box>
       )}
 
       {getStudentStat.data &&

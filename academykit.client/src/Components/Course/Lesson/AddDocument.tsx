@@ -1,7 +1,7 @@
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import FileUploadLesson from '@components/Ui/FileUploadLesson';
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+import FileUploadLesson from "@components/Ui/FileUploadLesson";
+import RichTextEditor from "@components/Ui/RichTextEditor/Index";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Box,
   Button,
@@ -11,27 +11,27 @@ import {
   Switch,
   Text,
   Tooltip,
-} from '@mantine/core';
-import { createFormContext, yupResolver } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import { LessonType } from '@utils/enums';
-import errorType from '@utils/services/axiosError';
+} from "@mantine/core";
+import { createFormContext, yupResolver } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import { LessonType } from "@utils/enums";
+import errorType from "@utils/services/axiosError";
 import {
   useCreateLesson,
   useUpdateLesson,
-} from '@utils/services/courseService';
-import { ILessonAssignment, ILessonFile } from '@utils/services/types';
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
-import * as Yup from 'yup';
+} from "@utils/services/courseService";
+import { ILessonAssignment, ILessonFile } from "@utils/services/types";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import * as Yup from "yup";
 
 const schema = () => {
   const { t } = useTranslation();
 
   return Yup.object().shape({
-    name: Yup.string().required(t('file_name_required') as string),
-    documentUrl: Yup.string().required(t('file_required') as string),
+    name: Yup.string().required(t("file_name_required") as string),
+    documentUrl: Yup.string().required(t("file_required") as string),
   });
 };
 
@@ -67,13 +67,13 @@ const AddDocument = ({
   );
 
   const [, setOpened] = useState(false);
-  const [, setLessonId] = useState('');
+  const [, setLessonId] = useState("");
 
   const form = useForm({
     initialValues: {
-      name: item?.name ?? '',
-      description: item?.description ?? '',
-      documentUrl: item?.documentUrl ?? '',
+      name: item?.name ?? "",
+      description: item?.description ?? "",
+      documentUrl: item?.documentUrl ?? "",
       isMandatory: item?.isMandatory ?? false,
     },
     validate: yupResolver(schema()),
@@ -102,9 +102,9 @@ const AddDocument = ({
         setIsEditing(false);
       }
       showNotification({
-        title: t('success'),
-        message: `${t('file')} ${isEditing ? t('edited') : t('added')} ${t(
-          'successfully'
+        title: t("success"),
+        message: `${t("file")} ${isEditing ? t("edited") : t("added")} ${t(
+          "successfully"
         )}`,
       });
       setAddLessonClick(true);
@@ -112,9 +112,9 @@ const AddDocument = ({
       const err = errorType(error);
 
       showNotification({
-        title: t('error'),
+        title: t("error"),
         message: err,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -122,42 +122,42 @@ const AddDocument = ({
     <FormProvider form={form}>
       <form onSubmit={form.onSubmit(submitForm)}>
         <Paper withBorder p="md">
-          <Grid align={'center'}>
+          <Grid align={"center"}>
             <Grid.Col span={6}>
               <CustomTextFieldWithAutoFocus
                 withAsterisk
-                label={t('file_title')}
-                placeholder={t('file_name') as string}
-                {...form.getInputProps('name')}
-                styles={{ error: { position: 'absolute' } }}
+                label={t("file_title")}
+                placeholder={t("file_name") as string}
+                {...form.getInputProps("name")}
+                styles={{ error: { position: "absolute" } }}
               />
             </Grid.Col>
-            <Tooltip multiline label={t('mandatory_tooltip')} w={220}>
+            <Tooltip multiline label={t("mandatory_tooltip")} w={220}>
               <Grid.Col span={4}>
                 <Switch
-                  label={t('is_mandatory')}
-                  {...form.getInputProps('isMandatory')}
+                  label={t("is_mandatory")}
+                  {...form.getInputProps("isMandatory")}
                   checked={isMandatory}
                   onChange={() => {
                     setIsMandatory(() => !isMandatory);
-                    form.setFieldValue('isMandatory', !isMandatory);
+                    form.setFieldValue("isMandatory", !isMandatory);
                   }}
                 />
               </Grid.Col>
             </Tooltip>
           </Grid>
-          <Text size={'md'} mt={10}>
-            {t('file')} <span className="global-astrick"> *</span>
+          <Text size={"md"} mt={10}>
+            {t("file")} <span className="global-astrick"> *</span>
           </Text>
           <FileUploadLesson
             currentFile={item?.documentUrl}
             formContext={useFormContext}
           />
-          <Box my={form.errors['documentUrl'] ? 20 : 10}>
-            <Text size={'sm'}>{t('file_description')}</Text>
+          <Box my={form.errors["documentUrl"] ? 20 : 10}>
+            <Text size={"sm"}>{t("file_description")}</Text>
             <RichTextEditor
-              placeholder={t('file_description') as string}
-              {...form.getInputProps('description')}
+              placeholder={t("file_description") as string}
+              {...form.getInputProps("description")}
             />
           </Box>
           <Group mt="md">
@@ -165,16 +165,16 @@ const AddDocument = ({
               type="submit"
               loading={lesson.isLoading || updateLesson.isLoading}
             >
-              {t('submit')}
+              {t("submit")}
             </Button>
             {!isEditing && (
               <Button
                 onClick={() => {
-                  setAddState('');
+                  setAddState("");
                 }}
                 variant="outline"
               >
-                {t('close')}
+                {t("close")}
               </Button>
             )}
           </Group>

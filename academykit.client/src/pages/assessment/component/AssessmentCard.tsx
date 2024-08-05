@@ -1,5 +1,5 @@
-import DeleteModal from '@components/Ui/DeleteModal';
-import UserShortProfile from '@components/UserShortProfile';
+import DeleteModal from "@components/Ui/DeleteModal";
+import UserShortProfile from "@components/UserShortProfile";
 import {
   Anchor,
   Badge,
@@ -10,9 +10,9 @@ import {
   List,
   Menu,
   Text,
-} from '@mantine/core';
-import { useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
+} from "@mantine/core";
+import { useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
 import {
   IconCheck,
   IconChevronRight,
@@ -20,40 +20,40 @@ import {
   IconEdit,
   IconTrash,
   IconX,
-} from '@tabler/icons-react';
-import { AssessmentStatus, UserRole } from '@utils/enums';
-import RoutePath from '@utils/routeConstants';
+} from "@tabler/icons-react";
+import { AssessmentStatus, UserRole } from "@utils/enums";
+import RoutePath from "@utils/routeConstants";
 import {
   IAssessmentResponse,
   useDeleteAssessment,
-} from '@utils/services/assessmentService';
-import { t } from 'i18next';
-import { Link, useNavigate } from 'react-router-dom';
-import { getAssessmentText } from '../AssessmentDescription';
+} from "@utils/services/assessmentService";
+import { t } from "i18next";
+import { Link, useNavigate } from "react-router-dom";
+import { getAssessmentText } from "../AssessmentDescription";
 
 export const getAssessmentStatus = (assessmentStatus: AssessmentStatus) => {
   if (assessmentStatus === AssessmentStatus.Draft) {
     return (
       <Badge variant="light" color="grape">
-        {t('Draft')}
+        {t("Draft")}
       </Badge>
     );
   } else if (assessmentStatus === AssessmentStatus.Review) {
     return (
       <Badge variant="light" color="orange">
-        {t('review')}
+        {t("review")}
       </Badge>
     );
   } else if (assessmentStatus === AssessmentStatus.Published) {
     return (
       <Badge variant="light" color="green">
-        {t('Published')}
+        {t("Published")}
       </Badge>
     );
   } else if (assessmentStatus === AssessmentStatus.Rejected) {
     return (
       <Badge variant="light" color="red">
-        {t('rejected')}
+        {t("rejected")}
       </Badge>
     );
   }
@@ -105,12 +105,12 @@ const AssessmentCard = ({
     try {
       await deleteAssessment.mutateAsync(data.id);
       showNotification({
-        message: t('delete_assessment_success'),
+        message: t("delete_assessment_success"),
       });
     } catch (error: any) {
       showNotification({
         message: error?.response?.data?.message,
-        color: 'red',
+        color: "red",
       });
     } finally {
       setDeleteConfirmation();
@@ -120,20 +120,20 @@ const AssessmentCard = ({
   return (
     <>
       <DeleteModal
-        title={t('delete_assessment_confirmation')}
+        title={t("delete_assessment_confirmation")}
         open={deleteConfirmation}
         onClose={setDeleteConfirmation}
         onConfirm={handleDelete}
       />
 
-      <Card p="md" withBorder radius={'md'}>
+      <Card p="md" withBorder radius={"md"}>
         <Group justify="space-between">
           <Anchor
             component={Link}
             to={RoutePath.assessment.description(data.slug).route}
-            size={'md'}
+            size={"md"}
             lineClamp={1}
-            maw={'80%'}
+            maw={"80%"}
           >
             <Text truncate>{data.title}</Text>
           </Anchor>
@@ -158,7 +158,7 @@ const AssessmentCard = ({
                   to={RoutePath.manageAssessment.edit(data.slug).route}
                   rightSection={<IconChevronRight size={12} stroke={1.5} />}
                 >
-                  {t('manage')}
+                  {t("manage")}
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item
@@ -169,26 +169,26 @@ const AssessmentCard = ({
                     setDeleteConfirmation();
                   }}
                 >
-                  {t('delete')}
+                  {t("delete")}
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>
           )}
         </Group>
 
-        <Group mt={'sm'}>
-          <UserShortProfile user={data.user} size={'sm'} page="assessment" />
+        <Group mt={"sm"}>
+          <UserShortProfile user={data.user} size={"sm"} page="assessment" />
         </Group>
-        <Flex mt={'sm'} gap={10}>
+        <Flex mt={"sm"} gap={10}>
           {displayEligibilityStatus() && (
             <>
               {getEligibilityStatus() ? (
                 <Badge variant="light" color="green">
-                  {t('eligible')}
+                  {t("eligible")}
                 </Badge>
               ) : (
                 <Badge variant="light" color="red">
-                  {t('not_eligible')}
+                  {t("not_eligible")}
                 </Badge>
               )}
             </>
@@ -196,15 +196,15 @@ const AssessmentCard = ({
           {getAssessmentStatus(data.assessmentStatus)}
         </Flex>
         <Card.Section
-          py={'xs'}
+          py={"xs"}
           px="lg"
-          mt={'sm'}
+          mt={"sm"}
           style={{
-            borderTop: '1px solid var(--mantine-color-pool-border)',
+            borderTop: "1px solid var(--mantine-color-pool-border)",
           }}
         >
           <Text size="xs" c="dimmed" mb={10}>
-            {t('eligibility')}
+            {t("eligibility")}
           </Text>
 
           <List>
@@ -234,29 +234,29 @@ const AssessmentCard = ({
                   </List.Item>
                 ))
             ) : (
-              <Text>{t('no_eligibility_criteria')}</Text>
+              <Text>{t("no_eligibility_criteria")}</Text>
             )}
           </List>
           {data.eligibilityCreationRequestModels.length > 4 && (
             <Anchor
               component={Link}
               to={RoutePath.assessment.description(data.slug).route}
-              size={'md'}
+              size={"md"}
               lineClamp={1}
             >
-              <Text truncate>{t('see_more')}</Text>
+              <Text truncate>{t("see_more")}</Text>
             </Anchor>
           )}
         </Card.Section>
 
         <Button
           variant="light"
-          mt={'auto'}
+          mt={"auto"}
           onClick={() =>
             navigate(RoutePath.assessment.description(data.slug).route)
           }
         >
-          {t('watch')}
+          {t("watch")}
         </Button>
       </Card>
     </>

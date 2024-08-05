@@ -1,4 +1,4 @@
-import Breadcrumb from '@components/Ui/BreadCrumb';
+import Breadcrumb from "@components/Ui/BreadCrumb";
 import {
   Anchor,
   Button,
@@ -11,25 +11,25 @@ import {
   Select,
   Text,
   useMantineTheme,
-} from '@mantine/core';
-import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import TransferList from '@pages/course/component/TransferList';
-import errorType from '@utils/services/axiosError';
-import { usePools } from '@utils/services/poolService';
+} from "@mantine/core";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import TransferList from "@pages/course/component/TransferList";
+import errorType from "@utils/services/axiosError";
+import { usePools } from "@utils/services/poolService";
 import {
   useAddQuestionQuestionSet,
   useQuestion,
   useQuestionSetQuestions,
-} from '@utils/services/questionService';
-import { api } from '@utils/services/service-api';
-import { httpClient } from '@utils/services/service-axios';
-import { ITag } from '@utils/services/tagService';
-import { IPaginated } from '@utils/services/types';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
-import QuestionForm from './components/QuestionForm';
+} from "@utils/services/questionService";
+import { api } from "@utils/services/service-api";
+import { httpClient } from "@utils/services/service-axios";
+import { ITag } from "@utils/services/tagService";
+import { IPaginated } from "@utils/services/types";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import QuestionForm from "./components/QuestionForm";
 
 interface ISelectList {
   label: string;
@@ -58,14 +58,14 @@ const Questions = () => {
   const [poolValue, setPoolValue] = useState<string | null>(null);
   const [tagValue, setTagValue] = useState<string | null>(null);
   const matches = useMediaQuery(`(min-width: ${theme.breakpoints.sm}px)`);
-  const questionPools = usePools('');
+  const questionPools = usePools("");
   // const questionPoolTags = useTags('', poolValue ?? '', 1);
   const [questionPoolTags, setQuestionPoolTags] = useState<IPaginated<ITag>>(
     {} as IPaginated<ITag>
   );
   const questions = useQuestion(
-    poolValue ?? '',
-    `page=${activePage}&size=12&${tagValue ? `tags=${[tagValue]}` : ''}`
+    poolValue ?? "",
+    `page=${activePage}&size=12&${tagValue ? `tags=${[tagValue]}` : ""}`
   );
 
   const callAPI = async (
@@ -76,23 +76,23 @@ const Questions = () => {
     try {
       const response = await httpClient.get<IPaginated<ITag>>(
         api.tags.list +
-          `?${search}${identity ? `Idenitiy=${identity}` : ''}${
-            trainingType ? `&TrainingType=${trainingType}` : ''
+          `?${search}${identity ? `Idenitiy=${identity}` : ""}${
+            trainingType ? `&TrainingType=${trainingType}` : ""
           }`
       );
       setQuestionPoolTags(response.data);
     } catch (error) {
       showNotification({
-        title: t('error'),
-        message: 'Something went wrong',
-        color: 'red',
+        title: t("error"),
+        message: "Something went wrong",
+        color: "red",
       });
     }
   };
 
   // get tags on every pool value change
   useEffect(() => {
-    callAPI('', poolValue ?? '', 1);
+    callAPI("", poolValue ?? "", 1);
   }, [poolValue]);
 
   const addQuestions = useAddQuestionQuestionSet(lessonSlug as string);
@@ -149,8 +149,8 @@ const Questions = () => {
   const addQuestion = async () => {
     if (!data[1].length) {
       showNotification({
-        message: t('question_list_cannot_empty'),
-        color: 'red',
+        message: t("question_list_cannot_empty"),
+        color: "red",
       });
       return;
     }
@@ -161,19 +161,19 @@ const Questions = () => {
       });
       await addQuestions.mutateAsync({
         questionPoolQuestionIds,
-        identity: params.lessonSlug ?? '',
+        identity: params.lessonSlug ?? "",
       });
       showNotification({
-        message: t('add_questions_success'),
+        message: t("add_questions_success"),
       });
       navigate(-1);
     } catch (error) {
       const err = errorType(error);
 
       showNotification({
-        title: t('error'),
+        title: t("error"),
         message: err,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -189,18 +189,18 @@ const Questions = () => {
           <Grid.Col span={matches ? 3 : 6}>
             <Select
               size="md"
-              placeholder={t('pick_one') as string}
+              placeholder={t("pick_one") as string}
               label={
                 <>
-                  <Text>{t('mcq_pools')}</Text>
-                  <Text size={'0.810rem'} c="#909296">
-                    {t('question_pool_created')}
+                  <Text>{t("mcq_pools")}</Text>
+                  <Text size={"0.810rem"} c="#909296">
+                    {t("question_pool_created")}
                     <Anchor href="/pools">
-                      {t('question_pool_href')}
-                    </Anchor>{' '}
-                    {t('section')}
+                      {t("question_pool_href")}
+                    </Anchor>{" "}
+                    {t("section")}
                     <Anchor href="https://docs.academykit.co/app-documentation/training/questions">
-                      {t('learn_more')}
+                      {t("learn_more")}
                     </Anchor>
                   </Text>
                 </>
@@ -208,7 +208,7 @@ const Questions = () => {
               searchable
               clearable
               allowDeselect
-              nothingFoundMessage={t('no_options')}
+              nothingFoundMessage={t("no_options")}
               maxDropdownHeight={280}
               data={poolData}
               onChange={(e) => {
@@ -235,7 +235,7 @@ const Questions = () => {
           </Grid.Col>
         </Grid>
 
-        {questions.fetchStatus !== 'idle' && questions.isLoading ? (
+        {questions.fetchStatus !== "idle" && questions.isLoading ? (
           <Loader />
         ) : (
           <>
@@ -252,14 +252,14 @@ const Questions = () => {
           </>
         )}
         <Group mt={30}>
-          <Button onClick={addQuestion}>{t('submit')}</Button>
+          <Button onClick={addQuestion}>{t("submit")}</Button>
           <Button
             variant="outline"
             onClick={() => {
               navigate(-1);
             }}
           >
-            {t('cancel')}
+            {t("cancel")}
           </Button>
         </Group>
       </Paper>

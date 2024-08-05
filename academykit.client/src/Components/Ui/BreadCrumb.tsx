@@ -1,7 +1,7 @@
-import useNav from '@hooks/useNav';
-import { Anchor, Breadcrumbs, Divider, MantineStyleProps } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+import useNav from "@hooks/useNav";
+import { Anchor, Breadcrumbs, Divider, MantineStyleProps } from "@mantine/core";
+import { useTranslation } from "react-i18next";
+import { Link, useLocation } from "react-router-dom";
 
 type ItemsProps = {
   items: {
@@ -15,9 +15,9 @@ const getItems = ({ items, hide }: ItemsProps) => {
   const { t } = useTranslation();
   const finalItem = items.map((item, index) => (
     <Anchor
-      size={'sm'}
-      maw={'200px'}
-      style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+      size={"sm"}
+      maw={"200px"}
+      style={{ overflow: "hidden", textOverflow: "ellipsis" }}
       to={item.href}
       component={Link}
       key={index}
@@ -41,17 +41,17 @@ const Breadcrumb = ({
   py = 20,
 }: {
   hide?: number | null;
-  py?: MantineStyleProps['py'];
+  py?: MantineStyleProps["py"];
   start?: { title: string; href: string };
 }) => {
   const { breadCrumb } = useNav();
   const routes = useLocation();
-  const pathNames = routes.pathname.split('/').splice(1);
+  const pathNames = routes.pathname.split("/").splice(1);
 
   const newPath = pathNames.map((x, i) => {
     const elementTo = i + 1;
-    if (x === 'courses') x = 'trainings';
-    const href = '/' + [...pathNames].splice(0, elementTo).join('/');
+    if (x === "courses") x = "trainings";
+    const href = "/" + [...pathNames].splice(0, elementTo).join("/");
     const a = {
       title: x,
       href,
@@ -64,7 +64,7 @@ const Breadcrumb = ({
       <Breadcrumbs
         py={py}
         pb={5}
-        styles={{ breadcrumb: { lineHeight: '20px' } }}
+        styles={{ breadcrumb: { lineHeight: "20px" } }}
       >
         {getItems({ items: start ? [start, ...items] : items, hide })}
       </Breadcrumbs>

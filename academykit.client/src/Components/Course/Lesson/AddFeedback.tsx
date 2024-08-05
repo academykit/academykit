@@ -1,6 +1,6 @@
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+import RichTextEditor from "@components/Ui/RichTextEditor/Index";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Box,
   Button,
@@ -10,26 +10,26 @@ import {
   Switch,
   Text,
   Tooltip,
-} from '@mantine/core';
-import { useForm, yupResolver } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import { LessonType } from '@utils/enums';
-import errorType from '@utils/services/axiosError';
+} from "@mantine/core";
+import { useForm, yupResolver } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import { LessonType } from "@utils/enums";
+import errorType from "@utils/services/axiosError";
 import {
   useCreateLesson,
   useUpdateLesson,
-} from '@utils/services/courseService';
-import { ILessonFeedback } from '@utils/services/types';
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import * as Yup from 'yup';
+} from "@utils/services/courseService";
+import { ILessonFeedback } from "@utils/services/types";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import * as Yup from "yup";
 
 const schema = () => {
   const { t } = useTranslation();
 
   return Yup.object().shape({
-    name: Yup.string().required(t('feedback_name_required') as string),
+    name: Yup.string().required(t("feedback_name_required") as string),
   });
 };
 
@@ -62,8 +62,8 @@ const AddFeedback = ({
 
   const form = useForm({
     initialValues: {
-      name: item?.name ?? '',
-      description: item?.description ?? '',
+      name: item?.name ?? "",
+      description: item?.description ?? "",
       isMandatory: item?.isMandatory ?? false,
     },
     validate: yupResolver(schema()),
@@ -93,18 +93,18 @@ const AddFeedback = ({
         setIsEditing(false);
       }
       showNotification({
-        title: t('success'),
-        message: `${t('feedback')} ${isEditing ? t('edited') : t('added')} ${t(
-          'successfully'
+        title: t("success"),
+        message: `${t("feedback")} ${isEditing ? t("edited") : t("added")} ${t(
+          "successfully"
         )}`,
       });
     } catch (error: any) {
       const err = errorType(error);
 
       showNotification({
-        title: t('error'),
+        title: t("error"),
         message: err,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -112,34 +112,34 @@ const AddFeedback = ({
     <React.Fragment>
       <form onSubmit={form.onSubmit(submitForm)}>
         <Paper withBorder p="md">
-          <Grid align={'center'}>
+          <Grid align={"center"}>
             <Grid.Col span={{ base: 12, lg: 6 }}>
               <CustomTextFieldWithAutoFocus
                 withAsterisk
-                label={t('feedback_title')}
-                placeholder={t('feedback_title') as string}
-                {...form.getInputProps('name')}
+                label={t("feedback_title")}
+                placeholder={t("feedback_title") as string}
+                {...form.getInputProps("name")}
               />
             </Grid.Col>
-            <Tooltip multiline label={t('mandatory_tooltip')} w={220}>
+            <Tooltip multiline label={t("mandatory_tooltip")} w={220}>
               <Grid.Col span={4}>
                 <Switch
-                  label={t('is_mandatory')}
-                  {...form.getInputProps('isMandatory')}
+                  label={t("is_mandatory")}
+                  {...form.getInputProps("isMandatory")}
                   checked={isMandatory}
                   onChange={() => {
                     setIsMandatory(() => !isMandatory);
-                    form.setFieldValue('isMandatory', !isMandatory);
+                    form.setFieldValue("isMandatory", !isMandatory);
                   }}
                 />
               </Grid.Col>
             </Tooltip>
           </Grid>
           <Box my={20}>
-            <Text size={'sm'}>{t('feedback_description')}</Text>
+            <Text size={"sm"}>{t("feedback_description")}</Text>
             <RichTextEditor
-              placeholder={t('feedback_description') as string}
-              {...form.getInputProps('description')}
+              placeholder={t("feedback_description") as string}
+              {...form.getInputProps("description")}
             />
           </Box>
           <Group mt="md">
@@ -147,21 +147,21 @@ const AddFeedback = ({
               type="submit"
               loading={lesson.isLoading || updateLesson.isLoading}
             >
-              {t('submit')}
+              {t("submit")}
             </Button>
             {!isEditing && (
               <Button
                 onClick={() => {
-                  setAddState('');
+                  setAddState("");
                 }}
                 variant="outline"
               >
-                {t('close')}
+                {t("close")}
               </Button>
             )}
             {isEditing && (
               <Button component={Link} to={`${item?.id}/feedback`}>
-                {t('add_more_feedback')}
+                {t("add_more_feedback")}
               </Button>
             )}
           </Group>

@@ -1,33 +1,33 @@
-import useAuth from '@hooks/useAuth';
-import useNav from '@hooks/useNav';
-import { Loader } from '@mantine/core';
-import { CourseUserStatus, UserRole } from '@utils/enums';
-import lazyWithRetry from '@utils/lazyImportWithReload';
-import { useCourseDescription } from '@utils/services/courseService';
-import { useEffect } from 'react';
-import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import useAuth from "@hooks/useAuth";
+import useNav from "@hooks/useNav";
+import { Loader } from "@mantine/core";
+import { CourseUserStatus, UserRole } from "@utils/enums";
+import lazyWithRetry from "@utils/lazyImportWithReload";
+import { useCourseDescription } from "@utils/services/courseService";
+import { useEffect } from "react";
+import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 
-const LessonDetails = lazyWithRetry(() => import('../manage/lessonDetails'));
-const ManageCourse = lazyWithRetry(() => import('../manage/manage'));
-const StudentDetails = lazyWithRetry(() => import('../manage/studentDetails'));
-const Questions = lazyWithRetry(() => import('../question'));
+const LessonDetails = lazyWithRetry(() => import("../manage/lessonDetails"));
+const ManageCourse = lazyWithRetry(() => import("../manage/manage"));
+const StudentDetails = lazyWithRetry(() => import("../manage/studentDetails"));
+const Questions = lazyWithRetry(() => import("../question"));
 const PreviewQuestions = lazyWithRetry(
-  () => import('../question/PreviewQuestion')
+  () => import("../question/PreviewQuestion")
 );
-const Certificate = lazyWithRetry(() => import('./certificate'));
-const CourseEditNav = lazyWithRetry(() => import('./Components/Layout'));
-const Dashboard = lazyWithRetry(() => import('./dashboard'));
-const EditCourse = lazyWithRetry(() => import('./edit'));
-const CourseLessons = lazyWithRetry(() => import('./lessons'));
-const Teacher = lazyWithRetry(() => import('./teacher'));
+const Certificate = lazyWithRetry(() => import("./certificate"));
+const CourseEditNav = lazyWithRetry(() => import("./Components/Layout"));
+const Dashboard = lazyWithRetry(() => import("./dashboard"));
+const EditCourse = lazyWithRetry(() => import("./edit"));
+const CourseLessons = lazyWithRetry(() => import("./lessons"));
+const Teacher = lazyWithRetry(() => import("./teacher"));
 
-const ManageLessons = lazyWithRetry(() => import('../manage/Lesson'));
-const ManageStudents = lazyWithRetry(() => import('../manage/Student'));
+const ManageLessons = lazyWithRetry(() => import("../manage/Lesson"));
+const ManageStudents = lazyWithRetry(() => import("../manage/Student"));
 const CreateAssignment = lazyWithRetry(
-  () => import('@pages/assignment/create')
+  () => import("@pages/assignment/create")
 );
 const CreateFeedback = lazyWithRetry(
-  () => import('@components/Course/FeedBack/CreateFeedBack')
+  () => import("@components/Course/FeedBack/CreateFeedBack")
 );
 
 const CourseRoute = () => {
@@ -47,11 +47,11 @@ const CourseRoute = () => {
     if (courseDetail.isSuccess) {
       nav.setBreadCrumb &&
         nav.setBreadCrumb([
-          { href: '/trainings', title: 'Training' },
-          { href: '/trainings', title: 'Training' },
+          { href: "/trainings", title: "Training" },
+          { href: "/trainings", title: "Training" },
           {
             href: `/trainings/stat/${courseDetail.data.slug}`,
-            title: courseDetail?.data?.name ?? '',
+            title: courseDetail?.data?.name ?? "",
           },
         ]);
       // }
@@ -66,7 +66,7 @@ const CourseRoute = () => {
         (auth?.auth && auth.auth.role <= UserRole.Admin)
       )
     ) {
-      return navigate('/403');
+      return navigate("/403");
     }
   }
 

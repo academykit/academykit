@@ -1,15 +1,15 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   CourseLanguage,
   CourseStatus,
   CourseUserStatus,
   LessonType,
-} from '@utils/enums';
-import { ResponseData } from './authService';
-import errorType from './axiosError';
-import { INotMember } from './groupService';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
+} from "@utils/enums";
+import { ResponseData } from "./authService";
+import errorType from "./axiosError";
+import { INotMember } from "./groupService";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
 import {
   ILessonAssignment,
   ILessonFeedback,
@@ -18,7 +18,7 @@ import {
   ILessonMeeting,
   IPaginated,
   IUser,
-} from './types';
+} from "./types";
 
 interface ICourseTag {
   id: string;
@@ -78,7 +78,7 @@ const getCourseTeacher = async (course_id: string, searchParams: string) =>
 
 export const useCourseTeacher = (course_id: string, searchParams: string) =>
   useQuery({
-    queryKey: ['get_course_teachers' + api.courseTeacher.list + searchParams],
+    queryKey: ["get_course_teachers" + api.courseTeacher.list + searchParams],
     queryFn: () => getCourseTeacher(course_id, searchParams),
     enabled: true,
     select: (data) => data.data,
@@ -106,13 +106,13 @@ export const useCreateTeacherCourse = (searchParams: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ['post' + api.courseTeacher.list],
+    mutationKey: ["post" + api.courseTeacher.list],
     mutationFn: createTeacherCourse,
 
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [
-          'get_course_teachers' + api.courseTeacher.list + searchParams,
+          "get_course_teachers" + api.courseTeacher.list + searchParams,
         ],
       });
     },
@@ -126,13 +126,13 @@ const deleteCourseTeacher = async (id: string) => {
 export const useDeleteCourseTeacher = (searchParams: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['delete' + api.courseTeacher.detail],
+    mutationKey: ["delete" + api.courseTeacher.detail],
     mutationFn: deleteCourseTeacher,
 
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [
-          'get_course_teachers' + api.courseTeacher.list + searchParams,
+          "get_course_teachers" + api.courseTeacher.list + searchParams,
         ],
       });
     },
@@ -273,7 +273,7 @@ export const useQuestionReorder = (id: string) => {
 export const useUpdateCourse = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.course.list],
+    mutationKey: ["update" + api.course.list],
 
     mutationFn: (data: any) => {
       return httpClient.put(api.course.update(id), data);
@@ -290,7 +290,7 @@ export const useUpdateCourse = (id: string) => {
 export const useUpdateGeneralSetting = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.course.list],
+    mutationKey: ["update" + api.course.list],
 
     mutationFn: (data: any) => {
       return httpClient.put(api.course.update(id), data);
@@ -310,7 +310,7 @@ const deleteCourse = async (id: string) => {
 export const useDeleteCourse = (search: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['delete' + api.course.detail],
+    mutationKey: ["delete" + api.course.detail],
     mutationFn: deleteCourse,
 
     onSuccess: () => {
@@ -374,7 +374,7 @@ export const useCreateSection = (slug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ['post' + api.section.common],
+    mutationKey: ["post" + api.section.common],
     mutationFn: createSection,
 
     onSuccess: () => {
@@ -392,7 +392,7 @@ const getSection = async (courseIdentity: string) => {
 };
 export const useGetSection = (courseIdentity: string) => {
   return useQuery({
-    queryKey: ['get' + api.section.common],
+    queryKey: ["get" + api.section.common],
     queryFn: () => getSection(courseIdentity),
 
     select: (data) => {
@@ -414,7 +414,7 @@ const updateSectionName = async (data: {
 export const useUpdateSectionName = (slug: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['patch' + api.section.common],
+    mutationKey: ["patch" + api.section.common],
     mutationFn: updateSectionName,
 
     onSuccess: () => {
@@ -433,7 +433,7 @@ const deleteSection = async (data: { id: string; sectionId: string }) => {
 export const useDeleteSection = (slug: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['delete' + api.section.common],
+    mutationKey: ["delete" + api.section.common],
     mutationFn: deleteSection,
 
     onSuccess: () => {
@@ -457,7 +457,7 @@ export const useCreateLesson = (slug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ['post' + api.lesson.common],
+    mutationKey: ["post" + api.lesson.common],
     mutationFn: createLesson,
 
     onSuccess: () => {
@@ -490,7 +490,7 @@ export const useUpdateLesson = (
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ['update' + api.lesson.common],
+    mutationKey: ["update" + api.lesson.common],
     mutationFn: updateLesson,
 
     onSuccess: () => {
@@ -498,7 +498,7 @@ export const useUpdateLesson = (
         queryKey: [api.lesson.courseLesson(courseIdentity)],
       });
       queryClient.invalidateQueries({
-        queryKey: [api.lesson.courseLesson(courseId ?? '', lessonId)],
+        queryKey: [api.lesson.courseLesson(courseId ?? "", lessonId)],
       });
       queryClient.invalidateQueries({
         queryKey: [api.course.detail(courseIdentity)],
@@ -515,7 +515,7 @@ const deleteLesson = async (data: { id: string; lessonId: string }) => {
 export const useDeleteLesson = (slug: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['delete' + api.lesson.common],
+    mutationKey: ["delete" + api.lesson.common],
     mutationFn: deleteLesson,
 
     onSuccess: () => {

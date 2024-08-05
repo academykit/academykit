@@ -1,14 +1,14 @@
-import { Button, Group, Loader, Textarea } from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import errorType from '@utils/services/axiosError';
+import { Button, Group, Loader, Textarea } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import errorType from "@utils/services/axiosError";
 import {
   useGetCommentReplies,
   usePostCommentReply,
-} from '@utils/services/commentService';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import CommentReply from './CommentReply';
+} from "@utils/services/commentService";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import CommentReply from "./CommentReply";
 
 const CommentReplies = ({
   commentId,
@@ -21,7 +21,7 @@ const CommentReplies = ({
 }) => {
   const form = useForm({
     initialValues: {
-      content: '',
+      content: "",
     },
   });
   const addCommentReply = usePostCommentReply(courseId, commentId);
@@ -45,7 +45,7 @@ const CommentReplies = ({
       const error = errorType(err);
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -78,18 +78,18 @@ const CommentReplies = ({
       <form onSubmit={form.onSubmit(submitHandler)}>
         <Group mx={14}>
           <Textarea
-            {...form.getInputProps('content')}
-            style={{ width: '100%' }}
-            placeholder={t('your_comment') as string}
+            {...form.getInputProps("content")}
+            style={{ width: "100%" }}
+            placeholder={t("your_comment") as string}
             withAsterisk
           />
           <Button
             type="submit"
             loading={addCommentReply.isLoading}
             disabled={!form.values.content.trim()}
-            style={{ '&[data-disabled]': { pointerEvents: 'all' } }}
+            style={{ "&[data-disabled]": { pointerEvents: "all" } }}
           >
-            {t('reply')}
+            {t("reply")}
           </Button>
         </Group>
       </form>

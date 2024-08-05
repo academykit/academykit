@@ -1,11 +1,11 @@
-import DeleteModal from '@components/Ui/DeleteModal';
-import EmptyRow from '@components/Ui/EmptyRow';
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
-import TextViewer from '@components/Ui/RichTextViewer';
+import DeleteModal from "@components/Ui/DeleteModal";
+import EmptyRow from "@components/Ui/EmptyRow";
+import RichTextEditor from "@components/Ui/RichTextEditor/Index";
+import TextViewer from "@components/Ui/RichTextViewer";
 import withSearchPagination, {
   IWithSearchPagination,
-} from '@hoc/useSearchPagination';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+} from "@hoc/useSearchPagination";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   ActionIcon,
   Badge,
@@ -25,10 +25,10 @@ import {
   TextInput,
   Title,
   Tooltip,
-} from '@mantine/core';
-import { useForm, yupResolver } from '@mantine/form';
-import { useDisclosure, useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
+} from "@mantine/core";
+import { useForm, yupResolver } from "@mantine/form";
+import { useDisclosure, useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
 import {
   IconAsteriskSimple,
   IconFileSearch,
@@ -36,8 +36,8 @@ import {
   IconPencil,
   IconSend,
   IconTrash,
-} from '@tabler/icons-react';
-import { MailType } from '@utils/enums';
+} from "@tabler/icons-react";
+import { MailType } from "@utils/enums";
 import {
   IMailNotification,
   useDeleteMailNotification,
@@ -46,26 +46,26 @@ import {
   usePostMailNotification,
   useTestEmail,
   useUpdateMailNotification,
-} from '@utils/services/adminService';
-import errorType from '@utils/services/axiosError';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import * as Yup from 'yup';
-import VariableHelpTable from './Component/VariableHelpTable';
+} from "@utils/services/adminService";
+import errorType from "@utils/services/axiosError";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import * as Yup from "yup";
+import VariableHelpTable from "./Component/VariableHelpTable";
 
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    mailName: Yup.string().required(t('mail_name_required') as string),
-    mailSubject: Yup.string().required(t('mail_subject_required') as string),
-    mailType: Yup.string().required(t('mail_type_required') as string),
+    mailName: Yup.string().required(t("mail_name_required") as string),
+    mailSubject: Yup.string().required(t("mail_subject_required") as string),
+    mailType: Yup.string().required(t("mail_type_required") as string),
     mailMessage: Yup.string()
-      .required(t('mail_message_required') as string)
+      .required(t("mail_message_required") as string)
       .test(
-        'check-for-empty-p-tags',
-        t('mail_message_required') as string,
+        "check-for-empty-p-tags",
+        t("mail_message_required") as string,
         (value) => {
-          return value !== '<p></p>';
+          return value !== "<p></p>";
         }
       ),
   });
@@ -75,7 +75,7 @@ const emailSchema = () => {
   return Yup.object().shape({
     emailAddress: Yup.string()
       .email()
-      .required(t('email_validation') as string),
+      .required(t("email_validation") as string),
   });
 };
 
@@ -107,10 +107,10 @@ const MailNotification = ({
 
   const form = useForm({
     initialValues: {
-      mailName: '',
-      mailSubject: '',
-      mailMessage: '',
-      mailType: '',
+      mailName: "",
+      mailSubject: "",
+      mailMessage: "",
+      mailType: "",
       isActive: true,
     },
     validate: yupResolver(schema()),
@@ -137,15 +137,15 @@ const MailNotification = ({
       });
       form.reset();
       showNotification({
-        message: t('edit_mail_success'),
+        message: t("edit_mail_success"),
       });
     } catch (error) {
       const err = errorType(error);
 
       showNotification({
-        title: t('error'),
+        title: t("error"),
         message: err,
-        color: 'red',
+        color: "red",
       });
     } finally {
       close();
@@ -161,15 +161,15 @@ const MailNotification = ({
       });
       form.reset();
       showNotification({
-        message: t('post_mail_success'),
+        message: t("post_mail_success"),
       });
     } catch (error) {
       const err = errorType(error);
 
       showNotification({
-        title: t('error'),
+        title: t("error"),
         message: err,
-        color: 'red',
+        color: "red",
       });
     } finally {
       close();
@@ -185,7 +185,7 @@ const MailNotification = ({
 
     const emailForm = useForm({
       initialValues: {
-        emailAddress: '',
+        emailAddress: "",
       },
       validate: yupResolver(emailSchema()),
     });
@@ -198,15 +198,15 @@ const MailNotification = ({
           data: values,
         });
         showNotification({
-          message: t('Email sent successfully!'),
+          message: t("Email sent successfully!"),
         });
       } catch (error) {
         const err = errorType(error);
 
         showNotification({
-          title: t('error'),
+          title: t("error"),
           message: err,
-          color: 'red',
+          color: "red",
         });
       }
     };
@@ -215,14 +215,14 @@ const MailNotification = ({
       try {
         await deleteMailNotification.mutateAsync(item.id);
         showNotification({
-          title: t('successful'),
-          message: t('mail_deleted'),
+          title: t("successful"),
+          message: t("mail_deleted"),
         });
       } catch (error) {
         const err = errorType(error);
         showNotification({
           message: err,
-          color: 'red',
+          color: "red",
         });
       }
       setOpened(false);
@@ -232,7 +232,7 @@ const MailNotification = ({
       <>
         {opened && (
           <DeleteModal
-            title={`${t('sure_to_delete')} "${item?.mailName}" ${t('mail')}?`}
+            title={`${t("sure_to_delete")} "${item?.mailName}" ${t("mail")}?`}
             open={opened}
             onClose={() => setOpened(false)}
             onConfirm={handleDelete}
@@ -245,54 +245,54 @@ const MailNotification = ({
             closeEmailModal();
             emailForm.reset();
           }}
-          title={t('test_email')}
+          title={t("test_email")}
         >
           <form onSubmit={emailForm.onSubmit(handleEmailSubmit)}>
             <TextInput
               withAsterisk
-              label={t('email')}
-              placeholder={t('email_placeholder') as string}
-              {...emailForm.getInputProps('emailAddress')}
+              label={t("email")}
+              placeholder={t("email_placeholder") as string}
+              {...emailForm.getInputProps("emailAddress")}
             />
             <Button type="submit" mt={15}>
-              {t('send')}
+              {t("send")}
             </Button>
           </form>
         </Modal>
 
         <Modal
-          size={'xl'}
+          size={"xl"}
           opened={previewModal}
           onClose={() => {
             setPreviewModal(false);
           }}
-          title={t('mail_preview')}
+          title={t("mail_preview")}
         >
-          <TextViewer content={mailReview.data ?? ''} />
+          <TextViewer content={mailReview.data ?? ""} />
         </Modal>
 
         <Table.Tr>
-          <Table.Td style={{ maxWidth: '190px' }}>
+          <Table.Td style={{ maxWidth: "190px" }}>
             <Text truncate>{item.mailName}</Text>
             <Text truncate>{item.mailSubject}</Text>
           </Table.Td>
           <Table.Td>
             <Text truncate>{t(`${MailType[item.mailType]}`)}</Text>
           </Table.Td>
-          <Table.Td style={{ textAlign: 'center' }}>
+          <Table.Td style={{ textAlign: "center" }}>
             {item?.isActive ? (
-              <Badge variant="light" color={'green'}>
-                {t('active')}
+              <Badge variant="light" color={"green"}>
+                {t("active")}
               </Badge>
             ) : (
-              <Badge variant="light" color={'red'}>
-                {t('inactive')}
+              <Badge variant="light" color={"red"}>
+                {t("inactive")}
               </Badge>
             )}
           </Table.Td>
           <Table.Td>
-            <Group gap={'sm'} justify="center">
-              <Tooltip label={t('edit')}>
+            <Group gap={"sm"} justify="center">
+              <Tooltip label={t("edit")}>
                 <ActionIcon
                   onClick={() => {
                     open();
@@ -306,7 +306,7 @@ const MailNotification = ({
                 </ActionIcon>
               </Tooltip>
 
-              <Tooltip label={t('preview')}>
+              <Tooltip label={t("preview")}>
                 <ActionIcon
                   onClick={async () => {
                     await mailReview.refetch();
@@ -319,7 +319,7 @@ const MailNotification = ({
                 </ActionIcon>
               </Tooltip>
 
-              <Tooltip label={t('test_email')}>
+              <Tooltip label={t("test_email")}>
                 <ActionIcon
                   onClick={() => {
                     openEmailModal();
@@ -349,10 +349,10 @@ const MailNotification = ({
   return (
     <>
       <Modal
-        title={t('modal_variables')}
+        title={t("modal_variables")}
         opened={helpModal}
         onClose={toggleHelpModal}
-        size={'xl'}
+        size={"xl"}
       >
         <ScrollArea h={690} scrollHideDelay={0}>
           <VariableHelpTable />
@@ -360,13 +360,13 @@ const MailNotification = ({
       </Modal>
       <section>
         <Group
-          style={{ justifyContent: 'space-between', alignItems: 'center' }}
+          style={{ justifyContent: "space-between", alignItems: "center" }}
           mb={15}
         >
           <Group>
-            <Title>{t('mail-notification')}</Title>
+            <Title>{t("mail-notification")}</Title>
             <IconInfoCircle
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: "pointer" }}
               onClick={() => {
                 toggleHelpModal();
               }}
@@ -378,7 +378,7 @@ const MailNotification = ({
               form.reset();
             }}
           >
-            {t('add_mail')}
+            {t("add_mail")}
           </Button>
         </Group>
 
@@ -400,71 +400,71 @@ const MailNotification = ({
               <Grid>
                 <Grid.Col span={{ xs: 6, lg: 12 }}>
                   <TextInput
-                    label={t('name')}
+                    label={t("name")}
                     withAsterisk
-                    placeholder={t('name_placeholder') as string}
-                    {...form.getInputProps('mailName')}
+                    placeholder={t("name_placeholder") as string}
+                    {...form.getInputProps("mailName")}
                   />
                 </Grid.Col>
                 <Grid.Col span={{ xs: 6, lg: 12 }}>
                   <TextInput
-                    label={t('subject')}
+                    label={t("subject")}
                     withAsterisk
-                    placeholder={t('subject_placeholder') as string}
-                    {...form.getInputProps('mailSubject')}
+                    placeholder={t("subject_placeholder") as string}
+                    {...form.getInputProps("mailSubject")}
                   />
                 </Grid.Col>
                 <Grid.Col span={{ xs: 6, lg: 12 }}>
                   <Select
                     withAsterisk
                     allowDeselect={false}
-                    label={t('mail_type')}
-                    placeholder={t('mail_type_placeholder') as string}
+                    label={t("mail_type")}
+                    placeholder={t("mail_type_placeholder") as string}
                     data={getMailType() ?? []}
-                    {...form.getInputProps('mailType')}
+                    {...form.getInputProps("mailType")}
                   />
                 </Grid.Col>
                 <Grid.Col span={{ xs: 12, lg: 12 }}>
                   <Text size="sm">
-                    {t('message')} <IconAsteriskSimple color="red" size={10} />
+                    {t("message")} <IconAsteriskSimple color="red" size={10} />
                   </Text>
                   <RichTextEditor
                     error={form.errors?.mailMessage}
-                    placeholder={t('message_placeholder') as string}
-                    {...form.getInputProps('mailMessage')}
+                    placeholder={t("message_placeholder") as string}
+                    {...form.getInputProps("mailMessage")}
                   />
                 </Grid.Col>
                 {isEditing && (
                   <Grid.Col span={{ xs: 6, lg: 12 }} mt={10}>
                     <Switch
-                      style={{ input: { cursor: 'pointer' } }}
+                      style={{ input: { cursor: "pointer" } }}
                       checked={form.values.isActive}
-                      label={t('mail_enabled')}
+                      label={t("mail_enabled")}
                       labelPosition="left"
                       onChange={(e) => {
-                        form.setFieldValue('isActive', e.currentTarget.checked);
+                        form.setFieldValue("isActive", e.currentTarget.checked);
                       }}
                     />
                   </Grid.Col>
                 )}
               </Grid>
               <Group mt={20}>
-                <Button type="submit">{t('submit')}</Button>
+                <Button type="submit">{t("submit")}</Button>
               </Group>
             </form>
           </Box>
         </Drawer>
 
         <Flex mb={10}>
-          {searchComponent(t('search_mail_notification') as string)}
-          <Flex style={{ width: '210px' }}>
+          {searchComponent(t("search_mail_notification") as string)}
+          <Flex style={{ width: "210px" }}>
             {filterComponent(
               [
-                { value: 'true', label: t('active') },
-                { value: 'false', label: t('inactive') },
+                { value: "true", label: t("active") },
+                { value: "false", label: t("inactive") },
               ],
-              t('mail_status'),
-              'IsActive'
+              t("mail_status"),
+              "IsActive"
             )}
           </Flex>
         </Flex>
@@ -476,21 +476,21 @@ const MailNotification = ({
               highlightOnHover
               withTableBorder
               withColumnBorders
-              style={{ marginTop: '10px' }}
+              style={{ marginTop: "10px" }}
             >
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>
-                    <Text>{t('name_subject')}</Text>
+                    <Text>{t("name_subject")}</Text>
                   </Table.Th>
                   <Table.Th>
-                    <Text>{t('mail_type')}</Text>
+                    <Text>{t("mail_type")}</Text>
                   </Table.Th>
                   <Table.Th>
-                    <Text ta="center">{t('isActive')}</Text>
+                    <Text ta="center">{t("isActive")}</Text>
                   </Table.Th>
-                  <Table.Th style={{ minWidth: '180px' }}>
-                    <Text ta="center">{t('actions')}</Text>
+                  <Table.Th style={{ minWidth: "180px" }}>
+                    <Text ta="center">{t("actions")}</Text>
                   </Table.Th>
                 </Table.Tr>
               </Table.Thead>

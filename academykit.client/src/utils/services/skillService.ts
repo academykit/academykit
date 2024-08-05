@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import errorType from './axiosError';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
-import { IPaginated, IUser } from './types';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import errorType from "./axiosError";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
+import { IPaginated, IUser } from "./types";
 
 export interface ISkill {
   id: string;
@@ -25,12 +25,12 @@ export const useSkills = (search: string) => {
   });
 };
 
-type IPostSkill = Omit<ISkill, 'id' | 'userModel'>;
+type IPostSkill = Omit<ISkill, "id" | "userModel">;
 
 export const usePostDepartmentSetting = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['post' + api.skill.list],
+    mutationKey: ["post" + api.skill.list],
 
     mutationFn: (data: {
       skillName: string;
@@ -54,7 +54,7 @@ const updateSkillDetail = ({ id, data }: { id: string; data: IPostSkill }) =>
 export const useUpdateSkill = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update' + api.skill.list],
+    mutationKey: ["update" + api.skill.list],
     mutationFn: updateSkillDetail,
 
     onSuccess: () => {

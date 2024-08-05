@@ -1,5 +1,5 @@
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import RichTextEditor from "@components/Ui/RichTextEditor/Index";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Accordion,
   ActionIcon,
@@ -11,34 +11,34 @@ import {
   SimpleGrid,
   Text,
   TextInput,
-} from '@mantine/core';
-import { DatePickerInput } from '@mantine/dates';
-import { createFormContext, yupResolver } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import { IconPlus, IconTrash } from '@tabler/icons-react';
-import { SkillAssessmentRule } from '@utils/enums';
-import queryStringGenerator from '@utils/queryStringGenerator';
-import RoutePath from '@utils/routeConstants';
-import { useDepartmentSetting } from '@utils/services/adminService';
+} from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
+import { createFormContext, yupResolver } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
+import { SkillAssessmentRule } from "@utils/enums";
+import queryStringGenerator from "@utils/queryStringGenerator";
+import RoutePath from "@utils/routeConstants";
+import { useDepartmentSetting } from "@utils/services/adminService";
 import {
   useAssessments,
   useGetSingleAssessment,
   useUpdateAssessment,
-} from '@utils/services/assessmentService';
-import errorType from '@utils/services/axiosError';
-import { useCourse } from '@utils/services/courseService';
-import { useGroups } from '@utils/services/groupService';
-import { useSkills } from '@utils/services/skillService';
-import { t } from 'i18next';
-import moment from 'moment';
-import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+} from "@utils/services/assessmentService";
+import errorType from "@utils/services/axiosError";
+import { useCourse } from "@utils/services/courseService";
+import { useGroups } from "@utils/services/groupService";
+import { useSkills } from "@utils/services/skillService";
+import { t } from "i18next";
+import moment from "moment";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   EligibilityCriteriaRequestModels,
   IAssessmentForm,
   SkillsCriteriaRequestModels,
-} from './CreateAssessment';
-import schema from './component/AssessmentFormSchema';
+} from "./CreateAssessment";
+import schema from "./component/AssessmentFormSchema";
 
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IAssessmentForm>();
@@ -102,14 +102,14 @@ const EditAssessment = () => {
 
   const form = useForm({
     initialValues: {
-      title: '',
+      title: "",
       startDate: null,
       endDate: null,
       retakes: 0,
       weightage: 1,
       duration: 1,
-      description: '',
-      skillsCriteriaRequestModels: [{ rule: '', skill: '', percentage: 0 }],
+      description: "",
+      skillsCriteriaRequestModels: [{ rule: "", skill: "", percentage: 0 }],
       eligibilityCreationRequestModels: [],
     },
     validate: yupResolver(schema()),
@@ -140,11 +140,11 @@ const EditAssessment = () => {
         });
 
       form.setValues({
-        title: assessmentData.data?.title ?? '',
+        title: assessmentData.data?.title ?? "",
         retakes: assessmentData.data?.retakes ?? 0,
         weightage: assessmentData.data?.weightage ?? 0,
         duration: assessmentData.data?.duration / 60 ?? 0, // show in minutes
-        description: assessmentData.data?.description ?? '',
+        description: assessmentData.data?.description ?? "",
         eligibilityCreationRequestModels: eligibility,
         skillsCriteriaRequestModels: skills,
         startDate: moment(assessmentData.data.startDate).toDate(),
@@ -158,12 +158,12 @@ const EditAssessment = () => {
       const data = {
         ...values,
         startDate: moment(values.startDate)
-          .add(5, 'hour')
-          .add(45, 'minute')
+          .add(5, "hour")
+          .add(45, "minute")
           .toDate(),
         endDate: moment(values.endDate)
-          .add(5, 'hour')
-          .add(45, 'minute')
+          .add(5, "hour")
+          .add(45, "minute")
           .toDate(),
         skillsCriteriaRequestModels: values.skillsCriteriaRequestModels.map(
           (skill) => {
@@ -189,8 +189,8 @@ const EditAssessment = () => {
       await updateAssessment.mutateAsync({ id: params.id as string, data });
 
       showNotification({
-        title: t('successful'),
-        message: t('assessment_update_success'),
+        title: t("successful"),
+        message: t("assessment_update_success"),
       });
 
       navigate(RoutePath.manageAssessment.question(params.id).route);
@@ -198,7 +198,7 @@ const EditAssessment = () => {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -210,88 +210,88 @@ const EditAssessment = () => {
           <form onSubmit={form.onSubmit(onSubmit)}>
             <SimpleGrid
               cols={{ base: 1, sm: 2, lg: 3 }}
-              spacing={{ base: 10, sm: 'xl' }}
-              verticalSpacing={{ base: 'md', sm: 'xl' }}
+              spacing={{ base: 10, sm: "xl" }}
+              verticalSpacing={{ base: "md", sm: "xl" }}
             >
               <TextInput
                 withAsterisk
-                label={t('title')}
-                placeholder={t('title_placeholder') as string}
-                {...form.getInputProps('title')}
+                label={t("title")}
+                placeholder={t("title_placeholder") as string}
+                {...form.getInputProps("title")}
               />
               <DatePickerInput
                 withAsterisk
-                label={t('start_date')}
-                placeholder={t('start_date') as string}
+                label={t("start_date")}
+                placeholder={t("start_date") as string}
                 minDate={new Date()}
-                {...form.getInputProps('startDate')}
+                {...form.getInputProps("startDate")}
               />
               <DatePickerInput
                 withAsterisk
-                label={t('end_date')}
-                placeholder={t('end_date') as string}
+                label={t("end_date")}
+                placeholder={t("end_date") as string}
                 minDate={form.values.startDate ?? new Date()}
-                {...form.getInputProps('endDate')}
+                {...form.getInputProps("endDate")}
               />
               <NumberInput
                 withAsterisk
-                label={t('retake')}
+                label={t("retake")}
                 placeholder="Input placeholder"
                 min={0}
                 stepHoldDelay={500}
                 stepHoldInterval={(t) => Math.max(1000 / t ** 2, 25)}
-                {...form.getInputProps('retakes')}
+                {...form.getInputProps("retakes")}
               />
               <NumberInput
                 withAsterisk
-                label={t('weightage')}
+                label={t("weightage")}
                 placeholder="Input placeholder"
                 min={1}
                 stepHoldDelay={500}
                 stepHoldInterval={(t) => Math.max(1000 / t ** 2, 25)}
-                {...form.getInputProps('weightage')}
+                {...form.getInputProps("weightage")}
               />
               <NumberInput
                 withAsterisk
-                label={t('duration')}
+                label={t("duration")}
                 placeholder="Input placeholder"
                 min={1}
                 stepHoldDelay={500}
                 stepHoldInterval={(t) => Math.max(1000 / t ** 2, 25)}
-                {...form.getInputProps('duration')}
+                {...form.getInputProps("duration")}
               />
             </SimpleGrid>
 
             <Box my={20}>
-              <Text>{t('description')}</Text>
+              <Text>{t("description")}</Text>
               <RichTextEditor
-                placeholder={t('assessment_description') as string}
+                placeholder={t("assessment_description") as string}
                 formContext={useFormContext}
               />
             </Box>
 
             <Accordion defaultValue="Eligibility">
               <Accordion.Item value="Eligibility">
-                <Accordion.Control>{t('eligibility')}</Accordion.Control>
+                <Accordion.Control>{t("eligibility")}</Accordion.Control>
                 <Accordion.Panel>
                   {form.values.eligibilityCreationRequestModels.length < 1 && (
                     <Button
                       onClick={() => {
                         form.insertListItem(
-                          'eligibilityCreationRequestModels',
+                          "eligibilityCreationRequestModels",
                           {
-                            skill: '',
-                            role: '',
-                            departmentId: '',
-                            groupId: '',
-                            completedAssessmentId: '',
-                            trainingId: '',
+                            skill: "",
+                            role: "",
+                            departmentId: "",
+                            groupId: "",
+                            completedAssessmentId: "",
+                            trainingId: "",
                           },
                           0
                         );
                       }}
                     >
-                      {t('add_eligibility_criteria')}
+                      {t("add_eligibility_criteria")}
                     </Button>
                   )}
 
@@ -300,29 +300,29 @@ const EditAssessment = () => {
                       <Flex
                         mb={10}
                         gap={10}
-                        align={'flex-end'}
-                        wrap={'wrap'}
+                        align={"flex-end"}
+                        wrap={"wrap"}
                         key={index}
                       >
                         <Select
-                          label={t('skill')}
-                          placeholder={t('pick_value') as string}
+                          label={t("skill")}
+                          placeholder={t("pick_value") as string}
                           data={getSkillDropdown() ?? []}
                           {...form.getInputProps(
                             `eligibilityCreationRequestModels.${index}.skill`
                           )}
                         />
                         <Select
-                          label={t('role')}
-                          placeholder={t('pick_value') as string}
+                          label={t("role")}
+                          placeholder={t("pick_value") as string}
                           data={[
                             {
-                              value: '3',
-                              label: 'Trainer',
+                              value: "3",
+                              label: "Trainer",
                             },
                             {
-                              value: '4',
-                              label: 'Trainee',
+                              value: "4",
+                              label: "Trainee",
                             },
                           ]}
                           {...form.getInputProps(
@@ -331,32 +331,32 @@ const EditAssessment = () => {
                         />
 
                         <Select
-                          label={t('department')}
-                          placeholder={t('pick_value') as string}
+                          label={t("department")}
+                          placeholder={t("pick_value") as string}
                           data={getDepartmentDropdown() ?? []}
                           {...form.getInputProps(
                             `eligibilityCreationRequestModels.${index}.departmentId`
                           )}
                         />
                         <Select
-                          label={t('group')}
-                          placeholder={t('pick_value') as string}
+                          label={t("group")}
+                          placeholder={t("pick_value") as string}
                           data={getGroupDropdown() ?? []}
                           {...form.getInputProps(
                             `eligibilityCreationRequestModels.${index}.groupId`
                           )}
                         />
                         <Select
-                          label={t('assessment')}
-                          placeholder={t('pick_value') as string}
+                          label={t("assessment")}
+                          placeholder={t("pick_value") as string}
                           data={getAssessmentDropdown() ?? []}
                           {...form.getInputProps(
                             `eligibilityCreationRequestModels.${index}.assessmentId`
                           )}
                         />
                         <Select
-                          label={t('training')}
-                          placeholder={t('pick_value') as string}
+                          label={t("training")}
+                          placeholder={t("pick_value") as string}
                           data={getTrainingDropdown() ?? []}
                           {...form.getInputProps(
                             `eligibilityCreationRequestModels.${index}.trainingId`
@@ -367,14 +367,14 @@ const EditAssessment = () => {
                           variant="subtle"
                           onClick={() => {
                             form.insertListItem(
-                              'eligibilityCreationRequestModels',
+                              "eligibilityCreationRequestModels",
                               {
-                                skill: '',
-                                role: '',
-                                departmentId: '',
-                                groupId: '',
-                                completedAssessmentId: '',
-                                trainingId: '',
+                                skill: "",
+                                role: "",
+                                departmentId: "",
+                                groupId: "",
+                                completedAssessmentId: "",
+                                trainingId: "",
                               },
                               // add to the end of the list
                               form.values.eligibilityCreationRequestModels
@@ -386,10 +386,10 @@ const EditAssessment = () => {
                         </ActionIcon>
                         <ActionIcon
                           variant="subtle"
-                          c={'red'}
+                          c={"red"}
                           onClick={() => {
                             form.removeListItem(
-                              'eligibilityCreationRequestModels',
+                              "eligibilityCreationRequestModels",
                               index
                             );
                           }}
@@ -405,16 +405,16 @@ const EditAssessment = () => {
 
             <Accordion defaultValue="Skill">
               <Accordion.Item value="Skill">
-                <Accordion.Control>{t('skill_criteria')}</Accordion.Control>
+                <Accordion.Control>{t("skill_criteria")}</Accordion.Control>
                 <Accordion.Panel>
                   {form.values.skillsCriteriaRequestModels.map(
                     (_criteria, index) => (
-                      <Flex gap={10} key={index} align={'flex-end'} mb={10}>
+                      <Flex gap={10} key={index} align={"flex-end"} mb={10}>
                         <Select
                           withAsterisk
                           allowDeselect={false}
-                          label={t('rule')}
-                          placeholder={t('pick_value') as string}
+                          label={t("rule")}
+                          placeholder={t("pick_value") as string}
                           data={getSkillAssessmentType() ?? []}
                           {...form.getInputProps(
                             `skillsCriteriaRequestModels.${index}.rule`
@@ -424,8 +424,8 @@ const EditAssessment = () => {
                         <Select
                           withAsterisk
                           allowDeselect={false}
-                          label={t('skill')}
-                          placeholder={t('pick_value') as string}
+                          label={t("skill")}
+                          placeholder={t("pick_value") as string}
                           data={getSkillDropdown() ?? []}
                           {...form.getInputProps(
                             `skillsCriteriaRequestModels.${index}.skill`
@@ -433,16 +433,16 @@ const EditAssessment = () => {
                         />
 
                         {form.values.skillsCriteriaRequestModels[index].rule !==
-                          '' && (
+                          "" && (
                           <NumberInput
                             withAsterisk
-                            label={t('percentage')}
+                            label={t("percentage")}
                             min={0}
                             stepHoldDelay={500}
                             stepHoldInterval={(t) =>
                               Math.max(1000 / t ** 2, 25)
                             }
-                            placeholder={t('percentage_placeholder') as string}
+                            placeholder={t("percentage_placeholder") as string}
                             {...form.getInputProps(
                               `skillsCriteriaRequestModels.${index}.percentage`
                             )}
@@ -453,8 +453,8 @@ const EditAssessment = () => {
                           variant="subtle"
                           onClick={() => {
                             form.insertListItem(
-                              'skillsCriteriaRequestModels',
-                              { rule: '', skill: '', percentage: 0 },
+                              "skillsCriteriaRequestModels",
+                              { rule: "", skill: "", percentage: 0 },
                               form.values.skillsCriteriaRequestModels.length // add to the end of the list
                             );
                           }}
@@ -465,10 +465,10 @@ const EditAssessment = () => {
                         {form.values.skillsCriteriaRequestModels.length > 1 && (
                           <ActionIcon
                             variant="subtle"
-                            c={'red'}
+                            c={"red"}
                             onClick={() => {
                               form.removeListItem(
-                                'skillsCriteriaRequestModels',
+                                "skillsCriteriaRequestModels",
                                 index
                               );
                             }}
@@ -484,7 +484,7 @@ const EditAssessment = () => {
             </Accordion>
 
             <Button mt={30} type="submit" loading={updateAssessment.isLoading}>
-              {t('submit')}
+              {t("submit")}
             </Button>
           </form>
         </FormProvider>

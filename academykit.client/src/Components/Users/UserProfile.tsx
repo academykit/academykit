@@ -1,4 +1,4 @@
-import TextViewer from '@components/Ui/RichTextViewer';
+import TextViewer from "@components/Ui/RichTextViewer";
 import {
   Avatar,
   Badge,
@@ -8,28 +8,28 @@ import {
   Paper,
   Tabs,
   Text,
-} from '@mantine/core';
-import { IconEdit, IconFileDescription, IconSchool } from '@tabler/icons-react';
-import { useProfileAuth } from '@utils/services/authService';
-import { useTranslation } from 'react-i18next';
+} from "@mantine/core";
+import { IconEdit, IconFileDescription, IconSchool } from "@tabler/icons-react";
+import { useProfileAuth } from "@utils/services/authService";
+import { useTranslation } from "react-i18next";
 import {
   Link,
   Outlet,
   useLocation,
   useNavigate,
   useParams,
-} from 'react-router-dom';
-import classes from './styles/profile.module.css';
+} from "react-router-dom";
+import classes from "./styles/profile.module.css";
 
 const UserProfile = () => {
   const { id } = useParams();
-  const local_id = localStorage.getItem('id');
+  const local_id = localStorage.getItem("id");
   const navigate = useNavigate();
   const { t } = useTranslation();
   const location = useLocation();
 
   const { data, isSuccess } = useProfileAuth(id as string);
-  const currentLocation = location.pathname.split('/').slice(-1)[0]; // accessing the endpoint of the url
+  const currentLocation = location.pathname.split("/").slice(-1)[0]; // accessing the endpoint of the url
 
   return (
     <>
@@ -38,30 +38,30 @@ const UserProfile = () => {
           <Avatar
             src={data?.imageUrl}
             size={200}
-            style={{ borderRadius: '50%' }}
+            style={{ borderRadius: "50%" }}
             alt={data?.fullName}
           />
 
-          <div style={{ marginLeft: '15px' }}>
+          <div style={{ marginLeft: "15px" }}>
             <Group>
-              <Text size={'xl'}>{data?.fullName}</Text>
+              <Text size={"xl"}>{data?.fullName}</Text>
               {isSuccess && id === local_id ? (
-                <Link to={'/settings?edit=1'}>
-                  <IconEdit style={{ marginLeft: '5px' }} />
+                <Link to={"/settings?edit=1"}>
+                  <IconEdit style={{ marginLeft: "5px" }} />
                 </Link>
               ) : (
-                ''
+                ""
               )}
             </Group>
 
             {data?.profession && (
-              <Text mt={5}>{`${data?.profession ?? ''}`}</Text>
+              <Text mt={5}>{`${data?.profession ?? ""}`}</Text>
             )}
 
             {data?.memberId && <Text mt={5}>{data?.memberId}</Text>}
 
             {data && data.skills && data?.skills.length > 0 && (
-              <Flex gap={10} mt={10} wrap={'wrap'}>
+              <Flex gap={10} mt={10} wrap={"wrap"}>
                 {data.skills.map((skill) => (
                   <Badge variant="light" color="blue" key={skill.id}>
                     {skill.skillName}
@@ -71,22 +71,22 @@ const UserProfile = () => {
             )}
           </div>
         </div>
-        <Paper shadow={'lg'} withBorder style={{ marginTop: '5px' }}>
-          <Text size={'md'} style={{ padding: '5px 50px' }}>
-            {t('address')} : {data?.address}
+        <Paper shadow={"lg"} withBorder style={{ marginTop: "5px" }}>
+          <Text size={"md"} style={{ padding: "5px 50px" }}>
+            {t("address")} : {data?.address}
           </Text>
-          <Text size={'md'} style={{ padding: '5px 50px' }}>
-            {t('mobilenumber')} : {data?.mobileNumber}
+          <Text size={"md"} style={{ padding: "5px 50px" }}>
+            {t("mobilenumber")} : {data?.mobileNumber}
           </Text>
-          <Text size={'md'} style={{ padding: '5px 50px' }} mb={10}>
-            {t('email')} : {data?.email}
+          <Text size={"md"} style={{ padding: "5px 50px" }} mb={10}>
+            {t("email")} : {data?.email}
           </Text>
-          {data && data.bio && data?.bio.replace(/<[^>]+>/g, '').length > 0 && (
+          {data && data.bio && data?.bio.replace(/<[^>]+>/g, "").length > 0 && (
             <>
               <TextViewer
                 styles={{
                   root: {
-                    border: 'none',
+                    border: "none",
                   },
                 }}
                 content={data?.bio}
@@ -98,7 +98,7 @@ const UserProfile = () => {
       <Box mt={20}>
         <Tabs
           defaultChecked={true}
-          defaultValue={location.pathname?.split('/').at(-1) ?? 'certificate'}
+          defaultValue={location.pathname?.split("/").at(-1) ?? "certificate"}
           value={currentLocation}
           onChange={(value) =>
             navigate(`${value}`, { preventScrollReset: true })
@@ -109,10 +109,10 @@ const UserProfile = () => {
               value="certificate"
               leftSection={<IconFileDescription size={14} />}
             >
-              {t('only_certificate')}
+              {t("only_certificate")}
             </Tabs.Tab>
             <Tabs.Tab value="training" leftSection={<IconSchool size={14} />}>
-              {t('trainings')}
+              {t("trainings")}
             </Tabs.Tab>
           </Tabs.List>
 

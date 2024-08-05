@@ -5,11 +5,11 @@ import {
   Paper,
   Text,
   TextInput,
-} from '@mantine/core';
-import cx from 'clsx';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import classes from './styles/payment.module.css';
+} from "@mantine/core";
+import cx from "clsx";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import classes from "./styles/payment.module.css";
 
 interface AccordionLabelProps {
   title: string;
@@ -35,13 +35,13 @@ const Accordion = ({ items }: any) => {
   const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
   return (
-    <div style={{ marginBottom: '20px' }}>
+    <div style={{ marginBottom: "20px" }}>
       <Paper
         className={cx(classes.accordionBody, {
           [classes.accordionActive]: isActive,
         })}
         withBorder
-        shadow={'md'}
+        shadow={"md"}
       >
         <div
           className={classes.accordionLabel}
@@ -51,25 +51,25 @@ const Accordion = ({ items }: any) => {
         </div>
       </Paper>
       {isActive && (
-        <Container style={{ marginTop: '10px' }}>
+        <Container style={{ marginTop: "10px" }}>
           <TextInput
-            label={t('key')}
+            label={t("key")}
             withAsterisk
-            placeholder={t('your_key') as string}
-            style={{ marginBottom: '5px' }}
+            placeholder={t("your_key") as string}
+            style={{ marginBottom: "5px" }}
           />
           <TextInput
-            label={t('secret')}
+            label={t("secret")}
             withAsterisk
             type="password"
-            placeholder={t('secret_key') as string}
-            style={{ marginBottom: '5px' }}
+            placeholder={t("secret_key") as string}
+            style={{ marginBottom: "5px" }}
           />
           <TextInput
-            label={t('verify_url')}
+            label={t("verify_url")}
             withAsterisk
-            placeholder={t('your_verification_url') as string}
-            style={{ marginBottom: '5px' }}
+            placeholder={t("your_verification_url") as string}
+            style={{ marginBottom: "5px" }}
           />
         </Container>
       )}
@@ -81,14 +81,14 @@ const PaymentMethod = () => {
   const { t } = useTranslation();
   const accordionData = [
     {
-      title: t('esewa'),
-      image: 'https://img.icons8.com/clouds/256/000000/homer-simpson.png',
-      description: 'Esewa says They are the best',
+      title: t("esewa"),
+      image: "https://img.icons8.com/clouds/256/000000/homer-simpson.png",
+      description: "Esewa says They are the best",
     },
     {
-      title: t('khalti'),
-      iamge: 'https://img.icons8.com/clouds/256/000000/futurama-bender.png',
-      description: 'Khalti says THEY are the best',
+      title: t("khalti"),
+      iamge: "https://img.icons8.com/clouds/256/000000/futurama-bender.png",
+      description: "Khalti says THEY are the best",
     },
   ];
   return (

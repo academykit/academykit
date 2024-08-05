@@ -1,4 +1,4 @@
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Button,
   FocusTrap,
@@ -6,19 +6,19 @@ import {
   Paper,
   Space,
   TextInput,
-} from '@mantine/core';
-import { useForm, yupResolver } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import errorType from '@utils/services/axiosError';
-import { useAddGroup } from '@utils/services/groupService';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
+} from "@mantine/core";
+import { useForm, yupResolver } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import errorType from "@utils/services/axiosError";
+import { useAddGroup } from "@utils/services/groupService";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 
 const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
-    name: Yup.string().required(t('group_name_required') as string),
+    name: Yup.string().required(t("group_name_required") as string),
   });
 };
 const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
@@ -28,7 +28,7 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
   const { mutateAsync, isLoading, data, isSuccess } = useAddGroup();
   const form = useForm({
     initialValues: {
-      name: '',
+      name: "",
     },
     validate: yupResolver(schema()),
   });
@@ -42,15 +42,15 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
     try {
       await mutateAsync(name);
       showNotification({
-        title: t('successful'),
-        message: t('group_add_success'),
+        title: t("successful"),
+        message: t("group_add_success"),
       });
       onCancel();
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -62,16 +62,16 @@ const AddGroups = ({ onCancel }: { onCancel: () => void }) => {
             data-autofocus
             autoComplete="off"
             mb={10}
-            label={t('group_name')}
-            placeholder={t('your_group_name') as string}
+            label={t("group_name")}
+            placeholder={t("your_group_name") as string}
             withAsterisk
-            {...form.getInputProps('name')}
+            {...form.getInputProps("name")}
           />
         </FocusTrap>
         <Space h="md" />
         <Group justify="flex-end">
           <Button loading={isLoading} type="submit">
-            {t('submit')}
+            {t("submit")}
           </Button>
         </Group>
       </form>

@@ -1,4 +1,4 @@
-import { FC, createContext, useState } from 'react';
+import { FC, createContext, useState } from "react";
 
 interface IFormContext {
   isReady: boolean;

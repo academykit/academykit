@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ResponseData } from './authService';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ResponseData } from "./authService";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
 
 const postAttendance = async ({ identity }: { identity: string }) =>
   await httpClient.post<ResponseData>(
@@ -13,7 +13,7 @@ export const usePostAttendance = (courseId: string, lessonId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ['attend'],
+    mutationKey: ["attend"],
     mutationFn: postAttendance,
 
     onSuccess: () => {
@@ -46,13 +46,13 @@ export const useReviewAttendance = (
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ['review'],
+    mutationKey: ["review"],
     mutationFn: reviewAttendance,
 
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [
-          api.course.lessonStatDetails(courseId, lessonId, 'page=1&size=12'),
+          api.course.lessonStatDetails(courseId, lessonId, "page=1&size=12"),
         ],
       });
       queryClient.invalidateQueries({

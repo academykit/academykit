@@ -1,4 +1,4 @@
-import { Text } from '@mantine/core';
+import { Text } from "@mantine/core";
 
 const Play = ({ ...props }) => {
   return (
@@ -15,7 +15,7 @@ const Play = ({ ...props }) => {
         strokeWidth="2"
         viewBox="0 0 24 24"
         aria-hidden="true"
-        style={{ padding: '2px' }}
+        style={{ padding: "2px" }}
         {...props}
       >
         <path d="M5 3L19 12 5 21 5 3z"></path>
@@ -40,7 +40,7 @@ const Pause = ({ ...props }) => {
         viewBox="0 0 24 24"
         aria-hidden="true"
         className="mx-auto"
-        style={{ padding: '2px' }}
+        style={{ padding: "2px" }}
         {...props}
       >
         <path d="M6 4H10V20H6z"></path>
@@ -64,7 +64,7 @@ const Settings = ({ ...props }) => {
         strokeLinejoin="round"
         strokeWidth="2"
         viewBox="0 0 24 24"
-        style={{ padding: '5px' }}
+        style={{ padding: "5px" }}
         className="mx-auto"
         {...props}
       >
@@ -129,7 +129,7 @@ const FullScreen = ({ ...props }) => {
         strokeWidth="2"
         viewBox="0 0 24 24"
         aria-hidden="true"
-        style={{ padding: '5px' }}
+        style={{ padding: "5px" }}
         className="mx-auto"
         {...props}
       >
@@ -157,7 +157,7 @@ const FullScreenExit = ({ ...props }) => {
         strokeWidth="2"
         viewBox="0 0 24 24"
         aria-hidden="true"
-        style={{ padding: '3px' }}
+        style={{ padding: "3px" }}
         className="mx-auto"
         {...props}
       >
@@ -233,7 +233,7 @@ const Volume = ({ ...props }) => {
         strokeWidth="2"
         viewBox="0 0 24 24"
         aria-hidden="true"
-        style={{ padding: '2px' }}
+        style={{ padding: "2px" }}
         {...props}
       >
         <path d="M11 5L6 9 2 9 2 15 6 15 11 19 11 5z"></path>
@@ -259,7 +259,7 @@ const VolumeMuted = ({ ...props }) => {
         strokeWidth="2"
         viewBox="0 0 24 24"
         aria-hidden="true"
-        style={{ padding: '2px' }}
+        style={{ padding: "2px" }}
         {...props}
       >
         <path d="M11 5L6 9 2 9 2 15 6 15 11 19 11 5z"></path>

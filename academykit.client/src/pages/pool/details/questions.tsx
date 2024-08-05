@@ -1,7 +1,7 @@
-import DeleteModal from '@components/Ui/DeleteModal';
+import DeleteModal from "@components/Ui/DeleteModal";
 import withSearchPagination, {
   IWithSearchPagination,
-} from '@hoc/useSearchPagination';
+} from "@hoc/useSearchPagination";
 import {
   Badge,
   Box,
@@ -13,20 +13,20 @@ import {
   Paper,
   ScrollArea,
   Table,
-} from '@mantine/core';
-import { useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
-import { QuestionType } from '@utils/enums';
-import errorType from '@utils/services/axiosError';
+} from "@mantine/core";
+import { useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { QuestionType } from "@utils/enums";
+import errorType from "@utils/services/axiosError";
 import {
   IQuestion,
   useDeleteQuestion,
   useQuestion,
-} from '@utils/services/questionService';
-import { TFunction } from 'i18next';
-import { useTranslation } from 'react-i18next';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+} from "@utils/services/questionService";
+import { TFunction } from "i18next";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const MCQQuestions = ({
   searchParams,
@@ -40,10 +40,10 @@ const MCQQuestions = ({
 
   return (
     <Container fluid>
-      <Flex justify={'end'}>
-        {searchComponent(t('search_for_questions') as string)}
-        <Button component={Link} ml={5} to="create" w={'12%'}>
-          {t('add_question')}
+      <Flex justify={"end"}>
+        {searchComponent(t("search_for_questions") as string)}
+        <Button component={Link} ml={5} to="create" w={"12%"}>
+          {t("add_question")}
         </Button>
       </Flex>
       <ScrollArea>
@@ -52,11 +52,11 @@ const MCQQuestions = ({
             <Table striped withTableBorder withColumnBorders highlightOnHover>
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th>{t('name')}</Table.Th>
-                  <Table.Th>{t('tags')}</Table.Th>
-                  <Table.Th>{t('type')}</Table.Th>
+                  <Table.Th>{t("name")}</Table.Th>
+                  <Table.Th>{t("tags")}</Table.Th>
+                  <Table.Th>{t("type")}</Table.Th>
                   <Table.Th>
-                    <Center>{t('actions')}</Center>
+                    <Center>{t("actions")}</Center>
                   </Table.Th>
                 </Table.Tr>
               </Table.Thead>
@@ -78,9 +78,9 @@ const MCQQuestions = ({
         {isLoading && <Loader />}
 
         {data && pagination(data.totalPage, data.items.length)}
-        {isError && <Box>{t('something_wrong')}</Box>}
+        {isError && <Box>{t("something_wrong")}</Box>}
         {data && data?.totalCount < 1 && (
-          <Box mt={10}>{t('no_question_found')}</Box>
+          <Box mt={10}>{t("no_question_found")}</Box>
         )}
       </ScrollArea>
     </Container>
@@ -115,7 +115,7 @@ const QuestionRow = ({
       const error = errorType(err);
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
     setShowDelete();
@@ -133,8 +133,8 @@ const QuestionRow = ({
       <Table.Td>{data.name}</Table.Td>
       <Table.Td>
         {data.tags.map((x) => (
-          <Badge key={x.id} color={'green'} mx={2}>
-            {' '}
+          <Badge key={x.id} color={"green"} mx={2}>
+            {" "}
             {x.tagName}
           </Badge>
         ))}
@@ -146,7 +146,7 @@ const QuestionRow = ({
           <Button
             variant="subtle"
             onClick={() => {
-              navigate('edit/' + data.id);
+              navigate("edit/" + data.id);
             }}
           >
             <IconEdit />
@@ -154,7 +154,7 @@ const QuestionRow = ({
           <Button
             onClick={() => setShowDelete()}
             variant="subtle"
-            color={'red'}
+            color={"red"}
           >
             <IconTrash />
           </Button>

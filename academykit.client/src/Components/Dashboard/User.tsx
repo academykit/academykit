@@ -4,7 +4,7 @@ import {
   SimpleGrid,
   Text,
   useMantineColorScheme,
-} from '@mantine/core';
+} from "@mantine/core";
 import {
   IconArrowDownRight,
   IconArrowUpRight,
@@ -12,15 +12,15 @@ import {
   IconDiscount2,
   IconReceipt2,
   IconUserPlus,
-} from '@tabler/icons-react';
+} from "@tabler/icons-react";
 import {
   DashboardCourses,
   DashboardStats,
-} from '@utils/services/dashboardService';
-import { useTranslation } from 'react-i18next';
-import { StatsCard } from './StatsCard';
-import TrainingCards from './TrainingCards';
-import classes from './styles/user.module.css';
+} from "@utils/services/dashboardService";
+import { useTranslation } from "react-i18next";
+import { StatsCard } from "./StatsCard";
+import TrainingCards from "./TrainingCards";
+import classes from "./styles/user.module.css";
 
 export const icons = {
   user: IconUserPlus,
@@ -50,28 +50,28 @@ export const User = ({
 
   const incomingData = [
     {
-      key: 'totalEnrolledCourses',
-      label: 'Total Enrollments',
-      icon: 'enrollment',
-      signLabel: t('enrollment'),
-      pluLabel: t('enrollments'),
-      color: colorScheme == 'dark' ? 'white' : 'black',
+      key: "totalEnrolledCourses",
+      label: "Total Enrollments",
+      icon: "enrollment",
+      signLabel: t("enrollment"),
+      pluLabel: t("enrollments"),
+      color: colorScheme == "dark" ? "white" : "black",
     },
     {
-      key: 'totalInProgressCourses',
-      label: 'Active Trainings',
-      icon: 'trainings',
-      signLabel: t('training'),
-      pluLabel: t('trainings'),
-      color: colorScheme == 'dark' ? 'white' : 'black',
+      key: "totalInProgressCourses",
+      label: "Active Trainings",
+      icon: "trainings",
+      signLabel: t("training"),
+      pluLabel: t("trainings"),
+      color: colorScheme == "dark" ? "white" : "black",
     },
     {
-      key: 'totalCompletedCourses',
-      label: 'My Completed Trainings',
-      icon: 'completed',
-      signLabel: t('training'),
-      pluLabel: t('trainings'),
-      color: colorScheme == 'dark' ? 'white' : 'black',
+      key: "totalCompletedCourses",
+      label: "My Completed Trainings",
+      icon: "completed",
+      signLabel: t("training"),
+      pluLabel: t("trainings"),
+      color: colorScheme == "dark" ? "white" : "black",
     },
   ];
   return (
@@ -82,18 +82,18 @@ export const User = ({
             <StatsCard key={x.key} data={x} dashboard={dashboard} />
           ))}
       </SimpleGrid>
-      <Text size={'xl'} fw={700}>
-        {t('my_trainings')}
+      <Text size={"xl"} fw={700}>
+        {t("my_trainings")}
       </Text>
       {dashboardCourses.length > 0 ? (
         <Text c="dimmed" mb={10}>
-          {t('my_progress')}
+          {t("my_progress")}
         </Text>
       ) : (
-        <Text c="dimmed">{t('not_enrolled_training')}</Text>
+        <Text c="dimmed">{t("not_enrolled_training")}</Text>
       )}
       <SimpleGrid
-        cols={{ base: 1, sm: 2, md: 3, '1280': 3, '1780': 4 }}
+        cols={{ base: 1, sm: 2, md: 3, "1280": 3, "1780": 4 }}
         spacing={10}
       >
         {dashboardCourses.length > 0 &&
@@ -122,7 +122,7 @@ export function StatsGrid({ data }: StatsGridProps) {
         <Group justify="flex-end" gap="xs" mt={25}>
           <Text className={classes.value}>{stat.value}</Text>
           <Text
-            c={stat.diff > 0 ? 'teal' : 'red'}
+            c={stat.diff > 0 ? "teal" : "red"}
             size="sm"
             className={classes.diff}
           >
@@ -132,7 +132,7 @@ export function StatsGrid({ data }: StatsGridProps) {
         </Group>
 
         <Text size="xs" c="dimmed" mt={7}>
-          {t('previous_month')}
+          {t("previous_month")}
         </Text>
       </Paper>
     );

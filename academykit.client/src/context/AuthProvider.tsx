@@ -1,11 +1,11 @@
-import { AppShell, Button, Center, Group, Loader, Modal } from '@mantine/core';
-import { useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from '@utils/constants';
-import { useLogout, useReAuth } from '@utils/services/authService';
-import { IUserProfile } from '@utils/services/types';
-import React, { FC, createContext, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { AppShell, Button, Center, Group, Loader, Modal } from "@mantine/core";
+import { useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from "@utils/constants";
+import { useLogout, useReAuth } from "@utils/services/authService";
+import { IUserProfile } from "@utils/services/types";
+import React, { FC, createContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface IAuthContext {
   auth: IUserProfile | null;
@@ -26,10 +26,10 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
   const useLogoutQuery = useLogout();
   const [loggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState<string | null>(
-    localStorage.getItem(TOKEN_STORAGE)
+    localStorage.getItem(TOKEN_STORAGE),
   );
   const [refreshToken, setRefreshToken] = useState<string | null>(
-    localStorage.getItem(REFRESH_TOKEN_STORAGE) as string
+    localStorage.getItem(REFRESH_TOKEN_STORAGE) as string,
   );
   const { t } = useTranslation();
 
@@ -45,7 +45,7 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
     if (reAuth.isError) {
       localStorage.removeItem(REFRESH_TOKEN_STORAGE);
       localStorage.removeItem(TOKEN_STORAGE);
-      localStorage.removeItem('id');
+      localStorage.removeItem("id");
 
       setIsLoggedIn(false);
       setToken(null);
@@ -65,14 +65,14 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
   const confirmLogout = async () => {
     try {
       await useLogoutQuery.mutateAsync();
-      window.history.replaceState({}, '', '/login');
+      window.history.replaceState({}, "", "/login");
       setShowLogout();
     } catch (err) {
       setShowLogout();
       showNotification({
-        title: t('error'),
-        message: t('unable_to_logout'),
-        color: 'red',
+        title: t("error"),
+        message: t("unable_to_logout"),
+        color: "red",
       });
     }
   };
@@ -97,16 +97,16 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
       <Modal
         onClose={() => setShowLogout()}
         opened={showLogout}
-        title={t('logout_confirmation')}
+        title={t("logout_confirmation")}
       >
         <Group justify="center">
-          <Button onClick={confirmLogout}>{t('sure')}</Button>
+          <Button onClick={confirmLogout}>{t("sure")}</Button>
           <Button variant="outline" onClick={() => setShowLogout()}>
-            {t('cancel')}
+            {t("cancel")}
           </Button>
         </Group>
       </Modal>
-      {!ready && localStorage.getItem('token') ? (
+      {!ready && localStorage.getItem("token") ? (
         <AppShell>
           <Center>
             <Loader />

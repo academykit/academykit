@@ -1,5 +1,5 @@
-import { Paper, Text, Title } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
+import { Paper, Text, Title } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   title: string;
@@ -11,7 +11,7 @@ const SummaryCard = ({ title, count }: IProps) => {
 
   return (
     <>
-      <Paper p={'md'} withBorder miw={'100%'}>
+      <Paper p={"md"} withBorder miw={"100%"}>
         <Title order={4}>{t(`${title}`)}</Title>
         <Text>{count}</Text>
       </Paper>

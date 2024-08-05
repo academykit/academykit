@@ -1,28 +1,28 @@
-import DeleteModal from '@components/Ui/DeleteModal';
-import EditNameForm from '@components/Ui/EditNameForm';
-import { useSection } from '@context/SectionProvider';
-import { ActionIcon, Container, Group, Paper } from '@mantine/core';
-import { useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
+import DeleteModal from "@components/Ui/DeleteModal";
+import EditNameForm from "@components/Ui/EditNameForm";
+import { useSection } from "@context/SectionProvider";
+import { ActionIcon, Container, Group, Paper } from "@mantine/core";
+import { useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
 import {
   IconChevronRight,
   IconDragDrop,
   IconPencilMinus,
   IconTrashX,
-} from '@tabler/icons-react';
-import { CourseStatus } from '@utils/enums';
-import errorType from '@utils/services/axiosError';
+} from "@tabler/icons-react";
+import { CourseStatus } from "@utils/enums";
+import errorType from "@utils/services/axiosError";
 import {
   ISection,
   useDeleteSection,
   useUpdateSectionName,
-} from '@utils/services/courseService';
-import cx from 'clsx';
-import { useState } from 'react';
-import { DraggableStateSnapshot } from 'react-beautiful-dnd';
-import { useTranslation } from 'react-i18next';
-import classes from '../styles/sectionItem.module.css';
-import Lessons from './Lessons';
+} from "@utils/services/courseService";
+import cx from "clsx";
+import { useState } from "react";
+import { DraggableStateSnapshot } from "react-beautiful-dnd";
+import { useTranslation } from "react-i18next";
+import classes from "../styles/sectionItem.module.css";
+import Lessons from "./Lessons";
 
 const SectionItem = ({
   item,
@@ -50,16 +50,16 @@ const SectionItem = ({
         sectionId: item.slug,
       });
       showNotification({
-        message: t('delete_section_success'),
-        title: t('success'),
+        message: t("delete_section_success"),
+        title: t("success"),
       });
       toggle();
     } catch (error: any) {
       const err = errorType(error);
       showNotification({
         message: err,
-        color: 'red',
-        title: t('error'),
+        color: "red",
+        title: t("error"),
       });
       toggle();
     }
@@ -77,7 +77,7 @@ const SectionItem = ({
       })}
     >
       <DeleteModal
-        title={t('sure_want_to_delete')}
+        title={t("sure_want_to_delete")}
         open={value}
         onClose={toggle}
         onConfirm={onDelete}
@@ -85,8 +85,8 @@ const SectionItem = ({
       <Container
         fluid
         style={{
-          display: 'flex',
-          justifyContent: 'space-between',
+          display: "flex",
+          justifyContent: "space-between",
         }}
       >
         {!isEditing ? (
@@ -94,7 +94,7 @@ const SectionItem = ({
             {item.name}
             <IconPencilMinus
               size={16}
-              style={{ marginLeft: '10px', cursor: 'pointer' }}
+              style={{ marginLeft: "10px", cursor: "pointer" }}
               onClick={() => {
                 setIsEditing(true);
               }}
@@ -111,7 +111,7 @@ const SectionItem = ({
         <Group justify="flex-end" grow>
           <IconTrashX
             size={18}
-            style={{ color: 'red', cursor: 'pointer' }}
+            style={{ color: "red", cursor: "pointer" }}
             onClick={() => {
               toggle();
             }}
@@ -122,9 +122,9 @@ const SectionItem = ({
               section?.setActiveSection(item.slug);
             }}
             style={{
-              transform: active() ? 'rotate(90deg)' : '',
-              transition: '0.35s',
-              cursor: 'pointer',
+              transform: active() ? "rotate(90deg)" : "",
+              transition: "0.35s",
+              cursor: "pointer",
             }}
           />
           <ActionIcon {...dragHandleProps} variant="subtle" color="gray">

@@ -1,10 +1,10 @@
-import Exam from '@components/Course/Classes/Exam';
-import { Button, Container, Loader, Title } from '@mantine/core';
-import { useStartExam } from '@utils/services/examService';
-import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
-import classes from '../styles/assignment.module.css';
+import Exam from "@components/Course/Classes/Exam";
+import { Button, Container, Loader, Title } from "@mantine/core";
+import { useStartExam } from "@utils/services/examService";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import classes from "../styles/assignment.module.css";
 
 const LessonExam = () => {
   const { id } = useParams();
@@ -26,7 +26,7 @@ const LessonExam = () => {
     return (
       <Container className={classes.root}>
         <div>
-          <Title className={classes.title}>{t('no_question_found')}</Title>
+          <Title className={classes.title}>{t("no_question_found")}</Title>
 
           <Button
             variant="outline"
@@ -35,7 +35,7 @@ const LessonExam = () => {
             onClick={() => navigate(-1)}
             className={classes.control}
           >
-            {t('back_course')}
+            {t("back_course")}
           </Button>
         </div>
       </Container>

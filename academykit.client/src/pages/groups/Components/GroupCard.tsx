@@ -1,22 +1,22 @@
-import DeleteModal from '@components/Ui/DeleteModal';
-import UserShortProfile from '@components/UserShortProfile';
-import useAuth from '@hooks/useAuth';
-import { Anchor, Button, Card, Group, Menu, Text } from '@mantine/core';
-import { useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
+import DeleteModal from "@components/Ui/DeleteModal";
+import UserShortProfile from "@components/UserShortProfile";
+import useAuth from "@hooks/useAuth";
+import { Anchor, Button, Card, Group, Menu, Text } from "@mantine/core";
+import { useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
 import {
   IconChevronRight,
   IconDotsVertical,
   IconEdit,
   IconTrash,
-} from '@tabler/icons-react';
-import { UserRole } from '@utils/enums';
-import RoutePath from '@utils/routeConstants';
-import errorType from '@utils/services/axiosError';
-import { IGroup, useDeleteGroup } from '@utils/services/groupService';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import classes from '../styles/groupCard.module.css';
+} from "@tabler/icons-react";
+import { UserRole } from "@utils/enums";
+import RoutePath from "@utils/routeConstants";
+import errorType from "@utils/services/axiosError";
+import { IGroup, useDeleteGroup } from "@utils/services/groupService";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import classes from "../styles/groupCard.module.css";
 
 const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
   const [deleteModal, setDeleteModal] = useToggle();
@@ -28,14 +28,14 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
     try {
       await deleteGroup.mutateAsync({ id: group.id });
       showNotification({
-        title: t('successful'),
-        message: t('group_deleted'),
+        title: t("successful"),
+        message: t("group_deleted"),
       });
     } catch (error) {
       const err = errorType(error);
       showNotification({
-        color: 'red',
-        title: t('error'),
+        color: "red",
+        title: t("error"),
         message: err as string,
       });
     }
@@ -47,8 +47,8 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
       <DeleteModal
         title={`${
           group.memberCount > 0
-            ? t('Delete_group_withMember')
-            : t('want_to_delete') + ' ' + group.name + ' ' + t('group') + t('?')
+            ? t("Delete_group_withMember")
+            : t("want_to_delete") + " " + group.name + " " + t("group") + t("?")
         }`}
         open={deleteModal}
         onClose={setDeleteModal}
@@ -59,16 +59,16 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
         p="md"
         key={group.id}
         withBorder
-        radius={'md'}
+        radius={"md"}
       >
         <Group justify="space-between">
           <Anchor
             component={Link}
             to={RoutePath.groups.details(group.slug).route}
-            size={'md'}
+            size={"md"}
             lineClamp={1}
             className={classes.anchor}
-            maw={'80%'}
+            maw={"80%"}
           >
             <Text truncate>{group.name}</Text>
           </Anchor>
@@ -92,7 +92,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
                   to={RoutePath.groups.details(group.slug).route}
                   rightSection={<IconChevronRight size={12} stroke={1.5} />}
                 >
-                  {t('manage')}
+                  {t("manage")}
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item
@@ -103,20 +103,20 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
                     setDeleteModal();
                   }}
                 >
-                  {t('delete')}
+                  {t("delete")}
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>
           )}
         </Group>
-        <Group mt={'sm'}>
-          <UserShortProfile user={group.user} size={'sm'} />
+        <Group mt={"sm"}>
+          <UserShortProfile user={group.user} size={"sm"} />
         </Group>
         <Card.Section className={classes.footer}>
           <Group justify="space-between">
             <div>
               <Text size="xs" c="dimmed">
-                {t('members')}
+                {t("members")}
               </Text>
               <Anchor
                 fw={500}
@@ -129,7 +129,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
             </div>
             <div>
               <Text size="xs" c="dimmed">
-                {t('trainings')}
+                {t("trainings")}
               </Text>
               <Anchor
                 fw={500}
@@ -142,7 +142,7 @@ const GroupCard = ({ group, search }: { group: IGroup; search: string }) => {
             </div>
             <div>
               <Text size="xs" c="dimmed">
-                {t('attachments')}
+                {t("attachments")}
               </Text>
               <Anchor
                 fw={500}

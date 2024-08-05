@@ -1,9 +1,9 @@
-import { Cross } from '@components/Icons';
-import { ActionIcon, TextInput, Tooltip } from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { IconSearch } from '@tabler/icons-react';
-import React, { useRef } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Cross } from "@components/Icons";
+import { ActionIcon, TextInput, Tooltip } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { IconSearch } from "@tabler/icons-react";
+import React, { useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   placeholder?: string;
@@ -19,7 +19,7 @@ const SearchBar: React.FC<React.PropsWithChildren<Props>> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const form = useForm({
     initialValues: {
-      search: search ?? '',
+      search: search ?? "",
     },
   });
   // useEffect(() => {
@@ -28,22 +28,22 @@ const SearchBar: React.FC<React.PropsWithChildren<Props>> = ({
   //   }
   // }, [form.values.search]);
   const clearField = () => {
-    form.setFieldValue('search', '');
+    form.setFieldValue("search", "");
     inputRef.current?.focus();
-    setSearch('');
+    setSearch("");
   };
   const { t } = useTranslation();
 
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ width: "100%" }}>
       <form onSubmit={form.onSubmit((values) => setSearch(values.search))}>
         <TextInput
           ref={inputRef}
-          radius={'md'}
+          radius={"md"}
           size="sm"
           rightSection={
             form.values.search && (
-              <Tooltip label={t('clear_search')}>
+              <Tooltip label={t("clear_search")}>
                 <ActionIcon onClick={clearField} variant="transparent" c="gray">
                   <Cross />
                 </ActionIcon>
@@ -51,7 +51,7 @@ const SearchBar: React.FC<React.PropsWithChildren<Props>> = ({
             )
           }
           placeholder={placeholder}
-          {...form.getInputProps('search')}
+          {...form.getInputProps("search")}
           leftSection={<IconSearch size={14} stroke={1.5} />}
         />
       </form>

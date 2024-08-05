@@ -1,6 +1,6 @@
-import TextViewer from '@components/Ui/RichTextViewer';
-import UserShortProfile from '@components/UserShortProfile';
-import useAuth from '@hooks/useAuth';
+import TextViewer from "@components/Ui/RichTextViewer";
+import UserShortProfile from "@components/UserShortProfile";
+import useAuth from "@hooks/useAuth";
 import {
   AspectRatio,
   Badge,
@@ -15,46 +15,46 @@ import {
   Modal,
   Textarea,
   Title,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useToggle } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { color } from '@utils/constants';
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useToggle } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { color } from "@utils/constants";
 import {
   CourseStatus,
   CourseUserStatus,
   CourseUserStatusValue,
   UserRole,
-} from '@utils/enums';
-import getCourseOgImageUrl from '@utils/getCourseOGImage';
-import RoutePath from '@utils/routeConstants';
-import { useGeneralSetting } from '@utils/services/adminService';
-import errorType from '@utils/services/axiosError';
+} from "@utils/enums";
+import getCourseOgImageUrl from "@utils/getCourseOGImage";
+import RoutePath from "@utils/routeConstants";
+import { useGeneralSetting } from "@utils/services/adminService";
+import errorType from "@utils/services/axiosError";
 import {
   useCourseDescription,
   useCourseStatus,
   useEnrollCourse,
-} from '@utils/services/courseService';
-import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
-import classes from '../styles/courseDescription.module.css';
-import CourseContent from './CourseContent/CourseContent';
+} from "@utils/services/courseService";
+import { useTranslation } from "react-i18next";
+import { Link, useParams } from "react-router-dom";
+import classes from "../styles/courseDescription.module.css";
+import CourseContent from "./CourseContent/CourseContent";
 
 const CourseDescription = () => {
   const { id } = useParams();
   const auth = useAuth();
-  const courseStatus = useCourseStatus(id as string, '');
+  const courseStatus = useCourseStatus(id as string, "");
   const [isRejected, toggleRejected] = useToggle();
   const [confirmPublish, togglePublish] = useToggle();
 
   // to validate reject message
   const form = useForm({
     initialValues: {
-      message: '',
+      message: "",
     },
     validate: {
       message: (value) =>
-        value.length === 0 ? 'Rejection message is required!' : null,
+        value.length === 0 ? "Rejection message is required!" : null,
     },
   });
 
@@ -63,18 +63,18 @@ const CourseDescription = () => {
       await courseStatus.mutateAsync({
         identity: id as string,
         status: message ? CourseStatus.Rejected : CourseStatus.Published,
-        message: message ?? '',
+        message: message ?? "",
       });
       showNotification({
         message: message
-          ? t('training_rejected_success')
-          : t('training_published_success'),
+          ? t("training_rejected_success")
+          : t("training_published_success"),
       });
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
     togglePublished();
@@ -89,10 +89,10 @@ const CourseDescription = () => {
   const onEnroll = async () => {
     try {
       await enrollCourse.mutateAsync({ id: id as string });
-      showNotification({ message: t('enroll_course_success') });
+      showNotification({ message: t("enroll_course_success") });
     } catch (err) {
       const error = errorType(err);
-      showNotification({ message: error, color: 'red' });
+      showNotification({ message: error, color: "red" });
     }
   };
   if (course.isError) {
@@ -107,7 +107,7 @@ const CourseDescription = () => {
     );
   }
   if (course.isError) {
-    <Center>{t('unable_get_course')}</Center>;
+    <Center>{t("unable_get_course")}</Center>;
   }
 
   const firstLessonSlugs = course?.data?.sections?.find(
@@ -116,7 +116,7 @@ const CourseDescription = () => {
 
   const slug = firstLessonSlugs?.lessons
     ? firstLessonSlugs?.lessons[0].slug
-    : '';
+    : "";
 
   const togglePublished = () => {
     togglePublish();
@@ -131,8 +131,8 @@ const CourseDescription = () => {
         onClose={togglePublished}
         title={
           isRejected
-            ? t('leave_message_reject')
-            : `${t('publish_confirmation')} "${course.data.name}"${t('?')}`
+            ? t("leave_message_reject")
+            : `${t("publish_confirmation")} "${course.data.name}"${t("?")}`
         }
       >
         {!isRejected ? (
@@ -141,7 +141,7 @@ const CourseDescription = () => {
               onClick={() => onPublish()}
               loading={courseStatus.isLoading}
             >
-              {t('publish')}
+              {t("publish")}
             </Button>
             <Button
               variant="outline"
@@ -149,18 +149,18 @@ const CourseDescription = () => {
                 toggleRejected();
               }}
             >
-              {t('reject')}
+              {t("reject")}
             </Button>
           </Group>
         ) : (
           <form onSubmit={form.onSubmit((value) => onPublish(value.message))}>
             <Group>
-              <Textarea {...form.getInputProps('message')} w={'100%'} />
+              <Textarea {...form.getInputProps("message")} w={"100%"} />
               <Button loading={courseStatus.isLoading} type="submit">
-                {t('submit')}
+                {t("submit")}
               </Button>
               <Button variant="outline" onClick={() => toggleRejected()}>
-                {t('cancel')}
+                {t("cancel")}
               </Button>
             </Group>
           </form>
@@ -169,14 +169,14 @@ const CourseDescription = () => {
       <Container fluid>
         <div className={classes.inner}>
           <div className={classes.content}>
-            <Flex wrap={'wrap'} align={'baseline'}>
-              <Box maw={{ base: '100%', md: 300, lg: 500 }}>
+            <Flex wrap={"wrap"} align={"baseline"}>
+              <Box maw={{ base: "100%", md: 300, lg: 500 }}>
                 <Title
                   className={classes.title}
                   style={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
                   }}
                 >
                   {course.data?.name}
@@ -204,7 +204,7 @@ const CourseDescription = () => {
 
             <Group my={4}>
               {course.data?.user && (
-                <UserShortProfile user={course?.data?.user} size={'md'} />
+                <UserShortProfile user={course?.data?.user} size={"md"} />
               )}
             </Group>
             <TextViewer content={course.data?.description} />
@@ -234,7 +234,7 @@ const CourseDescription = () => {
                           size="md"
                           className={classes.control}
                         >
-                          {t('preview')}
+                          {t("preview")}
                         </Button>
                       </Link>
                     )}
@@ -248,7 +248,7 @@ const CourseDescription = () => {
                     onClick={onEnroll}
                     disabled={!course.data.isEligible}
                   >
-                    {t('enroll_course')}
+                    {t("enroll_course")}
                   </Button>
                 ) : course.data?.userStatus === CourseUserStatus.Author ||
                   course.data?.userStatus === CourseUserStatus.Teacher ? (
@@ -262,7 +262,7 @@ const CourseDescription = () => {
                           size="md"
                           className={classes.control}
                         >
-                          {t('preview')}
+                          {t("preview")}
                         </Button>
                       </Link>
                     )}
@@ -278,7 +278,7 @@ const CourseDescription = () => {
                           size="md"
                           className={classes.control}
                         >
-                          {t('watch_course')}
+                          {t("watch_course")}
                         </Button>
                       </Link>
                     )}
@@ -293,7 +293,7 @@ const CourseDescription = () => {
                       size="md"
                       className={classes.control}
                     >
-                      {t('publish')}
+                      {t("publish")}
                     </Button>
                   )}
 
@@ -302,7 +302,7 @@ const CourseDescription = () => {
                   course.data?.status === CourseStatus.Draft && (
                     <Link to={RoutePath.manageCourse.edit(id).route}>
                       <Button radius="xl" size="md" className={classes.control}>
-                        {t('edit')}
+                        {t("edit")}
                       </Button>
                     </Link>
                   )}
@@ -314,14 +314,14 @@ const CourseDescription = () => {
                     course.data?.userStatus === CourseUserStatus.Teacher) && (
                     <Link to={RoutePath.manageCourse.dashboard(id).route}>
                       <Button radius="xl" size="md" className={classes.control}>
-                        {t('manage')}
+                        {t("manage")}
                       </Button>
                     </Link>
                   )}
               </Group>
             </Center>
 
-            <Box className={classes.CourseContentLarge} maw={'90%'}>
+            <Box className={classes.CourseContentLarge} maw={"90%"}>
               {course.data?.sections && (
                 <CourseContent
                   courseName={course.data?.name}

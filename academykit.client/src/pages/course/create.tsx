@@ -1,12 +1,12 @@
-import TitleAndDescriptionSuggestion from '@components/Ui/AI/TitleAndDescriptionSuggestion';
-import Breadcrumb from '@components/Ui/BreadCrumb';
-import CustomTextFieldWithAutoFocus from '@components/Ui/CustomTextFieldWithAutoFocus';
-import GroupCreatableSelect from '@components/Ui/GroupCreatableSelect';
-import RichTextEditor from '@components/Ui/RichTextEditor/Index';
-import ThumbnailEditor from '@components/Ui/ThumbnailEditor';
-import useAuth from '@hooks/useAuth';
-import useCustomForm from '@hooks/useCustomForm';
-import useFormErrorHooks from '@hooks/useFormErrorHooks';
+import TitleAndDescriptionSuggestion from "@components/Ui/AI/TitleAndDescriptionSuggestion";
+import Breadcrumb from "@components/Ui/BreadCrumb";
+import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
+import GroupCreatableSelect from "@components/Ui/GroupCreatableSelect";
+import RichTextEditor from "@components/Ui/RichTextEditor/Index";
+import ThumbnailEditor from "@components/Ui/ThumbnailEditor";
+import useAuth from "@hooks/useAuth";
+import useCustomForm from "@hooks/useCustomForm";
+import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Accordion,
   ActionIcon,
@@ -18,34 +18,34 @@ import {
   Loader,
   Select,
   Text,
-} from '@mantine/core';
-import { DatePickerInput } from '@mantine/dates';
-import { createFormContext, yupResolver } from '@mantine/form';
-import { useScrollIntoView } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { IconPlus, IconTrash } from '@tabler/icons-react';
-import { TrainingEligibilityEnum } from '@utils/enums';
-import queryStringGenerator from '@utils/queryStringGenerator';
-import RoutePath from '@utils/routeConstants';
-import { useDepartmentSetting } from '@utils/services/adminService';
-import { useAIMaster, useTrainingSuggestion } from '@utils/services/aiService';
-import { useAssessments } from '@utils/services/assessmentService';
-import errorType from '@utils/services/axiosError';
+} from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
+import { createFormContext, yupResolver } from "@mantine/form";
+import { useScrollIntoView } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
+import { TrainingEligibilityEnum } from "@utils/enums";
+import queryStringGenerator from "@utils/queryStringGenerator";
+import RoutePath from "@utils/routeConstants";
+import { useDepartmentSetting } from "@utils/services/adminService";
+import { useAIMaster, useTrainingSuggestion } from "@utils/services/aiService";
+import { useAssessments } from "@utils/services/assessmentService";
+import errorType from "@utils/services/axiosError";
 import {
   IBaseTrainingEligibility,
   useCourse,
   useCreateCourse,
-} from '@utils/services/courseService';
-import { useAddGroup, useGroups } from '@utils/services/groupService';
-import { useLevels } from '@utils/services/levelService';
-import { useSkills } from '@utils/services/skillService';
-import { ITag, useAddTag, useTags } from '@utils/services/tagService';
-import moment from 'moment';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import * as Yup from 'yup';
-import TagMultiSelectCreatable from './component/TagMultiSelectCreatable';
+} from "@utils/services/courseService";
+import { useAddGroup, useGroups } from "@utils/services/groupService";
+import { useLevels } from "@utils/services/levelService";
+import { useSkills } from "@utils/services/skillService";
+import { ITag, useAddTag, useTags } from "@utils/services/tagService";
+import moment from "moment";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import * as Yup from "yup";
+import TagMultiSelectCreatable from "./component/TagMultiSelectCreatable";
 
 interface FormValues {
   thumbnail: string;
@@ -65,26 +65,26 @@ const schema = () => {
   return Yup.object().shape({
     title: Yup.string()
       .trim()
-      .required(t('course_title_required') as string)
-      .max(100, t('course_title_must_be_less_than_100') as string),
-    level: Yup.string().required(t('level_required') as string),
+      .required(t("course_title_required") as string)
+      .max(100, t("course_title_must_be_less_than_100") as string),
+    level: Yup.string().required(t("level_required") as string),
     groups: Yup.string()
       .nullable()
-      .required(t('group_required') as string),
+      .required(t("group_required") as string),
     startDate: Yup.string()
-      .required(t('start_date_required') as string)
-      .typeError(t('start_date_required') as string),
+      .required(t("start_date_required") as string)
+      .typeError(t("start_date_required") as string),
     isUnlimitedEndDate: Yup.boolean(),
-    endDate: Yup.string().when('isUnlimitedEndDate', {
+    endDate: Yup.string().when("isUnlimitedEndDate", {
       is: false,
       then: Yup.string()
-        .required(t('end_date_required') as string)
-        .typeError(t('end_date_required') as string),
+        .required(t("end_date_required") as string)
+        .typeError(t("end_date_required") as string),
       otherwise: Yup.string().nullable(),
     }),
     trainingEligibilities: Yup.array().of(
       Yup.object().shape({
-        eligibilityId: Yup.string().required(t('field_required') as string),
+        eligibilityId: Yup.string().required(t("field_required") as string),
       })
     ),
   });
@@ -103,11 +103,11 @@ const CreateCoursePage = () => {
   const skillData = useSkills(queryStringGenerator({ size: 1000 }));
   const getAssessments = useAssessments(queryStringGenerator({ size: 1000 }));
   const getTrainings = useCourse(queryStringGenerator({ size: 1000 }));
-  const [searchParamGroup] = useState('');
+  const [searchParamGroup] = useState("");
   const { t } = useTranslation();
   const groupAdd = useAddGroup();
   const auth = useAuth();
-  const [language] = useState([{ value: '1', label: 'English' }]);
+  const [language] = useState([{ value: "1", label: "English" }]);
   const { scrollIntoView: scrollToTop, targetRef: refBasic } =
     useScrollIntoView<HTMLDivElement>({
       offset: 60,
@@ -120,28 +120,28 @@ const CreateCoursePage = () => {
     })
   );
   const [searchParams] = useSearchParams();
-  const groupSlug = searchParams.get('group');
+  const groupSlug = searchParams.get("group");
   useEffect(() => {
     if (groups.isSuccess && groups?.data && groupSlug) {
       form.setFieldValue(
-        'groups',
+        "groups",
         (
           groups.data &&
           groups.data.data.items.find((x) => x.slug === groupSlug)
-        )?.id ?? ''
+        )?.id ?? ""
       );
     }
   }, [groups.isSuccess]);
 
   const form = useForm({
     initialValues: {
-      thumbnail: '',
-      title: '',
-      level: '',
-      groups: '',
-      description: '',
+      thumbnail: "",
+      title: "",
+      level: "",
+      groups: "",
+      description: "",
       tags: [],
-      language: '1',
+      language: "1",
       startDate: null,
       endDate: null,
       isUnlimitedEndDate: false,
@@ -188,7 +188,7 @@ const CreateCoursePage = () => {
       }));
   };
 
-  const [searchParam] = useState('');
+  const [searchParam] = useState("");
 
   const label = useLevels();
   const { data: addTagData, isSuccess, mutateAsync: mutAsync } = useAddTag();
@@ -217,7 +217,7 @@ const CreateCoursePage = () => {
       //   { label: addTagData.data.name, value: addTagData.data.id },
       // ]);
       setTagsLists([...tagsLists, addTagData.data]);
-      form.setFieldValue('tags', [...form.values.tags, addTagData?.data?.id]);
+      form.setFieldValue("tags", [...form.values.tags, addTagData?.data?.id]);
     }
   }, [isSuccess]);
 
@@ -230,15 +230,15 @@ const CreateCoursePage = () => {
         tagIds: data.tags,
         levelId: data.level,
         language: parseInt(data.language),
-        name: data.title.trim().split(/ +/).join(' '),
+        name: data.title.trim().split(/ +/).join(" "),
         thumbnailUrl: data.thumbnail,
         startDate: moment(data.startDate)
-          .add(5, 'hour')
-          .add(45, 'minute')
+          .add(5, "hour")
+          .add(45, "minute")
           .toISOString(),
         endDate: moment(data.endDate)
-          .add(5, 'hour')
-          .add(45, 'minute')
+          .add(5, "hour")
+          .add(45, "minute")
           .toISOString(),
         isUnlimitedEndDate: data.isUnlimitedEndDate,
         trainingEligibilities: data.trainingEligibilities.map((eligibility) => {
@@ -250,15 +250,15 @@ const CreateCoursePage = () => {
       });
       form.reset();
       showNotification({
-        title: t('success'),
-        message: t('create_training_success'),
+        title: t("success"),
+        message: t("create_training_success"),
       });
       navigate(RoutePath.manageCourse.lessons(res.data.slug).route);
     } catch (err) {
       const error = errorType(err);
       showNotification({
         message: error,
-        color: 'red',
+        color: "red",
       });
     }
   };
@@ -266,13 +266,13 @@ const CreateCoursePage = () => {
   // set endDate as null if unlimited endDate is checked
   useEffect(() => {
     if (form.values.isUnlimitedEndDate) {
-      form.setFieldValue('endDate', null);
+      form.setFieldValue("endDate", null);
     }
   }, [form.values.isUnlimitedEndDate]);
 
   const acceptAIAnswer = () => {
-    form.setFieldValue('title', aiSuggestion.data?.title ?? '');
-    form.setFieldValue('description', aiSuggestion.data?.description ?? '');
+    form.setFieldValue("title", aiSuggestion.data?.title ?? "");
+    form.setFieldValue("description", aiSuggestion.data?.description ?? "");
   };
 
   // scroll to error section
@@ -285,7 +285,7 @@ const CreateCoursePage = () => {
       errors.endDate
     ) {
       scrollToTop({
-        alignment: 'center',
+        alignment: "center",
       });
     }
   };
@@ -298,12 +298,12 @@ const CreateCoursePage = () => {
           <Box mt={20}>
             <ThumbnailEditor
               formContext={useFormContext}
-              label={t('thumbnail') as string}
+              label={t("thumbnail") as string}
             />
 
             {aiStatus.data?.isActive &&
               aiStatus.data.key !== null &&
-              aiStatus.data.key !== '' && (
+              aiStatus.data.key !== "" && (
                 <TitleAndDescriptionSuggestion
                   title={aiSuggestion.data?.title}
                   description={aiSuggestion.data?.description}
@@ -319,11 +319,11 @@ const CreateCoursePage = () => {
 
             <Group mt={10} grow ref={refBasic}>
               <CustomTextFieldWithAutoFocus
-                placeholder={t('title_course') as string}
-                label={t('title')}
+                placeholder={t("title_course") as string}
+                label={t("title")}
                 name="Title"
                 withAsterisk
-                {...form.getInputProps('title')}
+                {...form.getInputProps("title")}
                 size="lg"
               />
             </Group>
@@ -345,21 +345,21 @@ const CreateCoursePage = () => {
                 <Select
                   withAsterisk
                   size="lg"
-                  placeholder={t('level_placeholder') as string}
-                  label={t('level')}
-                  {...form.getInputProps('level')}
+                  placeholder={t("level_placeholder") as string}
+                  label={t("level")}
+                  {...form.getInputProps("level")}
                   data={
                     label.data.length > 0
                       ? label.data.map((x) => ({ value: x.id, label: x.name }))
                       : [
                           {
-                            label: t('no_level') as string,
-                            value: 'null',
+                            label: t("no_level") as string,
+                            value: "null",
                             disabled: true,
                           },
                         ]
                   }
-                  styles={{ error: { position: 'absolute' } }}
+                  styles={{ error: { position: "absolute" } }}
                 ></Select>
               ) : (
                 <div>
@@ -378,14 +378,14 @@ const CreateCoursePage = () => {
                   auth={auth}
                 />
               ) : (
-                <Loader style={{ flexGrow: '0' }} />
+                <Loader style={{ flexGrow: "0" }} />
               )}
 
               <Select
-                label={t('Language')}
-                size={'lg'}
+                label={t("Language")}
+                size={"lg"}
                 data={language}
-                {...form.getInputProps('language')}
+                {...form.getInputProps("language")}
               />
             </Group>
 
@@ -393,35 +393,35 @@ const CreateCoursePage = () => {
               <DatePickerInput
                 withAsterisk
                 minDate={new Date()}
-                label={t('start_date')}
-                placeholder={t('pick_date') as string}
+                label={t("start_date")}
+                placeholder={t("pick_date") as string}
                 size="lg"
-                {...form.getInputProps('startDate')}
+                {...form.getInputProps("startDate")}
               />
 
               <DatePickerInput
                 minDate={form.values.startDate ?? new Date()}
                 withAsterisk={!form.values.isUnlimitedEndDate}
                 disabled={form.values.isUnlimitedEndDate}
-                label={t('end_date')}
-                placeholder={t('pick_date') as string}
+                label={t("end_date")}
+                placeholder={t("pick_date") as string}
                 size="lg"
-                {...form.getInputProps('endDate')}
+                {...form.getInputProps("endDate")}
               />
             </Group>
             <Group grow mt={20}>
               <Checkbox
                 label="Unlimited end date"
-                {...form.getInputProps('isUnlimitedEndDate', {
-                  type: 'checkbox',
+                {...form.getInputProps("isUnlimitedEndDate", {
+                  type: "checkbox",
                 })}
               />
             </Group>
 
             <Box mt={20}>
-              <Text>{t('description')}</Text>
+              <Text>{t("description")}</Text>
               <RichTextEditor
-                placeholder={t('course_description') as string}
+                placeholder={t("course_description") as string}
                 formContext={useFormContext}
               />
             </Box>
@@ -429,30 +429,30 @@ const CreateCoursePage = () => {
             <Accordion defaultValue="Eligibility" mt={10}>
               <Accordion.Item value="Eligibility">
                 <Accordion.Control>
-                  {t('eligibility_criteria')}
+                  {t("eligibility_criteria")}
                 </Accordion.Control>
                 <Accordion.Panel>
                   {form.values.trainingEligibilities.length < 1 && (
                     <Button
                       onClick={() => {
                         form.insertListItem(
-                          'trainingEligibilities',
-                          { eligibility: 0, eligibilityId: '' },
+                          "trainingEligibilities",
+                          { eligibility: 0, eligibilityId: "" },
                           0
                         );
                       }}
                     >
-                      {t('add_eligibility_criteria')}
+                      {t("add_eligibility_criteria")}
                     </Button>
                   )}
 
                   {form.values.trainingEligibilities.map(
                     (_eligibility, index) => (
-                      <Flex gap={10} key={index} align={'flex-end'} mb={10}>
+                      <Flex gap={10} key={index} align={"flex-end"} mb={10}>
                         <Select
                           allowDeselect={false}
-                          label={t('eligibility_type')}
-                          placeholder={t('pick_value') as string}
+                          label={t("eligibility_type")}
+                          placeholder={t("pick_value") as string}
                           data={getEligibilityType() ?? []}
                           {...form.getInputProps(
                             `trainingEligibilities.${index}.eligibility`
@@ -463,8 +463,8 @@ const CreateCoursePage = () => {
                           <Select
                             withAsterisk
                             allowDeselect={false}
-                            label={t('department')}
-                            placeholder={t('pick_value') as string}
+                            label={t("department")}
+                            placeholder={t("pick_value") as string}
                             data={getDepartmentDropdown() ?? []}
                             {...form.getInputProps(
                               `trainingEligibilities.${index}.eligibilityId`
@@ -477,8 +477,8 @@ const CreateCoursePage = () => {
                           <Select
                             withAsterisk
                             allowDeselect={false}
-                            label={t('training')}
-                            placeholder={t('pick_value') as string}
+                            label={t("training")}
+                            placeholder={t("pick_value") as string}
                             data={getTrainingDropdown() ?? []}
                             {...form.getInputProps(
                               `trainingEligibilities.${index}.eligibilityId`
@@ -491,8 +491,8 @@ const CreateCoursePage = () => {
                           <Select
                             withAsterisk
                             allowDeselect={false}
-                            label={t('skills')}
-                            placeholder={t('pick_value') as string}
+                            label={t("skills")}
+                            placeholder={t("pick_value") as string}
                             data={getSkillDropdown() ?? []}
                             {...form.getInputProps(
                               `trainingEligibilities.${index}.eligibilityId`
@@ -505,8 +505,8 @@ const CreateCoursePage = () => {
                           <Select
                             withAsterisk
                             allowDeselect={false}
-                            label={t('assessment')}
-                            placeholder={t('pick_value') as string}
+                            label={t("assessment")}
+                            placeholder={t("pick_value") as string}
                             data={getAssessmentDropdown() ?? []}
                             {...form.getInputProps(
                               `trainingEligibilities.${index}.eligibilityId`
@@ -518,8 +518,8 @@ const CreateCoursePage = () => {
                           variant="subtle"
                           onClick={() => {
                             form.insertListItem(
-                              'trainingEligibilities',
-                              { eligibility: 0, eligibilityId: '' },
+                              "trainingEligibilities",
+                              { eligibility: 0, eligibilityId: "" },
                               index + 1
                             );
                           }}
@@ -529,9 +529,9 @@ const CreateCoursePage = () => {
 
                         <ActionIcon
                           variant="subtle"
-                          c={'red'}
+                          c={"red"}
                           onClick={() => {
-                            form.removeListItem('trainingEligibilities', index);
+                            form.removeListItem("trainingEligibilities", index);
                           }}
                         >
                           <IconTrash />
@@ -550,7 +550,7 @@ const CreateCoursePage = () => {
                 type="submit"
                 loading={isLoading}
               >
-                {t('submit')}
+                {t("submit")}
               </Button>
             </Box>
           </Box>

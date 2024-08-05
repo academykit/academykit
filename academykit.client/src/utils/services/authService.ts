@@ -1,9 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from '@utils/constants';
-import { UserRole } from '@utils/enums';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
-import { IPasswordResetResponse, IUserProfile } from './types';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from "@utils/constants";
+import { UserRole } from "@utils/enums";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
+import { IPasswordResetResponse, IUserProfile } from "./types";
 
 export interface ILogin {
   firstName: string;
@@ -29,7 +29,7 @@ export const useLogin = () => {
     onSuccess: (data) => {
       localStorage.setItem(TOKEN_STORAGE, data?.data?.token);
       localStorage.setItem(REFRESH_TOKEN_STORAGE, data?.data?.refreshToken);
-      localStorage.setItem('id', data?.data?.userId);
+      localStorage.setItem("id", data?.data?.userId);
     },
   });
 };
@@ -45,7 +45,7 @@ export const useLogout = () => {
     onSuccess: () => {
       localStorage.removeItem(TOKEN_STORAGE);
       localStorage.removeItem(REFRESH_TOKEN_STORAGE);
-      localStorage.removeItem('id');
+      localStorage.removeItem("id");
     },
   });
 };
@@ -153,7 +153,7 @@ export const useChangeEmail = () => {
     }) => {
       return httpClient.put<{ resendToken: string }>(
         api.auth.changeEmail,
-        data
+        data,
       );
     },
   });

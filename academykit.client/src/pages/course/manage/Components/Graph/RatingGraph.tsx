@@ -1,4 +1,4 @@
-import { Title as Heading, Paper, Text } from '@mantine/core';
+import { Title as Heading, Paper, Text } from "@mantine/core";
 import {
   BarElement,
   CategoryScale,
@@ -7,9 +7,9 @@ import {
   LinearScale,
   Title,
   Tooltip,
-} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import { useTranslation } from 'react-i18next';
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+import { useTranslation } from "react-i18next";
 
 ChartJS.register(
   CategoryScale,
@@ -25,13 +25,13 @@ export const options = {
   responsive: true,
   plugins: {
     legend: {
-      position: 'top' as const,
+      position: "top" as const,
       onClick: function () {},
     },
   },
 };
 
-const labels = ['One', 'Two', 'Three', 'Four', 'Five'];
+const labels = ["One", "Two", "Three", "Four", "Five"];
 
 interface IProps {
   name: string;
@@ -52,7 +52,7 @@ const RatingGraph = ({ name, stats, responseCount }: IProps) => {
     labels,
     datasets: [
       {
-        label: 'Ratings',
+        label: "Ratings",
         data: [
           stats.oneRating,
           stats.twoRating,
@@ -60,7 +60,7 @@ const RatingGraph = ({ name, stats, responseCount }: IProps) => {
           stats.fourRating,
           stats.fiveRating,
         ],
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
     ],
   };
@@ -69,10 +69,10 @@ const RatingGraph = ({ name, stats, responseCount }: IProps) => {
     <>
       <Heading order={4}>{name}</Heading>
       <Text fz="sm" c="dimmed">
-        {t('responses')}: {responseCount}
+        {t("responses")}: {responseCount}
       </Text>
 
-      <Paper mb={10} p="sm" h={300} withBorder style={{ position: 'relative' }}>
+      <Paper mb={10} p="sm" h={300} withBorder style={{ position: "relative" }}>
         <Bar options={options} data={data} />
       </Paper>
     </>

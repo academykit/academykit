@@ -1,10 +1,10 @@
-import { Box } from '@mantine/core';
-import { UseQueryResult } from '@tanstack/react-query';
-import { FeedbackType } from '@utils/enums';
-import { IFeedbackChart } from '@utils/services/feedbackService';
-import HorizontalBarGraph from './Components/Graph/HorizontalBarGraph';
-import RatingGraph from './Components/Graph/RatingGraph';
-import SubjectiveData from './Components/Graph/SubjectiveData';
+import { Box } from "@mantine/core";
+import { UseQueryResult } from "@tanstack/react-query";
+import { FeedbackType } from "@utils/enums";
+import { IFeedbackChart } from "@utils/services/feedbackService";
+import HorizontalBarGraph from "./Components/Graph/HorizontalBarGraph";
+import RatingGraph from "./Components/Graph/RatingGraph";
+import SubjectiveData from "./Components/Graph/SubjectiveData";
 
 const FeedbackGraphDetail = ({
   chartData,

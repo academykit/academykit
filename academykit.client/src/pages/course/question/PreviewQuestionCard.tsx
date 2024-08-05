@@ -1,4 +1,4 @@
-import TextViewer from '@components/Ui/RichTextViewer';
+import TextViewer from "@components/Ui/RichTextViewer";
 import {
   ActionIcon,
   Box,
@@ -8,16 +8,16 @@ import {
   Paper,
   Select,
   Text,
-} from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import {
   IconChevronDown,
   IconChevronUp,
   IconDragDrop,
-} from '@tabler/icons-react';
-import { QuestionType, ReadableEnum } from '@utils/enums';
-import { QuestionSetQuestions } from '@utils/services/questionService';
-import { useTranslation } from 'react-i18next';
+} from "@tabler/icons-react";
+import { QuestionType, ReadableEnum } from "@utils/enums";
+import { QuestionSetQuestions } from "@utils/services/questionService";
+import { useTranslation } from "react-i18next";
 
 const PreviewQuestionCard = ({
   question,
@@ -39,8 +39,8 @@ const PreviewQuestionCard = ({
   return (
     <>
       <Paper p={10} withBorder mb={25}>
-        <Flex justify={'space-between'}>
-          <Text size={'lg'} truncate w={'92%'}>
+        <Flex justify={"space-between"}>
+          <Text size={"lg"} truncate w={"92%"}>
             {question.name}
           </Text>
           <Group>
@@ -55,22 +55,22 @@ const PreviewQuestionCard = ({
         <Collapse in={opened}>
           {question.description && (
             <Box my={10}>
-              <Text>{t('description')}</Text>
+              <Text>{t("description")}</Text>
               <TextViewer key={question.id} content={question.description} />
             </Box>
           )}
 
           {question.hints && (
             <Box my={10}>
-              <Text size={'sm'}>{t('hint')}</Text>
+              <Text size={"sm"}>{t("hint")}</Text>
               <TextViewer key={question.id} content={question.hints} />
             </Box>
           )}
 
           <Select
             mt={20}
-            placeholder={t('question_type') as string}
-            label={t('question_type')}
+            placeholder={t("question_type") as string}
+            label={t("question_type")}
             data={getQuestionType()}
             value={question.type.toString()}
             onChange={() => {}}
@@ -79,10 +79,10 @@ const PreviewQuestionCard = ({
 
           <Box my={20}>
             <>
-              <Text>{t('options')}</Text>
+              <Text>{t("options")}</Text>
               {question.questionOptions.map((option) => (
                 <Group my={10} key={option.id} id="hehe">
-                  <div style={{ width: '100%' }}>
+                  <div style={{ width: "100%" }}>
                     <TextViewer
                       content={option.option}
                       styles={{ root: { flexGrow: 1 } }}

@@ -1,7 +1,7 @@
-import useAuth from '@hooks/useAuth';
-import { UserRole } from '@utils/enums';
-import RoutePath from '@utils/routeConstants';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import useAuth from "@hooks/useAuth";
+import { UserRole } from "@utils/enums";
+import RoutePath from "@utils/routeConstants";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 const TeacherRouteGuard = () => {
   const auth = useAuth();

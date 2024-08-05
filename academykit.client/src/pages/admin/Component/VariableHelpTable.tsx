@@ -1,6 +1,6 @@
-import TextViewer from '@components/Ui/RichTextViewer';
-import { Text } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
+import TextViewer from "@components/Ui/RichTextViewer";
+import { Text } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 
 const VariableHelpTable = () => {
   const { t } = useTranslation();
@@ -25,7 +25,7 @@ const VariableHelpTable = () => {
 
   return (
     <>
-      <Text>{t('template_welcome')}</Text>
+      <Text>{t("template_welcome")}</Text>
       <TemplateViewer
         title="template_1"
         placeholder="template_1_placeholder"

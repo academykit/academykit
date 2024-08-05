@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import errorType from './axiosError';
-import { api } from './service-api';
-import { httpClient } from './service-axios';
-import { IPaginated } from './types';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import errorType from "./axiosError";
+import { api } from "./service-api";
+import { httpClient } from "./service-axios";
+import { IPaginated } from "./types";
 
 export interface ITag {
   id: string;
@@ -19,8 +19,8 @@ const getTags = async (
 ) =>
   await httpClient.get<IPaginated<ITag>>(
     api.tags.list +
-      `?${search}${identity ? `Idenitiy=${identity}` : ''}${
-        trainingType ? `&TrainingType=${trainingType}` : ''
+      `?${search}${identity ? `Idenitiy=${identity}` : ""}${
+        trainingType ? `&TrainingType=${trainingType}` : ""
       }`
   );
 

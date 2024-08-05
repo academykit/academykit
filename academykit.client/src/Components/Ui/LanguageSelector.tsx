@@ -1,10 +1,10 @@
-import { Select } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
-import { LANGUAGES } from '../../constants';
+import { Select } from "@mantine/core";
+import { useTranslation } from "react-i18next";
+import { LANGUAGES } from "../../constants";
 
 const LanguageSelector = () => {
   const { i18n } = useTranslation();
-  const lang = localStorage.getItem('lang');
+  const lang = localStorage.getItem("lang");
   return (
     <Select
       allowDeselect={false}
@@ -12,7 +12,7 @@ const LanguageSelector = () => {
       w={110}
       mr={5}
       onChange={(value) => {
-        localStorage.setItem('lang', value as string);
+        localStorage.setItem("lang", value as string);
         i18n.changeLanguage(value as string);
         window.location.reload();
       }}

@@ -1,5 +1,5 @@
-import { Loader } from '@mantine/core';
-import Copy from './Copy';
+import { Loader } from "@mantine/core";
+import Copy from "./Copy";
 
 const LoadingAndCopy = ({
   loading,

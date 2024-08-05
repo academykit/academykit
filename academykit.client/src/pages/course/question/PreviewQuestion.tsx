@@ -1,23 +1,23 @@
-import Breadcrumb from '@components/Ui/BreadCrumb';
-import { Box, Button, Flex, Loader, Paper, Text, Title } from '@mantine/core';
-import { IconChevronLeft } from '@tabler/icons-react';
-import { LessonType } from '@utils/enums';
-import { useQuestionReorder } from '@utils/services/courseService';
+import Breadcrumb from "@components/Ui/BreadCrumb";
+import { Box, Button, Flex, Loader, Paper, Text, Title } from "@mantine/core";
+import { IconChevronLeft } from "@tabler/icons-react";
+import { LessonType } from "@utils/enums";
+import { useQuestionReorder } from "@utils/services/courseService";
 import {
   QuestionSetQuestions,
   useQuestionSetQuestions,
-} from '@utils/services/questionService';
-import { useEffect, useState } from 'react';
+} from "@utils/services/questionService";
+import { useEffect, useState } from "react";
 import {
   DragDropContext,
   Draggable,
   DropResult,
   Droppable,
-} from 'react-beautiful-dnd';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
-import PreviewQuestionCard from './PreviewQuestionCard';
-import Shuffle from './components/Shuffle';
+} from "react-beautiful-dnd";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import PreviewQuestionCard from "./PreviewQuestionCard";
+import Shuffle from "./components/Shuffle";
 
 const PreviewQuestion = () => {
   const navigate = useNavigate();
@@ -73,22 +73,22 @@ const PreviewQuestion = () => {
         onClick={() => navigate(-1)}
         mt={15}
       >
-        {t('go_back_button')}
+        {t("go_back_button")}
       </Button>
-      <Flex mt={10} align={'center'} justify={'space-between'}>
+      <Flex mt={10} align={"center"} justify={"space-between"}>
         <Title mb={20} ml={15}>
-          {'Preview Questions'}
+          {"Preview Questions"}
         </Title>
         <Button
           variant="subtle"
           mx={4}
-          onClick={() => navigate('../lessons/questions/' + params?.lessonSlug)}
+          onClick={() => navigate("../lessons/questions/" + params?.lessonSlug)}
         >
-          {t('edit_questions')}
+          {t("edit_questions")}
         </Button>
       </Flex>
 
-      <Paper p={'md'} withBorder mx={20}>
+      <Paper p={"md"} withBorder mx={20}>
         <Shuffle />
       </Paper>
 
@@ -110,7 +110,7 @@ const PreviewQuestion = () => {
               </Droppable>
             </DragDropContext>
           ) : (
-            <Text>{t('no_question_found')}</Text>
+            <Text>{t("no_question_found")}</Text>
           )}
         </Box>
       ) : (

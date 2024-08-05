@@ -1,22 +1,22 @@
-import { useState, useEffect } from 'react';
-import { Box, Button } from '@mantine/core';
-import { useToggle } from '@mantine/hooks';
+import { useState, useEffect } from "react";
+import { Box, Button } from "@mantine/core";
+import { useToggle } from "@mantine/hooks";
 import {
   IFeedbackQuestions,
   useFeedbackQuestion,
-} from '@utils/services/feedbackService';
-import EditFeedback from './EditFeedBack';
-import FeedbackItem from './FeedbackList';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useQuestionReorder } from '@utils/services/courseService';
+} from "@utils/services/feedbackService";
+import EditFeedback from "./EditFeedBack";
+import FeedbackItem from "./FeedbackList";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import { useQuestionReorder } from "@utils/services/courseService";
 import {
   Draggable,
   Droppable,
   DragDropContext,
   DropResult,
-} from 'react-beautiful-dnd';
-import { LessonType } from '@utils/enums';
+} from "react-beautiful-dnd";
+import { LessonType } from "@utils/enums";
 
 const CreateFeedback = () => {
   const { id, lessonId } = useParams();
@@ -25,7 +25,7 @@ const CreateFeedback = () => {
   const feedbackReorder = useQuestionReorder(lessonId as string);
   const [addQuestion, setAddQuestion] = useToggle();
   const { t } = useTranslation();
-  const feedbackList = useFeedbackQuestion(lessonId as string, '');
+  const feedbackList = useFeedbackQuestion(lessonId as string, "");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const CreateFeedback = () => {
           <FeedbackItem
             key={x.id}
             data={x}
-            search={''}
+            search={""}
             lessonId={lessonId as string}
             onEditChange={handleEditStateChange}
           />
@@ -99,7 +99,7 @@ const CreateFeedback = () => {
               </Droppable>
             </DragDropContext>
           ) : (
-            <Box mb={10}>{t('no_feedback_questions')}</Box>
+            <Box mb={10}>{t("no_feedback_questions")}</Box>
           )}
         </>
       )}
@@ -107,14 +107,14 @@ const CreateFeedback = () => {
         <EditFeedback
           onCancel={() => setAddQuestion()}
           lessonId={lessonId as string}
-          search={''}
+          search={""}
         />
       )}
       <Button onClick={() => setAddQuestion()} mt={10}>
-        {t('add_feedback')}
+        {t("add_feedback")}
       </Button>
       <Button ml={10} variant="outline" onClick={() => navigate(-1)} mt={10}>
-        {t('go_back_button')}
+        {t("go_back_button")}
       </Button>
     </>
   );
