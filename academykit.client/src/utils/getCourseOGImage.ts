@@ -18,13 +18,13 @@ const getCourseOgImageUrl = ({
   return thumbnailUrl && thumbnailUrl !== ""
     ? thumbnailUrl
     : `/api/utility/ogimage?title=${encodeURIComponent(
-        title
+        title,
       )}&author=${encodeURIComponent(
-        author.fullName ?? ""
+        author.fullName ?? "",
       )}&image=${encodeURIComponent(
-        author.imageUrl ?? ""
+        author.imageUrl ?? "",
       )}&theme=${theme}&company=${encodeURIComponent(
-        companyName ?? ""
+        companyName ?? "",
       )}&logo=${encodeURIComponent(companyLogo ?? "")}`;
 };
 
