@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "prestart": "node aspnetcore-https.cjs && node aspnetcore-react.cjs",
     "start": "vite",
     "dev": "vite --debug",
     "build": "vite build",
@@ -100,6 +99,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.7",
     "postcss": "^8.4.40",
     "postcss-preset-mantine": "^1.17.0",
     "postcss-simple-vars": "^7.0.1",
