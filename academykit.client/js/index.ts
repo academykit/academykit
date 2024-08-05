@@ -1,4 +1,4 @@
-import { UserRole } from '@utils/enums';
+import { UserRole } from "@utils/enums";
 
 // eslint-disable-next-line no-var
 declare var ZoomMtg: any;
@@ -7,7 +7,7 @@ const BASE_URL = ``;
 const api = (courseId: string, lessonId: string) =>
   `/api/course/${courseId}/lesson/${lessonId}/join`;
 
-ZoomMtg.setZoomJSLib('https://jssdk.zoomus.cn/2.14.0/lib', '/av'); // china cdn option
+ZoomMtg.setZoomJSLib("https://jssdk.zoomus.cn/2.14.0/lib", "/av"); // china cdn option
 ZoomMtg.preLoadWasm();
 ZoomMtg.prepareJssdk();
 export interface IStartExam {
@@ -30,20 +30,20 @@ export interface IStartExam {
 
 const params = location.search;
 const searchParams = new URLSearchParams(params);
-const token = localStorage.getItem('token');
-const course = searchParams.get('c') as string;
-const lesson = searchParams.get('l') as string;
+const token = localStorage.getItem("token");
+const course = searchParams.get("c") as string;
+const lesson = searchParams.get("l") as string;
 
 const leaveUrl = `/meet/${course}/${lesson}`;
 
 function beginJoin(meetingConfig: IStartExam) {
   ZoomMtg.init({
-    leaveUrl: leaveUrl + '?s=1',
+    leaveUrl: leaveUrl + "?s=1",
 
     disableCORP: !window.crossOriginIsolated, // default true
     success: function () {
-      ZoomMtg.i18n.load('en');
-      ZoomMtg.i18n.reload('en');
+      ZoomMtg.i18n.load("en");
+      ZoomMtg.i18n.reload("en");
       ZoomMtg.join({
         meetingNumber: meetingConfig.meetingId,
         userName: meetingConfig.user.fullName,
@@ -53,16 +53,16 @@ function beginJoin(meetingConfig: IStartExam) {
         passWord: meetingConfig.passcode,
         customerKey: meetingConfig.user.id,
         success: function () {
-          console.info('join meeting success');
+          console.info("join meeting success");
           ZoomMtg.getCurrentUser({
             success: function (res: any) {
-              console.info('success getCurrentUser', res.result.currentUser);
+              console.info("success getCurrentUser", res.result.currentUser);
             },
           });
         },
         error: function () {
           window.location.replace(`${leaveUrl}/?s=4&e=${encodeURIComponent(
-            'Something went wrong while starting meeting.'
+            "Something went wrong while starting meeting."
           )}
         `);
         },
@@ -70,7 +70,7 @@ function beginJoin(meetingConfig: IStartExam) {
     },
     error: function () {
       window.location.replace(`${leaveUrl}/?s=4&e=${encodeURIComponent(
-        'Something went wrong while starting meeting.'
+        "Something went wrong while starting meeting."
       )}
     `);
     },
@@ -82,7 +82,7 @@ const fetchData = async () => {
       return window.location.replace(`${BASE_URL}/login`);
     } else if (!course && !lesson) {
       return window.location.replace(
-        `${leaveUrl}/?e=${encodeURIComponent('Invalid session link')}`
+        `${leaveUrl}/?e=${encodeURIComponent("Invalid session link")}`
       );
     } else {
       const res = await fetch(api(course, lesson), {
@@ -97,7 +97,7 @@ const fetchData = async () => {
     }
   } catch (err: any) {
     window.location.replace(`${leaveUrl}/?s=4&e=${encodeURIComponent(
-      err.message ?? 'Something went wrong while starting meeting.'
+      err.message ?? "Something went wrong while starting meeting."
     )}
     `);
   }

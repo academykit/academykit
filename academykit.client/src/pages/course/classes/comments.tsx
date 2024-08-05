@@ -58,7 +58,9 @@ const Comments = () => {
           {t("post")}
         </Button>
       </form>
-      {data?.items.map((x) => <Comment comment={x} key={x.id} />)}
+      {data?.items.map((x) => (
+        <Comment comment={x} key={x.id} />
+      ))}
     </Box>
   );
 };

@@ -8,8 +8,9 @@
     "dev": "vite --debug",
     "build": "vite build",
     "preview": "vite preview",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
-    "lint": "eslint --ext .ts,.tsx,.js,.jsx src"
+    "format": "biome format --write .",
+    "lint": "biome lint --write .",
+    "biome": "biome"
   },
   "dependencies": {
     "@emotion/react": "^11.13.0",
@@ -79,6 +80,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.24.9",
+    "@biomejs/biome": "1.8.3",
     "@swc/cli": "^0.4.0",
     "@swc/core": "^1.7.3",
     "@types/fscreen": "^1.0.4",

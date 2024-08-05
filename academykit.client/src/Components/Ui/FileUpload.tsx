@@ -14,7 +14,7 @@ registerPlugin(
   FilePondPluginImageExifOrientation,
   FilePondPluginImagePreview,
   FilePondPluginImageValidateSize,
-  FilePondPluginFileValidateType,
+  FilePondPluginFileValidateType
 );
 type IProps = {
   label?: string;
@@ -60,7 +60,7 @@ const FileUpload = ({ label = "files", onSuccess, id, search }: IProps) => {
         instantUpload={true}
         files={files}
         labelIdle={`${t("drag_and_drop")} ${label} ${t(
-          "or",
+          "or"
         )} <span class="filepond--label-action">${t("browse")}</span>`}
         onaddfile={() => {}}
         onupdatefiles={setFiles}
@@ -91,7 +91,7 @@ const FileUpload = ({ label = "files", onSuccess, id, search }: IProps) => {
           },
           load: async (source, load, error, _progress, abort) => {
             await fetch(
-              `${source}?cache=${Math.random().toString(36).substring(2, 7)}`,
+              `${source}?cache=${Math.random().toString(36).substring(2, 7)}`
             )
               .then(async (r) => {
                 load(await r.blob());

@@ -8,7 +8,7 @@ import useNav from "@hooks/useNav";
 const GroupCourse = lazyWithRetry(() => import("@pages/groups/details/course"));
 const GroupDetail = lazyWithRetry(() => import("@pages/groups/details"));
 const GroupMember = lazyWithRetry(
-  () => import("@pages/groups/details/members"),
+  () => import("@pages/groups/details/members")
 );
 
 const TeamsRoute = () => {

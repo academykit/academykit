@@ -195,9 +195,7 @@ const Questions = () => {
                   <Text>{t("mcq_pools")}</Text>
                   <Text size={"0.810rem"} c="#909296">
                     {t("question_pool_created")}
-                    <Anchor href="/pools">
-                      {t("question_pool_href")}
-                    </Anchor>{" "}
+                    <Anchor href="/pools">{t("question_pool_href")}</Anchor>{" "}
                     {t("section")}
                     <Anchor href="https://docs.academykit.co/app-documentation/training/questions">
                       {t("learn_more")}

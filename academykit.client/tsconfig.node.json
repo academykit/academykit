@@ -8,7 +8,9 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "paths": {
-      "vite-plugin-eslint": ["./node_modules/vite-plugin-eslint/dist/index.d.ts"]
+      "vite-plugin-eslint": [
+        "./node_modules/vite-plugin-eslint/dist/index.d.ts"
+      ]
     }
   },
   "include": ["vite.config.ts"]

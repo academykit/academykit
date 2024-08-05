@@ -54,7 +54,7 @@ const GroupAttachment = ({
     const removeAttachment = useRemoveGroupAttachment(
       id as string,
       item.id,
-      searchParams,
+      searchParams
     );
     const fileUrl = getFileUrl(item.url, enabled);
 
@@ -191,7 +191,7 @@ const GroupAttachment = ({
                 getGroupAttachment.data.totalPage > 1 &&
                 pagination(
                   getGroupAttachment.data?.totalPage,
-                  getGroupAttachment.data.items.length,
+                  getGroupAttachment.data.items.length
                 )}
             </Paper>
           </ScrollArea>

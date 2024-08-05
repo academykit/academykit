@@ -134,7 +134,7 @@ const ConfirmToken = () => {
         JSON.stringify({
           name: companySettings.data.data.name,
           logo: companySettings.data.data.imageUrl,
-        }),
+        })
       );
       setHeader();
     }

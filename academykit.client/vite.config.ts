@@ -32,7 +32,7 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
         "Pem",
         "--no-password",
       ],
-      { stdio: "inherit" },
+      { stdio: "inherit" }
     ).status
   ) {
     throw new Error("Could not create certificate.");

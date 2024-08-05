@@ -6,7 +6,7 @@ interface ICustomTextFieldWithAutoFocus extends TextInputProps {
 }
 
 const CustomTextFieldWithAutoFocus: FC<ICustomTextFieldWithAutoFocus> = (
-  props,
+  props
 ) => {
   const myRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -37,7 +37,7 @@ const CustomTextFieldWithAutoFocus: FC<ICustomTextFieldWithAutoFocus> = (
 };
 
 export const DynamicAutoFocusTextField: FC<ICustomTextFieldWithAutoFocus> = (
-  props,
+  props
 ) => {
   const { isViewMode } = props;
   const [isFocused, setIsFocused] = useState(!isViewMode);

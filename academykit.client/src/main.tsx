@@ -9,5 +9,5 @@ const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <App queryClient={queryClient} />
-  </React.StrictMode>,
+  </React.StrictMode>
 );

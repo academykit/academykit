@@ -70,7 +70,7 @@ export const api = {
     notMembers: (
       identity: string,
       query: string,
-      departmentId: string | undefined,
+      departmentId: string | undefined
     ) => {
       const url = `/api/group/${identity}/notMembers?${query}`;
       if (departmentId) {
@@ -260,7 +260,7 @@ export const api = {
     getRepliesList: (
       courseId: string,
       commentId: string,
-      replyCount?: number,
+      replyCount?: number
     ) =>
       `/api/course/${courseId}/comments/${commentId}?page=1&size=${replyCount}`,
     repliesList: (courseId: string, commentId: string) =>
@@ -296,7 +296,7 @@ export const api = {
       `/api/assessmentExam/${assessmentId}/getStudentResults/${userId}`,
     getOneAssessmentResult: (
       assessmentId: string,
-      assessmentSubmissionId: string,
+      assessmentSubmissionId: string
     ) =>
       `/api/assessmentExam/${assessmentId}/getResultDetail/${assessmentSubmissionId}/detail`,
   },

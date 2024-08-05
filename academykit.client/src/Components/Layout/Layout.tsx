@@ -53,7 +53,7 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
         JSON.stringify({
           name: settings.data.data.companyName,
           logo: settings.data.data.logoUrl,
-        }),
+        })
       );
       setHeader();
     }

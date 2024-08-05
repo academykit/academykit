@@ -5,8 +5,8 @@ import {
 } from "@utils/services/dashboardService";
 
 import { useTranslation } from "react-i18next";
-import { StatsCard } from "./StatsCard";
 import TrainingCards from "./TrainingCards";
+import { StatsCard } from "./StatsCard";
 
 const Admin = ({
   dashboard,

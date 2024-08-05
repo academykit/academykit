@@ -37,7 +37,7 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
   };
 
   const [brandingTheme, setBrandingTheme] = useState(
-    localStorage.getItem(BRANDING_SCHEME_KEY) ?? "#0E99AC",
+    localStorage.getItem(BRANDING_SCHEME_KEY) ?? "#0E99AC"
   );
   const [brandingThemeValue, setBrandingThemeValue] =
     useState<BrandingThemeType>(getBrandingTheme());
