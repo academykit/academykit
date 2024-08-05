@@ -3,7 +3,7 @@ import { lazy } from "react";
 const lazyWithRetry = (componentImport: any) =>
   lazy(async () => {
     const pageHasAlreadyBeenForceRefreshed = JSON.parse(
-      window.localStorage.getItem("page-has-been-force-refreshed") || "false",
+      window.localStorage.getItem("page-has-been-force-refreshed") || "false"
     );
 
     try {

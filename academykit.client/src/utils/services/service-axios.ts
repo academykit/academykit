@@ -38,7 +38,7 @@ export const httpClient = {
   post: <T>(
     url: string,
     data: RequestData,
-    config?: AxiosRequestConfig<RequestData>,
+    config?: AxiosRequestConfig<RequestData>
   ) =>
     axiosInstance.post<T>(url, data, {
       ...baseConfig,
@@ -49,7 +49,7 @@ export const httpClient = {
   put: <T>(
     url: string,
     data: RequestData,
-    config?: AxiosRequestConfig<RequestData>,
+    config?: AxiosRequestConfig<RequestData>
   ) =>
     axiosInstance.put<T>(url, data, {
       ...baseConfig,
@@ -59,7 +59,7 @@ export const httpClient = {
   patch: <T>(
     url: string,
     data?: RequestData,
-    config?: AxiosRequestConfig<RequestData>,
+    config?: AxiosRequestConfig<RequestData>
   ) =>
     axiosInstance.patch<T>(url, data, {
       ...baseConfig,
@@ -107,7 +107,7 @@ axiosInstance.interceptors.request.use(
   },
   function (error: any) {
     return Promise.reject(error);
-  },
+  }
 );
 
 interface IFailedRequestQueue {
@@ -151,7 +151,7 @@ function handleRefreshToken(refreshToken: string) {
 
 export function setAuthorizationHeader(
   request: AxiosDefaults | AxiosRequestConfig | any,
-  token: string,
+  token: string
 ) {
   request.headers.Authorization = `Bearer ${token}`;
 }
@@ -166,7 +166,7 @@ axiosInstance.interceptors.response.use(
     if (error?.response?.status === 401) {
       const originalConfig = error.config;
       const refreshToken = localStorage.getItem(
-        REFRESH_TOKEN_STORAGE,
+        REFRESH_TOKEN_STORAGE
       ) as string;
       !isRefreshing && handleRefreshToken(refreshToken);
 
@@ -183,7 +183,7 @@ axiosInstance.interceptors.response.use(
       });
     }
     return Promise.reject(error);
-  },
+  }
 );
 /**
  * Remove empty, null and undefined values

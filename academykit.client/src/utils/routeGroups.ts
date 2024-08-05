@@ -53,17 +53,17 @@ export const adminAndOrgRouteGroups = [...routeGroupAdmin, ...routeGroupOrg];
 
 export const getCurrentGroup = (
   currentLocation: string,
-  group: IRouteGroup[],
+  group: IRouteGroup[]
 ) => {
   const match = group.find(
-    (item) => currentLocation == item.route.split("/")[2],
+    (item) => currentLocation == item.route.split("/")[2]
   );
   return match ? match.group : "";
 };
 
 export const getCurrentNavGroup = (
   currentLocation: string,
-  group: IRouteGroup[],
+  group: IRouteGroup[]
 ) => {
   const match = group.find((item) => currentLocation == item.route);
   return match ? match.group : "";

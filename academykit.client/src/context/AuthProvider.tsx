@@ -26,10 +26,10 @@ export const AuthProvider: FC<React.PropsWithChildren> = ({ children }) => {
   const useLogoutQuery = useLogout();
   const [loggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState<string | null>(
-    localStorage.getItem(TOKEN_STORAGE),
+    localStorage.getItem(TOKEN_STORAGE)
   );
   const [refreshToken, setRefreshToken] = useState<string | null>(
-    localStorage.getItem(REFRESH_TOKEN_STORAGE) as string,
+    localStorage.getItem(REFRESH_TOKEN_STORAGE) as string
   );
   const { t } = useTranslation();
 
