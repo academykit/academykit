@@ -26,6 +26,7 @@ const CourseList = ({
     <Group
       style={{
         justifyContent: 'space-around',
+        marginTop: '0',
       }}
     >
       {courses.map((d) => (

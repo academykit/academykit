@@ -11,9 +11,10 @@ import {
   Group,
   Loader,
   rem,
+  ScrollArea,
   SegmentedControl,
 } from '@mantine/core';
-import { IconList, IconTable } from '@tabler/icons-react';
+import { IconColumns, IconLayoutGrid } from '@tabler/icons-react';
 import { CourseUserStatus, UserRole } from '@utils/enums';
 import { useCourse } from '@utils/services/courseService';
 import { useState } from 'react';
@@ -54,7 +55,7 @@ const CoursePage = ({
   return (
     <Container fluid>
       <Container fluid>
-        <Flex pb={20} justify={'end'} align={'center'}>
+        <Flex justify={'end'} align={'center'}>
           {searchComponent(t('search_trainings') as string)}
           {filterComponent(
             filterValue,
@@ -73,7 +74,7 @@ const CoursePage = ({
               value: 'list',
               label: (
                 <Center style={{ gap: 10 }}>
-                  <IconList style={{ width: rem(16), height: rem(16) }} />
+                  <IconLayoutGrid style={{ width: rem(20), height: rem(20) }} />
                 </Center>
               ),
             },
@@ -81,29 +82,30 @@ const CoursePage = ({
               value: 'table',
               label: (
                 <Center style={{ gap: 10 }}>
-                  <IconTable style={{ width: rem(16), height: rem(16) }} />
+                  <IconColumns style={{ width: rem(20), height: rem(20) }} />
                 </Center>
               ),
             },
           ]}
         />
       </Group>
-
-      {data &&
-        data?.items &&
-        (data.totalCount >= 1 ? (
-          selectedView === 'table' ? (
-            <TrainingTable courses={data?.items} search={searchParams} />
+      <ScrollArea>
+        {data &&
+          data?.items &&
+          (data.totalCount >= 1 ? (
+            selectedView === 'table' ? (
+              <TrainingTable courses={data?.items} search={searchParams} />
+            ) : (
+              <CourseList
+                role={role}
+                courses={data.items}
+                search={searchParams}
+              />
+            )
           ) : (
-            <CourseList
-              role={role}
-              courses={data.items}
-              search={searchParams}
-            />
-          )
-        ) : (
-          <Box>{t('no_trainings_found')}</Box>
-        ))}
+            <Box>{t('no_trainings_found')}</Box>
+          ))}
+      </ScrollArea>
       {isLoading && <Flex justify={'center'}>{<Loader mx={'auto'} />}</Flex>}
       {selectedView === 'table' &&
         data &&
