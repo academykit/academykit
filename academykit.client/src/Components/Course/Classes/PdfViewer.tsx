@@ -130,7 +130,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
   });
 
   return (
-    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.1.81/build/pdf.worker.min.js">
+    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
       <div
         className="js-viewer-container"
         style={{
