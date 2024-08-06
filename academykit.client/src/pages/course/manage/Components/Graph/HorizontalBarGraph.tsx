@@ -1,4 +1,5 @@
 import { Title as Heading, Paper, Text } from "@mantine/core";
+import removeTags from "@utils/sanitize-html";
 import {
   BarElement,
   CategoryScale,
@@ -34,7 +35,7 @@ export const options = {
   plugins: {
     legend: {
       position: "top" as const,
-      onClick: function () {},
+      onClick: function () { },
     },
   },
   scales: {
@@ -47,8 +48,8 @@ export const options = {
           const truncatedValue =
             this.getLabelForValue(tickValue as number).toString().length > 6
               ? this.getLabelForValue(tickValue as number)
-                  .toString()
-                  .substring(0, 6) + "..."
+                .toString()
+                .substring(0, 6) + "..."
               : this.getLabelForValue(tickValue as number);
 
           return truncatedValue;
@@ -80,10 +81,6 @@ const HorizontalBarGraph = ({
   type,
 }: IProps) => {
   const { t } = useTranslation();
-
-  const removeTags = (value: string) => {
-    return value.replace(/<[^>]*>/g, "");
-  };
 
   const labels = feedbackOptions.map((option) => removeTags(option.option));
 
