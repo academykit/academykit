@@ -8,7 +8,7 @@
     <IsPackable>false</IsPackable>
     <SpaRoot>..\academykit.client</SpaRoot>
     <SpaProxyServerUrl>https://localhost:44414</SpaProxyServerUrl>
-    <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
+    <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <Version>1.0.5-alpha</Version>
   </PropertyGroup>

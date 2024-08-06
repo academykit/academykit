@@ -62,19 +62,19 @@ The Hangfire Dashboard is available at https://localhost:7042/hangfire
 To add a new migration from the root folder
 
 ```
-dotnet ef migrations add "migration message" --project Infrastructure --startup-project AcademyKit.Server -o Persistence/Migrations
+dotnet ef migrations add "migration message" --project AcademyKit.Server --startup-project AcademyKit.Server -o Infrastructure/Persistence/Migrations
 ```
 
 To remove migrations
 
 ```
-dotnet ef migrations  remove --project Infrastructure --startup-project AcademyKit.Server
+dotnet ef migrations  remove --project AcademyKit.Server --startup-project AcademyKit.Server
 ```
 
 To update database
 
 ```bash
-dotnet ef database update  --project Infrastructure --startup-project AcademyKit.Server
+dotnet ef database update  --project AcademyKit.Server --startup-project AcademyKit.Server
 ```
 
 ## Docker

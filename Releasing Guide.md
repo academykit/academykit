@@ -1,7 +1,7 @@
 # Production Release Guide
 
 1. Verify all changes are good
-1. Update the `<version></version>` tag in the `src/Api/Api.csproj`
+1. Update the `<version></version>` tag in the `AcademyKit.Server/AcademyKit.Server.csproj`
 1. Commit to the `main` branch
 1. Go to github and create a release with the tag `v`+ the version you have added in the project file above in step 2.
 1. Publish the release
