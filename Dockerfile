@@ -2,10 +2,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
-EXPOSE 8080
 EXPOSE 443
-EXPOSE 7042
-EXPOSE 44414
 
 # Set the target architecture environment variable for conditional setups
 ARG TARGETARCH
