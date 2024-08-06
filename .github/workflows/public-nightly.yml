@@ -43,4 +43,4 @@ jobs:
           server: "${{ secrets.CAPROVER_SERVER }}"
           app: "${{ secrets.CAPROVER_APP_NAME }}"
           token: "${{ secrets.CAPROVER_APP_TOKEN }}"
-          image: academykit/academy:latest
+          image: academykit/academy:main
