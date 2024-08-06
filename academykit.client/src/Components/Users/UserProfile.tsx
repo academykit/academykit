@@ -10,6 +10,7 @@ import {
   Text,
 } from "@mantine/core";
 import { IconEdit, IconFileDescription, IconSchool } from "@tabler/icons-react";
+import removeTags from "@utils/sanitize-html";
 import { useProfileAuth } from "@utils/services/authService";
 import { useTranslation } from "react-i18next";
 import {
@@ -81,7 +82,7 @@ const UserProfile = () => {
           <Text size={"md"} style={{ padding: "5px 50px" }} mb={10}>
             {t("email")} : {data?.email}
           </Text>
-          {data && data.bio && data?.bio.replace(/<[^>]+>/g, "").length > 0 && (
+          {data && data.bio && removeTags(data?.bio).length > 0 && (
             <>
               <TextViewer
                 styles={{
