@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/dotnet:0-7.0
+FROM mcr.microsoft.com/devcontainers/dotnet:8.0
 
 ENV PATH $PATH:/home/vscode/.dotnet:/home/vscode/.dotnet/tools
 

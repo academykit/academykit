@@ -24,18 +24,18 @@ mono_crash.*
 
 [Oo]bj
 
-/src/Infrastructure/obj/*
-/src/Infrastructure/bin/*
+/Infrastructure/obj/*
+/Infrastructure/bin/*
 
-/src/Application/obj/*
-/src/Application/bin/*
+/Application/obj/*
+/Application/bin/*
 
-/src/Domain/obj/*
-/src/Domain/bin/*
+/Domain/obj/*
+/Domain/bin/*
 
 
-/src/Api/obj/*
-/src/Api/bin/*
+/AcademyKit.Server/obj/*
+/AcademyKit.Server/bin/*
 
 /tests/Application.IntegrationTests/bin/*
 /tests/Application.IntegrationTests/obj/*

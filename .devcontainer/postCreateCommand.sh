@@ -7,17 +7,12 @@ echo "🛠 cleaning the solution"
 dotnet dev-certs https --trust
 
 echo "restoring the solution file"
-dotnet restore AcademyKit.sln
+dotnet restore academyKit.sln
 
 echo "installing dotnet tools"
 dotnet tool restore
 
-echo "installing client app"
-npm i 
-cd src/Api/ClientApp && npm i && cd ../../../
-
-
 echo "updating the database"
-dotnet ef database update  --project src/Infrastructure --startup-project src/Api
+dotnet ef database update  --project AcademyKit.Server --startup-project AcademyKit.Server
 
 echo "✅ All setup done ✅"

@@ -66,5 +66,8 @@
   "javascript.autoClosingTags": true,
   "editor.minimap.maxColumn": 80,
   "csharp.format.enable": true,
-  "editor.stickyScroll.enabled": true
+  "editor.stickyScroll.enabled": true,
+  "eslint.options": {
+    "configFile": "../academykit.client/.eslintrc.cjs"
+  }
 }
