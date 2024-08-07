@@ -1,10 +1,5 @@
 import SearchBar from "@components/Ui/SearchBar";
-import {
-  Pagination,
-  Select,
-  UnstyledButton,
-  useMantineColorScheme,
-} from "@mantine/core";
+import { Pagination, Select, UnstyledButton } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import {
   IconArrowsSort,
@@ -68,8 +63,6 @@ const withSearchPagination = <P extends object>(
         value: "",
       },
     ]);
-
-    const { colorScheme } = useMantineColorScheme();
 
     const search = params.get("s") ?? null;
     const pageSize = 12;
@@ -145,14 +138,13 @@ const withSearchPagination = <P extends object>(
       const sortValue =
         sort && sort.split(":").length > 0 && sort.split(":")[1];
       const isAscending = sortKey === props.sortKey && sortValue === "1";
-      console.log("cvoloerw", colorScheme);
+
       return (
         <UnstyledButton
           style={{
             display: "flex",
             alignItems: "center",
             fontWeight: "bold",
-            color: colorScheme === "light" ? "#495057" : "",
             fontSize: "inherit",
           }}
           onClick={() => {

@@ -86,6 +86,7 @@ export enum CourseUserStatus {
   NotEnrolled = 3,
   Teacher = 4,
 }
+
 export const CourseUserStatusValue = {
   [CourseUserStatus.Author]: "Author",
   [CourseUserStatus.Enrolled]: "Enrolled",

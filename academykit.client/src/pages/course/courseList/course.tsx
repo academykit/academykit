@@ -5,6 +5,7 @@ import withSearchPagination, {
 import useAuth from "@hooks/useAuth";
 import {
   Box,
+  Button,
   Center,
   Flex,
   Group,
@@ -12,13 +13,16 @@ import {
   rem,
   ScrollArea,
   SegmentedControl,
+  Title,
 } from "@mantine/core";
 import { IconColumns, IconLayoutGrid } from "@tabler/icons-react";
-import { CourseUserStatus, UserRole } from "@utils/enums";
+import { CourseStatus, CourseUserStatus, UserRole } from "@utils/enums";
 import { useCourse } from "@utils/services/courseService";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import CourseList from "./component/List";
+import RoutePath from "@utils/routeConstants";
+import { Link } from "react-router-dom";
 
 const CoursePage = ({
   filterComponent,
@@ -51,18 +55,38 @@ const CoursePage = ({
     },
   ];
 
+  const filterStatusValue = [
+    {
+      value: CourseStatus.Review.toString(),
+      label: t("review"),
+    },
+    {
+      value: CourseStatus.Completed.toString(),
+      label: t("completed"),
+    },
+  ];
+
   return (
     <>
-      <Flex justify={"end"} align={"center"}>
-        {searchComponent(t("search_trainings") as string)}
+      <Box style={{ justifyContent: "space-between", alignItems: "center" }}>
+        <Group justify="space-between">
+          <Title style={{ flexGrow: 2 }}>{t("trainings")}</Title>
+          {role != UserRole.Trainee && (
+            <Link to={RoutePath.courses.create}>
+              <Button ml={5}>{t("new_training")}</Button>
+            </Link>
+          )}
+        </Group>
+      </Box>
+      <Group my={10}>
+        <Box flex={1}>{searchComponent(t("search_trainings") as string)}</Box>
         {filterComponent(
           filterValue,
           t("enrollment_status"),
           "Enrollmentstatus"
         )}
-      </Flex>
+        {filterComponent(filterStatusValue, t("status"), "Status")}
 
-      <Group justify="flex-end" my={30}>
         <SegmentedControl
           value={selectedView}
           onChange={setSelectedView}
