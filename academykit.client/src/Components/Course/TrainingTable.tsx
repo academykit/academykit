@@ -1,4 +1,5 @@
 import DeleteModal from "@components/Ui/DeleteModal";
+import useAuth from "@hooks/useAuth";
 import {
   Anchor,
   Badge,
@@ -18,8 +19,13 @@ import {
   IconTrash,
   IconUsers,
 } from "@tabler/icons-react";
-import { DATE_FORMAT } from "@utils/constants";
-import { CourseLanguage } from "@utils/enums";
+import { color, DATE_FORMAT } from "@utils/constants";
+import {
+  CourseLanguage,
+  CourseStatus,
+  CourseUserStatus,
+  UserRole,
+} from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
 import errorType from "@utils/services/axiosError";
 import { ICourse, useDeleteCourse } from "@utils/services/courseService";
@@ -31,6 +37,7 @@ import { Link } from "react-router-dom";
 const TrainingRow = ({ item, search }: { item: ICourse; search: string }) => {
   const [deleteModal, setDeleteModal] = useToggle();
   const deleteCourse = useDeleteCourse(search);
+  const auth = useAuth();
   const handleDelete = async () => {
     try {
       await deleteCourse.mutateAsync(item.id);
@@ -100,6 +107,17 @@ const TrainingRow = ({ item, search }: { item: ICourse; search: string }) => {
           <Badge color="blue" variant="light">
             {item?.levelName}
           </Badge>
+        </Table.Td>
+        <Table.Td>
+          {((auth?.auth && Number(auth?.auth?.role) <= UserRole.Admin) ||
+            item.userStatus === CourseUserStatus.Author ||
+            item.userStatus === CourseUserStatus.Teacher) && (
+            <>
+              <Badge variant="light" ml={10} color={color(item?.status)}>
+                {t(`${CourseStatus[item?.status]}`)}
+              </Badge>
+            </>
+          )}
         </Table.Td>
         <Table.Td>
           {item?.createdOn && moment(item.createdOn).format(DATE_FORMAT)}
@@ -198,6 +216,7 @@ const TrainingTable = ({
               <Table.Th>{t("group")}</Table.Th>
               <Table.Th>{t("Language")}</Table.Th>
               <Table.Th>{t("level")}</Table.Th>
+              <Table.Th>{t("status")}</Table.Th>
               <Table.Th>{t("created_date")}</Table.Th>
               <Table.Th></Table.Th>
             </Table.Tr>

@@ -6,7 +6,6 @@ import useAuth from "@hooks/useAuth";
 import {
   Box,
   Center,
-  Container,
   Flex,
   Group,
   Loader,
@@ -53,17 +52,15 @@ const CoursePage = ({
   ];
 
   return (
-    <Container fluid>
-      <Container fluid>
-        <Flex justify={"end"} align={"center"}>
-          {searchComponent(t("search_trainings") as string)}
-          {filterComponent(
-            filterValue,
-            t("enrollment_status"),
-            "Enrollmentstatus"
-          )}
-        </Flex>
-      </Container>
+    <>
+      <Flex justify={"end"} align={"center"}>
+        {searchComponent(t("search_trainings") as string)}
+        {filterComponent(
+          filterValue,
+          t("enrollment_status"),
+          "Enrollmentstatus"
+        )}
+      </Flex>
 
       <Group justify="flex-end" my={30}>
         <SegmentedControl
@@ -110,7 +107,7 @@ const CoursePage = ({
       {selectedView === "table" &&
         data &&
         pagination(data.totalPage, data.items.length)}
-    </Container>
+    </>
   );
 };
 

@@ -124,7 +124,7 @@ const PoolTable = ({ pool, search }: { pool: IPool[]; search: string }) => {
         >
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>{t("Pool_name")}</Table.Th>
+              <Table.Th>{t("pool_name")}</Table.Th>
               <Table.Th>{t("Creator")}</Table.Th>
               <Table.Th>{t("questions")}</Table.Th>
               <Table.Th></Table.Th>

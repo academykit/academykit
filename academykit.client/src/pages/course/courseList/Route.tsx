@@ -1,13 +1,5 @@
 import useAuth from "@hooks/useAuth";
-import {
-  Box,
-  Button,
-  Container,
-  Group,
-  Loader,
-  Tabs,
-  Title,
-} from "@mantine/core";
+import { Box, Button, Group, Loader, Tabs, Title } from "@mantine/core";
 import NotFound from "@pages/404";
 import { UserRole } from "@utils/enums";
 import lazyWithRetry from "@utils/lazyImportWithReload";
@@ -55,11 +47,8 @@ const CourseListPageNav = () => {
   const role = auth?.auth?.role ?? UserRole.Trainee;
   const { t } = useTranslation();
   return (
-    <Container fluid>
-      <Box
-        my={10}
-        style={{ justifyContent: "space-between", alignItems: "center" }}
-      >
+    <>
+      <Box style={{ justifyContent: "space-between", alignItems: "center" }}>
         <Group justify="space-between">
           <Title style={{ flexGrow: 2 }}>{t("trainings")}</Title>
           {role != UserRole.Trainee && (
@@ -91,6 +80,6 @@ const CourseListPageNav = () => {
       <Suspense fallback={<Loader />}>
         <Outlet />
       </Suspense>
-    </Container>
+    </>
   );
 };
