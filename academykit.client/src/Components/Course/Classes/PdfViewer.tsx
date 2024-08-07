@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import { Viewer, Worker } from "@react-pdf-viewer/core";
+import { PdfJs, Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
@@ -150,6 +150,11 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
             theme={theme.colorScheme}
             plugins={[defaultLayoutPluginInstance]}
             fileUrl={lesson.documentUrl}
+            transformGetDocumentParams={(options: PdfJs.GetDocumentParams) =>
+              Object.assign({}, options, {
+                isEvalSupported: false,
+              })
+            }
           />
         </div>
       </div>
