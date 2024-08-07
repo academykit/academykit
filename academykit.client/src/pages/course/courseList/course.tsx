@@ -17,18 +17,19 @@ import {
 } from "@mantine/core";
 import { IconColumns, IconLayoutGrid } from "@tabler/icons-react";
 import { CourseStatus, CourseUserStatus, UserRole } from "@utils/enums";
+import RoutePath from "@utils/routeConstants";
 import { useCourse } from "@utils/services/courseService";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import CourseList from "./component/List";
-import RoutePath from "@utils/routeConstants";
 import { Link } from "react-router-dom";
+import CourseList from "./component/List";
 
 const CoursePage = ({
   filterComponent,
   searchParams,
   pagination,
   searchComponent,
+  multiFilterComponent,
 }: IWithSearchPagination) => {
   const { data, isLoading } = useCourse(searchParams);
   const [selectedView, setSelectedView] = useState("list");
@@ -57,8 +58,24 @@ const CoursePage = ({
 
   const filterStatusValue = [
     {
+      value: CourseStatus.Draft.toString(),
+      label: t("Draft"),
+    },
+    {
       value: CourseStatus.Review.toString(),
       label: t("review"),
+    },
+    {
+      value: CourseStatus.Published.toString(),
+      label: t("Published"),
+    },
+    {
+      value: CourseStatus.Archived.toString(),
+      label: t("Archived"),
+    },
+    {
+      value: CourseStatus.Rejected.toString(),
+      label: t("rejected"),
     },
     {
       value: CourseStatus.Completed.toString(),
@@ -80,7 +97,7 @@ const CoursePage = ({
       </Box>
       <Group my={10}>
         <Box flex={1}>{searchComponent(t("search_trainings") as string)}</Box>
-        {filterComponent(
+        {multiFilterComponent(
           filterValue,
           t("enrollment_status"),
           "Enrollmentstatus"
