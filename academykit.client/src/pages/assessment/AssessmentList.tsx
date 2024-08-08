@@ -32,21 +32,6 @@ const AssessmentList = ({
 
   return (
     <>
-      {/* <Flex pb={20} justify={"end"} align={"center"}>
-        {searchComponent(t("search_assessments") as string)}
-        {auth?.auth?.role !== UserRole.Trainee &&
-          filterComponent(
-            [
-              { value: "1", label: t("Draft") },
-              { value: "2", label: t("review") },
-              { value: "3", label: t("Published") },
-              { value: "5", label: t("rejected") },
-            ],
-            t("assessment_status"),
-            "assessmentStatus"
-          )}
-      </Flex> */}
-
       <Group my={10}>
         <Box flex={1}>{searchComponent(t("search_assessments") as string)}</Box>
 
