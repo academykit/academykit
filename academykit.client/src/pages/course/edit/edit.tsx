@@ -80,7 +80,7 @@ const schema = () => {
         schema
           .required(t("end_date_required") as string)
           .typeError(t("end_date_required") as string),
-      otherwise: (schema) => schema.nullable()
+      otherwise: (schema) => schema.nullable(),
     }),
     trainingEligibilities: Yup.array().of(
       Yup.object().shape({
