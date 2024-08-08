@@ -44,18 +44,18 @@ ARG TARGETARCH
 # ENV PUPPETEER_EXECUTABLE_PATH="/usr/bin/google-chrome-stable"
 
 # Build stage for compiling the application
-RUN apt-get update && apt-get install -y curl
+# RUN apt-get update && apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs
 
 WORKDIR /AcademyKit
 
-COPY ["./academykit.client/academykit.client.esproj", "./academykit.client/"]
-COPY ["./AcademyKit.Server/AcademyKit.Server.csproj", "./AcademyKit.Server/"]
-RUN dotnet restore "./AcademyKit.Server/AcademyKit.Server.csproj"
+# COPY ["./academykit.client/academykit.client.esproj", "./academykit.client/"]
+# COPY ["./AcademyKit.Server/AcademyKit.Server.csproj", "./AcademyKit.Server/"]
+# RUN dotnet restore "./AcademyKit.Server/AcademyKit.Server.csproj"
 COPY . .
 
 # Publish the application
-RUN dotnet publish "./AcademyKit.Server/AcademyKit.Server.csproj" --no-restore -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./AcademyKit.Server/AcademyKit.Server.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # Final stage/image
 FROM ghcr.io/academykit/academykit-base:main AS final
