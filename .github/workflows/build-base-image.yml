@@ -7,7 +7,7 @@ on:
       - ".github/workflows/build-base-image.yml"
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: academykit-base
+  IMAGE_NAME: ${{ github.repository }}-base
 
 jobs:
   build-and-push:
