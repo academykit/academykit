@@ -1,5 +1,11 @@
 import { IAuthContext } from "@context/AuthProvider";
-import { Combobox, InputBase, MantineSize, useCombobox } from "@mantine/core";
+import {
+  Combobox,
+  Group,
+  InputBase,
+  MantineSize,
+  useCombobox,
+} from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
 import { UseMutationResult } from "@tanstack/react-query";
 import { UserRole } from "@utils/enums";
@@ -45,7 +51,9 @@ export default function GroupCreatableSelect({
 
   const options = filteredOptions?.map((item) => (
     <Combobox.Option value={item.id} key={item.id}>
-      {item.name}
+      <Group>
+        <span>{item.name}</span>
+      </Group>
     </Combobox.Option>
   ));
 
@@ -58,6 +66,7 @@ export default function GroupCreatableSelect({
     <Combobox
       store={combobox}
       withinPortal={false}
+      size={size}
       // creating new group
       onOptionSubmit={(val, optionProps) => {
         if (val === "$create") {
