@@ -1,7 +1,6 @@
-import { Anchor, Center, Container, Group, Text } from "@mantine/core";
+import { Anchor, Center, Container, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
-import { ColorSchemeToggle } from "./ColorSchemeToggle";
 import classes from "./styles/footer.module.css";
 
 export function AppFooter({ name }: { name: string }) {
@@ -29,10 +28,6 @@ export function AppFooter({ name }: { name: string }) {
             {t('about_us')}
           </Anchor>
         </Group> */}
-        <Group gap={0} justify="flex-end" wrap={"nowrap"}>
-          {/* <LanguageSelector /> */}
-          <ColorSchemeToggle size="lg" />
-        </Group>
       </Container>
       <Center>
         <Text size={"xs"} c={"dimmed"} mr={"md"}>
