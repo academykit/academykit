@@ -490,63 +490,63 @@ const EditCourse = () => {
                         />
                         {form.values.trainingEligibilities[index].eligibility ==
                           TrainingEligibilityEnum.Department.toString() && (
-                          <Select
-                            withAsterisk
-                            disabled={viewMode}
-                            allowDeselect={false}
-                            label={t("department")}
-                            placeholder={t("pick_value") as string}
-                            data={getDepartmentDropdown() ?? []}
-                            {...form.getInputProps(
-                              `trainingEligibilities.${index}.eligibilityId`
-                            )}
-                          />
-                        )}
+                            <Select
+                              withAsterisk
+                              disabled={viewMode}
+                              allowDeselect={false}
+                              label={t("department")}
+                              placeholder={t("pick_value") as string}
+                              data={getDepartmentDropdown() ?? []}
+                              {...form.getInputProps(
+                                `trainingEligibilities.${index}.eligibilityId`
+                              )}
+                            />
+                          )}
 
                         {form.values.trainingEligibilities[index].eligibility ==
                           TrainingEligibilityEnum.Training.toString() && (
-                          <Select
-                            disabled={viewMode}
-                            withAsterisk
-                            allowDeselect={false}
-                            label={t("training")}
-                            placeholder={t("pick_value") as string}
-                            data={getTrainingDropdown() ?? []}
-                            {...form.getInputProps(
-                              `trainingEligibilities.${index}.eligibilityId`
-                            )}
-                          />
-                        )}
+                            <Select
+                              disabled={viewMode}
+                              withAsterisk
+                              allowDeselect={false}
+                              label={t("training")}
+                              placeholder={t("pick_value") as string}
+                              data={getTrainingDropdown() ?? []}
+                              {...form.getInputProps(
+                                `trainingEligibilities.${index}.eligibilityId`
+                              )}
+                            />
+                          )}
 
                         {form.values.trainingEligibilities[index].eligibility ==
                           TrainingEligibilityEnum.Skills.toString() && (
-                          <Select
-                            disabled={viewMode}
-                            withAsterisk
-                            allowDeselect={false}
-                            label={t("skills")}
-                            placeholder={t("pick_value") as string}
-                            data={getSkillDropdown() ?? []}
-                            {...form.getInputProps(
-                              `trainingEligibilities.${index}.eligibilityId`
-                            )}
-                          />
-                        )}
+                            <Select
+                              disabled={viewMode}
+                              withAsterisk
+                              allowDeselect={false}
+                              label={t("skills")}
+                              placeholder={t("pick_value") as string}
+                              data={getSkillDropdown() ?? []}
+                              {...form.getInputProps(
+                                `trainingEligibilities.${index}.eligibilityId`
+                              )}
+                            />
+                          )}
 
                         {form.values.trainingEligibilities[index].eligibility ==
                           TrainingEligibilityEnum.Assessment.toString() && (
-                          <Select
-                            disabled={viewMode}
-                            withAsterisk
-                            allowDeselect={false}
-                            label={t("assessment")}
-                            placeholder={t("pick_value") as string}
-                            data={getAssessmentDropdown() ?? []}
-                            {...form.getInputProps(
-                              `trainingEligibilities.${index}.eligibilityId`
-                            )}
-                          />
-                        )}
+                            <Select
+                              disabled={viewMode}
+                              withAsterisk
+                              allowDeselect={false}
+                              label={t("assessment")}
+                              placeholder={t("pick_value") as string}
+                              data={getAssessmentDropdown() ?? []}
+                              {...form.getInputProps(
+                                `trainingEligibilities.${index}.eligibilityId`
+                              )}
+                            />
+                          )}
 
                         {!viewMode && (
                           <ActionIcon
