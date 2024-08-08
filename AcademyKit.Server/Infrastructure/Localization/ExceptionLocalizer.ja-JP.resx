@@ -623,7 +623,7 @@
     <value>視聴履歴を更新しようとしたときにエラーが発生しました</value>
   </data>
   <data name="ExamAlreadyFinished" xml:space="preserve">
-    <value>試験はもう終わった</value>
+    <value>"試験はすでに終了しました。</value>
   </data>
   <data name="ExamAlreadySubmitted" xml:space="preserve">
     <value>試験はすでに提出済みです</value>
@@ -1064,5 +1064,8 @@
   </data>
   <data name="AssessmentCannotBeDeleted" xml:space="preserve">
     <value>評価に提出物が含まれているため、削除できません</value>
+  </data>
+  <data name="AssessmentPublishedSuccessfully" xml:space="preserve">
+    <value>評価が無事に公開されました。</value>
   </data>
 </root>

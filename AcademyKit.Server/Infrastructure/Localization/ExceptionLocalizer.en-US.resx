@@ -1063,6 +1063,9 @@ recorded cannot be deleted.</value>
     <value>Zoom License Email is already used.</value>
   </data>
   <data name="AssessmentCannotBeDeleted" xml:space="preserve">
-    <value>Assessment Conatins Submission so Cannot be Deleted</value>
+    <value>Assessment Conatins Submission so Cannot be Deleted.</value>
+  </data>
+  <data name="AssessmentPublishedSuccessfully" xml:space="preserve">
+    <value>Assessment published successfully.</value>
   </data>
 </root>

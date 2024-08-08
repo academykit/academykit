@@ -43,43 +43,45 @@ const schema = () => {
     assessmentQuestionOptions: Yup.array()
       .when(["type"], {
         is: QuestionType.MultipleChoice.toString(),
-        then: Yup.array()
-          .min(1, t("option_more_than_one") as string)
-          .test(
-            "test",
-            t("multiple_choice_option_atleast") as string,
-            function (value: any) {
-              const a = value?.filter((x: any) => x.isCorrect).length > 0;
-              return a;
-            }
-          )
-          .of(
-            Yup.object().shape({
-              option: Yup.string()
-                .trim()
-                .required(t("option_required") as string),
-            })
-          ),
+        then: (schema) =>
+          schema
+            .min(1, t("option_more_than_one") as string)
+            .test(
+              "test",
+              t("multiple_choice_option_atleast") as string,
+              function (value: any) {
+                const a = value?.filter((x: any) => x.isCorrect).length > 0;
+                return a;
+              }
+            )
+            .of(
+              Yup.object().shape({
+                option: Yup.string()
+                  .trim()
+                  .required(t("option_required") as string),
+              })
+            ),
       })
       .when(["type"], {
         is: QuestionType.SingleChoice.toString(),
-        then: Yup.array()
-          .test(
-            t("test"),
-            t("single_choice_option_atleast") as string,
-            function (value: any) {
-              const length: number =
-                value && value.filter((e: any) => e?.isCorrect).length;
-              return length === 1;
-            }
-          )
-          .of(
-            Yup.object().shape({
-              option: Yup.string()
-                .trim()
-                .required(t("option_required") as string),
-            })
-          ),
+        then: (schema) =>
+          schema
+            .test(
+              t("test"),
+              t("single_choice_option_atleast") as string,
+              function (value: any) {
+                const length: number =
+                  value && value.filter((e: any) => e?.isCorrect).length;
+                return length === 1;
+              }
+            )
+            .of(
+              Yup.object().shape({
+                option: Yup.string()
+                  .trim()
+                  .required(t("option_required") as string),
+              })
+            ),
       }),
   });
 };
