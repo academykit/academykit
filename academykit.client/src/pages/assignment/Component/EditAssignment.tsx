@@ -41,7 +41,7 @@ const schema = () => {
     answers: Yup.array()
       .when(["type"], {
         is: QuestionType.MultipleChoice.toString(),
-        then: Yup.array()
+        then: (schema) => schema
           .min(2, t("more_option_required") as string)
           .test(
             t("test"),
@@ -69,7 +69,7 @@ const schema = () => {
       })
       .when(["type"], {
         is: QuestionType.SingleChoice.toString(),
-        then: Yup.array()
+        then: (schema) => schema
           .min(2, t("more_option_required") as string)
           .test(
             t("test"),
@@ -229,79 +229,79 @@ const EditAssignment = ({
             ></Select>
             {(form.values.type === QuestionType.MultipleChoice.toString() ||
               form.values.type === QuestionType.SingleChoice.toString()) && (
-              <Box>
-                <Text mt={20}>{t("options")}</Text>
-                {form.values.answers &&
-                  form.values.answers.map((_x, i) => (
-                    <div
-                      key={i}
-                      style={{ marginBottom: "30px", marginTop: "10px" }}
-                    >
-                      <Flex gap={"md"} align="center">
-                        {QuestionType.MultipleChoice.toString() ===
-                        form.values.type ? (
-                          <Checkbox
-                            checked={
-                              form?.values?.answers &&
-                              form?.values?.answers[i].isCorrect
-                            }
-                            mr={10}
-                            {...form.getInputProps(`answers.${i}.isCorrect`)}
-                            name=""
-                          ></Checkbox>
-                        ) : (
-                          <Radio
-                            mr={10}
-                            onChange={() => onChangeRadioType(i)}
-                            checked={
-                              form?.values?.answers &&
-                              form?.values?.answers[i].isCorrect
-                            }
+                <Box>
+                  <Text mt={20}>{t("options")}</Text>
+                  {form.values.answers &&
+                    form.values.answers.map((_x, i) => (
+                      <div
+                        key={i}
+                        style={{ marginBottom: "30px", marginTop: "10px" }}
+                      >
+                        <Flex gap={"md"} align="center">
+                          {QuestionType.MultipleChoice.toString() ===
+                            form.values.type ? (
+                            <Checkbox
+                              checked={
+                                form?.values?.answers &&
+                                form?.values?.answers[i].isCorrect
+                              }
+                              mr={10}
+                              {...form.getInputProps(`answers.${i}.isCorrect`)}
+                              name=""
+                            ></Checkbox>
+                          ) : (
+                            <Radio
+                              mr={10}
+                              onChange={() => onChangeRadioType(i)}
+                              checked={
+                                form?.values?.answers &&
+                                form?.values?.answers[i].isCorrect
+                              }
                             // {...form.getInputProps(`answers.${i}.isCorrect`)}
-                          ></Radio>
-                        )}
-                        <div style={{ width: "80%" }}>
-                          <RichTextEditor
-                            // style={{width:100}}
-                            placeholder={t("option_placeholder") as string}
-                            label={`answers.${i}.option`}
-                            formContext={useFormContext}
-                          ></RichTextEditor>
-                        </div>
-                        <UnstyledButton
-                          ml={10}
-                          onClick={() => {
-                            form.insertListItem(
-                              "answers",
-                              {
-                                option: "",
-                                isCorrect: false,
-                              },
-                              i + 1
-                            );
-                          }}
-                        >
-                          <IconPlus color="green" />
-                        </UnstyledButton>
-                        {form.values.answers &&
-                          form.values.answers.length > 1 && (
-                            <UnstyledButton
-                              ml={10}
-                              onClick={() => {
-                                form.removeListItem("answers", i);
-                              }}
-                            >
-                              <IconTrash color="red" />
-                            </UnstyledButton>
+                            ></Radio>
                           )}
-                      </Flex>
-                    </div>
-                  ))}
-                {typeof form.errors[`answers`] === "string" && (
-                  <span style={{ color: "red" }}>{form.errors[`answers`]}</span>
-                )}
-              </Box>
-            )}
+                          <div style={{ width: "80%" }}>
+                            <RichTextEditor
+                              // style={{width:100}}
+                              placeholder={t("option_placeholder") as string}
+                              label={`answers.${i}.option`}
+                              formContext={useFormContext}
+                            ></RichTextEditor>
+                          </div>
+                          <UnstyledButton
+                            ml={10}
+                            onClick={() => {
+                              form.insertListItem(
+                                "answers",
+                                {
+                                  option: "",
+                                  isCorrect: false,
+                                },
+                                i + 1
+                              );
+                            }}
+                          >
+                            <IconPlus color="green" />
+                          </UnstyledButton>
+                          {form.values.answers &&
+                            form.values.answers.length > 1 && (
+                              <UnstyledButton
+                                ml={10}
+                                onClick={() => {
+                                  form.removeListItem("answers", i);
+                                }}
+                              >
+                                <IconTrash color="red" />
+                              </UnstyledButton>
+                            )}
+                        </Flex>
+                      </div>
+                    ))}
+                  {typeof form.errors[`answers`] === "string" && (
+                    <span style={{ color: "red" }}>{form.errors[`answers`]}</span>
+                  )}
+                </Box>
+              )}
             <Group mt={20}>
               <Button
                 size="sm"

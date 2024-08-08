@@ -76,10 +76,11 @@ const schema = () => {
     isUnlimitedEndDate: Yup.boolean(),
     endDate: Yup.string().when("isUnlimitedEndDate", {
       is: false,
-      then: Yup.string()
-        .required(t("end_date_required") as string)
-        .typeError(t("end_date_required") as string),
-      otherwise: Yup.string().nullable(),
+      then: (schema) =>
+        schema
+          .required(t("end_date_required") as string)
+          .typeError(t("end_date_required") as string),
+      otherwise: (schema) => schema.nullable()
     }),
     trainingEligibilities: Yup.array().of(
       Yup.object().shape({
@@ -489,63 +490,63 @@ const EditCourse = () => {
                         />
                         {form.values.trainingEligibilities[index].eligibility ==
                           TrainingEligibilityEnum.Department.toString() && (
-                          <Select
-                            withAsterisk
-                            disabled={viewMode}
-                            allowDeselect={false}
-                            label={t("department")}
-                            placeholder={t("pick_value") as string}
-                            data={getDepartmentDropdown() ?? []}
-                            {...form.getInputProps(
-                              `trainingEligibilities.${index}.eligibilityId`
-                            )}
-                          />
-                        )}
+                            <Select
+                              withAsterisk
+                              disabled={viewMode}
+                              allowDeselect={false}
+                              label={t("department")}
+                              placeholder={t("pick_value") as string}
+                              data={getDepartmentDropdown() ?? []}
+                              {...form.getInputProps(
+                                `trainingEligibilities.${index}.eligibilityId`
+                              )}
+                            />
+                          )}
 
                         {form.values.trainingEligibilities[index].eligibility ==
                           TrainingEligibilityEnum.Training.toString() && (
-                          <Select
-                            disabled={viewMode}
-                            withAsterisk
-                            allowDeselect={false}
-                            label={t("training")}
-                            placeholder={t("pick_value") as string}
-                            data={getTrainingDropdown() ?? []}
-                            {...form.getInputProps(
-                              `trainingEligibilities.${index}.eligibilityId`
-                            )}
-                          />
-                        )}
+                            <Select
+                              disabled={viewMode}
+                              withAsterisk
+                              allowDeselect={false}
+                              label={t("training")}
+                              placeholder={t("pick_value") as string}
+                              data={getTrainingDropdown() ?? []}
+                              {...form.getInputProps(
+                                `trainingEligibilities.${index}.eligibilityId`
+                              )}
+                            />
+                          )}
 
                         {form.values.trainingEligibilities[index].eligibility ==
                           TrainingEligibilityEnum.Skills.toString() && (
-                          <Select
-                            disabled={viewMode}
-                            withAsterisk
-                            allowDeselect={false}
-                            label={t("skills")}
-                            placeholder={t("pick_value") as string}
-                            data={getSkillDropdown() ?? []}
-                            {...form.getInputProps(
-                              `trainingEligibilities.${index}.eligibilityId`
-                            )}
-                          />
-                        )}
+                            <Select
+                              disabled={viewMode}
+                              withAsterisk
+                              allowDeselect={false}
+                              label={t("skills")}
+                              placeholder={t("pick_value") as string}
+                              data={getSkillDropdown() ?? []}
+                              {...form.getInputProps(
+                                `trainingEligibilities.${index}.eligibilityId`
+                              )}
+                            />
+                          )}
 
                         {form.values.trainingEligibilities[index].eligibility ==
                           TrainingEligibilityEnum.Assessment.toString() && (
-                          <Select
-                            disabled={viewMode}
-                            withAsterisk
-                            allowDeselect={false}
-                            label={t("assessment")}
-                            placeholder={t("pick_value") as string}
-                            data={getAssessmentDropdown() ?? []}
-                            {...form.getInputProps(
-                              `trainingEligibilities.${index}.eligibilityId`
-                            )}
-                          />
-                        )}
+                            <Select
+                              disabled={viewMode}
+                              withAsterisk
+                              allowDeselect={false}
+                              label={t("assessment")}
+                              placeholder={t("pick_value") as string}
+                              data={getAssessmentDropdown() ?? []}
+                              {...form.getInputProps(
+                                `trainingEligibilities.${index}.eligibilityId`
+                              )}
+                            />
+                          )}
 
                         {!viewMode && (
                           <ActionIcon
