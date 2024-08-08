@@ -1,73 +1,73 @@
 # Use multi-stage builds to separate building and runtime environments
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
 
 # Set the target architecture environment variable for conditional setups
 ARG TARGETARCH
 
 # Update and install base packages, including Node.js and dependencies for Puppeteer
-RUN apt-get update && apt-get install -y \
-    curl \
-    wget \
-    gnupg \
-    libpng-dev \
-    libjpeg-dev \
-    libxi6 \
-    build-essential \
-    libgl1-mesa-glx \
-    ffmpeg \
-    libxss1 \
-    dbus \
-    dbus-x11 \
-    fonts-ipafont-gothic \
-    fonts-wqy-zenhei \
-    fonts-thai-tlwg \
-    fonts-khmeros \
-    fonts-kacst \
-    fonts-freefont-ttf \
-    --no-install-recommends && \
-    curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs && \
-    rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -y \
+#     curl \
+#     wget \
+#     gnupg \
+#     libpng-dev \
+#     libjpeg-dev \
+#     libxi6 \
+#     build-essential \
+#     libgl1-mesa-glx \
+#     ffmpeg \
+#     libxss1 \
+#     dbus \
+#     dbus-x11 \
+#     fonts-ipafont-gothic \
+#     fonts-wqy-zenhei \
+#     fonts-thai-tlwg \
+#     fonts-khmeros \
+#     fonts-kacst \
+#     fonts-freefont-ttf \
+#     --no-install-recommends && \
+#     curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
+#     apt-get install -y nodejs && \
+#     rm -rf /var/lib/apt/lists/*
 
 # Setup Google Chrome repository based on architecture
-RUN if [ "$TARGETARCH" = "amd64" ]; then \
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg && \
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list && \
-    apt-get update && \
-    apt-get install -y google-chrome-stable --no-install-recommends; \
-    fi
+# RUN if [ "$TARGETARCH" = "amd64" ]; then \
+#     wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg && \
+#     echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list && \
+#     apt-get update && \
+#     apt-get install -y google-chrome-stable --no-install-recommends; \
+#     fi
 
-# Start D-Bus to support Google Chrome
-RUN service dbus start
+# # Start D-Bus to support Google Chrome
+# RUN service dbus start
 
-# Set Puppeteer's executable path environment variable
-ENV PUPPETEER_EXECUTABLE_PATH="/usr/bin/google-chrome-stable"
+# # Set Puppeteer's executable path environment variable
+# ENV PUPPETEER_EXECUTABLE_PATH="/usr/bin/google-chrome-stable"
 
 # Build stage for compiling the application
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-RUN apt-get update
-RUN apt-get install -y curl
-RUN apt-get install -y libpng-dev libjpeg-dev curl libxi6 build-essential libgl1-mesa-glx
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
-RUN apt-get install -y nodejs
+RUN apt-get update && apt-get install -y curl
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs
 
 WORKDIR /AcademyKit
+
 COPY ["./academykit.client/academykit.client.esproj", "./academykit.client/"]
 COPY ["./AcademyKit.Server/AcademyKit.Server.csproj", "./AcademyKit.Server/"]
 RUN dotnet restore "./AcademyKit.Server/AcademyKit.Server.csproj"
 COPY . .
-RUN dotnet build "./AcademyKit.Server/AcademyKit.Server.csproj" -c Release -o /app/build
+# RUN dotnet build "./AcademyKit.Server/AcademyKit.Server.csproj" -c Release -o /app/build
 
 # Publish the application
-FROM build AS publish
-RUN dotnet publish "./AcademyKit.Server/AcademyKit.Server.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./AcademyKit.Server/AcademyKit.Server.csproj" --no-restore -c Release -o /app/publish /p:UseAppHost=false
+
 
 # Final stage/image
-FROM base AS final
+FROM ghcr.io/yourusername/base-image-with-dependencies:latest AS final
+
 WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "AcademyKit.Server.dll"]
