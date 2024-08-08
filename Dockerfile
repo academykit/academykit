@@ -1,7 +1,6 @@
 # Use multi-stage builds to separate building and runtime environments
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-
 # Set the target architecture environment variable for conditional setups
 ARG TARGETARCH
 
@@ -45,8 +44,6 @@ ARG TARGETARCH
 # ENV PUPPETEER_EXECUTABLE_PATH="/usr/bin/google-chrome-stable"
 
 # Build stage for compiling the application
-# FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-
 RUN apt-get update && apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs
 
@@ -56,11 +53,9 @@ COPY ["./academykit.client/academykit.client.esproj", "./academykit.client/"]
 COPY ["./AcademyKit.Server/AcademyKit.Server.csproj", "./AcademyKit.Server/"]
 RUN dotnet restore "./AcademyKit.Server/AcademyKit.Server.csproj"
 COPY . .
-# RUN dotnet build "./AcademyKit.Server/AcademyKit.Server.csproj" -c Release -o /app/build
 
 # Publish the application
 RUN dotnet publish "./AcademyKit.Server/AcademyKit.Server.csproj" --no-restore -c Release -o /app/publish /p:UseAppHost=false
-
 
 # Final stage/image
 FROM ghcr.io/academykit/academykit-base:main AS final
@@ -69,5 +64,5 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "AcademyKit.Server.dll"]
