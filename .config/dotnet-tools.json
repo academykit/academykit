@@ -4,23 +4,12 @@
   "tools": {
     "csharpier": {
       "version": "0.28.2",
-      "commands": [
-        "dotnet-csharpier"
-      ],
+      "commands": ["dotnet-csharpier"],
       "rollForward": false
     },
     "dotnet-ef": {
       "version": "8.0.7",
-      "commands": [
-        "dotnet-ef"
-      ],
-      "rollForward": false
-    },
-    "dotnet-subset": {
-      "version": "0.3.2",
-      "commands": [
-        "dotnet-subset"
-      ],
+      "commands": ["dotnet-ef"],
       "rollForward": false
     }
   }
