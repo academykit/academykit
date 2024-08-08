@@ -123,7 +123,8 @@ const GeneralSettings = () => {
             marginLeft: "0px",
           }}
         >
-          {t("company_logo")} <sup style={{ color: "red" }}>*</sup>
+          {t("company_logo")}{" "}
+          <span style={{ color: "red", fontSize: "20px" }}>*</span>
           <ThumbnailEditor
             formContext={useFormContext}
             label={t("image") as string}

@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Center,
-  Container,
   Drawer,
   FocusTrap,
   Group,
@@ -70,11 +69,8 @@ const MCQPool = ({
     }
   };
   return (
-    <Container fluid>
-      <Group
-        style={{ justifyContent: "space-between", alignItems: "center" }}
-        mb={15}
-      >
+    <>
+      <Group style={{ justifyContent: "space-between", alignItems: "center" }}>
         <Title>{t("mcq_pools")}</Title>
 
         <Button onClick={open}>{t("create_pool")}</Button>
@@ -105,10 +101,11 @@ const MCQPool = ({
           </form>
         </Box>
       </Drawer>
-      <Box>{searchComponent(t("search_pools") as string)}</Box>
+
       {pools.isLoading && <Loader />}
 
-      <Group justify="flex-end" my={30}>
+      <Group my={10}>
+        <Box flex={1}>{searchComponent(t("search_pools") as string)}</Box>
         <SegmentedControl
           value={selectedView}
           onChange={setSelectedView}
@@ -152,7 +149,7 @@ const MCQPool = ({
         </ScrollArea>
       )}
       {pools.data && pagination(pools.data.totalPage, pools.data.items.length)}
-    </Container>
+    </>
   );
 };
 

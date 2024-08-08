@@ -1,5 +1,5 @@
 import SearchBar from "@components/Ui/SearchBar";
-import { Pagination, Select, UnstyledButton } from "@mantine/core";
+import { MultiSelect, Pagination, Select, UnstyledButton } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import {
   IconArrowsSort,
@@ -33,6 +33,14 @@ export interface IWithSearchPagination {
       }[]
     >
   >;
+  multiFilterComponent: (
+    data: {
+      value: string;
+      label: string;
+    }[],
+    placeholder: string,
+    key: string
+  ) => JSX.Element;
   startDateFilterComponent: (
     placeholder: string,
     key: string,
@@ -68,6 +76,10 @@ const withSearchPagination = <P extends object>(
     const pageSize = 12;
     const [itemLength, setItemLength] = useState<number>();
     const [filterValue, setFilterValue] = useState<string>("");
+
+    const [multiFilteredValue, setMultiFilteredValue] = useState<string[]>([]);
+    const [multiFilteredKey, setMultiFilteredKey] = useState<string>("");
+
     const [currentPage, setCurrentPage] = useState(
       parseInt(params.get("p") ?? "1")
     );
@@ -97,6 +109,7 @@ const withSearchPagination = <P extends object>(
         sortBy: by,
         sortType: type,
         [filterKey]: filterValue,
+        [multiFilteredKey]: multiFilteredValue,
         [startDateKey]: startDate,
         [endDateKey]: endDate,
       });
@@ -120,6 +133,7 @@ const withSearchPagination = <P extends object>(
       pageSize,
       sort,
       filterValue,
+      multiFilteredValue,
       initialSearch,
       startDate,
       endDate,
@@ -145,7 +159,6 @@ const withSearchPagination = <P extends object>(
             display: "flex",
             alignItems: "center",
             fontWeight: "bold",
-            color: "#495057",
             fontSize: "inherit",
           }}
           onClick={() => {
@@ -183,6 +196,28 @@ const withSearchPagination = <P extends object>(
           onChange={(value) => {
             setFilterValue(() => value ?? "");
             setFilterKey(() => key);
+          }}
+        />
+      );
+    };
+
+    const multiFilterComponent = (
+      data: { value: string; label: string }[],
+      placeholder: string,
+      key: string
+    ) => {
+      setMultiFilteredKey(key);
+      return (
+        <MultiSelect
+          placeholder={placeholder}
+          ml={5}
+          clearable
+          styles={{ input: { height: "20px", overflow: "hidden" } }}
+          maw={"184px"}
+          value={multiFilteredValue}
+          data={data}
+          onChange={(value) => {
+            setMultiFilteredValue(() => value ?? []);
           }}
         />
       );
@@ -259,6 +294,7 @@ const withSearchPagination = <P extends object>(
       <Component
         {...(props as P)}
         filterComponent={filterComponent}
+        multiFilterComponent={multiFilterComponent}
         searchParams={qs}
         pagination={pagination}
         searchComponent={searchComponent}

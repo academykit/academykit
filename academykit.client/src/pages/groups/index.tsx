@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Center,
-  Container,
   Drawer,
   Group,
   Loader,
@@ -40,14 +39,12 @@ const GroupsPage = ({
   const [selectedView, setSelectedView] = useState("list");
 
   return (
-    <Container fluid>
-      <Box my={10}>
+    <>
+      <Box>
         <Group
           style={{ justifyContent: "space-between", alignItems: "center" }}
-          mb={15}
         >
           <Title>{t("groups")}</Title>
-
           {auth?.auth && Number(auth.auth.role) <= UserRole.Admin && (
             <Button onClick={open}>{t("add_group")}</Button>
           )}
@@ -63,33 +60,38 @@ const GroupsPage = ({
         </Drawer>
 
         <div>
-          <Box>{searchComponent(t("search_groups") as string)}</Box>
+          <Group my={10}>
+            <Box flex={1}>{searchComponent(t("search_groups") as string)}</Box>
+            <SegmentedControl
+              value={selectedView}
+              onChange={setSelectedView}
+              data={[
+                {
+                  value: "list",
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconLayoutGrid
+                        style={{ width: rem(20), height: rem(20) }}
+                      />
+                    </Center>
+                  ),
+                },
+                {
+                  value: "table",
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconColumns
+                        style={{ width: rem(20), height: rem(20) }}
+                      />
+                    </Center>
+                  ),
+                },
+              ]}
+            />
+          </Group>
         </div>
       </Box>
-      <Group justify="flex-end" my={30}>
-        <SegmentedControl
-          value={selectedView}
-          onChange={setSelectedView}
-          data={[
-            {
-              value: "list",
-              label: (
-                <Center style={{ gap: 10 }}>
-                  <IconLayoutGrid style={{ width: rem(20), height: rem(20) }} />
-                </Center>
-              ),
-            },
-            {
-              value: "table",
-              label: (
-                <Center style={{ gap: 10 }}>
-                  <IconColumns style={{ width: rem(20), height: rem(20) }} />
-                </Center>
-              ),
-            },
-          ]}
-        />
-      </Group>
+
       <ScrollArea>
         {data?.data &&
           (data.data.totalCount > 0 ? (
@@ -114,7 +116,7 @@ const GroupsPage = ({
       {selectedView === "table" &&
         data &&
         pagination(data.data.totalPage, data.data.items.length)}
-    </Container>
+    </>
   );
 };
 

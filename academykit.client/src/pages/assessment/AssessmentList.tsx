@@ -5,7 +5,6 @@ import useAuth from "@hooks/useAuth";
 import {
   Box,
   Center,
-  Flex,
   Group,
   rem,
   ScrollArea,
@@ -33,8 +32,9 @@ const AssessmentList = ({
 
   return (
     <>
-      <Flex pb={20} justify={"end"} align={"center"}>
-        {searchComponent(t("search_assessments") as string)}
+      <Group my={10}>
+        <Box flex={1}>{searchComponent(t("search_assessments") as string)}</Box>
+
         {auth?.auth?.role !== UserRole.Trainee &&
           filterComponent(
             [
@@ -46,9 +46,6 @@ const AssessmentList = ({
             t("assessment_status"),
             "assessmentStatus"
           )}
-      </Flex>
-
-      <Group justify="flex-end" my={30}>
         <SegmentedControl
           value={selectedView}
           onChange={setSelectedView}

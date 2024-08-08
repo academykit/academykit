@@ -1,5 +1,5 @@
 import useAuth from "@hooks/useAuth";
-import { Box, Button, Container, Group, Loader, Title } from "@mantine/core";
+import { Box, Button, Group, Loader, Title } from "@mantine/core";
 import { UserRole } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
 import { Suspense } from "react";
@@ -12,26 +12,21 @@ const AssessmentLayout = () => {
   const role = auth?.auth?.role ?? UserRole.Trainee;
   return (
     <>
-      <Container fluid>
-        <Box
-          my={10}
+      <Box>
+        <Group
           style={{ justifyContent: "space-between", alignItems: "center" }}
         >
-          <Group justify="space-between">
-            <Title style={{ flexGrow: 2 }}>{t("assessments")}</Title>
-            {role <= UserRole.Trainer && (
-              <Link to={RoutePath.assessment.create}>
-                <Button my={10} ml={5}>
-                  {t("new_assessment")}
-                </Button>
-              </Link>
-            )}
-          </Group>
-        </Box>
-        <Suspense fallback={<Loader />}>
-          <Outlet />
-        </Suspense>
-      </Container>
+          <Title style={{ flexGrow: 2 }}>{t("assessments")}</Title>
+          {role <= UserRole.Trainer && (
+            <Link to={RoutePath.assessment.create}>
+              <Button>{t("new_assessment")}</Button>
+            </Link>
+          )}
+        </Group>
+      </Box>
+      <Suspense fallback={<Loader />}>
+        <Outlet />
+      </Suspense>
     </>
   );
 };
