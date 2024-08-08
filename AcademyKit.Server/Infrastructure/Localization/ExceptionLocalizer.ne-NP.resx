@@ -1063,4 +1063,7 @@
   <data name="AssessmentCannotBeDeleted" xml:space="preserve">
     <value>मूल्याङ्कनले सबमिशन समावेश गर्दछ त्यसैले मेट्न सकिदैन</value>
   </data>
+  <data name="AssessmentPublishedSuccessfully" xml:space="preserve">
+    <value>मूल्यांकन सफलतापूर्वक प्रकाशित गरियो।</value>
+  </data>
 </root>
