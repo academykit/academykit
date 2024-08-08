@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <IsPackable>false</IsPackable>
     <SpaRoot>..\academykit.client</SpaRoot>
     <SpaProxyServerUrl>https://localhost:44414</SpaProxyServerUrl>
