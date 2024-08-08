@@ -149,7 +149,7 @@ const TextEditor = ({
         </RichTextEditor.Toolbar>
         <RichTextEditor.Content />
       </RichTextEditor>
-      <Text c="red" size={"md"} mt={5}>
+      <Text c="red" size={"xs"} mt={3}>
         {form ? form.errors[label ?? "description"] : error}
       </Text>
     </Box>

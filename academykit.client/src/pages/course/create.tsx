@@ -77,10 +77,11 @@ const schema = () => {
     isUnlimitedEndDate: Yup.boolean(),
     endDate: Yup.string().when("isUnlimitedEndDate", {
       is: false,
-      then: Yup.string()
-        .required(t("end_date_required") as string)
-        .typeError(t("end_date_required") as string),
-      otherwise: Yup.string().nullable(),
+      then: (schema) =>
+        schema
+          .required(t("end_date_required") as string)
+          .typeError(t("end_date_required") as string),
+      otherwise: (schema) => schema.nullable(),
     }),
     trainingEligibilities: Yup.array().of(
       Yup.object().shape({

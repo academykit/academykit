@@ -78,6 +78,15 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
           },
         }),
       },
+      PasswordInput: {
+        styles: () => ({
+          required: {
+            fontWeight: "bold",
+            fontSize: "20px",
+            verticalAlign: "middle",
+          },
+        }),
+      },
       MultiSelect: {
         styles: () => ({
           required: {
