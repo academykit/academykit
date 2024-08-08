@@ -63,7 +63,7 @@ RUN dotnet publish "./AcademyKit.Server/AcademyKit.Server.csproj" --no-restore -
 
 
 # Final stage/image
-FROM ghcr.io/yourusername/base-image-with-dependencies:latest AS final
+FROM ghcr.io/academykit/academykit-base:main AS final
 
 WORKDIR /app
 EXPOSE 80
