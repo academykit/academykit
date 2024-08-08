@@ -8,7 +8,7 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import {
   useUpdateZoomSetting,
@@ -18,6 +18,7 @@ import errorType from "@utils/services/axiosError";
 import { TFunction } from "i18next";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import * as Yup from "yup";
 
 const mapData = {
   sdkKey: "zoom_sdk_key",
@@ -70,6 +71,22 @@ const ZoomSettings = () => {
   const [edit, setEdit] = useState(true);
   const { t } = useTranslation();
 
+  const schema = () => {
+    return Yup.object().shape({
+      oAuthAccountId: Yup.string().required(
+        t("oAuth_accountId_required") as string
+      ),
+      oAuthClientId: Yup.string().required(
+        t("oAuth_clientId_required") as string
+      ),
+      oAuthClientSecret: Yup.string().required(
+        t("oAuth_clientSecret_required") as string
+      ),
+      sdkKey: Yup.string().required(t("sdk_key_required") as string),
+      sdkSecret: Yup.string().required(t("sdk_secret_required") as string),
+    });
+  };
+
   const form = useForm({
     initialValues: {
       oAuthAccountId: zoom.data?.data?.oAuthAccountId || "",
@@ -81,6 +98,7 @@ const ZoomSettings = () => {
       webhookSecret: zoom.data?.data?.webhookSecret || "",
       // webhookVerification: zoom.data?.data?.webhookVerificationKey || '',
     },
+    validate: yupResolver(schema()),
   });
 
   useEffect(() => {
@@ -126,6 +144,7 @@ const ZoomSettings = () => {
           >
             <TextInput
               label={t("oAuth_accountId")}
+              withAsterisk
               name="oAuthAccountId"
               placeholder={t("enter_oAuth_accountId") as string}
               mb={10}
@@ -133,6 +152,7 @@ const ZoomSettings = () => {
             />
             <TextInput
               label={t("oAuth_clientId")}
+              withAsterisk
               name="oAuthClientId"
               placeholder={t("enter_oAuth_clientId") as string}
               mb={10}
@@ -140,6 +160,7 @@ const ZoomSettings = () => {
             />
             <TextInput
               label={t("oAuth_clientSecret")}
+              withAsterisk
               name="oAuthClientSecret"
               placeholder={t("enter_oAuth_clientSecret") as string}
               mb={10}
@@ -147,6 +168,7 @@ const ZoomSettings = () => {
             />
             <TextInput
               label={t("zoom_sdk_key")}
+              withAsterisk
               name="sdkKey"
               placeholder={t("enter_zoom_sdk_key") as string}
               mb={10}
@@ -154,6 +176,7 @@ const ZoomSettings = () => {
             />
             <TextInput
               label={t("zoom_sdk_secret")}
+              withAsterisk
               name="sdkSecret"
               placeholder={t("enter_zoom_sdk_secret") as string}
               mb={10}

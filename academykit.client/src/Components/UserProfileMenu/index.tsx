@@ -1,9 +1,19 @@
 import useAuth from "@hooks/useAuth";
-import { Avatar, Box, Divider, Group, Menu, Text } from "@mantine/core";
+import {
+  Avatar,
+  Box,
+  Divider,
+  Group,
+  Menu,
+  Text,
+  useMantineColorScheme,
+} from "@mantine/core";
 import {
   IconLock,
   IconLogout,
+  IconMoonStars,
   IconPencil,
+  IconSun,
   IconUser,
 } from "@tabler/icons-react";
 import { UserRole } from "@utils/enums";
@@ -25,6 +35,7 @@ const UserProfileMenu: FC<Props> = ({
 }) => {
   const auth = useAuth();
   const { t } = useTranslation();
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
   return (
     <Group justify="center">
@@ -80,7 +91,6 @@ const UserProfileMenu: FC<Props> = ({
           >
             <Text size={size}>{t("editProfile")}</Text>
           </Menu.Item>
-
           <Menu.Item
             component={Link}
             to={`/settings/account`}
@@ -88,6 +98,19 @@ const UserProfileMenu: FC<Props> = ({
             leftSection={<IconLock size={14} />}
           >
             <Text size={size}>{t("Account")}</Text>
+          </Menu.Item>
+          <Menu.Item
+            onClick={() => toggleColorScheme()}
+            style={{ width: "100%" }}
+            leftSection={
+              colorScheme === "dark" ? (
+                <IconSun size={15} />
+              ) : (
+                <IconMoonStars size={15} />
+              )
+            }
+          >
+            <Text size={size}>{t("Theme")}</Text>
           </Menu.Item>
           <Menu.Item
             onClick={auth?.logout}

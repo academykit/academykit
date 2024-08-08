@@ -93,7 +93,7 @@ const AssessmentList = ({
               </SimpleGrid>
             )
           ) : (
-            <Box>{t("no_trainings_found")}</Box>
+            <Box>{t("no_assessment_found")}</Box>
           ))}
       </ScrollArea>
 
