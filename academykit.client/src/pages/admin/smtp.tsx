@@ -26,13 +26,13 @@ const SMTP = () => {
       mailServer: "",
     },
     validate: {
-      senderEmail: (values: string) => !values && "Sender's Email is required!",
-      senderName: (values: string) => !values && "Sender's Name is required!",
-      userName: (values: string) => !values && "Username is required!",
-      replyTo: (values: string) => !values && "Reply Email is required!",
-      password: (values: string) => !values && "Password is required!",
-      mailPort: (values: number) => !values && "Mail Port is required!",
-      mailServer: (values: string) => !values && "Mail Server is required!",
+      senderEmail: (values: string) => !values && "Sender's Email is required.",
+      senderName: (values: string) => !values && "Sender's Name is required.",
+      userName: (values: string) => !values && "Username is required.",
+      replyTo: (values: string) => !values && "Reply Email is required.",
+      password: (values: string) => !values && "Password is required.",
+      mailPort: (values: number) => !values && "Mail Port is required.",
+      mailServer: (values: string) => !values && "Mail Server is required.",
     },
   });
 
@@ -73,6 +73,7 @@ const SMTP = () => {
       >
         <TextInput
           mb={10}
+          withAsterisk
           label={t("sender_email")}
           type={"email"}
           name="senderEmail"
@@ -82,6 +83,7 @@ const SMTP = () => {
         <TextInput
           mb={10}
           label={t("reply_email")}
+          withAsterisk
           name="replyEmail"
           type={"email"}
           placeholder={t("reply_email_placeholder") as string}
@@ -90,6 +92,7 @@ const SMTP = () => {
         <TextInput
           mb={10}
           label={t("sender_name")}
+          withAsterisk
           name="senderName"
           placeholder={t("sender_name_placeholder") as string}
           {...form.getInputProps("senderName")}
@@ -97,6 +100,7 @@ const SMTP = () => {
         <TextInput
           mb={10}
           label={t("user_name")}
+          withAsterisk
           name="userName"
           placeholder={t("user_name_placeholder") as string}
           {...form.getInputProps("userName")}
@@ -104,6 +108,7 @@ const SMTP = () => {
         <PasswordInput
           mb={10}
           label={t("password")}
+          withAsterisk
           name="password"
           placeholder={t("password_placeholder") as string}
           {...form.getInputProps("password")}
@@ -111,6 +116,7 @@ const SMTP = () => {
         <TextInput
           mb={10}
           label={t("port")}
+          withAsterisk
           name="port"
           type={"number"}
           placeholder={t("port_placeholder") as string}
@@ -119,6 +125,7 @@ const SMTP = () => {
         <TextInput
           mb={10}
           label={t("server")}
+          withAsterisk
           name="server"
           placeholder={t("server_placeholder") as string}
           {...form.getInputProps("mailServer")}

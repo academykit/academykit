@@ -120,8 +120,9 @@ const GroupDetail = () => {
                 withAsterisk
                 placeholder={t("your_group_name") as string}
                 {...form.getInputProps("name")}
+                mb={10}
               />
-              <Button loading={updateGroups.isLoading} mt={20} type="submit">
+              <Button loading={updateGroups.isLoading} type="submit">
                 {t("save")}
               </Button>
               <Button
