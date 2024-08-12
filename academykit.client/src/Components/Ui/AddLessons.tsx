@@ -1,6 +1,7 @@
 import AddAssignment from "@components/Course/Lesson/AddAssignment";
 import AddDocument from "@components/Course/Lesson/AddDocument";
 import AddExam from "@components/Course/Lesson/AddExam";
+import AddExternalUrl from "@components/Course/Lesson/AddExternalUrl";
 import AddFeedback from "@components/Course/Lesson/AddFeedback";
 import AddLecture from "@components/Course/Lesson/AddLecture";
 import AddMeeting from "@components/Course/Lesson/AddMeeting";
@@ -92,6 +93,16 @@ const LessonAddList = ({
         />
       );
       break;
+    case "externalUrl":
+      returnDiv = (
+        <AddExternalUrl
+          setIsEditing={() => {}}
+          setAddState={setAddState}
+          sectionId={sectionId}
+          setAddLessonClick={setAddLessonClick}
+        />
+      );
+      break;
     default:
       break;
   }
@@ -147,6 +158,13 @@ const LessonAddList = ({
             onClick={() => setAddState("document")}
           >
             + {t("document")}
+          </Badge>{" "}
+          <Badge
+            style={{ cursor: "pointer" }}
+            variant="outline"
+            onClick={() => setAddState("externalUrl")}
+          >
+            + {t("external Urls")}
           </Badge>{" "}
           <Badge
             color="red"
