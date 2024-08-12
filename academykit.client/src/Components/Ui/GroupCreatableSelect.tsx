@@ -68,15 +68,13 @@ export default function GroupCreatableSelect({
       withinPortal={false}
       size={size}
       // creating new group
-      onOptionSubmit={(val, optionProps) => {
+      onOptionSubmit={(val) => {
         if (val === "$create") {
           setValue(search);
           api
             .mutateAsync(search)
             .then((res: any) => form.setFieldValue("groups", res.data.id)); // setting value after fetch
         } else {
-          setValue(optionProps.children as string);
-          setSearch(optionProps.children as string);
           form.setFieldValue("groups", val);
         }
 
