@@ -1,4 +1,5 @@
 import AddAssignment from "@components/Course/Lesson/AddAssignment";
+import AddContent from "@components/Course/Lesson/AddContent";
 import AddDocument from "@components/Course/Lesson/AddDocument";
 import AddExam from "@components/Course/Lesson/AddExam";
 import AddExternalUrl from "@components/Course/Lesson/AddExternalUrl";
@@ -99,7 +100,15 @@ const LessonAddList = ({
           setIsEditing={() => {}}
           setAddState={setAddState}
           sectionId={sectionId}
-          setAddLessonClick={setAddLessonClick}
+        />
+      );
+      break;
+    case "content":
+      returnDiv = (
+        <AddContent
+          setIsEditing={() => {}}
+          setAddState={setAddState}
+          sectionId={sectionId}
         />
       );
       break;
@@ -165,6 +174,13 @@ const LessonAddList = ({
             onClick={() => setAddState("externalUrl")}
           >
             + {t("external Urls")}
+          </Badge>{" "}
+          <Badge
+            style={{ cursor: "pointer" }}
+            variant="outline"
+            onClick={() => setAddState("content")}
+          >
+            + {t("content")}
           </Badge>{" "}
           <Badge
             color="red"
