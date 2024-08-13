@@ -23,6 +23,8 @@ export const routeGroupAdmin = [
 
   { route: "/settings/courses", group: "reviews" },
   { route: "/settings/certificate", group: "reviews" },
+
+  { route: "/settings/updates", group: "updates" },
 ];
 
 export const routeGroupOrg = [

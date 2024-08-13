@@ -6,6 +6,7 @@
     using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Application.Common.Models.ResponseModels;
     using AcademyKit.Infrastructure.Localization;
+    using Docker.DotNet;
     using FluentValidation;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,7 @@
         private readonly IValidator<ZoomSettingRequestModel> zoomSettingValidator;
         private readonly IValidator<SMTPSettingRequestModel> smtpSettingValidator;
         private readonly IStringLocalizer<ExceptionLocalizer> localizer;
+        private readonly IConfiguration configuration;
 
         public SettingsController(
             ILogger<SettingsController> logger,
@@ -33,7 +35,8 @@
             IValidator<GeneralSettingRequestModel> generalSettingValidator,
             IValidator<ZoomSettingRequestModel> zoomSettingValidator,
             IStringLocalizer<ExceptionLocalizer> localizer,
-            IValidator<SMTPSettingRequestModel> smtpSettingValidator
+            IValidator<SMTPSettingRequestModel> smtpSettingValidator,
+            IConfiguration configuration
         )
         {
             this.logger = logger;
@@ -45,6 +48,7 @@
             this.zoomSettingValidator = zoomSettingValidator;
             this.smtpSettingValidator = smtpSettingValidator;
             this.localizer = localizer;
+            this.configuration = configuration;
         }
 
         /// <summary>
@@ -257,6 +261,39 @@
 
             var savedEntity = await smtpSettingService.UpdateAsync(existing).ConfigureAwait(false);
             return new SMTPSettingResponseModel(savedEntity);
+        }
+
+        /// <summary>
+        /// get updates information.
+        /// </summary>
+        /// <returns> the instance of <see cref="CheckUpdatesResponseModel" /> .</returns>
+        [HttpGet("CheckUpdates")]
+        public async Task<CheckUpdatesResponseModel> CheckUpdates()
+        {
+            var socket = configuration.GetValue<string>("Docker:Socket");
+            var registry = configuration.GetValue<string>("Docker:Registry");
+            var repo = configuration.GetValue<string>("Docker:Repo");
+            var containerName = configuration.GetValue<string>("Docker:ContainerName");
+            var releaseNotesUrl = configuration.GetValue<string>("Docker:ReleaseNotesUrl");
+
+            var client = (socket == null ? new DockerClientConfiguration() : new DockerClientConfiguration(new Uri(socket)))
+                 .CreateClient();
+
+            var tags = await Infrastructure.Helpers.HttpClientUtils.GetImageTagsAsync(registry, repo);
+
+            var container = await client.Containers.InspectContainerAsync(containerName);
+            var currentImage = await client.Images.InspectImageAsync(container.Image);
+
+            var latestRemoteVersion = Infrastructure.Helpers.CommonHelper.FilterLatestSemanticVersion(tags);
+            var currentVersion = Infrastructure.Helpers.CommonHelper.FilterLatestSemanticVersion(currentImage.RepoTags);
+
+            return new CheckUpdatesResponseModel
+            {
+                Latest = latestRemoteVersion,
+                Current = currentVersion,
+                Available = currentVersion == null || latestRemoteVersion == null || new Version(currentVersion) < new Version(latestRemoteVersion),
+                ReleaseNotesUrl = releaseNotesUrl
+            };
         }
     }
 }

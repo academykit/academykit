@@ -8,7 +8,7 @@
     using AcademyKit.Infrastructure.Common;
     using AcademyKit.Infrastructure.Localization;
     using Application.Common.Dtos;
-    using global::Infrastructure.Helpers;
+    using AcademyKit.Infrastructure.Helpers;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using MimeKit;

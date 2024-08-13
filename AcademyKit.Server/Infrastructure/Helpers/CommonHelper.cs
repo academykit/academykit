@@ -17,12 +17,16 @@
     /// <threadsafety>
     /// This class is immutable and thread safe.
     /// </threadsafety>
-    public static class CommonHelper
+    public static partial class CommonHelper
     {
         /// <summary>
         /// Represents the request property name for the current user.
         /// </summary>
         public const string CurrentUserPropertyName = "CurrentUser";
+        private const string SemanticVersionPattern = @"^\d+\.\d+\.\d+(-\w+)?$"; // Basic semver regex
+
+        [GeneratedRegex(SemanticVersionPattern)]
+        public static partial Regex SemanticVersionRegex();
 
         /// <summary>
         /// Represents the JSON serializer settings.
@@ -428,6 +432,34 @@
         public static string SanitizeForLogger(this string value)
         {
             return value.Replace("\n", "").Replace("\r", "");
+        }
+
+        /// <summary>
+        /// Filter the provided tags to get the latest semantic version
+        /// </summary>
+        /// <param name="tags">the tags to be filtered</param>
+        /// <returns>The tag of latest semantic version</returns>
+        public static string FilterLatestSemanticVersion(IEnumerable<string> tags)
+        {
+            var semanticVersions = tags
+                .Select(static tag =>
+                {
+                    var lastColonIndex = tag.LastIndexOf(':');
+                    if (lastColonIndex >= 0)
+                    {
+                        return tag[(lastColonIndex + 1)..];
+                    }
+                    else
+                    {
+                        return tag;
+                    }
+                })
+                .Where(tag => SemanticVersionRegex().IsMatch(tag)) // Filter out non-semver tags
+                .Select(tag => new Version(tag.Split('-')[0])) // Parse versions, ignore pre-release
+                .OrderByDescending(v => v) // Sort in descending order
+                .ToList();
+
+            return semanticVersions.Count > 0 ? semanticVersions.First().ToString() : null;
         }
     }
 }

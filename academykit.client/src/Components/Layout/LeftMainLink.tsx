@@ -223,6 +223,11 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
           target: "_blank",
           role: UserRole.Admin,
         },
+        {
+          label: "updates",
+          href: "/settings/updates",
+          role: UserRole.SuperAdmin,
+        },
       ],
     },
   ];
