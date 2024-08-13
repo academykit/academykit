@@ -12,11 +12,14 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import { LessonType } from "@utils/enums";
+import errorType from "@utils/services/axiosError";
 import {
   useCreateLesson,
   useUpdateLesson,
 } from "@utils/services/courseService";
-import { ILessonFeedback } from "@utils/services/types";
+import { ILessonExternalUrl } from "@utils/services/types";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
@@ -27,7 +30,7 @@ const schema = () => {
 
   return Yup.object().shape({
     name: Yup.string().required(t("feedback_name_required") as string),
-    url: Yup.string().required(t("url") as string),
+    externalUrl: Yup.string().required(t("externalUrl") as string),
   });
 };
 
@@ -35,9 +38,10 @@ const AddExternalUrl = ({
   setAddState,
   item,
   isEditing,
+  sectionId,
 }: {
   setAddState: (s: string) => void;
-  item?: ILessonFeedback;
+  item?: ILessonExternalUrl;
   isEditing?: boolean;
   sectionId: string;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
@@ -58,12 +62,46 @@ const AddExternalUrl = ({
   const form = useForm({
     initialValues: {
       name: item?.name ?? "",
+      externalUrl: item?.externalUrl ?? "",
+      description: item?.description ?? "",
     },
     validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
 
-  const submitForm = async () => {};
+  const submitForm = async (values: {
+    name: string;
+    externalUrl: string;
+    description: string;
+  }) => {
+    try {
+      const data = {
+        courseId: slug,
+        sectionIdentity: sectionId,
+        type: LessonType.ExternalUrl,
+        ...values,
+        isMandatory,
+      };
+
+      await lesson.mutateAsync(data as ILessonExternalUrl);
+      showNotification({
+        title: t("success"),
+        message: `${t("feedback")} ${isEditing ? t("edited") : t("added")} ${t(
+          "successfully"
+        )}`,
+      });
+      form.reset();
+    } catch (error) {
+      const err = errorType(error);
+
+      showNotification({
+        title: t("error"),
+        message: err,
+        color: "red",
+      });
+    }
+  };
+
   return (
     <React.Fragment>
       <form onSubmit={form.onSubmit(submitForm)}>
@@ -94,8 +132,8 @@ const AddExternalUrl = ({
               <CustomTextFieldWithAutoFocus
                 withAsterisk
                 label={t("URL")}
-                placeholder={t("feedback_title") as string}
-                {...form.getInputProps("url")}
+                placeholder={t("externalUrl") as string}
+                {...form.getInputProps("externalUrl")}
               />
             </Grid.Col>
           </Grid>

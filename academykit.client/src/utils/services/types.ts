@@ -94,6 +94,11 @@ export interface ILessonFeedback extends ILessons {
   name: string;
   description?: string;
 }
+export interface ILessonExternalUrl extends ILessons {
+  name: string;
+  description?: string;
+  externalUrl: string;
+}
 export interface ILessonFile extends ILessons {
   name: string;
   description: string;
