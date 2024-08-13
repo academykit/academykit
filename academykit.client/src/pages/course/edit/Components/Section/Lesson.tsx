@@ -120,8 +120,8 @@ const Lesson = ({
         LessonEditCase({
           item: lesson,
           lessonType: lesson?.type,
-          setAddLessonClick: () => { },
-          setAddState: () => { },
+          setAddLessonClick: () => {},
+          setAddState: () => {},
           sectionId: sectionId,
           setIsEditing,
         })}

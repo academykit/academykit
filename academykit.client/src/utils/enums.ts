@@ -61,7 +61,7 @@ export enum LessonType {
   Feedback = 7,
   Physical = 8,
   ExternalUrl = 9,
-  Content = 10
+  Content = 10,
 }
 
 export enum CourseStatus {

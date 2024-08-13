@@ -49,11 +49,7 @@ const AddExternalUrl = ({
 }) => {
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
-  const updateLesson = useUpdateLesson(
-    // item?.courseId || "",
-    // item?.id,
-    slug as string
-  );
+  const updateLesson = useUpdateLesson(slug as string);
   const { t } = useTranslation();
 
   const [isMandatory, setIsMandatory] = useState<boolean>(
