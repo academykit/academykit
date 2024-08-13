@@ -484,6 +484,11 @@
                     lesson.DocumentUrl = model.DocumentUrl;
                 }
 
+                if (lesson.Type == LessonType.ExternalUrl)
+                {
+                    lesson.ExternalUrl = model.ExternalUrl;
+                }
+
                 if (lesson.Type == LessonType.LiveClass)
                 {
                     lesson.Duration = model.Meeting.MeetingDuration * 60; //convert duration from minutes to seconds;

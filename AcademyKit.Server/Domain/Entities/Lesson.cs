@@ -10,6 +10,7 @@
         public string Description { get; set; }
         public string VideoUrl { get; set; }
         public string ThumbnailUrl { get; set; }
+        public string ExternalUrl { get; set; }
         public string DocumentUrl { get; set; }
         public int Order { get; set; }
         public int Duration { get; set; }
