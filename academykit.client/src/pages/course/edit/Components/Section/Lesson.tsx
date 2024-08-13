@@ -1,6 +1,7 @@
 import AddAssignment from "@components/Course/Lesson/AddAssignment";
 import AddDocument from "@components/Course/Lesson/AddDocument";
 import AddExam from "@components/Course/Lesson/AddExam";
+import AddExternalUrl from "@components/Course/Lesson/AddExternalUrl";
 import AddFeedback from "@components/Course/Lesson/AddFeedback";
 import AddLecture from "@components/Course/Lesson/AddLecture";
 import AddMeeting from "@components/Course/Lesson/AddMeeting";
@@ -15,6 +16,7 @@ import errorType from "@utils/services/axiosError";
 import { ILessons, useDeleteLesson } from "@utils/services/courseService";
 import {
   ILessonAssignment,
+  ILessonExternalUrl,
   ILessonFeedback,
   ILessonFile,
   ILessonMCQ,
@@ -223,6 +225,16 @@ const LessonEditCase = ({
           setAddState={setAddState}
           isEditing={true}
           setAddLessonClick={setAddLessonClick}
+          setIsEditing={setIsEditing}
+        />
+      );
+    case LessonType.ExternalUrl:
+      return (
+        <AddExternalUrl
+          sectionId={sectionId}
+          item={item as ILessonExternalUrl}
+          setAddState={setAddState}
+          isEditing={true}
           setIsEditing={setIsEditing}
         />
       );

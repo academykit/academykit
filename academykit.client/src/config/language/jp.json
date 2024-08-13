@@ -566,6 +566,7 @@
   "feedback_title": "フィードバックのタイトル",
   "feedback_description": "フィードバックの説明",
   "external_url_description": "外部URLの説明",
+  "external_URL": "外部のウェブアドレス",
   "add_more_feedback": "さらにフィードバックを追加",
   "file_title": "ファイルのタイトル",
   "file_name": "ファイル名",

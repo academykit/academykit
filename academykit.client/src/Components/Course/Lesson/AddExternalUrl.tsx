@@ -39,6 +39,7 @@ const AddExternalUrl = ({
   item,
   isEditing,
   sectionId,
+  setIsEditing,
 }: {
   setAddState: (s: string) => void;
   item?: ILessonExternalUrl;
@@ -82,15 +83,22 @@ const AddExternalUrl = ({
         ...values,
         isMandatory,
       };
-
-      await lesson.mutateAsync(data as ILessonExternalUrl);
+      if (!isEditing) {
+        await lesson.mutateAsync(data as ILessonExternalUrl);
+        form.reset();
+      } else {
+        await updateLesson.mutateAsync({
+          ...data,
+          lessonIdentity: item?.id,
+        } as ILessonExternalUrl);
+        setIsEditing(false);
+      }
       showNotification({
         title: t("success"),
-        message: `${t("feedback")} ${isEditing ? t("edited") : t("added")} ${t(
+        message: `${t("external_URL")} ${isEditing ? t("edited") : t("added")} ${t(
           "successfully"
         )}`,
       });
-      form.reset();
     } catch (error) {
       const err = errorType(error);
 

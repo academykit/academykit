@@ -1,5 +1,6 @@
 import AssignmentDetails from "@components/Course/Classes/AssignmentDetails";
 import ExamDetails from "@components/Course/Classes/ExamDetails";
+import ExternalLinkViewer from "@components/Course/Classes/ExternalLinkViewer";
 import FeedbackDetails from "@components/Course/Classes/FeedbackDetails";
 import PhysicalTrainingDetail from "@components/Course/Classes/PhysicalTrainingDetail";
 import CourseContent from "@components/Course/CourseDescription/CourseContent/CourseContent";
@@ -228,6 +229,15 @@ const Classes = () => {
                   hasAttended={courseLesson.data.hasAttended}
                   startDate={courseLesson.data.startDate}
                   isTrainee={courseLesson.data.isTrainee}
+                />
+              </Box>
+            )}
+            {courseLesson.data?.type === LessonType.ExternalUrl && (
+              <Box
+                className={cx(classes.videoSection, classes.externalSection)}
+              >
+                <ExternalLinkViewer
+                  url={courseLesson.data?.externalUrl ?? ""}
                 />
               </Box>
             )}

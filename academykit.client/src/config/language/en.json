@@ -215,6 +215,7 @@
   "certificate_url": "Certificate URLs",
   "external_certificate": "External Certificates",
   "external_URLs": "External URLs",
+  "external_URL": "External URL",
   "verified": "Verified",
   "start_date": "Start Date",
   "end_date": "End Date",

@@ -662,6 +662,7 @@ export interface ICourseLesson {
   password: string;
   hasAttended: boolean;
   isTrainee: boolean;
+  externalUrl: string;
 }
 
 const getCourseLesson = async (

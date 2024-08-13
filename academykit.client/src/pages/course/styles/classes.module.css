@@ -7,6 +7,7 @@
 .videoSection::before {
   padding-bottom: 0px !important;
 }
+
 @media (min-width: 62em) {
   .videoSection {
     height: 70vh;
@@ -19,6 +20,7 @@
   background: var(--mantine-color-classes-section);
   overflow-y: auto;
 }
+
 @media (min-width: 62em) {
   .section {
     height: 70vh;
@@ -50,4 +52,8 @@
   overflow-y: hidden;
   justify-content: center;
   align-items: center;
+}
+
+.externalSection {
+  height: 100%;
 }

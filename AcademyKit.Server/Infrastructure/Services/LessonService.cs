@@ -359,6 +359,11 @@
                     .ConfigureAwait(false);
             }
 
+            if (lesson.Type == LessonType.ExternalUrl && !string.IsNullOrEmpty(lesson.ExternalUrl))
+            {
+                responseModel.ExternalUrl = lesson.ExternalUrl;
+            }
+
             bool? HasAttended = null;
             if (lesson.Type == LessonType.Physical)
             {
@@ -649,6 +654,7 @@
                 var currentTimeStamp = DateTime.UtcNow;
 
                 var existingThumbnailUrlKey = existing.ThumbnailUrl;
+                var existingExternalUrlKey = existing.ExternalUrl;
                 var existingDocumentUrlKey = existing.DocumentUrl;
                 var existingVideoUrl = existing.VideoUrl;
 
@@ -669,6 +675,11 @@
                 if (existing.Type == LessonType.Document)
                 {
                     existing.DocumentUrl = model.DocumentUrl;
+                }
+
+                if (existing.Type == LessonType.ExternalUrl)
+                {
+                    existing.ExternalUrl = model.ExternalUrl;
                 }
 
                 if (existing.Type == LessonType.Video)
