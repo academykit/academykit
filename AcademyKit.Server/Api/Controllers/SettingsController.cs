@@ -282,10 +282,9 @@
             var tags = await Infrastructure.Helpers.HttpClientUtils.GetImageTagsAsync(registry, repo);
 
             var container = await client.Containers.InspectContainerAsync(containerName);
-            var currentImage = await client.Images.InspectImageAsync(container.Image);
 
             var latestRemoteVersion = Infrastructure.Helpers.CommonHelper.FilterLatestSemanticVersion(tags);
-            var currentVersion = Infrastructure.Helpers.CommonHelper.FilterLatestSemanticVersion(currentImage.RepoTags);
+            var currentVersion = container.Config.Labels["org.opencontainers.image.version"];
 
             return new CheckUpdatesResponseModel
             {
