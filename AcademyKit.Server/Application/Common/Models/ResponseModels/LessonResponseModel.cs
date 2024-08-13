@@ -13,6 +13,7 @@
         public string ThumbnailUrl { get; set; }
         public string DocumentUrl { get; set; }
         public string ExternalUrl { get; set; }
+        public string Content { get; set; }
         public int Order { get; set; }
         public int Duration { get; set; }
         public bool IsMandatory { get; set; }

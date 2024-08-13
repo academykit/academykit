@@ -6,7 +6,7 @@ import {
   useCreateLesson,
   useUpdateLesson,
 } from "@utils/services/courseService";
-import { ILessonFeedback } from "@utils/services/types";
+import { ILessonContent } from "@utils/services/types";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
@@ -17,7 +17,7 @@ const schema = () => {
 
   return Yup.object().shape({
     name: Yup.string().required(t("feedback_name_required") as string),
-    url: Yup.string().required(t("url") as string),
+    content: Yup.string().required(t("url") as string),
   });
 };
 
@@ -27,7 +27,7 @@ const AddContent = ({
   isEditing,
 }: {
   setAddState: (s: string) => void;
-  item?: ILessonFeedback;
+  item?: ILessonContent;
   isEditing?: boolean;
   sectionId: string;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
@@ -49,7 +49,7 @@ const AddContent = ({
   });
   useFormErrorHooks(form);
 
-  const submitForm = async () => {};
+  const submitForm = async () => { };
   return (
     <React.Fragment>
       <form onSubmit={form.onSubmit(submitForm)}>

@@ -11,6 +11,7 @@
         public string ThumbnailUrl { get; set; }
         public string DocumentUrl { get; set; }
         public string ExternalUrl { get; set; }
+        public string Content { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int Order { get; set; }
