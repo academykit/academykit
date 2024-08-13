@@ -97,7 +97,7 @@ const MCQTeacher = () => {
                   {...form.getInputProps("email")}
                 />
 
-                <Button type="submit" loading={createPoolTeacher.isLoading}>
+                <Button type="submit" loading={createPoolTeacher.isPending}>
                   {t("add")}
                 </Button>
               </Group>

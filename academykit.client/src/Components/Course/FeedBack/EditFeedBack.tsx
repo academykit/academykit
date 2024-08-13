@@ -182,60 +182,60 @@ const EditFeedback = ({
             ></Select>
             {(form.values.type === FeedbackType.MultipleChoice.toString() ||
               form.values.type === FeedbackType.SingleChoice.toString()) && (
-              <Box>
-                <Text mt={20}>{t("options")}</Text>
-                {form.values.answers &&
-                  form.values.answers.map((x, i) => (
-                    <div
-                      key={i}
-                      style={{ marginBottom: "30px", width: "100%" }}
-                    >
-                      <Flex>
-                        <div style={{ width: "90%" }}>
-                          <RichTextEditor
-                            placeholder={t("option_placeholder") as string}
-                            label={`answers.${i}.option`}
-                            formContext={useFormContext}
-                          ></RichTextEditor>
-                        </div>
-                        <UnstyledButton
-                          mx={10}
-                          onClick={() => {
-                            form.insertListItem(
-                              "answers",
-                              {
-                                option: "",
-                              },
-                              i + 1
-                            );
-                          }}
-                        >
-                          <IconPlus color="green" />
-                        </UnstyledButton>
-                        {form.values.answers &&
-                          form.values.answers.length > 1 && (
-                            <UnstyledButton
-                              onClick={() => {
-                                form.removeListItem("answers", i);
-                              }}
-                            >
-                              <IconTrash color="red" />
-                            </UnstyledButton>
-                          )}
-                      </Flex>
-                    </div>
-                  ))}
-                {typeof form.errors[`answers`] === "string" && (
-                  <span style={{ color: "red" }}>{form.errors[`answers`]}</span>
-                )}
-              </Box>
-            )}
+                <Box>
+                  <Text mt={20}>{t("options")}</Text>
+                  {form.values.answers &&
+                    form.values.answers.map((_, i) => (
+                      <div
+                        key={i}
+                        style={{ marginBottom: "30px", width: "100%" }}
+                      >
+                        <Flex>
+                          <div style={{ width: "90%" }}>
+                            <RichTextEditor
+                              placeholder={t("option_placeholder") as string}
+                              label={`answers.${i}.option`}
+                              formContext={useFormContext}
+                            ></RichTextEditor>
+                          </div>
+                          <UnstyledButton
+                            mx={10}
+                            onClick={() => {
+                              form.insertListItem(
+                                "answers",
+                                {
+                                  option: "",
+                                },
+                                i + 1
+                              );
+                            }}
+                          >
+                            <IconPlus color="green" />
+                          </UnstyledButton>
+                          {form.values.answers &&
+                            form.values.answers.length > 1 && (
+                              <UnstyledButton
+                                onClick={() => {
+                                  form.removeListItem("answers", i);
+                                }}
+                              >
+                                <IconTrash color="red" />
+                              </UnstyledButton>
+                            )}
+                        </Flex>
+                      </div>
+                    ))}
+                  {typeof form.errors[`answers`] === "string" && (
+                    <span style={{ color: "red" }}>{form.errors[`answers`]}</span>
+                  )}
+                </Box>
+              )}
             <Group mt={20}>
               <Button
                 size="sm"
                 type="submit"
                 loading={
-                  addFeedbackQuestions.isLoading
+                  addFeedbackQuestions.isPending
                   // || editAssignment.isLoading
                 }
               >

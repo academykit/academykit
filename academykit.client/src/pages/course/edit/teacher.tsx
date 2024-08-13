@@ -180,7 +180,7 @@ const Teacher = ({
                   {...form.getInputProps("email")}
                 />
 
-                <Button loading={createTeacher.isLoading} type="submit">
+                <Button loading={createTeacher.isPending} type="submit">
                   {t("add")}
                 </Button>
               </Group>

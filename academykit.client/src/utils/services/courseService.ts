@@ -363,6 +363,7 @@ export interface ILessons {
   passingWeightage: number;
   allowedRetake: number;
   isCompleted: boolean;
+  isLoading: boolean;
 }
 
 const createSection = async (data: { courseIdentity: string; name: string }) =>
@@ -688,7 +689,6 @@ export const useGetCourseLesson = (
 
     enabled,
     retry: 0,
-    onError: () => {},
 
     // to reflect the changes made after submission of various assignments
     refetchOnMount: true,

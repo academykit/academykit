@@ -249,7 +249,7 @@ const UserInfo = () => {
               {!viewMode && (
                 <>
                   <Button
-                    loading={updateUser.isLoading}
+                    loading={updateUser.isPending}
                     type="submit"
                     style={{ marginRight: "10px" }}
                   >

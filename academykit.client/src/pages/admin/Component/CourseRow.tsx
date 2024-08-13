@@ -90,7 +90,7 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
             <Group mt={10}>
               <Button
                 onClick={() => onPublish()}
-                loading={courseStatus.isLoading}
+                loading={courseStatus.isPending}
               >
                 {t("publish")}
               </Button>
@@ -107,7 +107,7 @@ const CourseRow = ({ course, search }: { course: ICourse; search: string }) => {
             <form onSubmit={form.onSubmit((value) => onPublish(value.message))}>
               <Group>
                 <Textarea {...form.getInputProps("message")} w={"100%"} />
-                <Button loading={courseStatus.isLoading} type="submit">
+                <Button loading={courseStatus.isPending} type="submit">
                   {t("submit")}
                 </Button>
                 <Button variant="outline" onClick={() => toggleRejected()}>

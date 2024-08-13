@@ -339,7 +339,7 @@ const QuestionForm = ({
             <Group mt={20}>
               <Button
                 type="submit"
-                loading={addQuestion.isLoading}
+                loading={addQuestion.isPending}
                 onClick={() => setIsReset(false)}
               >
                 {t("save")}
@@ -354,7 +354,7 @@ const QuestionForm = ({
               <Button
                 type="button"
                 variant="outline"
-                loading={addQuestion.isLoading}
+                loading={addQuestion.isPending}
                 onClick={() => closeModal()}
               >
                 {t("cancel")}

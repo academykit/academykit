@@ -307,7 +307,7 @@ const EditAssignment = ({
                 size="sm"
                 type="submit"
                 loading={
-                  addAssignmentQuestion.isLoading || editAssignment.isLoading
+                  addAssignmentQuestion.isPending || editAssignment.isPending
                 }
               >
                 {t("save")}

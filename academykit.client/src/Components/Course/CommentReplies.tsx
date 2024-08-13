@@ -54,7 +54,7 @@ const CommentReplies = ({
     setVisibleReplies(initialVisibleReplies);
   }, [addCommentReply.isSuccess]);
 
-  if (commentReplies.isLoading) {
+  if (commentReplies.isPending) {
     return <Loader />;
   }
 
@@ -85,7 +85,7 @@ const CommentReplies = ({
           />
           <Button
             type="submit"
-            loading={addCommentReply.isLoading}
+            loading={addCommentReply.isPending}
             disabled={!form.values.content.trim()}
             style={{ "&[data-disabled]": { pointerEvents: "all" } }}
           >

@@ -49,7 +49,7 @@ const Comments = () => {
           style={{ minHeight: "5rem" }}
         />
         <Button
-          loading={postComment.isLoading}
+          loading={postComment.isPending}
           type="submit"
           mb={"xs"}
           disabled={!form.values.content.trim()}

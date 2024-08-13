@@ -187,7 +187,7 @@ const GeneralSettings = () => {
             disabled={!cForm?.isReady}
             mt={10}
             type="submit"
-            loading={updateGeneral.isLoading}
+            loading={updateGeneral.isPending}
           >
             {t("submit")}
           </Button>

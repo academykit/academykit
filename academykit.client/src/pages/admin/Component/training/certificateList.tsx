@@ -49,9 +49,8 @@ const CertificateCard = ({
         : CertificateStatus.Rejected;
       await updateStatus.mutateAsync({ id: item.id, status });
       showNotification({
-        message: `${t("training")} ${
-          approve ? t("approved") : t("rejected")
-        } ${t("successfully")}`,
+        message: `${t("training")} ${approve ? t("approved") : t("rejected")
+          } ${t("successfully")}`,
       });
     } catch (error) {
       const err = errorType(error);
@@ -134,7 +133,7 @@ const CertificateCard = ({
         auth.auth.id !== item.user.id && (
           <Box mt={10}>
             <Button
-              loading={updateStatus.isLoading}
+              loading={updateStatus.isPending}
               onClick={() => handleSubmit(true)}
             >
               {t("approve")}
@@ -144,7 +143,7 @@ const CertificateCard = ({
               variant="outline"
               color={"red"}
               onClick={() => handleSubmit(false)}
-              loading={updateStatus.isLoading}
+              loading={updateStatus.isPending}
             >
               {t("reject")}
             </Button>

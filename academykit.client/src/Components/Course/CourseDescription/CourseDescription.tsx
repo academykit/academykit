@@ -99,7 +99,7 @@ const CourseDescription = () => {
     throw course.error;
   }
 
-  if (course.isLoading) {
+  if (course.isPending) {
     return (
       <Center>
         <Loader />
@@ -132,14 +132,14 @@ const CourseDescription = () => {
         title={
           isRejected
             ? t("leave_message_reject")
-            : `${t("publish_confirmation")} "${course.data.name}"${t("?")}`
+            : `${t("publish_confirmation")} "${course?.data?.name}"${t("?")}`
         }
       >
         {!isRejected ? (
           <Group mt={10}>
             <Button
               onClick={() => onPublish()}
-              loading={courseStatus.isLoading}
+              loading={courseStatus.isPending}
             >
               {t("publish")}
             </Button>
@@ -156,7 +156,7 @@ const CourseDescription = () => {
           <form onSubmit={form.onSubmit((value) => onPublish(value.message))}>
             <Group>
               <Textarea {...form.getInputProps("message")} w={"100%"} />
-              <Button loading={courseStatus.isLoading} type="submit">
+              <Button loading={courseStatus.isPending} type="submit">
                 {t("submit")}
               </Button>
               <Button variant="outline" onClick={() => toggleRejected()}>
@@ -207,15 +207,15 @@ const CourseDescription = () => {
                 <UserShortProfile user={course?.data?.user} size={"md"} />
               )}
             </Group>
-            <TextViewer content={course.data?.description} />
+            <TextViewer content={course.data?.description ?? ""} />
           </div>
           <div className={classes.aside}>
             <AspectRatio ratio={16 / 8} mx="auto">
               <Image
                 src={getCourseOgImageUrl({
-                  author: course?.data?.user,
-                  title: course?.data?.name,
-                  thumbnailUrl: course?.data.thumbnailUrl,
+                  author: course?.data?.user ?? "",
+                  title: course?.data?.name ?? "",
+                  thumbnailUrl: course?.data?.thumbnailUrl ?? "",
                   companyName: companyName,
                   companyLogo: companyLogo,
                 })}
@@ -244,7 +244,7 @@ const CourseDescription = () => {
                     radius="xl"
                     size="md"
                     className={classes.control}
-                    loading={enrollCourse.isLoading}
+                    loading={enrollCourse.isPending}
                     onClick={onEnroll}
                     disabled={!course.data.isEligible}
                   >

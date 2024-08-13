@@ -91,7 +91,7 @@ const MyTrainings = () => {
                         </Table.Td>
                       </Table.Tr>
                     ))}
-                  {authorCourse.isLoading && <Loader />}
+                  {authorCourse.isPending && <Loader />}
                 </Table.Tbody>
               </Table>
             </Paper>

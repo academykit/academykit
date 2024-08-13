@@ -371,13 +371,13 @@ const EditQuestion = () => {
                 </Box>
               )}
             <Group mt={20}>
-              <Button size="sm" type="submit" loading={editQuestion.isLoading}>
+              <Button size="sm" type="submit" loading={editQuestion.isPending}>
                 {t("save")}
               </Button>
               <Button
                 type="button"
                 variant="outline"
-                loading={editQuestion.isLoading}
+                loading={editQuestion.isPending}
                 onClick={() => cancelEditing()}
               >
                 {t("cancel")}

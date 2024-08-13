@@ -597,7 +597,7 @@ const EditCourse = () => {
                     disabled={!cForm?.isReady}
                     size="lg"
                     type="submit"
-                    loading={updateCourse.isLoading}
+                    loading={updateCourse.isPending}
                   >
                     {t("submit")}
                   </Button>

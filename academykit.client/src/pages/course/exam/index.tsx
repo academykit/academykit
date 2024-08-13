@@ -16,7 +16,7 @@ const LessonExam = () => {
     exam.mutate();
   }, []);
 
-  if (exam.isLoading) {
+  if (exam.isPending) {
     return <Loader />;
   }
   if (exam.isError) {

@@ -172,7 +172,7 @@ const LoginPage = () => {
               </Anchor>
             </Link>
           </Group>
-          <Button loading={login.isLoading} fullWidth mt="xl" type="submit">
+          <Button loading={login.isPending} fullWidth mt="xl" type="submit">
             {t("sign_in")}
           </Button>
         </Paper>

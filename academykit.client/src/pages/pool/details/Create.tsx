@@ -348,14 +348,14 @@ const Create = () => {
             <Group mt={20}>
               <Button
                 type="submit"
-                loading={addQuestion.isLoading}
+                loading={addQuestion.isPending}
                 onClick={() => setIsReset(false)}
               >
                 {t("save")}
               </Button>
               <Button
                 type="submit"
-                loading={addQuestion.isLoading}
+                loading={addQuestion.isPending}
                 onClick={() => setIsReset(true)}
               >
                 {t("save_more")}
@@ -363,7 +363,7 @@ const Create = () => {
               <Button
                 type="button"
                 variant="outline"
-                loading={addQuestion.isLoading}
+                loading={addQuestion.isPending}
                 onClick={() => cancelCreation()}
               >
                 {t("cancel")}

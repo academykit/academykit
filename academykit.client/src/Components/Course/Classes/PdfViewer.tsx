@@ -77,7 +77,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
                     lesson.isTrainee && (
                       <Button
                         onClick={onMarkComplete}
-                        loading={watchHistory.isLoading}
+                        loading={watchHistory.isPending}
                         disabled={disable}
                       >
                         {t("mark_complete")}

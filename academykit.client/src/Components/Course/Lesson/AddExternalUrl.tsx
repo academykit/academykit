@@ -57,7 +57,7 @@ const AddExternalUrl = ({
   const [isMandatory, setIsMandatory] = useState<boolean>(
     item?.isMandatory ?? false
   );
-
+  console.log("loading", lesson);
   const form = useForm({
     initialValues: {
       name: item?.name ?? "",
@@ -154,7 +154,7 @@ const AddExternalUrl = ({
           <Group mt="md">
             <Button
               type="submit"
-              loading={lesson.isLoading || updateLesson.isLoading}
+              loading={lesson.isPending || updateLesson.isPending}
             >
               {t("submit")}
             </Button>

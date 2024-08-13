@@ -65,7 +65,7 @@ const PhysicalTrainingDetail = ({
             isTrainee) && (
             <Button
               onClick={() => handleAttendance()}
-              loading={attendance.isLoading || attendance.isSuccess}
+              loading={attendance.isPending || attendance.isSuccess}
             >
               {t("mark_as_attended")}
             </Button>

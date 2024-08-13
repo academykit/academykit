@@ -1,3 +1,4 @@
+import TextViewer from "@components/Ui/RichTextViewer";
 import { Button, Card, Group, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
@@ -8,12 +9,11 @@ import {
   useSubmitAssignment,
 } from "@utils/services/assignmentService";
 import errorType from "@utils/services/axiosError";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import CheckboxType from "./CheckboxType";
 import RadioType from "./RadioType";
 import SubjectiveType from "./SubjectiveType";
-import { useTranslation } from "react-i18next";
-import TextViewer from "@components/Ui/RichTextViewer";
 
 const AssignmentForm = ({
   item,
@@ -101,7 +101,7 @@ const AssignmentForm = ({
       ))}
       {item[0].isTrainee && (
         <Group mt={20}>
-          <Button loading={submitAssignment.isLoading} type="submit">
+          <Button loading={submitAssignment.isPending} type="submit">
             {t("submit")}
           </Button>
           <Button type="reset" variant="outline" onClick={() => navigation(-1)}>

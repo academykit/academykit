@@ -9,12 +9,12 @@ import {
   IFeedbackSubmission,
   useFeedbackSubmission,
 } from "@utils/services/feedbackService";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import FeedbackCheckBoxType from "./Options/FeedbackCheckBox";
 import FeedbackRadio from "./Options/FeedbackRadio";
 import FeedbackRating from "./Options/FeedbackRating";
 import FeedbackSubjective from "./Options/FeedbackSubjective";
-import { useTranslation } from "react-i18next";
 
 const FeedbackForm = ({
   item,
@@ -101,7 +101,7 @@ const FeedbackForm = ({
       ))}
       {item[0].isTrainee && (
         <Group mt={20}>
-          <Button loading={submitFeedback.isLoading} type="submit">
+          <Button loading={submitFeedback.isPending} type="submit">
             {t("submit")}
           </Button>
           <Button type="reset" variant="outline" onClick={() => navigation(-1)}>

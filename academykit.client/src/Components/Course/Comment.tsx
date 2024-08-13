@@ -192,7 +192,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
         )}
         {showEdit(comment.user) && comment.repliesCount <= 0 && (
           <Button
-            loading={deleteComment.isLoading}
+            loading={deleteComment.isPending}
             variant="subtle"
             mx={4}
             c="red"

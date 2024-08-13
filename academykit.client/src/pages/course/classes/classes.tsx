@@ -115,7 +115,7 @@ const Classes = () => {
       <Grid className={classes.wrapper}>
         <Grid.Col p={0} m={"auto"} span={matches ? 8 : 12}>
           <Suspense fallback={<Loader />}>
-            {courseLesson.isLoading && (
+            {courseLesson.isPending && (
               <Box
                 className={classes.videoSection}
                 style={{

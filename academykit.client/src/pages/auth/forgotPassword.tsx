@@ -144,7 +144,7 @@ const ForgotPassword = () => {
             </Link>
           </Group>
           <Button
-            loading={forgotPassword.isLoading}
+            loading={forgotPassword.isPending}
             fullWidth
             mt="xl"
             type="submit"

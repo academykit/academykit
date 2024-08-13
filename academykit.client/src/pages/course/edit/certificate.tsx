@@ -102,9 +102,8 @@ const Certificate = () => {
       });
       showNotification({
         title: t("success"),
-        message: `${t("certificate_details")} ${
-          isEditing ? t("updated") : t("added")
-        } ${t("successfully")}`,
+        message: `${t("certificate_details")} ${isEditing ? t("updated") : t("added")
+          } ${t("successfully")}`,
       });
     } catch (error) {
       const err = errorType(error);
@@ -125,7 +124,7 @@ const Certificate = () => {
           <SimpleGrid cols={{ cmd: 1, lg: 2 }} spacing={{ cmd: "sm" }}>
             <Box style={{ width: "300px", margin: "auto" }}>
               {getCertificateDetails.isSuccess &&
-              getCertificateDetails.data?.data?.sampleUrl ? (
+                getCertificateDetails.data?.data?.sampleUrl ? (
                 <div style={{ position: "relative", backgroundColor: "black" }}>
                   <Image
                     radius={"md"}
@@ -219,7 +218,7 @@ const Certificate = () => {
                   />
                 </Grid.Col>
               </Grid>
-              <Button mt={20} type="submit" loading={addCertificate.isLoading}>
+              <Button mt={20} type="submit" loading={addCertificate.isPending}>
                 {t("submit")}
               </Button>
             </Container>

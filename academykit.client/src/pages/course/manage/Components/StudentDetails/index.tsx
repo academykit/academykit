@@ -254,7 +254,7 @@ const StudentLessonDetails = ({
           <Group mt={10}>
             <Button
               onClick={() => onReview()}
-              loading={attendanceReview.isLoading}
+              loading={attendanceReview.isPending}
             >
               {t("approve")}
             </Button>
@@ -271,7 +271,7 @@ const StudentLessonDetails = ({
           <form onSubmit={form.onSubmit((value) => onReview(value.message))}>
             <Group>
               <Textarea {...form.getInputProps("message")} w={"100%"} />
-              <Button loading={attendanceReview.isLoading} type="submit">
+              <Button loading={attendanceReview.isPending} type="submit">
                 {t("submit")}
               </Button>
               <Button variant="outline" onClick={() => toggleRejected()}>
@@ -332,7 +332,7 @@ const StudentLessonDetails = ({
                   </Table.Thead>
 
                   <Table.Tbody>
-                    {meetingReport.data.map((x) => (
+                    {meetingReport.data?.map((x) => (
                       <TableRow values={x} key={x.joinedTime} />
                     ))}
                   </Table.Tbody>
@@ -356,7 +356,7 @@ const StudentLessonDetails = ({
               variant="subtle"
               color={"primary"}
             >
-              {watchHistory.isLoading ? (
+              {watchHistory.isPending ? (
                 <Loader variant="oval" />
               ) : (
                 <IconCheck />
@@ -374,7 +374,7 @@ const StudentLessonDetails = ({
               variant="subtle"
               color={"primary"}
             >
-              {watchHistory.isLoading ? (
+              {watchHistory.isPending ? (
                 <Loader variant="oval" />
               ) : (
                 <IconCheck />
