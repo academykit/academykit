@@ -276,7 +276,7 @@
             var containerName = configuration.GetValue<string>("Docker:ContainerName");
             var releaseNotesUrl = configuration.GetValue<string>("Docker:ReleaseNotesUrl");
 
-            var client = (socket == null ? new DockerClientConfiguration() : new DockerClientConfiguration(new Uri(socket)))
+            var client = (string.IsNullOrEmpty(socket) ? new DockerClientConfiguration() : new DockerClientConfiguration(new Uri(socket)))
                  .CreateClient();
 
             var tags = await Infrastructure.Helpers.HttpClientUtils.GetImageTagsAsync(registry, repo);
