@@ -22,7 +22,7 @@ import {
 import { ILessonExternalUrl } from "@utils/services/types";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
 const schema = () => {
@@ -40,12 +40,14 @@ const AddExternalUrl = ({
   isEditing,
   sectionId,
   setIsEditing,
+  setAddLessonClick,
 }: {
   setAddState: (s: string) => void;
   item?: ILessonExternalUrl;
   isEditing?: boolean;
   sectionId: string;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  setAddLessonClick: (b: boolean) => void;
 }) => {
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
@@ -95,6 +97,7 @@ const AddExternalUrl = ({
           "successfully"
         )}`,
       });
+      setAddLessonClick(true);
     } catch (error) {
       const err = errorType(error);
 
@@ -114,8 +117,8 @@ const AddExternalUrl = ({
             <Grid.Col span={{ base: 12, lg: 6 }}>
               <CustomTextFieldWithAutoFocus
                 withAsterisk
-                label={t("external_url_title")}
-                placeholder={t("external_url_title") as string}
+                label={t("lesson_name")}
+                placeholder={t("lesson_name") as string}
                 {...form.getInputProps("name")}
               />
             </Grid.Col>
@@ -163,11 +166,6 @@ const AddExternalUrl = ({
                 variant="outline"
               >
                 {t("close")}
-              </Button>
-            )}
-            {isEditing && (
-              <Button component={Link} to={`${item?.id}/feedback`}>
-                {t("add_more_feedback")}
               </Button>
             )}
           </Group>

@@ -237,6 +237,7 @@ const LessonEditCase = ({
           item={item as ILessonExternalUrl}
           setAddState={setAddState}
           isEditing={true}
+          setAddLessonClick={setAddLessonClick}
           setIsEditing={setIsEditing}
         />
       );
@@ -248,6 +249,7 @@ const LessonEditCase = ({
           setAddState={setAddState}
           isEditing={true}
           setIsEditing={setIsEditing}
+          setAddLessonClick={setAddLessonClick}
         />
       );
     default:

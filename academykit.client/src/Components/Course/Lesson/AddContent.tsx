@@ -22,7 +22,7 @@ import {
 import { ILessonContent } from "@utils/services/types";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
 const schema = () => {
@@ -40,12 +40,14 @@ const AddContent = ({
   isEditing,
   sectionId,
   setIsEditing,
+  setAddLessonClick,
 }: {
   setAddState: (s: string) => void;
   item?: ILessonContent;
   isEditing?: boolean;
   sectionId: string;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  setAddLessonClick: (b: boolean) => void;
 }) => {
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
@@ -99,6 +101,7 @@ const AddContent = ({
           "successfully"
         )}`,
       });
+      setAddLessonClick(true);
     } catch (error) {
       const err = errorType(error);
 
@@ -170,11 +173,6 @@ const AddContent = ({
                 variant="outline"
               >
                 {t("close")}
-              </Button>
-            )}
-            {isEditing && (
-              <Button component={Link} to={`${item?.id}/feedback`}>
-                {t("add_more_feedback")}
               </Button>
             )}
           </Group>

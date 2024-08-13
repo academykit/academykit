@@ -100,6 +100,7 @@ const LessonAddList = ({
           setIsEditing={() => {}}
           setAddState={setAddState}
           sectionId={sectionId}
+          setAddLessonClick={setAddLessonClick}
         />
       );
       break;
@@ -109,6 +110,7 @@ const LessonAddList = ({
           setIsEditing={() => {}}
           setAddState={setAddState}
           sectionId={sectionId}
+          setAddLessonClick={setAddLessonClick}
         />
       );
       break;
