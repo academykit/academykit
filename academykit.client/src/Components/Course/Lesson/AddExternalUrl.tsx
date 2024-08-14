@@ -30,7 +30,9 @@ const schema = () => {
 
   return Yup.object().shape({
     name: Yup.string().required(t("feedback_name_required") as string),
-    externalUrl: Yup.string().required(t("externalUrl") as string),
+    externalUrl: Yup.string()
+      .url("Invalid URL format.")
+      .required(t("externalUrl") as string),
   });
 };
 

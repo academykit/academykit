@@ -13,7 +13,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240813101744_support content for lesson")]
-    partial class supportcontentforlesson
+    partial class SupportContentForLesson
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

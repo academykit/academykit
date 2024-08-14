@@ -1,21 +1,22 @@
+using System.Text.Json;
 using AcademyKit.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RestSharp;
 
 namespace AcademyKit.Api.Controllers
 {
     public class IframelyController : BaseApiController
     {
-        private readonly ILogger<IframelyController> logger;
         private readonly string IFRAMELY_API_BASE_URL;
         private readonly string IFRAMELY_API_KEY;
 
-        public IframelyController(IConfiguration configuration, ILogger<IframelyController> logger)
+        public IframelyController(IConfiguration configuration)
         {
             IFRAMELY_API_BASE_URL = configuration.GetSection("IFRAMELY:API_BASE_URL").Value;
             IFRAMELY_API_KEY = configuration.GetSection("IFRAMELY:API_KEY").Value;
-            this.logger = logger;
         }
 
         [HttpGet("oembed")]
@@ -28,24 +29,18 @@ namespace AcademyKit.Api.Controllers
             }
             try
             {
-                using (var httpClient = new HttpClient())
-                {
-                    var requestUrl =
-                        $"{IFRAMELY_API_BASE_URL}/api/oembed?url={System.Web.HttpUtility.UrlEncode(url)}&key={IFRAMELY_API_KEY}";
-
-                    // Send the request to the iFramely API
-                    var response = await httpClient.GetAsync(requestUrl);
-                    response.EnsureSuccessStatusCode(); // Throw if not a success code.
-
-                    // Read the response content
-                    var responseBody = await response.Content.ReadAsStringAsync();
-
-                    // Optionally, parse the JSON response if you need to process it
-                    var jsonResponse = JObject.Parse(responseBody);
-                    logger.LogDebug("response from iframely", responseBody);
-                    // Return JSON response to the client
-                    return Ok(jsonResponse);
-                }
+                var client = new RestClient(IFRAMELY_API_BASE_URL);
+                var request = new RestRequest("/api/oembed");
+                request.AddQueryParameter("url", url);
+                request.AddQueryParameter("key", IFRAMELY_API_KEY);
+                request.AddQueryParameter("iframe", 1);
+                request.AddQueryParameter("omit_script", 1);
+                request.AddHeader("Content-Type", "application/json");
+                var response = await client.GetAsync(request).ConfigureAwait(false);
+                var jObject = JObject.Parse(response.Content);
+                var jsonString = JsonConvert.SerializeObject(jObject);
+                var json = JsonDocument.Parse(jsonString);
+                return Ok(json);
             }
             catch (Exception ex)
             {

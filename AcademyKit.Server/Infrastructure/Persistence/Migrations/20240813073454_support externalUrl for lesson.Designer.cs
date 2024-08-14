@@ -13,7 +13,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240813073454_support externalUrl for lesson")]
-    partial class supportexternalUrlforlesson
+    partial class SupportExternalUrlForLesson
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

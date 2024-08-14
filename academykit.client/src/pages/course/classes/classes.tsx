@@ -237,6 +237,7 @@ const Classes = () => {
                 className={cx(classes.videoSection, classes.externalSection)}
               >
                 <ExternalLinkViewer
+                  key={courseLesson.data?.id}
                   url={courseLesson.data?.externalUrl ?? ""}
                 />
               </Box>

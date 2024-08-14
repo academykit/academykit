@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class supportexternalUrlforlesson : Migration
+    public partial class SupportExternalUrlForLesson : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

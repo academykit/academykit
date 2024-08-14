@@ -5,7 +5,7 @@
 namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class supportcontentforlesson : Migration
+    public partial class SupportContentForLesson : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
