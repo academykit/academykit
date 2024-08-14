@@ -312,4 +312,7 @@ export const api = {
     trainingSuggest: `/api/AITrainingGenerator`,
     aiMasterSetup: `/api/AIKey`,
   },
+  update: {
+    checkVersions: "/api/admin/settings/CheckUpdates",
+  },
 };
