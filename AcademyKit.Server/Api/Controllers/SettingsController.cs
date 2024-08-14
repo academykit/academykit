@@ -6,7 +6,6 @@
     using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Application.Common.Models.ResponseModels;
     using AcademyKit.Infrastructure.Localization;
-    using Docker.DotNet;
     using FluentValidation;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -270,28 +269,21 @@
         [HttpGet("CheckUpdates")]
         public async Task<CheckUpdatesResponseModel> CheckUpdates()
         {
-            var socket = configuration.GetValue<string>("Docker:Socket");
             var registry = configuration.GetValue<string>("Docker:Registry");
             var repo = configuration.GetValue<string>("Docker:Repo");
-            var containerName = configuration.GetValue<string>("Docker:ContainerName");
             var releaseNotesUrl = configuration.GetValue<string>("Docker:ReleaseNotesUrl");
-
-            var client = (
-                string.IsNullOrEmpty(socket)
-                    ? new DockerClientConfiguration()
-                    : new DockerClientConfiguration(new Uri(socket))
-            ).CreateClient();
 
             var tags = await Infrastructure.Helpers.HttpClientUtils.GetImageTagsAsync(
                 registry,
                 repo
             );
 
-            var container = await client.Containers.InspectContainerAsync(containerName);
-
             var latestRemoteVersion =
                 Infrastructure.Helpers.CommonHelper.FilterLatestSemanticVersion(tags);
-            var currentVersion = container.Config.Labels["org.opencontainers.image.version"];
+            var currentVersion = Assembly
+                .GetEntryAssembly()
+                ?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                ?.InformationalVersion;
 
             return new CheckUpdatesResponseModel
             {
@@ -300,7 +292,10 @@
                 Available =
                     currentVersion == null
                     || latestRemoteVersion == null
-                    || new Version(currentVersion) < new Version(latestRemoteVersion),
+                    || Infrastructure.Helpers.CommonHelper.CompareVersion(
+                        currentVersion,
+                        latestRemoteVersion
+                    ) < 0,
                 ReleaseNotesUrl = releaseNotesUrl
             };
         }
