@@ -7,12 +7,11 @@ namespace AcademyKit.Api.Controllers
 {
     public class IframelyController : BaseApiController
     {
-
         private readonly ILogger<IframelyController> logger;
         private readonly string IFRAMELY_API_BASE_URL;
         private readonly string IFRAMELY_API_KEY;
-        public IframelyController(IConfiguration configuration,
-         ILogger<IframelyController> logger)
+
+        public IframelyController(IConfiguration configuration, ILogger<IframelyController> logger)
         {
             IFRAMELY_API_BASE_URL = configuration.GetSection("IFRAMELY:API_BASE_URL").Value;
             IFRAMELY_API_KEY = configuration.GetSection("IFRAMELY:API_KEY").Value;
@@ -31,7 +30,8 @@ namespace AcademyKit.Api.Controllers
             {
                 using (var httpClient = new HttpClient())
                 {
-                    var requestUrl = $"{IFRAMELY_API_BASE_URL}/api/oembed?url={System.Web.HttpUtility.UrlEncode(url)}&key={IFRAMELY_API_KEY}";
+                    var requestUrl =
+                        $"{IFRAMELY_API_BASE_URL}/api/oembed?url={System.Web.HttpUtility.UrlEncode(url)}&key={IFRAMELY_API_KEY}";
 
                     // Send the request to the iFramely API
                     var response = await httpClient.GetAsync(requestUrl);

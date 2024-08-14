@@ -105,3 +105,9 @@ docker run -d -p 8080:80 -v //var/run/docker.sock:/var/run/docker.sock --name ac
 # mac
 sudo lsof -t -i tcp:7042 | xargs kill -9
 ```
+
+## Formatting
+Run
+```bash
+dotnet csharpier .
+```
