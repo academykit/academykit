@@ -88,7 +88,13 @@ docker build -t academy .
 Run docker container
 
 ```bash
-docker run -d -p 8080:80 --name academy academy
+docker run -d -p 8080:80 -v /var/run/docker.sock:/var/run/docker.sock --name academy academy
+```
+
+or on Windows
+
+```cmd
+docker run -d -p 8080:80 -v //var/run/docker.sock:/var/run/docker.sock --name academy academy
 ```
 
 ## Known issues
