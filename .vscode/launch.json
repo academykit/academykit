@@ -9,9 +9,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/Api/bin/Debug/net7.0/Api.dll",
+            "program": "${workspaceFolder}/AcademyKit.Server/bin/Debug/net8.0/AcademyKit.Server.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/Api",
+            "cwd": "${workspaceFolder}/AcademyKit.Server",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",

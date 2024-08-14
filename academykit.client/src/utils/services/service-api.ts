@@ -220,7 +220,7 @@ export const api = {
     userFeedback: (lessonId: string, userId: string, search?: string) =>
       search
         ? "/api/feedback" +
-          `?${search}&LessonIdentity=${lessonId}&UserId=${userId}`
+        `?${search}&LessonIdentity=${lessonId}&UserId=${userId}`
         : "/api/feedback" + `?LessonIdentity=${lessonId}&UserId=${userId}`,
     exportFeedback: (lessonId: string) => `/api/Feedback/${lessonId}/export`,
     graph: (id: string) => `/api/Feedback/${id}/chart`,
@@ -315,4 +315,7 @@ export const api = {
   iframely: {
     oembed: (url: string) => `/api/iframely/oembed?url=${url}`,
   },
+  update: {
+    checkVersions: "/api/admin/settings/CheckUpdates",
+  }
 };

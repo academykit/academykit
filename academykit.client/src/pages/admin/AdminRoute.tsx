@@ -31,6 +31,7 @@ const ZoomSettings = lazyWithRetry(() => import("./zoomSettings"));
 const Log = lazyWithRetry(() => import("./log"));
 const MailNotification = lazyWithRetry(() => import("./MailNotification"));
 const AIMasterSetup = lazyWithRetry(() => import("./AIMasterSetup"));
+const Updates = lazyWithRetry(() => import("./updates"));
 
 const AdminRoute = () => {
   return (
@@ -73,6 +74,7 @@ const AdminRoutesChild = () => {
           <Route path={"/fileStorage"} element={<FileStorage />} />
           <Route path={"/ai-setup"} element={<AIMasterSetup />} />
         </Route>
+        <Route path="/updates" element={<Updates />} />
       </Routes>
     </Suspense>
   );
