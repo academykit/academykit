@@ -23,7 +23,7 @@
         /// Represents the request property name for the current user.
         /// </summary>
         public const string CurrentUserPropertyName = "CurrentUser";
-        private const string SemanticVersionPattern = @"^\d+\.\d+\.\d+(-\w+)?$"; // Basic semver regex
+        private const string SemanticVersionPattern = @"^\d+\.\d+\.\d+(-\w+)?(\+\w+)?$"; // Basic semver regex
 
         [GeneratedRegex(SemanticVersionPattern)]
         public static partial Regex SemanticVersionRegex();
@@ -435,30 +435,60 @@
         }
 
         /// <summary>
+        /// Compare semantic versions
+        /// </summary>
+        /// <param name="v1">semantic version 1</param>
+        /// <param name="v2">semantic version 2</param>///
+        /// <returns>Compare result as int</returns>
+        public static int CompareVersion(string v1, string v2)
+        {
+            var split1 = v1.Split('-');
+            var split2 = v2.Split('-');
+            var version1 = new Version(split1[0]);
+            var version2 = new Version(split2[0]);
+            if (version1 < version2)
+            {
+                return -1;
+            }
+            else if (version1 > version2)
+            {
+                return 1;
+            }
+            else
+            {
+                var suffix1 = split1.Length > 1 ? split1[1] : "";
+                var suffix2 = split2.Length > 1 ? split2[1] : "";
+                static int GetSuffixValue(string suffix)
+                {
+                    if (suffix.StartsWith("alpha"))
+                    {
+                        return -2;
+                    }
+                    else if (suffix.StartsWith("beta"))
+                    {
+                        return -1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+
+                return GetSuffixValue(suffix1) - GetSuffixValue(suffix2);
+            }
+        }
+
+        /// <summary>
         /// Filter the provided tags to get the latest semantic version
         /// </summary>
         /// <param name="tags">the tags to be filtered</param>
         /// <returns>The tag of latest semantic version</returns>
         public static string FilterLatestSemanticVersion(IEnumerable<string> tags)
         {
-            var semanticVersions = tags.Select(static tag =>
-                {
-                    var lastColonIndex = tag.LastIndexOf(':');
-                    if (lastColonIndex >= 0)
-                    {
-                        return tag[(lastColonIndex + 1)..];
-                    }
-                    else
-                    {
-                        return tag;
-                    }
-                })
-                .Where(tag => SemanticVersionRegex().IsMatch(tag)) // Filter out non-semver tags
-                .Select(tag => new Version(tag.Split('-')[0])) // Parse versions, ignore pre-release
-                .OrderByDescending(v => v) // Sort in descending order
+            var semanticVersions = tags.Where(tag => SemanticVersionRegex().IsMatch(tag)) // Filter out non-semver tags
+                .OrderDescending(Comparer<string>.Create(CompareVersion))
                 .ToList();
-
-            return semanticVersions.Count > 0 ? semanticVersions.First().ToString() : null;
+            return semanticVersions.DefaultIfEmpty(null).First();
         }
     }
 }
