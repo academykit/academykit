@@ -36,7 +36,10 @@ namespace AcademyKit.Infrastructure.Helpers
         {
             var httpClient = new HttpClient();
 
-            var authenticationRequest = new HttpRequestMessage(HttpMethod.Get, $"https://{registryUrl}/token?scope=repository:{imageName}:pull");
+            var authenticationRequest = new HttpRequestMessage(
+                HttpMethod.Get,
+                $"https://{registryUrl}/token?scope=repository:{imageName}:pull"
+            );
             var authenticationResponse = await httpClient.SendAsync(authenticationRequest);
             authenticationResponse.EnsureSuccessStatusCode();
 
@@ -44,14 +47,21 @@ namespace AcademyKit.Infrastructure.Helpers
 
             var token = JsonConvert.DeserializeAnonymousType(tokenJson, new { token = "" });
 
-            var listRequest = new HttpRequestMessage(HttpMethod.Get, $"https://{registryUrl}/v2/{imageName}/tags/list");
-            listRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token.token);
+            var listRequest = new HttpRequestMessage(
+                HttpMethod.Get,
+                $"https://{registryUrl}/v2/{imageName}/tags/list"
+            );
+            listRequest.Headers.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token.token);
 
             var listResponse = await httpClient.SendAsync(listRequest);
             listResponse.EnsureSuccessStatusCode();
 
             var manifestJson = await listResponse.Content.ReadAsStringAsync();
-            var manifest = JsonConvert.DeserializeAnonymousType(manifestJson, new { tags = Array.Empty<string>() });
+            var manifest = JsonConvert.DeserializeAnonymousType(
+                manifestJson,
+                new { tags = Array.Empty<string>() }
+            );
 
             return manifest.tags;
         }

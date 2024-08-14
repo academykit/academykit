@@ -441,8 +441,7 @@
         /// <returns>The tag of latest semantic version</returns>
         public static string FilterLatestSemanticVersion(IEnumerable<string> tags)
         {
-            var semanticVersions = tags
-                .Select(static tag =>
+            var semanticVersions = tags.Select(static tag =>
                 {
                     var lastColonIndex = tag.LastIndexOf(':');
                     if (lastColonIndex >= 0)

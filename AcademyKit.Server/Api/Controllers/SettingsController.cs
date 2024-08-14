@@ -276,21 +276,31 @@
             var containerName = configuration.GetValue<string>("Docker:ContainerName");
             var releaseNotesUrl = configuration.GetValue<string>("Docker:ReleaseNotesUrl");
 
-            var client = (string.IsNullOrEmpty(socket) ? new DockerClientConfiguration() : new DockerClientConfiguration(new Uri(socket)))
-                 .CreateClient();
+            var client = (
+                string.IsNullOrEmpty(socket)
+                    ? new DockerClientConfiguration()
+                    : new DockerClientConfiguration(new Uri(socket))
+            ).CreateClient();
 
-            var tags = await Infrastructure.Helpers.HttpClientUtils.GetImageTagsAsync(registry, repo);
+            var tags = await Infrastructure.Helpers.HttpClientUtils.GetImageTagsAsync(
+                registry,
+                repo
+            );
 
             var container = await client.Containers.InspectContainerAsync(containerName);
 
-            var latestRemoteVersion = Infrastructure.Helpers.CommonHelper.FilterLatestSemanticVersion(tags);
+            var latestRemoteVersion =
+                Infrastructure.Helpers.CommonHelper.FilterLatestSemanticVersion(tags);
             var currentVersion = container.Config.Labels["org.opencontainers.image.version"];
 
             return new CheckUpdatesResponseModel
             {
                 Latest = latestRemoteVersion,
                 Current = currentVersion,
-                Available = currentVersion == null || latestRemoteVersion == null || new Version(currentVersion) < new Version(latestRemoteVersion),
+                Available =
+                    currentVersion == null
+                    || latestRemoteVersion == null
+                    || new Version(currentVersion) < new Version(latestRemoteVersion),
                 ReleaseNotesUrl = releaseNotesUrl
             };
         }
