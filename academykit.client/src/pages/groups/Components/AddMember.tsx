@@ -75,7 +75,7 @@ const AddMember = ({
   const getDepartment = useDepartmentSetting(depSearch);
 
   const { id } = useParams();
-  const { mutateAsync, isLoading } = useAddGroupMember(
+  const { mutateAsync, isPending } = useAddGroupMember(
     id as string,
     searchParams
   );
@@ -199,7 +199,7 @@ const AddMember = ({
             {...form.getInputProps("email")}
           />
           <Group mt={"lg"} justify="flex-end">
-            <Button loading={isLoading} mr={10} type="submit" size="md">
+            <Button loading={isPending} mr={10} type="submit" size="md">
               {t("submit")}
             </Button>
           </Group>

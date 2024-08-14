@@ -105,14 +105,14 @@ const Dashboard = () => {
           title={t("status_change_completed") as string}
         >
           <Button
-            loading={courseStatus.isLoading}
+            loading={courseStatus.isPending}
             mr={5}
             onClick={handleCompleted}
           >
             {t("yes")}
           </Button>
           <Button
-            loading={courseStatus.isLoading}
+            loading={courseStatus.isPending}
             variant="outline"
             onClick={() => setOpened(false)}
           >
@@ -141,7 +141,7 @@ const Dashboard = () => {
               <li>{t("lesson_description_added")}</li>
             </ol>
             <Button
-              loading={courseStatus.isLoading}
+              loading={courseStatus.isPending}
               onClick={onPublish}
               disabled={courseButton}
             >
@@ -215,7 +215,7 @@ const Dashboard = () => {
               <li>{t("lessons_sections_properly_added")}</li>
               <li>{t("lesson_description_added")}</li>
             </ol>
-            <Button loading={courseStatus.isLoading} onClick={onPublish}>
+            <Button loading={courseStatus.isPending} onClick={onPublish}>
               {t("publish")}{" "}
             </Button>
           </Card>

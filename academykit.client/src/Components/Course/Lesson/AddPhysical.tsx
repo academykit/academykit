@@ -187,7 +187,7 @@ const AddPhysical = ({
       <Group mt="md">
         <Button
           type="submit"
-          loading={lesson.isLoading || updateLesson.isLoading}
+          loading={lesson.isPending || updateLesson.isPending}
         >
           {t("submit")}
         </Button>

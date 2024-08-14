@@ -122,7 +122,7 @@ const GroupDetail = () => {
                 {...form.getInputProps("name")}
                 mb={10}
               />
-              <Button loading={updateGroups.isLoading} type="submit">
+              <Button loading={updateGroups.isPending} type="submit">
                 {t("save")}
               </Button>
               <Button

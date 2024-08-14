@@ -14,14 +14,14 @@ const AssessmentExam = () => {
     assessmentExam.refetch();
   }, []);
 
-  if (assessmentExam.isLoading) {
+  if (assessmentExam.isPending) {
     return <Loader />;
   }
   if (assessmentExam.isError) {
     throw assessmentExam.error;
   }
 
-  if (assessmentExam.data.questions.length === 0) {
+  if (assessmentExam.data?.questions?.length === 0) {
     return (
       <Container fluid>
         <div>

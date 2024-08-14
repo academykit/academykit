@@ -229,74 +229,74 @@ const AssessmentQuestionForm = ({ onCancel, data }: IProps) => {
 
               {(form.values.type === QuestionType.MultipleChoice.toString() ||
                 form.values.type === QuestionType.SingleChoice.toString()) && (
-                <Box>
-                  <Text mt={20}>{t("options")}</Text>
-                  {form.values.assessmentQuestionOptions.map((_x, i) => (
-                    <Flex align={"center"} gap={"md"} key={i} mb={30}>
-                      {QuestionType.MultipleChoice.toString() ===
-                      form.values.type ? (
-                        <Checkbox
-                          checked={
-                            form.values.assessmentQuestionOptions[i].isCorrect
-                          }
-                          {...form.getInputProps(
-                            `assessmentQuestionOptions.${i}.isCorrect`
-                          )}
-                        ></Checkbox>
-                      ) : (
-                        <Radio
-                          onChange={() => onChangeRadioType(i)}
-                          checked={
-                            form.values.assessmentQuestionOptions[i].isCorrect
-                          }
-                        ></Radio>
-                      )}
-                      <div style={{ width: "80%" }}>
-                        <RichTextEditor
-                          label={`assessmentQuestionOptions.${i}.option`}
-                          placeholder={t("option_placeholder") as string}
-                          formContext={useFormContext}
-                        ></RichTextEditor>
-                      </div>
-                      <UnstyledButton
-                        onClick={() => {
-                          form.insertListItem(
-                            "assessmentQuestionOptions",
-                            {
-                              option: "",
-                              isCorrect: false,
-                            },
-                            i + 1
-                          );
-                        }}
-                      >
-                        <IconPlus color="green" />
-                      </UnstyledButton>
-                      {form.values.assessmentQuestionOptions.length > 1 && (
+                  <Box>
+                    <Text mt={20}>{t("options")}</Text>
+                    {form.values.assessmentQuestionOptions.map((_x, i) => (
+                      <Flex align={"center"} gap={"md"} key={i} mb={30}>
+                        {QuestionType.MultipleChoice.toString() ===
+                          form.values.type ? (
+                          <Checkbox
+                            checked={
+                              form.values.assessmentQuestionOptions[i].isCorrect
+                            }
+                            {...form.getInputProps(
+                              `assessmentQuestionOptions.${i}.isCorrect`
+                            )}
+                          ></Checkbox>
+                        ) : (
+                          <Radio
+                            onChange={() => onChangeRadioType(i)}
+                            checked={
+                              form.values.assessmentQuestionOptions[i].isCorrect
+                            }
+                          ></Radio>
+                        )}
+                        <div style={{ width: "80%" }}>
+                          <RichTextEditor
+                            label={`assessmentQuestionOptions.${i}.option`}
+                            placeholder={t("option_placeholder") as string}
+                            formContext={useFormContext}
+                          ></RichTextEditor>
+                        </div>
                         <UnstyledButton
                           onClick={() => {
-                            form.removeListItem("assessmentQuestionOptions", i);
+                            form.insertListItem(
+                              "assessmentQuestionOptions",
+                              {
+                                option: "",
+                                isCorrect: false,
+                              },
+                              i + 1
+                            );
                           }}
                         >
-                          <IconTrash color="red" />
+                          <IconPlus color="green" />
                         </UnstyledButton>
+                        {form.values.assessmentQuestionOptions.length > 1 && (
+                          <UnstyledButton
+                            onClick={() => {
+                              form.removeListItem("assessmentQuestionOptions", i);
+                            }}
+                          >
+                            <IconTrash color="red" />
+                          </UnstyledButton>
+                        )}
+                      </Flex>
+                    ))}
+                    {typeof form.errors[`assessmentQuestionOptions`] ===
+                      "string" && (
+                        <span style={{ color: "red" }}>
+                          {form.errors[`assessmentQuestionOptions`]}
+                        </span>
                       )}
-                    </Flex>
-                  ))}
-                  {typeof form.errors[`assessmentQuestionOptions`] ===
-                    "string" && (
-                    <span style={{ color: "red" }}>
-                      {form.errors[`assessmentQuestionOptions`]}
-                    </span>
-                  )}
-                </Box>
-              )}
+                  </Box>
+                )}
               <Group mt={20}>
                 <Button
                   type="submit"
                   loading={
-                    postAssessmentQuestion.isLoading ||
-                    updateAssessmentQuestion.isLoading
+                    postAssessmentQuestion.isPending ||
+                    updateAssessmentQuestion.isPending
                   }
                 >
                   {t("save")}

@@ -123,7 +123,7 @@ const CommentReply = ({
             />
             <Group>
               <Button
-                loading={editReply.isLoading}
+                loading={editReply.isPending}
                 size="sm"
                 type="submit"
                 disabled={!form.values.content.trim()}

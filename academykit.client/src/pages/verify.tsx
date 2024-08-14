@@ -38,7 +38,7 @@ const Verify = () => {
           <a href="mailto:hello@academykit.co">hello@academykit.co</a>
         </Text>
         <Text mt={10}>{t("valid_five_minutes")}</Text>
-        <Button mt={20} loading={resendEmail.isLoading} onClick={handleClick}>
+        <Button mt={20} loading={resendEmail.isPending} onClick={handleClick}>
           {t("resend_verification")}
         </Button>
       </div>

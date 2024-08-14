@@ -156,7 +156,7 @@ const Rows = ({
               <Button
                 size="xs"
                 mt={10}
-                loading={postUserData.isLoading}
+                loading={postUserData.isPending}
                 onClick={() => handleSubmit([item.userId])}
               >
                 {t("issue")}
@@ -268,7 +268,7 @@ const ManageStudents = ({
               onClick={() => setSubmitModal(true)}
               disabled={selected.length === 0}
               mr={20}
-              loading={selected.length !== 0 && postUserData.isLoading}
+              loading={selected.length !== 0 && postUserData.isPending}
             >
               {t("issue_certificate")}
             </Button>
@@ -276,7 +276,7 @@ const ManageStudents = ({
 
           {getStudentStat.data && getStudentStat.data?.items.length >= 1 && (
             <Button
-              loading={selected.length === 0 && postUserData.isLoading}
+              loading={selected.length === 0 && postUserData.isPending}
               disabled={selected.length > 0}
               onClick={() => setOpenModal(true)}
             >

@@ -50,12 +50,12 @@ const AssignmentResult = () => {
           <AssignmentReviewForm
             reviewId={getAssignment.data?.assignmentReview?.id}
             closeModal={() => setShowReviewBox()}
-            edit={!!getAssignment.data.assignmentReview}
+            edit={!!getAssignment.data?.assignmentReview}
             editData={getAssignment.data}
           />
         )}
       </Modal>
-      {getAssignment.data.assignments.map((x) => (
+      {getAssignment.data?.assignments.map((x) => (
         <Card key={x.id} shadow="sm" my={10} withBorder>
           <Title>{x.name}</Title>
           {x.description && (
@@ -106,7 +106,7 @@ const AssignmentResult = () => {
           )}
         </Card>
       ))}
-      {getAssignment.data.assignmentReview && (
+      {getAssignment.data?.assignmentReview && (
         <Paper p={20}>
           <Title>{t("review")}</Title>
           <Group>

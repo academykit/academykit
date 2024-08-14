@@ -169,7 +169,7 @@ const UserRow = ({
                 color: colorScheme === "dark" ? "#F8F9FA" : "#25262B",
               }}
             >
-              {resend.isLoading ? (
+              {resend.isPending ? (
                 <Loader variant="oval" />
               ) : (
                 <IconSend size={20} />

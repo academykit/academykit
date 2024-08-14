@@ -250,7 +250,7 @@ const MyTrainingExternal = () => {
               <Button
                 disabled={!cForm?.isReady}
                 type="submit"
-                loading={addCertificate.isLoading}
+                loading={addCertificate.isPending}
               >
                 {t("submit")}
               </Button>

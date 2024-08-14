@@ -184,7 +184,7 @@ const ConfirmToken = () => {
                     </Link>
                   </Group>
                   <Button
-                    loading={login.isLoading}
+                    loading={login.isPending}
                     fullWidth
                     mt="xl"
                     type="submit"
@@ -238,7 +238,7 @@ const ConfirmToken = () => {
                     </Link>
                   </Group>
                   <Button
-                    loading={login.isLoading}
+                    loading={login.isPending}
                     fullWidth
                     mt="xl"
                     type="submit"

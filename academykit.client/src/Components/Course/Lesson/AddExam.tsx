@@ -300,7 +300,7 @@ const AddExam = ({
         <Group mt="md">
           <Button
             type="submit"
-            loading={updateLesson.isLoading || lesson.isLoading}
+            loading={updateLesson.isPending || lesson.isPending}
           >
             {t("submit")}
           </Button>

@@ -70,7 +70,7 @@ const AssessmentItem = ({ data }: IProps) => {
         open={confirmDelete}
         onClose={setConfirmDelete}
         onConfirm={deleteHandler}
-        loading={deleteAssessmentQuestion.isLoading}
+        loading={deleteAssessmentQuestion.isPending}
       />
 
       <Paper shadow={"lg"} style={{ width: "100%" }} my={20} withBorder p={20}>
@@ -114,20 +114,20 @@ const AssessmentItem = ({ data }: IProps) => {
         <Box my={20}>
           {(data.type === FeedbackType.MultipleChoice ||
             data.type === FeedbackType.SingleChoice) && (
-            <>
-              <Text>{t("options")}</Text>
-              {data.assessmentQuestionOptions?.map((x) => (
-                <Group my={10} key={x.id}>
-                  <div style={{ width: "100%" }}>
-                    <TextViewer
-                      content={x.option}
-                      styles={{ root: { flexGrow: 1 } }}
-                    ></TextViewer>
-                  </div>
-                </Group>
-              ))}
-            </>
-          )}
+              <>
+                <Text>{t("options")}</Text>
+                {data.assessmentQuestionOptions?.map((x) => (
+                  <Group my={10} key={x.id}>
+                    <div style={{ width: "100%" }}>
+                      <TextViewer
+                        content={x.option}
+                        styles={{ root: { flexGrow: 1 } }}
+                      ></TextViewer>
+                    </div>
+                  </Group>
+                ))}
+              </>
+            )}
         </Box>
       </Paper>
     </>

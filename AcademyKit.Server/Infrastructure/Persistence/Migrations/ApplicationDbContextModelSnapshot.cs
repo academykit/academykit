@@ -3,6 +3,7 @@ using System;
 using AcademyKit.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -16,8 +17,10 @@ namespace Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.9")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("AcademyKit.Domain.Entities.AIKey", b =>
                 {
@@ -1974,6 +1977,11 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(50)")
                         .HasColumnName("id");
 
+                    b.Property<string>("Content")
+                        .HasMaxLength(5000)
+                        .HasColumnType("VARCHAR(5000)")
+                        .HasColumnName("content");
+
                     b.Property<string>("CourseId")
                         .IsRequired()
                         .HasColumnType("VARCHAR(50)")
@@ -2006,6 +2014,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("DATETIME")
                         .HasColumnName("end_date");
+
+                    b.Property<string>("ExternalUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnName("external_url");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -2158,6 +2171,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Exception")
                         .HasColumnType("VARCHAR(5000)");

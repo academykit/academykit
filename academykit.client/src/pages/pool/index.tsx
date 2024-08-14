@@ -47,7 +47,7 @@ const MCQPool = ({
 }: IWithSearchPagination) => {
   const pools = usePools(searchParams);
   const [selectedView, setSelectedView] = useState("list");
-  const { mutateAsync, isLoading } = useAddPool(searchParams);
+  const { mutateAsync, isPending } = useAddPool(searchParams);
   const [opened, { open, close }] = useDisclosure(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -94,7 +94,7 @@ const MCQPool = ({
             </FocusTrap>
             <Space h="md" />
             <Group justify="flex-end">
-              <Button type="submit" loading={isLoading}>
+              <Button type="submit" loading={isPending}>
                 {t("create")}
               </Button>
             </Group>

@@ -63,10 +63,8 @@ export const useReAuth = () => {
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     retryOnMount: false,
-    onError: () => {},
     select: (data) => data.data,
     enabled: !!localStorage.getItem(TOKEN_STORAGE),
-    onSuccess: () => {},
   });
 };
 
@@ -78,10 +76,8 @@ export const useProfileAuth = (id: string) => {
       return httpClient.get<IUserProfile>(api.auth.getUser(id as string));
     },
 
-    onError: () => {},
     select: (data) => data.data,
     enabled: !!localStorage.getItem(TOKEN_STORAGE),
-    onSuccess: () => {},
   });
 };
 

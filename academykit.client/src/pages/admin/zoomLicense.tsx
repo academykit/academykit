@@ -109,9 +109,8 @@ export default function ZoomLicense() {
         {opened && (
           <DeleteModal
             key={item.id}
-            title={`${t("zoom_license_delete_confirmation")} "${
-              item.licenseEmail
-            }"?`}
+            title={`${t("zoom_license_delete_confirmation")} "${item.licenseEmail
+              }"?`}
             open={opened}
             onClose={() => setOpened(false)}
             onConfirm={handleDelete}
@@ -271,7 +270,7 @@ export default function ZoomLicense() {
           <Group mt={10}>
             <Button
               type="submit"
-              loading={addZoomLicense.isLoading || updateZoomLicense.isLoading}
+              loading={addZoomLicense.isPending || updateZoomLicense.isPending}
             >
               {t("submit")}
             </Button>

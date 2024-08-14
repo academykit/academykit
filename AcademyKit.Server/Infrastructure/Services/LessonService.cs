@@ -359,6 +359,15 @@
                     .ConfigureAwait(false);
             }
 
+            if (lesson.Type == LessonType.ExternalUrl && !string.IsNullOrEmpty(lesson.ExternalUrl))
+            {
+                responseModel.ExternalUrl = lesson.ExternalUrl;
+            }
+            if (lesson.Type == LessonType.Content && !string.IsNullOrEmpty(lesson.Content))
+            {
+                responseModel.Content = lesson.Content;
+            }
+
             bool? HasAttended = null;
             if (lesson.Type == LessonType.Physical)
             {
@@ -482,6 +491,16 @@
                 if (lesson.Type == LessonType.Document)
                 {
                     lesson.DocumentUrl = model.DocumentUrl;
+                }
+
+                if (lesson.Type == LessonType.ExternalUrl)
+                {
+                    lesson.ExternalUrl = model.ExternalUrl;
+                }
+
+                if (lesson.Type == LessonType.Content)
+                {
+                    lesson.Content = model.Content;
                 }
 
                 if (lesson.Type == LessonType.LiveClass)
@@ -664,6 +683,16 @@
                 if (existing.Type == LessonType.Document)
                 {
                     existing.DocumentUrl = model.DocumentUrl;
+                }
+
+                if (existing.Type == LessonType.ExternalUrl)
+                {
+                    existing.ExternalUrl = model.ExternalUrl;
+                }
+
+                if (existing.Type == LessonType.Content)
+                {
+                    existing.Content = model.Content;
                 }
 
                 if (existing.Type == LessonType.Video)

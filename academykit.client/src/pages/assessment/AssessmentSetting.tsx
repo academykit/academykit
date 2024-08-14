@@ -99,7 +99,7 @@ const AssessmentSetting = () => {
               <li>{t("assessment_description_added")}</li>
             </ol>
             <Button
-              loading={assessmentStatus.isLoading}
+              loading={assessmentStatus.isPending}
               onClick={onPublish}
               disabled={assessmentButton}
             >

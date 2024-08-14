@@ -1247,6 +1247,8 @@
                                 VideoUrl = l.VideoUrl,
                                 DocumentUrl = l.DocumentUrl,
                                 ThumbnailUrl = l.ThumbnailUrl,
+                                ExternalUrl = l.ExternalUrl,
+                                Content = l.Content,
                                 Description = l.Description,
                                 Type = l.Type,
                                 Status = l.Status,

@@ -40,42 +40,44 @@ const schema = () => {
     answers: Yup.array()
       .when(["type"], {
         is: FeedbackType.MultipleChoice.toString(),
-        then: (schema) => schema
-          .min(1, t("more_option_required") as string)
-          .test(
-            t("test"),
-            t("more_option_required") as string,
-            function (value: any) {
-              const a = value.length > 1;
-              return a;
-            }
-          )
-          .of(
-            Yup.object().shape({
-              option: Yup.string()
-                .trim()
-                .required(t("option_required") as string),
-            })
-          ),
+        then: (schema) =>
+          schema
+            .min(1, t("more_option_required") as string)
+            .test(
+              t("test"),
+              t("more_option_required") as string,
+              function (value: any) {
+                const a = value.length > 1;
+                return a;
+              }
+            )
+            .of(
+              Yup.object().shape({
+                option: Yup.string()
+                  .trim()
+                  .required(t("option_required") as string),
+              })
+            ),
       })
       .when(["type"], {
         is: FeedbackType.SingleChoice.toString(),
-        then: (schema) => schema
-          .test(
-            t("test"),
-            t("more_option_required") as string,
-            function (value: any) {
-              const length: number = value && value.length;
-              return length > 1;
-            }
-          )
-          .of(
-            Yup.object().shape({
-              option: Yup.string()
-                .trim()
-                .required(t("option_required") as string),
-            })
-          ),
+        then: (schema) =>
+          schema
+            .test(
+              t("test"),
+              t("more_option_required") as string,
+              function (value: any) {
+                const length: number = value && value.length;
+                return length > 1;
+              }
+            )
+            .of(
+              Yup.object().shape({
+                option: Yup.string()
+                  .trim()
+                  .required(t("option_required") as string),
+              })
+            ),
       }),
   });
 };
@@ -183,7 +185,7 @@ const EditFeedback = ({
                 <Box>
                   <Text mt={20}>{t("options")}</Text>
                   {form.values.answers &&
-                    form.values.answers.map((x, i) => (
+                    form.values.answers.map((_, i) => (
                       <div
                         key={i}
                         style={{ marginBottom: "30px", width: "100%" }}
@@ -233,7 +235,7 @@ const EditFeedback = ({
                 size="sm"
                 type="submit"
                 loading={
-                  addFeedbackQuestions.isLoading
+                  addFeedbackQuestions.isPending
                   // || editAssignment.isLoading
                 }
               >

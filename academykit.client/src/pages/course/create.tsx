@@ -222,7 +222,7 @@ const CreateCoursePage = () => {
     }
   }, [isSuccess]);
 
-  const { mutateAsync, isLoading } = useCreateCourse();
+  const { mutateAsync, isPending } = useCreateCourse();
   const submitHandler = async (data: FormValues) => {
     try {
       const res = await mutateAsync({
@@ -309,7 +309,7 @@ const CreateCoursePage = () => {
                   title={aiSuggestion.data?.title}
                   description={aiSuggestion.data?.description}
                   isLoading={
-                    aiSuggestion.isLoading ||
+                    aiSuggestion.isPending ||
                     aiSuggestion.isFetching ||
                     aiSuggestion.isRefetching
                   }
@@ -549,7 +549,7 @@ const CreateCoursePage = () => {
                 disabled={!cForm?.isReady}
                 size="lg"
                 type="submit"
-                loading={isLoading}
+                loading={isPending}
               >
                 {t("submit")}
               </Button>

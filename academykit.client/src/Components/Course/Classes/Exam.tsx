@@ -73,7 +73,7 @@ const Exam = ({
           <ExamCounter
             duration={data.duration}
             onSubmit={() => submitButtonRef.current?.click()}
-            isLoading={examSubmission.isLoading}
+            isLoading={examSubmission.isPending}
             onClick={() => setShowConfirmation()}
           />
         ) : (

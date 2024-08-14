@@ -86,7 +86,7 @@ const changeEmailSchema = () => {
 
 const Account = () => {
   const [opened, setOpened] = useState(false);
-  const { mutateAsync, isLoading } = useChangePassword();
+  const { mutateAsync, isPending } = useChangePassword();
   const changeEmail = useChangeEmail();
   const auth = useAuth();
   const navigate = useNavigate();
@@ -185,7 +185,7 @@ const Account = () => {
             placeholder={t("confirm_your_new_email") as string}
             {...changeEmailForm.getInputProps("confirmEmail")}
           />
-          <Button type="submit" mt={10} loading={changeEmail.isLoading}>
+          <Button type="submit" mt={10} loading={changeEmail.isPending}>
             {t("change_email")}
           </Button>
         </form>
@@ -222,7 +222,7 @@ const Account = () => {
               label={t("confirm_password")}
               {...form.getInputProps("confirmPassword")}
             />
-            <Button type="submit" loading={isLoading}>
+            <Button type="submit" loading={isPending}>
               {t("save")}
             </Button>
           </Container>

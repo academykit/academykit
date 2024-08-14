@@ -104,7 +104,7 @@ const AddSectionForm = ({ slug }: { slug: string }) => {
   return (
     <form
       onSubmit={form.onSubmit(async (values) => {
-        if (!addSection.isLoading) {
+        if (!addSection.isPending) {
           try {
             const data = await addSection.mutateAsync({
               name: values.name,

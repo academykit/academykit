@@ -111,7 +111,7 @@ const CreateSignature = ({
     <FormProvider form={form}>
       {data && (
         <DeleteModal
-          loading={deleteSignature.isLoading}
+          loading={deleteSignature.isPending}
           title={t("sure_want_to_delete")}
           open={confirmDelete}
           onClose={setConfirmDelete}
@@ -158,7 +158,7 @@ const CreateSignature = ({
           <Group mt={30}>
             <Button
               disabled={!cForm?.isReady}
-              loading={createCertificate.isLoading || editSignature.isLoading}
+              loading={createCertificate.isPending || editSignature.isPending}
               type="submit"
             >
               {edit ? t("save_edit") : t("add")}

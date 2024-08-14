@@ -434,20 +434,20 @@ const EditAssessment = () => {
 
                         {form.values.skillsCriteriaRequestModels[index].rule !==
                           "" && (
-                          <NumberInput
-                            withAsterisk
-                            label={t("percentage")}
-                            min={0}
-                            stepHoldDelay={500}
-                            stepHoldInterval={(t) =>
-                              Math.max(1000 / t ** 2, 25)
-                            }
-                            placeholder={t("percentage_placeholder") as string}
-                            {...form.getInputProps(
-                              `skillsCriteriaRequestModels.${index}.percentage`
-                            )}
-                          />
-                        )}
+                            <NumberInput
+                              withAsterisk
+                              label={t("percentage")}
+                              min={0}
+                              stepHoldDelay={500}
+                              stepHoldInterval={(t) =>
+                                Math.max(1000 / t ** 2, 25)
+                              }
+                              placeholder={t("percentage_placeholder") as string}
+                              {...form.getInputProps(
+                                `skillsCriteriaRequestModels.${index}.percentage`
+                              )}
+                            />
+                          )}
 
                         <ActionIcon
                           variant="subtle"
@@ -483,7 +483,7 @@ const EditAssessment = () => {
               </Accordion.Item>
             </Accordion>
 
-            <Button mt={30} type="submit" loading={updateAssessment.isLoading}>
+            <Button mt={30} type="submit" loading={updateAssessment.isPending}>
               {t("submit")}
             </Button>
           </form>

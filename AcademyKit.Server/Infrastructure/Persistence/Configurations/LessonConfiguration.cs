@@ -69,6 +69,18 @@
                 .HasColumnType("VARCHAR(500)")
                 .HasMaxLength(500)
                 .IsRequired(false);
+            builder
+                .Property(x => x.ExternalUrl)
+                .HasColumnName("external_url")
+                .HasColumnType("VARCHAR(500)")
+                .HasMaxLength(500)
+                .IsRequired(false);
+            builder
+                .Property(x => x.Content)
+                .HasColumnName("content")
+                .HasColumnType("VARCHAR(5000)")
+                .HasMaxLength(5000)
+                .IsRequired(false);
             builder.Property(x => x.IsDeleted).HasColumnName("is_deleted").HasDefaultValue(false);
             builder
                 .Property(x => x.VideoKey)

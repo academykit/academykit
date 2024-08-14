@@ -96,7 +96,7 @@ const MCQDetails = () => {
                 placeholder={t("enter_pool_name") as string}
                 {...form.getInputProps("name")}
               />
-              <Button loading={addPool.isLoading} mt={20} type="submit">
+              <Button loading={addPool.isPending} mt={20} type="submit">
                 {t("save")}
               </Button>
               <Button

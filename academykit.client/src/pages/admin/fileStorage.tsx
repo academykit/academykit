@@ -4,7 +4,7 @@ import { useGetFileStorageSetting } from "@utils/services/adminService";
 
 const FileStorage = () => {
   const files = useGetFileStorageSetting();
-  if (files.isLoading) {
+  if (files.isPending) {
     return <Loader />;
   }
   if (files.isError) {

@@ -312,6 +312,9 @@ export const api = {
     trainingSuggest: `/api/AITrainingGenerator`,
     aiMasterSetup: `/api/AIKey`,
   },
+  iframely: {
+    oembed: (url: string) => `/api/iframely/oembed?url=${url}`,
+  },
   update: {
     checkVersions: "/api/admin/settings/CheckUpdates",
   },

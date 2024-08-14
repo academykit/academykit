@@ -109,7 +109,7 @@ const Level = () => {
             open={opened}
             onClose={() => setOpened(false)}
             onConfirm={handleDelete}
-            loading={deleteLevel.isLoading}
+            loading={deleteLevel.isPending}
           />
         )}
         <Table.Td>
@@ -219,7 +219,7 @@ const Level = () => {
             <Group mt={10}>
               <Button
                 type="submit"
-                loading={updateLevel.isLoading || postLevel.isLoading}
+                loading={updateLevel.isPending || postLevel.isPending}
               >
                 {t("submit")}
               </Button>
