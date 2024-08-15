@@ -1,4 +1,5 @@
 import AssignmentDetails from "@components/Course/Classes/AssignmentDetails";
+import ContentDetail from "@components/Course/Classes/ContentDetail";
 import ExamDetails from "@components/Course/Classes/ExamDetails";
 import ExternalLinkViewer from "@components/Course/Classes/ExternalLinkViewer";
 import FeedbackDetails from "@components/Course/Classes/FeedbackDetails";
@@ -136,15 +137,14 @@ const Classes = () => {
 
                 {(courseLesson.error as AxiosError)?.response?.status &&
                   (courseLesson.error as AxiosError)?.response?.status ===
-                    403 && (
+                  403 && (
                     <Button
                       component={Link}
                       mt={20}
-                      to={`${RoutePath.classes}/${params.id}/${
-                        currentLesson &&
+                      to={`${RoutePath.classes}/${params.id}/${currentLesson &&
                         currentLesson[0] &&
                         currentLesson[0].slug
-                      }/description`}
+                        }/description`}
                     >
                       {t("view_previous_lesson")}
                     </Button>
@@ -154,20 +154,20 @@ const Classes = () => {
 
             {(courseLesson.data?.type == LessonType.Video ||
               courseLesson.data?.type == LessonType.RecordedVideo) && (
-              <AspectRatio
-                ratio={16 / 9}
-                mt={matches ? 1 : -8}
-                className={classes.videoSection}
-              >
-                <VideoPlayer
-                  onEnded={() =>
-                    onCourseEnded(courseLesson.data?.nextLessonSlug as string)
-                  }
-                  url={courseLesson.data.videoUrl}
-                  setCurrentPlayerState={setVideoState}
-                />
-              </AspectRatio>
-            )}
+                <AspectRatio
+                  ratio={16 / 9}
+                  mt={matches ? 1 : -8}
+                  className={classes.videoSection}
+                >
+                  <VideoPlayer
+                    onEnded={() =>
+                      onCourseEnded(courseLesson.data?.nextLessonSlug as string)
+                    }
+                    url={courseLesson.data.videoUrl}
+                    setCurrentPlayerState={setVideoState}
+                  />
+                </AspectRatio>
+              )}
             {courseLesson.data?.type == LessonType.Assignment && (
               <Box
                 className={cx(classes.videoSection, classes.assignmentSection)}
@@ -239,6 +239,14 @@ const Classes = () => {
                 <ExternalLinkViewer
                   key={courseLesson.data?.id}
                   url={courseLesson.data?.externalUrl ?? ""}
+                />
+              </Box>
+            )}
+            {courseLesson.data?.type === LessonType.Content && (
+              <Box className={cx(classes.contentSection)}>
+                <ContentDetail
+                  key={courseLesson.data?.id}
+                  content={courseLesson.data?.content}
                 />
               </Box>
             )}
