@@ -49,8 +49,9 @@ const CertificateCard = ({
         : CertificateStatus.Rejected;
       await updateStatus.mutateAsync({ id: item.id, status });
       showNotification({
-        message: `${t("training")} ${approve ? t("approved") : t("rejected")
-          } ${t("successfully")}`,
+        message: `${t("training")} ${
+          approve ? t("approved") : t("rejected")
+        } ${t("successfully")}`,
       });
     } catch (error) {
       const err = errorType(error);

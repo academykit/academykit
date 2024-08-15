@@ -4,7 +4,6 @@
     using AcademyKit.Application.Common.Exceptions;
     using AcademyKit.Domain.Enums;
     using Asp.Versioning;
-    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +12,7 @@
     [ApiController]
     [Produces("application/json")]
     // [ApiExplorerSettings(IgnoreApi = true)]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     public class BaseApiController : ControllerBase
     {
         /// <summary>

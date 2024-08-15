@@ -1,6 +1,9 @@
 ﻿namespace AcademyKit.Infrastructure.Configurations
 {
+    using System.Security.Claims;
     using System.Text;
+    using AcademyKit.Infrastructure.Security;
+    using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
@@ -55,7 +58,11 @@
                             return Task.CompletedTask;
                         }
                     };
-                });
+                })
+                .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(
+                    "ApiKey",
+                    null
+                );
 
             services.AddSwaggerGen(c =>
             {

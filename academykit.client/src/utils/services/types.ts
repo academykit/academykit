@@ -123,3 +123,11 @@ export interface IPhysicalTraining extends ILessons {
   name: string;
   description: string;
 }
+
+export interface IApiKey {
+  id: string;
+  key: string;
+  userId: string;
+  createdOn: string;
+  createdBy: string;
+}

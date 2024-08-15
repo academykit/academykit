@@ -54,7 +54,8 @@ export interface IWithSearchPagination {
 }
 
 const withSearchPagination = <P extends object>(
-  Component: React.FC<P & IWithSearchPagination>
+  Component: React.FC<P & IWithSearchPagination>,
+  updateUrl = true
 ) => {
   const withSearchPagination = (props: P) => {
     const [params, setParams] = useSearchParams();
@@ -125,7 +126,9 @@ const withSearchPagination = <P extends object>(
       startDate && params.set("sd", startDate.toString());
       endDate && params.set("ed", endDate.toString());
 
-      setParams(params, { replace: true });
+      if (updateUrl) {
+        setParams(params, { replace: true });
+      }
       return qs;
     }, [
       currentPage,
@@ -143,8 +146,10 @@ const withSearchPagination = <P extends object>(
       for (const value of params.entries()) {
         if (value[0] !== "s") params.delete(value[0]);
       }
-      params.set("s", search);
-      setParams(params);
+      if (updateUrl) {
+        params.set("s", search);
+        setParams(params);
+      }
     };
 
     const sortComponent = (props: { title: string; sortKey: string }) => {

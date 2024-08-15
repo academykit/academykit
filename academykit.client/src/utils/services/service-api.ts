@@ -318,4 +318,9 @@ export const api = {
   update: {
     checkVersions: "/api/admin/settings/CheckUpdates",
   },
+  apiKey: {
+    list: "/api/ApiKey",
+    add: "/api/ApiKey",
+    delete: (id: string) => `/api/ApiKey/${id}`,
+  },
 };

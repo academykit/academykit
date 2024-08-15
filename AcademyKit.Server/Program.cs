@@ -3,6 +3,7 @@ using AcademyKit.Infrastructure.Configurations;
 using Asp.Versioning;
 using Hangfire;
 using Hangfire.Dashboard;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using PuppeteerSharp;
@@ -38,7 +39,16 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod())
 );
 
-builder.Services.AddAuthorization();
+builder
+    .Services.AddAuthorizationBuilder()
+    .AddDefaultPolicy(
+        "ApiKeyOrBearer",
+        policy =>
+        {
+            policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme, "ApiKey");
+            policy.RequireAuthenticatedUser();
+        }
+    );
 
 // var logger = LogManager.Setup().LoadConfigurationFromFile("nlog.config").GetCurrentClassLogger();
 // //var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();

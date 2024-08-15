@@ -218,9 +218,9 @@ const AddUpdateUserForm = ({
             data={
               department
                 ? department.items.map((x) => ({
-                  label: x.name,
-                  value: x.id,
-                }))
+                    label: x.name,
+                    value: x.id,
+                  }))
                 : [""]
             }
             {...form.getInputProps("departmentId")}

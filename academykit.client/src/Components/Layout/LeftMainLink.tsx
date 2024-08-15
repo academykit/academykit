@@ -224,6 +224,11 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
           role: UserRole.Admin,
         },
         {
+          label: "api_keys",
+          href: "/settings/apiKeys",
+          role: UserRole.SuperAdmin,
+        },
+        {
           label: "updates",
           href: "/settings/updates",
           role: UserRole.SuperAdmin,
