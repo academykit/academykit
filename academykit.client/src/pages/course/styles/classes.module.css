@@ -57,3 +57,22 @@
 .externalSection {
   height: 100%;
 }
+
+.contentSection {
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.contentSection::before {
+  padding-bottom: 0px !important;
+}
+
+@media (min-width: 62em) {
+  .contentSection {
+    height: 70vh;
+    margin-top: -8px;
+  }
+}

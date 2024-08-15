@@ -249,7 +249,7 @@ const assignmentReorder = async ({
 }) =>
   await httpClient.post(
     api.course.reorder(id) +
-      `?lessonIdentity=${lessonIdentity}&lessonType=${lessonType}`,
+    `?lessonIdentity=${lessonIdentity}&lessonType=${lessonType}`,
     data
   );
 
@@ -664,6 +664,7 @@ export interface ICourseLesson {
   hasAttended: boolean;
   isTrainee: boolean;
   externalUrl: string;
+  content: string;
 }
 
 const getCourseLesson = async (
