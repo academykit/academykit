@@ -30,7 +30,15 @@ const LicenseForm = () => {
         />
         <Group>
           <Button onClick={() => {}}>{t("submit")}</Button>
-          <Button variant="outline" onClick={() => {}}>
+          <Button
+            variant="outline"
+            onClick={() => {
+              window.open(
+                "https://academykit.lemonsqueezy.com/buy/f83cb9f6-13d5-42f2-9a00-4ac5324e5cf6",
+                "_blank"
+              );
+            }}
+          >
             {t("Buy Key")}
           </Button>
         </Group>

@@ -48,5 +48,33 @@ namespace AcademyKit.Api.Controllers
                 throw new ServiceException(ex.Message, ex);
             }
         }
+
+        [HttpGet("activate")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ActivateLicenseAsync([FromQuery] string licenseKey)
+        {
+            if (string.IsNullOrEmpty(licenseKey))
+            {
+                throw new ArgumentException("License Key is required.");
+            }
+
+            try
+            {
+                var license = new RestClient(LEMON_SQUEEZY_BASE_URL);
+                var request = new RestRequest("/v1/licenses/activate");
+                request.AddQueryParameter("license_key", licenseKey);
+                request.AddQueryParameter("instance_name", "User");
+                request.AddHeader("Accept", "application/json");
+                var response = await license.PostAsync(request).ConfigureAwait(false);
+                var jObject = JObject.Parse(response.Content);
+                var jsonString = JsonConvert.SerializeObject(jObject);
+                var json = JsonDocument.Parse(jsonString);
+                return Ok(json);
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceException(ex.Message, ex);
+            }
+        }
     }
 }
