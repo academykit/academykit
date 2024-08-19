@@ -25,6 +25,7 @@ export const routeGroupAdmin = [
   { route: "/settings/certificate", group: "reviews" },
 
   { route: "/settings/updates", group: "updates" },
+  { route: "/settings/apiKeys", group: "api_keys" },
 ];
 
 export const routeGroupOrg = [

@@ -15,8 +15,10 @@ export const useApiKeys = (search: string) => {
   });
 };
 
-const createApiKey = async () => {
-  return await httpClient.post<IApiKey>(api.apiKey.add, {});
+const createApiKey = async (name: string) => {
+  return await httpClient.post<IApiKey>(api.apiKey.add, {
+    name,
+  });
 };
 
 export const useCreateApiKey = () => {

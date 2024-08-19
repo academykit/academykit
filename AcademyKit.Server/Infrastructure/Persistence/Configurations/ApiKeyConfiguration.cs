@@ -16,10 +16,16 @@ namespace AcademyKit.Infrastructure.Persistence.Configurations
                 .HasMaxLength(50)
                 .IsRequired();
             builder
+                .Property(x => x.Name)
+                .HasColumnName("name")
+                .HasColumnType("VARCHAR(100)")
+                .HasMaxLength(100)
+                .IsRequired(false);
+            builder
                 .Property(x => x.Key)
                 .HasColumnName("key")
-                .HasColumnType("VARCHAR(200)")
-                .HasMaxLength(200)
+                .HasColumnType("VARCHAR(64)")
+                .HasMaxLength(64)
                 .IsRequired(true);
 
             builder

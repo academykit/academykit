@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240815094004_support content for api keys")]
-    partial class supportcontentforapikeys
+    [Migration("20240816135739_ApiKey")]
+    partial class ApiKey
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -93,9 +93,14 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Key")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
+                        .HasMaxLength(64)
+                        .HasColumnType("VARCHAR(64)")
                         .HasColumnName("key");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("name");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)

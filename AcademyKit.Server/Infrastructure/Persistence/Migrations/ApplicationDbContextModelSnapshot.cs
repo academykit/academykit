@@ -90,9 +90,14 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Key")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
+                        .HasMaxLength(64)
+                        .HasColumnType("VARCHAR(64)")
                         .HasColumnName("key");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("name");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)

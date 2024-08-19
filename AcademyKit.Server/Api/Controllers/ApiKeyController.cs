@@ -3,7 +3,7 @@ namespace AcademyKit.Api.Controllers
     using AcademyKit.Api.Common;
     using AcademyKit.Application.Common.Dtos;
     using AcademyKit.Application.Common.Interfaces;
-    using AcademyKit.Application.Common.Models.ResponseModels;
+    using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Domain.Entities;
     using AcademyKit.Infrastructure.Helpers;
     using AcademyKit.Infrastructure.Localization;
@@ -49,10 +49,16 @@ namespace AcademyKit.Api.Controllers
             return model;
         }
 
+        /// <summary>
+        /// Create API key.
+        /// </summary>
+        /// <param name="payload">Request data<see cref="ApiKeyRequestModel"/> to create API key</param>
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         [HttpPost]
-        public async Task<ApiKeyResponseModel> CreateApiKey()
+        public async Task<ApiKey> CreateApiKey(ApiKeyRequestModel payload)
         {
             IsSuperAdmin(CurrentUser.Role);
+            CommonHelper.ValidateArgumentNotNullOrEmpty(payload.Name, nameof(payload.Name));
             var currentTimeStamp = DateTime.UtcNow;
             string key;
             do
@@ -62,13 +68,14 @@ namespace AcademyKit.Api.Controllers
             var model = new ApiKey
             {
                 Id = Guid.NewGuid(),
+                Name = payload.Name,
                 Key = key,
                 UserId = CurrentUser.Id,
                 CreatedOn = currentTimeStamp,
                 CreatedBy = CurrentUser.Id,
             };
-            var res = await apiKeyService.CreateAsync(model, false).ConfigureAwait(false);
-            return new ApiKeyResponseModel { Id = res.Id, Key = res.Key, };
+            await apiKeyService.CreateAsync(model, false).ConfigureAwait(false);
+            return model;
         }
 
         /// <summary>

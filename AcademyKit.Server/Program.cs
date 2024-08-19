@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using PuppeteerSharp;
+using AcademyKit.Infrastructure.RateLimiting;
+using AcademyKit.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +51,11 @@ builder
             policy.RequireAuthenticatedUser();
         }
     );
+
+builder.Services.Configure<RateLimitSettings>(
+    builder.Configuration.GetSection(RateLimitSettings.RateLimit));
+var rateLimitSettings = new RateLimitSettings();
+builder.Configuration.GetSection(RateLimitSettings.RateLimit).Bind(rateLimitSettings);
 
 // var logger = LogManager.Setup().LoadConfigurationFromFile("nlog.config").GetCurrentClassLogger();
 // //var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -100,6 +107,7 @@ app.UseHangfireDashboard(
 app.UseRequestLocalization();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSlidingWindowRateLimiting();
 app.MapControllers();
 
 app.MapFallbackToFile("index.html");
