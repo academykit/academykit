@@ -9,6 +9,7 @@
     using AcademyKit.Application.Common.Exceptions;
     using AcademyKit.Application.Common.Models.ResponseModels;
     using FluentValidation;
+    using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
@@ -64,6 +65,10 @@
             object message;
             switch (exception)
             {
+                case AuthenticationFailureException authenticationException:
+                    statusCode = HttpStatusCode.Unauthorized;
+                    message = new ApiError { Message = authenticationException.Message };
+                    break;
                 case SecurityException:
                     statusCode = HttpStatusCode.Forbidden;
 

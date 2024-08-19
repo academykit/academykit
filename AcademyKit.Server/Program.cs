@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
+using AcademyKit.Domain.Entities;
 using AcademyKit.Infrastructure.Configurations;
+using AcademyKit.Infrastructure.RateLimiting;
 using Asp.Versioning;
 using Hangfire;
 using Hangfire.Dashboard;
@@ -7,8 +9,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using PuppeteerSharp;
-using AcademyKit.Infrastructure.RateLimiting;
-using AcademyKit.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,9 +53,8 @@ builder
     );
 
 builder.Services.Configure<RateLimitSettings>(
-    builder.Configuration.GetSection(RateLimitSettings.RateLimit));
-var rateLimitSettings = new RateLimitSettings();
-builder.Configuration.GetSection(RateLimitSettings.RateLimit).Bind(rateLimitSettings);
+    builder.Configuration.GetSection(RateLimitSettings.RateLimit)
+);
 
 // var logger = LogManager.Setup().LoadConfigurationFromFile("nlog.config").GetCurrentClassLogger();
 // //var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();

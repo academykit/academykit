@@ -58,5 +58,12 @@ namespace AcademyKit.Infrastructure.Security
 
             return AuthenticateResult.Success(ticket);
         }
+
+        protected override Task HandleChallengeAsync(AuthenticationProperties properties)
+        {
+            throw new AuthenticationFailureException(
+                "Authentication failed. Invalid or missing API key."
+            );
+        }
     }
 }

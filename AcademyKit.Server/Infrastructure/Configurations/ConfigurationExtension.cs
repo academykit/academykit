@@ -2,6 +2,7 @@
 {
     using System.Security.Claims;
     using System.Text;
+    using AcademyKit.Application.Common.Exceptions;
     using AcademyKit.Infrastructure.Security;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -55,7 +56,9 @@
                                 context.Response.Headers.Append("IS-TOKEN-EXPIRED", "true");
                             }
 
-                            return Task.CompletedTask;
+                            throw new AuthenticationFailureException(
+                                "Authentication failed. Invalid or missing or expired Bearer Token."
+                            );
                         }
                     };
                 })
