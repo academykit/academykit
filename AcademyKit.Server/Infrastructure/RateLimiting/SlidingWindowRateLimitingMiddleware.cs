@@ -91,7 +91,10 @@ namespace AcademyKit.Infrastructure.RateLimiting
                     context.Response.Headers.RetryAfter = ((int)retryAfter.TotalSeconds).ToString(
                         NumberFormatInfo.InvariantInfo
                     );
-                    _logger.LogWarning("Rate limit exceeded for API key {ApiKey}.", apiKey);
+                    _logger.LogWarning(
+                        "Rate limit exceeded for API key {ApiKey}.",
+                        apiKey.Replace(Environment.NewLine, "")
+                    );
                     return;
                 }
             }
