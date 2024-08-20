@@ -1,6 +1,8 @@
 import { Button, Group, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
+import { showNotification } from "@mantine/notifications";
+import errorType from "@utils/services/axiosError";
 import { useTranslation } from "react-i18next";
 import useLemonSqueeze from "./LemonSqueeze/useLemonSqueeze";
 
@@ -8,13 +10,23 @@ const LicenseForm = () => {
   const { t } = useTranslation();
 
   const lemon = useLemonSqueeze();
-
   const form = useForm({
     initialValues: {
       license_key: "",
     },
   });
-  const onSubmit = async () => {};
+
+  const onSubmit = async ({ license_key }: { license_key: string }) => {
+    try {
+      console.log("license_key", license_key);
+    } catch (err) {
+      const error = errorType(err);
+      showNotification({
+        message: error,
+        color: "red",
+      });
+    }
+  };
 
   console.log("chekcout Data", lemon);
   return (

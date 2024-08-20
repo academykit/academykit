@@ -40,6 +40,28 @@ namespace AcademyKit.Infrastructure.Persistence.Configurations
                 .HasColumnType("VARCHAR(200)")
                 .HasMaxLength(50)
                 .IsRequired();
+            builder
+           .Property(x => x.CreatedBy)
+           .HasColumnName("CreatedBy")
+           .HasColumnType("VARCHAR(50)")
+           .HasMaxLength(50)
+           .IsRequired();
+            builder
+                .Property(x => x.CreatedOn)
+                .HasColumnName("CreatedOn")
+                .IsRequired()
+                .HasColumnType("DATETIME");
+            builder
+                .Property(x => x.UpdatedBy)
+                .HasColumnName("UpdatedBy")
+                .HasColumnType("VARCHAR(50)")
+                .HasMaxLength(50)
+                .IsRequired(false);
+            builder
+                .Property(x => x.UpdatedOn)
+                .HasColumnName("UpdatedOn")
+                .HasColumnType("DATETIME")
+                .IsRequired(false);
         }
     }
 }

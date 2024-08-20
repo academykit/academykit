@@ -318,4 +318,10 @@ export const api = {
   update: {
     checkVersions: "/api/admin/settings/CheckUpdates",
   },
+  license: {
+    validate: (licenseKey: string) =>
+      `/api/LemonSqueezy/validate?licenseKey=${licenseKey}`,
+    activate: (licenseKey: string) =>
+      `/api/LemonSqueezy/activate?licenseKey=${licenseKey}`,
+  },
 };
