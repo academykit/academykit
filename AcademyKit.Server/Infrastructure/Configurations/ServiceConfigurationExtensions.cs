@@ -110,6 +110,7 @@
             services.AddTransient<IMailNotificationService, MailNotificationService>();
             services.AddTransient<IGoogleService, GoogleService>();
             services.AddTransient<IMicrosoftService, MicrosoftService>();
+            services.AddTransient<IApiKeyService, ApiKeyService>();
 
             #endregion Service DI
 

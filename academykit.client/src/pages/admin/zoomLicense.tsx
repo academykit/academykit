@@ -109,8 +109,9 @@ export default function ZoomLicense() {
         {opened && (
           <DeleteModal
             key={item.id}
-            title={`${t("zoom_license_delete_confirmation")} "${item.licenseEmail
-              }"?`}
+            title={`${t("zoom_license_delete_confirmation")} "${
+              item.licenseEmail
+            }"?`}
             open={opened}
             onClose={() => setOpened(false)}
             onConfirm={handleDelete}

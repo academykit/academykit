@@ -6,18 +6,21 @@ import {
   rem,
 } from "@mantine/core";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
 
 interface IProps extends ActionIconProps {
   value: string;
 }
 
 const Copy = ({ value, disabled }: IProps) => {
+  const { t } = useTranslation();
+
   return (
     <>
       <CopyButton value={value} timeout={2000}>
         {({ copied, copy }) => (
           <Tooltip
-            label={copied ? "Copied" : "Copy"}
+            label={copied ? t("copied") : t("copy")}
             withArrow
             position="right"
           >

@@ -46,43 +46,45 @@ const schema = () => {
     answers: Yup.array()
       .when(["type"], {
         is: QuestionType.MultipleChoice.toString(),
-        then: (schema) => schema
-          .min(1, t("option_more_than_one") as string)
-          .test(
-            t("test"),
-            t("multiple_choice_option_atleast") as string,
-            function (value: any) {
-              const a = value?.filter((x: any) => x.isCorrect).length > 0;
-              return a;
-            }
-          )
-          .of(
-            Yup.object().shape({
-              option: Yup.string()
-                .trim()
-                .required(t("option_required") as string),
-            })
-          ),
+        then: (schema) =>
+          schema
+            .min(1, t("option_more_than_one") as string)
+            .test(
+              t("test"),
+              t("multiple_choice_option_atleast") as string,
+              function (value: any) {
+                const a = value?.filter((x: any) => x.isCorrect).length > 0;
+                return a;
+              }
+            )
+            .of(
+              Yup.object().shape({
+                option: Yup.string()
+                  .trim()
+                  .required(t("option_required") as string),
+              })
+            ),
       })
       .when(["type"], {
         is: QuestionType.SingleChoice.toString(),
-        then: (schema) => schema
-          .test(
-            t("test"),
-            t("single_choice_option_atleast") as string,
-            function (value: any) {
-              const length: number =
-                value && value.filter((e: any) => e.isCorrect).length;
-              return length === 1;
-            }
-          )
-          .of(
-            Yup.object().shape({
-              option: Yup.string()
-                .trim()
-                .required(t("option_required") as string),
-            })
-          ),
+        then: (schema) =>
+          schema
+            .test(
+              t("test"),
+              t("single_choice_option_atleast") as string,
+              function (value: any) {
+                const length: number =
+                  value && value.filter((e: any) => e.isCorrect).length;
+                return length === 1;
+              }
+            )
+            .of(
+              Yup.object().shape({
+                option: Yup.string()
+                  .trim()
+                  .required(t("option_required") as string),
+              })
+            ),
       }),
   });
 };
@@ -304,72 +306,72 @@ const EditQuestion = () => {
 
             {(form.values.type === QuestionType.MultipleChoice.toString() ||
               form.values.type === QuestionType.SingleChoice.toString()) && (
-                <Box>
-                  <Text mt={20}>{t("options")}</Text>
-                  {form.values.answers.map((x, i) => (
-                    <Flex
-                      align={"center"}
-                      justify={"start"}
-                      gap={"md"}
-                      key={i}
-                      mb={30}
-                    >
-                      {QuestionType.MultipleChoice.toString() ===
-                        form.values.type ? (
-                        <Checkbox
-                          checked={x.isCorrect}
-                          {...form.getInputProps(`answers.${i}.isCorrect`)}
-                          name=""
-                        ></Checkbox>
-                      ) : (
-                        <Radio
-                          onChange={() => onChangeRadioType(i)}
-                          checked={x.isCorrect}
+              <Box>
+                <Text mt={20}>{t("options")}</Text>
+                {form.values.answers.map((x, i) => (
+                  <Flex
+                    align={"center"}
+                    justify={"start"}
+                    gap={"md"}
+                    key={i}
+                    mb={30}
+                  >
+                    {QuestionType.MultipleChoice.toString() ===
+                    form.values.type ? (
+                      <Checkbox
+                        checked={x.isCorrect}
+                        {...form.getInputProps(`answers.${i}.isCorrect`)}
+                        name=""
+                      ></Checkbox>
+                    ) : (
+                      <Radio
+                        onChange={() => onChangeRadioType(i)}
+                        checked={x.isCorrect}
                         // {...form.getInputProps(`answers.${i}.isCorrect`)}
-                        ></Radio>
-                      )}
-                      <div style={{ width: "80%" }}>
-                        <RichTextEditor
-                          placeholder={t("option_placeholder") as string}
-                          label={`answers.${i}.option`}
-                          formContext={useFormContext}
-                        ></RichTextEditor>
-                      </div>
+                      ></Radio>
+                    )}
+                    <div style={{ width: "80%" }}>
+                      <RichTextEditor
+                        placeholder={t("option_placeholder") as string}
+                        label={`answers.${i}.option`}
+                        formContext={useFormContext}
+                      ></RichTextEditor>
+                    </div>
+                    <UnstyledButton
+                      onClick={() => {
+                        form.insertListItem(
+                          "answers",
+                          {
+                            option: "",
+                            isCorrect: false,
+                          },
+                          i + 1
+                        );
+                      }}
+                    >
+                      <IconPlus color="green" />
+                    </UnstyledButton>
+                    {form.values.answers.length > 1 && (
                       <UnstyledButton
                         onClick={() => {
-                          form.insertListItem(
-                            "answers",
-                            {
-                              option: "",
-                              isCorrect: false,
-                            },
-                            i + 1
-                          );
+                          form.removeListItem("answers", i);
                         }}
                       >
-                        <IconPlus color="green" />
+                        <IconTrash color="red" />
                       </UnstyledButton>
-                      {form.values.answers.length > 1 && (
-                        <UnstyledButton
-                          onClick={() => {
-                            form.removeListItem("answers", i);
-                          }}
-                        >
-                          <IconTrash color="red" />
-                        </UnstyledButton>
-                      )}
-                      {typeof form.errors[`answers.${i}.option`] === "string" && (
-                        <span style={{ color: "red" }}>
-                          {form.errors[`answers.${i}.option`]}
-                        </span>
-                      )}
-                    </Flex>
-                  ))}
-                  {typeof form.errors[`answers`] === "string" && (
-                    <span style={{ color: "red" }}>{form.errors[`answers`]}</span>
-                  )}
-                </Box>
-              )}
+                    )}
+                    {typeof form.errors[`answers.${i}.option`] === "string" && (
+                      <span style={{ color: "red" }}>
+                        {form.errors[`answers.${i}.option`]}
+                      </span>
+                    )}
+                  </Flex>
+                ))}
+                {typeof form.errors[`answers`] === "string" && (
+                  <span style={{ color: "red" }}>{form.errors[`answers`]}</span>
+                )}
+              </Box>
+            )}
             <Group mt={20}>
               <Button size="sm" type="submit" loading={editQuestion.isPending}>
                 {t("save")}

@@ -1,10 +1,9 @@
 import { Paper, Spoiler } from "@mantine/core";
 import removeTags from "@utils/sanitize-html";
 
-interface IProps extends React.HTMLAttributes<HTMLDivElement> { }
+interface IProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const SubjectiveAnswer = ({ children }: IProps) => {
-
   return (
     <Paper
       mb={15}

@@ -1,6 +1,9 @@
 ﻿namespace AcademyKit.Infrastructure.Configurations
 {
     using System.Text;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Infrastructure.Security;
+    using Microsoft.AspNetCore.Authentication;
     using AcademyKit.Server.Infrastructure.Configurations;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Authentication.Google;
@@ -84,6 +87,12 @@
                             .Value;
                     }
                 );
+                })
+                .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(
+                    "ApiKey",
+                    null
+                );
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc(
