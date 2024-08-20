@@ -1,8 +1,15 @@
+import { Badge, Button } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
+import { ICourseLesson } from "@utils/services/courseService";
 import { getIframelyOembed } from "@utils/services/iframelyService";
+import { useWatchHistory } from "@utils/services/watchHistory";
+import { t } from "i18next";
 import { useEffect, useState } from "react";
 
 type Props = {
   url: string;
+  lesson: ICourseLesson;
+  onEnded: () => void;
 };
 
 type Error = {
@@ -16,6 +23,18 @@ export default function ExternalLinkViewer(props: Props) {
   const [html, setHtml] = useState({
     __html: "<div />",
   });
+
+  const [disable, setDisable] = useState(false);
+  const watchHistory = useWatchHistory(props.lesson.courseId, props.lesson.id);
+
+  const onMarkComplete = () => {
+    setDisable(true);
+    props.onEnded();
+    showNotification({
+      title: t("success"),
+      message: t("mark_pdf_complete"),
+    });
+  };
 
   useEffect(() => {
     if (props && props.url) {
@@ -45,6 +64,23 @@ export default function ExternalLinkViewer(props: Props) {
   } else if (!isLoaded) {
     return <div>Loading…</div>;
   } else {
-    return <div dangerouslySetInnerHTML={html} />;
+    return (
+      <div>
+        <div dangerouslySetInnerHTML={html} />
+        {!props.lesson.isCompleted ? (
+          props.lesson.isTrainee && (
+            <Button
+              onClick={onMarkComplete}
+              loading={watchHistory.isPending}
+              disabled={disable}
+            >
+              {t("mark_complete")}
+            </Button>
+          )
+        ) : (
+          <Badge>{t("Completed")}</Badge>
+        )}
+      </div>
+    );
   }
 }
