@@ -23,8 +23,8 @@ INSERT INTO SMTPSettings (Id, Mail_Port, Mail_Server, Password, Reply_To, Sender
 VALUES ('d3c343d8-adf8-45d4-afbe-e09c3285da24', 123, 'localhost', 'password', 'hello@localhost.co', 'noreply@localhost.co', 'AcademyKit', 'username', true, '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004');
 
 -- Insert Group data
-INSERT INTO `Groups` (Id, slug, name, is_active, Created_By, Created_On, Updated_By, Updated_On) 
-VALUES ('d3c343d8-adf8-45d4-afbe-e09c3285da24', 'default-group', 'Default Group', true, '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004');
+INSERT INTO `Groups` (Id, slug, name, is_active,is_default, Created_By, Created_On, Updated_By, Updated_On) 
+VALUES ('d3c343d8-adf8-45d4-afbe-e09c3285da24', 'default-group', 'Default Group', true,true, '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004', '30fcd978-f256-4733-840f-759181bc5e63', '2022-11-04 10:35:19.3073004');
 
 -- Insert ZoomSettings data
 INSERT INTO ZoomSettings (Id, Sdk_Key, Sdk_Secret, OAuth_Account_Id, OAuth_Client_Id, OAuth_Client_Secret, Is_Recording_Enabled, Created_By, Created_On, Updated_By, Updated_On)

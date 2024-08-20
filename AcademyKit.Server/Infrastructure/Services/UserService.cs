@@ -20,12 +20,9 @@ using CsvHelper;
 using Hangfire;
 using LinqKit;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MimeKit;
@@ -117,11 +114,19 @@ namespace AcademyKit.Infrastructure.Services
                 user.UpdatedOn = currentTimeStamp;
                 if (user.Role == UserRole.Trainee || user.Role == UserRole.Trainer)
                 {
+                    var defaultGroup = await _unitOfWork
+                        .GetRepository<Domain.Entities.Group>()
+                        .GetFirstOrDefaultAsync(predicate: x => x.IsDefault.Value == true);
+                    if (defaultGroup is null)
+                    {
+                        throw new ForbiddenException(
+                            _localizer.GetString("GroupContainsUsersCannotAdd")
+                        );
+                    }
                     var existUsers = await _unitOfWork
                         .GetRepository<GroupMember>()
                         .ExistsAsync(predicate: p =>
-                            p.GroupId == new Guid("7df8d749-6172-482b-b5a1-016fbe478795")
-                            && p.UserId == user.Id
+                            p.GroupId == defaultGroup.Id && p.UserId == user.Id
                         )
                         .ConfigureAwait(false);
 
@@ -129,7 +134,7 @@ namespace AcademyKit.Infrastructure.Services
                     {
                         _logger.LogWarning(
                             "Group with id: {id} already contains users. User Id: {userId}",
-                            new Guid("7df8d749-6172-482b-b5a1-016fbe478795"), // Parameter for {id}
+                            defaultGroup.Id, // Parameter for {id}
                             user.Id // Parameter for {userId}
                         );
                         throw new ForbiddenException(
@@ -140,9 +145,9 @@ namespace AcademyKit.Infrastructure.Services
                     var groupMember = new GroupMember
                     {
                         UserId = user.Id,
-                        GroupId = new Guid("7df8d749-6172-482b-b5a1-016fbe478795"),
+                        GroupId = defaultGroup.Id,
                         IsActive = true,
-                        CreatedBy = new Guid("30fcd978-f256-4733-840f-759181bc5e63"),
+                        CreatedBy = user.Id,
                         CreatedOn = DateTime.Now,
                     };
                     await _unitOfWork
@@ -154,6 +159,56 @@ namespace AcademyKit.Infrastructure.Services
                 _unitOfWork.GetRepository<User>().Update(user);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
+
+            var refreshToken = new RefreshToken
+            {
+                Id = Guid.NewGuid(),
+                Token = await GetUniqueRefreshToken().ConfigureAwait(false),
+                LoginAt = currentTimeStamp,
+                UserId = user.Id,
+                IsActive = true,
+            };
+
+            //Create Token
+            authenticationModel.IsAuthenticated = true;
+            var jwtSecurityToken = await CreateJwtToken(user);
+            authenticationModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+            authenticationModel.ExpirationDuration = Convert.ToInt32(_jwt.DurationInMinutes);
+            authenticationModel.Email = user.Email;
+            authenticationModel.UserId = user.Id;
+            authenticationModel.Role = user.Role;
+            authenticationModel.RefreshToken = refreshToken.Token;
+            authenticationModel.UserId = user.Id;
+
+            await _refreshTokenService.CreateAsync(refreshToken).ConfigureAwait(false);
+            return authenticationModel;
+        }
+
+        /// <summary>
+        /// Handle to generate the token for the external login provider e.g. Google or Microsoft
+        /// </summary>
+        /// <param name="email">user email</param>
+        /// <returns>the instance of <see cref="AuthenticationModel"/></returns>
+        public async Task<AuthenticationModel> GetTokenForExternalLoginProvider(string email)
+        {
+            var authenticationModel = new AuthenticationModel();
+
+            var user = await GetUserByEmailAsync(email: email.Trim());
+            if (user == null)
+            {
+                authenticationModel.IsAuthenticated = false;
+                authenticationModel.Message = _localizer.GetString("AccountNotRegistered");
+                return authenticationModel;
+            }
+
+            if (user.Status == UserStatus.InActive)
+            {
+                authenticationModel.IsAuthenticated = false;
+                authenticationModel.Message = _localizer.GetString("AccountNotActive");
+                return authenticationModel;
+            }
+
+            var currentTimeStamp = DateTime.UtcNow;
 
             var refreshToken = new RefreshToken
             {

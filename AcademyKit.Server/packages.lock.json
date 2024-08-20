@@ -164,6 +164,12 @@
           "MimeKit": "4.6.0"
         }
       },
+      "Microsoft.AspNetCore.Authentication.Google": {
+        "type": "Direct",
+        "requested": "[8.0.8, )",
+        "resolved": "8.0.8",
+        "contentHash": "Hc6PfWcpNCSq9ZhesZSgLD62ACsxBuAx9jhkOv+No5tx+AdPPU+tonrxzM+PuTDvijOVPy4YydzuDK9NR4Z+PQ=="
+      },
       "Microsoft.AspNetCore.Authentication.JwtBearer": {
         "type": "Direct",
         "requested": "[8.0.7, )",
@@ -172,6 +178,12 @@
         "dependencies": {
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "7.1.2"
         }
+      },
+      "Microsoft.AspNetCore.Authentication.MicrosoftAccount": {
+        "type": "Direct",
+        "requested": "[8.0.8, )",
+        "resolved": "8.0.8",
+        "contentHash": "xAMfSKVkqyNP5fC0xPwn68GznMKlXjBU/xgIGxjJa5pMnCcSd5PTD2JwxsRokzgWI93UXgcozoVvur62y0QoCQ=="
       },
       "Microsoft.AspNetCore.Http.Features": {
         "type": "Direct",

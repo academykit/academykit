@@ -1,16 +1,25 @@
 ﻿namespace AcademyKit.Api.Controllers
 {
     using System.IdentityModel.Tokens.Jwt;
+    using System.Net.Http.Headers;
+    using System.Text;
+    using System.Text.Encodings.Web;
     using AcademyKit.Api.Common;
     using AcademyKit.Application.Common.Interfaces;
     using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Application.Common.Models.ResponseModels;
     using AcademyKit.Infrastructure.Localization;
+    using AcademyKit.Server.Application.Common.Interfaces;
+    using AcademyKit.Server.Application.Common.Models.ResponseModels;
+    using AcademyKit.Server.Infrastructure.Configurations;
     using Application.Common.Dtos;
     using FluentValidation;
+    using Microsoft.AspNetCore.Authentication.Google;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
+    using Microsoft.Extensions.Options;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Controller for managing account actions
@@ -22,6 +31,10 @@
         private readonly IValidator<ResetPasswordRequestModel> _resetPasswordValidator;
         private readonly IValidator<ChangePasswordRequestModel> _changePasswordValidator;
         private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
+        private readonly IGoogleService _googleService;
+        private readonly IMicrosoftService _microsoftService;
+        private readonly Google _google;
+        private readonly Microsoft _microsoft;
 
         /// <summary>
         /// Initializes the new instance of <see cref="AccountController" />
@@ -31,12 +44,18 @@
         /// <param name="resetPasswordValidator"> the instance of <se cref="IValidator" />  for the instance of <see cref="ResetPasswordRequestModel" /> </param>
         /// <param name="changePasswordValidator"> the instance of <se cref="IValidator" />  for the instance of <see cref="ChangePasswordRequestModel" /> </param>
         /// <param name="localizer">the instance of <se cref="IStringLocalizer" />  for the instance of <see cref="ExceptionLocalizer" /> </param>
+        /// <param name="google"></param>
+        /// <param name="microsoft"></param>
         public AccountController(
             IUserService userService,
             IValidator<LoginRequestModel> validator,
             IValidator<ResetPasswordRequestModel> resetPasswordValidator,
             IValidator<ChangePasswordRequestModel> changePasswordValidator,
-            IStringLocalizer<ExceptionLocalizer> localizer
+            IStringLocalizer<ExceptionLocalizer> localizer,
+            IOptions<Google> google,
+            IOptions<Microsoft> microsoft,
+            IGoogleService googleService,
+            IMicrosoftService microsoftService
         )
         {
             this.userService = userService;
@@ -44,6 +63,10 @@
             _resetPasswordValidator = resetPasswordValidator;
             _changePasswordValidator = changePasswordValidator;
             _localizer = localizer;
+            _google = google.Value;
+            _microsoft = microsoft.Value;
+            _googleService = googleService;
+            _microsoftService = microsoftService;
         }
 
         /// <summary>
@@ -231,6 +254,268 @@
                     Success = true
                 }
             );
+        }
+
+        /// <summary>
+        /// sign in with google
+        /// </summary>
+        /// <returns>the google sign in interface</returns>
+        [HttpGet("signin-with-google")]
+        [AllowAnonymous]
+        public IActionResult SignInWithGoogle()
+        {
+            var nonce = "Q2k4UWFtMmZ1NjlBNG1oRU1ENnNNRGhx";
+
+            var url =
+                $"{_google.AuthUrl}"
+                + $"response_type=code&"
+                + $"client_id={_google.ClientId}&"
+                + $"scope=openid https://www.googleapis.com/auth/userinfo.email&"
+                + $"redirect_uri={_google.RedirectUri}&"
+                + $"nonce={UrlEncoder.Default.Encode(nonce)}&"
+                + $"access_type=offline&"
+                + $"prompt=consent";
+
+            return Redirect(url);
+        }
+
+        /// <summary>
+        /// get access token
+        /// </summary>
+        /// <param name="code">the instance of <see cref="string"/></param>
+        /// <returns>the access token</returns>
+        [HttpGet("google/getAccessToken")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetGoogleAccessToken([FromQuery] string code)
+        {
+            var dicData = new Dictionary<string, string>
+            {
+                { "client_id", _google.ClientId },
+                { "client_secret", _google.ClientSecret },
+                { "code", code },
+                { "grant_type", "authorization_code" },
+                { "redirect_uri", _google.RedirectUri },
+                { "access_type", "offline" }
+            };
+
+            try
+            {
+                using var client = new HttpClient();
+                using var content = new FormUrlEncodedContent(dicData);
+                var response = await client.PostAsync(_google.AccessTokenUrl, content);
+                var json = await response.Content.ReadAsStringAsync();
+
+                var tokenResponse = JsonConvert.DeserializeObject<OAuthTokenResponse>(json);
+                if (tokenResponse.IsSuccess)
+                {
+                    var userEmail = await _googleService.GetGoogleUserEmail(
+                        tokenResponse.access_token
+                    );
+                    var authenticationModel = await userService.GetTokenForExternalLoginProvider(
+                        userEmail
+                    );
+                    return Ok(new { tokenResponse, authenticationModel });
+                }
+                else
+                {
+                    return BadRequest(new { tokenResponse.error, tokenResponse.error_description });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(
+                    500,
+                    new
+                    {
+                        Message = "An error occured while retrieving the access token.",
+                        Details = ex.Message
+                    }
+                );
+            }
+        }
+
+        /// <summary>
+        /// get refresh token of google
+        /// </summary>
+        /// <param name="refreshToken">the instance of <see cref="string"/></param>
+        /// <returns>the refresh token</returns>
+        [HttpPost("google/refreshToken")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetGoogleRefreshToken([FromBody] string refreshToken)
+        {
+            var dicData = new Dictionary<string, string>
+            {
+                { "client_id", _google.ClientId },
+                { "client_secret", _google.ClientSecret },
+                { "refresh_token", refreshToken },
+                { "grant_type", "refresh_token" }
+            };
+            try
+            {
+                using var client = new HttpClient();
+                using var content = new FormUrlEncodedContent(dicData);
+                var response = await client.PostAsync(_google.AccessTokenUrl, content);
+                var json = await response.Content.ReadAsStringAsync();
+
+                var tokenResponse = JsonConvert.DeserializeObject<OAuthTokenResponse>(json);
+
+                if (tokenResponse.IsSuccess)
+                {
+                    return Ok(new { tokenResponse.access_token, tokenResponse.expires_in });
+                }
+                else
+                {
+                    return BadRequest(new { tokenResponse.error, tokenResponse.error_description });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(
+                    500,
+                    new
+                    {
+                        Message = "An error occurred while renewing the access token.",
+                        Details = ex.Message
+                    }
+                );
+            }
+        }
+
+        /// <summary>
+        /// sign in with microsoft
+        /// </summary>
+        /// <returns>the microsoft login interface</returns>
+        [HttpGet("signin-with-microsoft")]
+        [AllowAnonymous]
+        public IActionResult SignInWithMicrosoft()
+        {
+            var nonce = "Q2k4UWFtMmZ1NjlBNG1oRU1ENnNNRGhx";
+
+            var url =
+                $"{_microsoft.AuthUrl}"
+                + $"client_id={_microsoft.ClientId}&"
+                + $"response_type=code id_token&"
+                + $"redirect_uri={UrlEncoder.Default.Encode(_microsoft.RedirectUri)}&"
+                + $"response_mode=form_post&"
+                + $"scope=openid email profile User.Read offline_access&"
+                + $"nonce={UrlEncoder.Default.Encode(nonce)}";
+
+            return Redirect(url);
+        }
+
+        /// <summary>
+        /// get microsoft access token
+        /// </summary>
+        /// <param name="code">the instance of <see cref="string"/></param>
+        /// <returns>the access token</returns>
+        [HttpPost("microsoft/getAccessToken")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetMicrosoftAccessToken([FromForm] string code)
+        {
+            var dicData = new Dictionary<string, string>
+            {
+                { "client_id", _microsoft.ClientId },
+                { "scope", "openid email profile User.Read offline_access" },
+                { "code", code },
+                { "redirect_uri", _microsoft.RedirectUri },
+                { "grant_type", "authorization_code" },
+                { "client_secret", _microsoft.ClientSecret },
+            };
+
+            try
+            {
+                using var client = new HttpClient();
+                var authHeader = Convert.ToBase64String(
+                    Encoding.ASCII.GetBytes("client_id:client_secret")
+                );
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                    "Basic",
+                    authHeader
+                );
+
+                using var content = new FormUrlEncodedContent(dicData);
+                var response = await client.PostAsync(_microsoft.AccessTokenUrl, content);
+                var json = await response.Content.ReadAsStringAsync();
+
+                var tokenResponse = JsonConvert.DeserializeObject<OAuthTokenResponse>(json);
+
+                if (tokenResponse.IsSuccess)
+                {
+                    var userEmail = await _microsoftService.GetMicrosoftUserEmail(
+                        tokenResponse.access_token
+                    );
+                    var authenticationModel = await userService.GetTokenForExternalLoginProvider(
+                        userEmail
+                    );
+                    return Ok(new { authenticationModel });
+                }
+                else
+                {
+                    return BadRequest(new { tokenResponse.error, tokenResponse.error_description });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(
+                    500,
+                    new
+                    {
+                        Message = "An error occurred while retrieving the access token.",
+                        Details = ex.Message
+                    }
+                );
+            }
+        }
+
+        /// <summary>
+        /// get microsoft refresh token
+        /// </summary>
+        /// <param name="refreshToken">the instance of <see cref="string"/></param>
+        /// <returns>the microsoft refresh token</returns>
+        [HttpPost("microsoft/refreshToken")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetMicrosoftRefreshToken([FromBody] string refreshToken)
+        {
+            var dicData = new Dictionary<string, string>
+            {
+                { "client_id", _microsoft.ClientId },
+                {
+                    "scope",
+                    "api://65891a3d-bcc4-47af-beb2-6cff844ce15d/openid api://65891a3d-bcc4-47af-beb2-6cff844ce15d/Forecast.Read api://65891a3d-bcc4-47af-beb2-6cff844ce15d/offline_access"
+                },
+                { "refresh_token", refreshToken },
+                { "grant_type", "refresh_token" },
+                { "client_secret", _microsoft.ClientSecret },
+            };
+            try
+            {
+                using var client = new HttpClient();
+                using var content = new FormUrlEncodedContent(dicData);
+
+                var response = await client.PostAsync(_microsoft.AccessTokenUrl, content);
+                var json = await response.Content.ReadAsStringAsync();
+
+                var tokenResponse = JsonConvert.DeserializeObject<OAuthTokenResponse>(json);
+                if (tokenResponse.IsSuccess)
+                {
+                    return Ok(new { tokenResponse.access_token, tokenResponse.expires_in });
+                }
+                else
+                {
+                    return BadRequest(new { tokenResponse.error, tokenResponse.error_description });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(
+                    500,
+                    new
+                    {
+                        Message = "An error occurred while renewing the access token.",
+                        Details = ex.Message
+                    }
+                );
+            }
         }
     }
 }

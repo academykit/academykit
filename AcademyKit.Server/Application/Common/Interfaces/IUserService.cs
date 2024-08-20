@@ -16,6 +16,13 @@
         Task<AuthenticationModel> VerifyUserAndGetToken(LoginRequestModel model);
 
         /// <summary>
+        /// Handle to generate the token for the external login provider e.g. Google or Microsoft
+        /// </summary>
+        /// <param name="email">user email</param>
+        /// <returns>the instance of <see cref="AuthenticationModel"/></returns>
+        Task<AuthenticationModel> GetTokenForExternalLoginProvider(string email);
+
+        /// <summary>
         /// Handle to logout user and set refresh token false
         /// </summary>
         /// <param name="token">the refresh token</param>

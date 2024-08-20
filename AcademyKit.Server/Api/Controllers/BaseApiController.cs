@@ -13,7 +13,8 @@
     [ApiController]
     [Produces("application/json")]
     // [ApiExplorerSettings(IgnoreApi = true)]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     public class BaseApiController : ControllerBase
     {
         /// <summary>
