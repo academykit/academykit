@@ -86,8 +86,7 @@
                             .GetSection("Microsoft:ClientSecret")
                             .Value;
                     }
-                );
-                })
+                )
                 .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(
                     "ApiKey",
                     null
