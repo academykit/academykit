@@ -321,7 +321,7 @@ export const api = {
   license: {
     validate: (licenseKey: string) =>
       `/api/LemonSqueezy/validate?licenseKey=${licenseKey}`,
-    activate: (licenseKey: string) =>
-      `/api/LemonSqueezy/activate?licenseKey=${licenseKey}`,
+    activate: "/api/LemonSqueezy/activate",
+    list: "/api/LemonSqueezy/license",
   },
 };

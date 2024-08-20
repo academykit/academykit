@@ -1,38 +1,57 @@
 import LicenseForm from "@components/LicenseForm";
 import useAuth from "@hooks/useAuth";
 import { Modal } from "@mantine/core";
-import { useValidateLicense } from "@utils/services/licenseService";
+import { License_Key } from "@utils/constants";
+import {
+  getLicenses,
+  useValidateLicense,
+} from "@utils/services/licenseService";
 import { FC, createContext, useEffect, useState } from "react";
 
 interface ILicenseContext {
   isValid: boolean;
-  setValid: () => void;
+  setValid: (value: boolean) => void;
 }
 
 export const LicenseContext = createContext<ILicenseContext | null>(null);
 
 const LicenseProvider: FC<React.PropsWithChildren> = ({ children }) => {
   const [isValid, setIsValid] = useState<boolean>(true);
+  const [licenseKey, setLicenseKey] = useState("");
   const auth = useAuth();
-  const setValid = () => {
-    setIsValid((isValid) => !isValid);
+  const setValid = (value: boolean) => {
+    setIsValid(value);
   };
-  const license = useValidateLicense("D0D13409-8BE7-4190-8FA9-1981D43738F");
-  console.log("license", license.data);
+  const licenseKeys = getLicenses();
+
+  const licenseToken = localStorage.getItem(License_Key);
+
+  const license = useValidateLicense(licenseToken ?? "");
+
   useEffect(() => {
-    // if (localStorage.getItem("licenseKey")) {
+    if (licenseToken) {
+      setLicenseKey(licenseKey);
+    } else {
+      if (licenseKeys.isSuccess) {
+        if (licenseKeys.data?.length) {
+          localStorage.setItem(License_Key, licenseKeys.data[0]?.licenseKey);
+        }
+      }
+    }
+  }, [licenseToken, licenseKeys.isSuccess]);
+
+  useEffect(() => {
     if (license.isSuccess) {
       if (license?.data?.valid) {
         setIsValid(true);
       } else {
         setIsValid(false);
       }
+    } else if (license.isError) {
+      setIsValid(false);
     }
-    // } else {
-    //   setIsValid(false);
-    // }
   }, [auth?.loggedIn, license]);
-  console.log("license error", license.error);
+
   return (
     <LicenseContext.Provider value={{ isValid, setValid }}>
       {auth?.loggedIn && (

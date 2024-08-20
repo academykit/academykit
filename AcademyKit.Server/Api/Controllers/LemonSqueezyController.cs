@@ -15,7 +15,7 @@ namespace AcademyKit.Api.Controllers
 
         private readonly IUnitOfWork _unitOfWork;
 
-        public LemonSqueezyController(IConfiguration configuration, IUnitOfWork unitOfWork, ILogger<LemonSqueezyController> logger)
+        public LemonSqueezyController(IConfiguration configuration, IUnitOfWork unitOfWork)
         {
             LEMON_SQUEEZY_BASE_URL = configuration.GetSection("LEMON_SQUEEZY:BASE_URL").Value;
             _unitOfWork = unitOfWork;

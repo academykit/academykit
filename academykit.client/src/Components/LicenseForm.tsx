@@ -1,34 +1,38 @@
+import useLicenseValidation from "@hooks/useLicenseValidation";
 import { Button, Group, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 import { showNotification } from "@mantine/notifications";
-import errorType from "@utils/services/axiosError";
+import { useActivatelicense } from "@utils/services/licenseService";
 import { useTranslation } from "react-i18next";
-import useLemonSqueeze from "./LemonSqueeze/useLemonSqueeze";
 
 const LicenseForm = () => {
   const { t } = useTranslation();
 
-  const lemon = useLemonSqueeze();
   const form = useForm({
     initialValues: {
       license_key: "",
     },
   });
 
+  const activateLicense = useActivatelicense();
+  const license = useLicenseValidation();
+
   const onSubmit = async ({ license_key }: { license_key: string }) => {
     try {
-      console.log("license_key", license_key);
-    } catch (err) {
-      const error = errorType(err);
+      await activateLicense.mutateAsync({ licenseKey: license_key });
+      license?.setValid(true);
       showNotification({
-        message: error,
+        message: t("license_activation_success"),
+      });
+    } catch (err) {
+      showNotification({
+        message: t("license_activation_fail"),
         color: "red",
       });
     }
   };
 
-  console.log("chekcout Data", lemon);
   return (
     <Group justify="center">
       <form onSubmit={form.onSubmit(onSubmit)}>
@@ -41,7 +45,7 @@ const LicenseForm = () => {
           {...form.getInputProps("license_key")}
         />
         <Group>
-          <Button onClick={() => {}}>{t("submit")}</Button>
+          <Button type="submit">{t("submit")}</Button>
           <Button
             variant="outline"
             onClick={() => {
