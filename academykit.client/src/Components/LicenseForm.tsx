@@ -36,16 +36,23 @@ const LicenseForm = () => {
   return (
     <Group justify="center">
       <form onSubmit={form.onSubmit(onSubmit)}>
-        <Text size="lg">{t("license_key")}</Text>
-        {/* <Paper p={20} withBorder mt={20}> */}
+        <Group justify="center">
+          <Text style={{ fontWeight: "bold" }} size="lg">
+            {t("license_key")}
+          </Text>
+        </Group>
         <TextInput
+          my={15}
+          style={{ minWidth: "350px" }}
           autoComplete="off"
           withAsterisk
           placeholder={t("license_key") as string}
           {...form.getInputProps("license_key")}
         />
-        <Group>
-          <Button type="submit">{t("submit")}</Button>
+        <Group justify="center">
+          <Button loading={activateLicense.isPending} type="submit">
+            {t("submit")}
+          </Button>
           <Button
             variant="outline"
             onClick={() => {
@@ -58,7 +65,6 @@ const LicenseForm = () => {
             {t("Buy Key")}
           </Button>
         </Group>
-        {/* </Paper> */}
       </form>
     </Group>
   );

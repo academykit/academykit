@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { License_Key } from "@utils/constants";
+import { License_Key, TOKEN_STORAGE } from "@utils/constants";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
 
@@ -17,6 +17,7 @@ export const useValidateLicense = (licenseKey: string) =>
     queryKey: [api.license.validate(licenseKey)],
     queryFn: () => licenseValidation(licenseKey),
     select: (data) => data.data,
+    enabled: !!localStorage.getItem(TOKEN_STORAGE),
   });
 
 const getLicense = () => httpClient.get<ILicense[]>(api.license.list);
@@ -26,6 +27,7 @@ export const getLicenses = () =>
     queryKey: [api.license.list],
     queryFn: () => getLicense(),
     select: (data) => data.data,
+    enabled: !!localStorage.getItem(TOKEN_STORAGE),
   });
 
 export const useActivatelicense = () => {
