@@ -64,6 +64,7 @@
         public DbSet<AIKey> AIKeys { get; set; }
         public DbSet<MailNotification> MailNotifications { get; set; }
         public DbSet<License> Licenses { get; set; }
+        public DbSet<ApiKey> ApiKeys { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -32,6 +32,7 @@ const Log = lazyWithRetry(() => import("./log"));
 const MailNotification = lazyWithRetry(() => import("./MailNotification"));
 const AIMasterSetup = lazyWithRetry(() => import("./AIMasterSetup"));
 const Updates = lazyWithRetry(() => import("./updates"));
+const ApiKeys = lazyWithRetry(() => import("./apiKeys"));
 
 const AdminRoute = () => {
   return (
@@ -74,6 +75,7 @@ const AdminRoutesChild = () => {
           <Route path={"/fileStorage"} element={<FileStorage />} />
           <Route path={"/ai-setup"} element={<AIMasterSetup />} />
         </Route>
+        <Route path="/apiKeys" element={<ApiKeys />} />
         <Route path="/updates" element={<Updates />} />
       </Routes>
     </Suspense>

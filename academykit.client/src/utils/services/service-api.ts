@@ -324,4 +324,9 @@ export const api = {
     activate: "/api/LemonSqueezy/activate",
     list: "/api/LemonSqueezy/license",
   },
+  apiKey: {
+    list: "/api/ApiKey",
+    add: "/api/ApiKey",
+    delete: (id: string) => `/api/ApiKey/${id}`,
+  },
 };

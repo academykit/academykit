@@ -106,6 +106,7 @@
             services.AddTransient<IAIService, AIService>();
             services.AddTransient<IAiKeyService, AiKeyService>();
             services.AddTransient<IMailNotificationService, MailNotificationService>();
+            services.AddTransient<IApiKeyService, ApiKeyService>();
 
             #endregion Service DI
 
