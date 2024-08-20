@@ -1,6 +1,10 @@
 ﻿namespace AcademyKit.Infrastructure.Configurations
 {
+    using System.Security.Claims;
     using System.Text;
+    using AcademyKit.Application.Common.Exceptions;
+    using AcademyKit.Infrastructure.Security;
+    using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
@@ -52,10 +56,16 @@
                                 context.Response.Headers.Append("IS-TOKEN-EXPIRED", "true");
                             }
 
-                            return Task.CompletedTask;
+                            throw new AuthenticationFailureException(
+                                "Authentication failed. Invalid or missing or expired Bearer Token."
+                            );
                         }
                     };
-                });
+                })
+                .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(
+                    "ApiKey",
+                    null
+                );
 
             services.AddSwaggerGen(c =>
             {

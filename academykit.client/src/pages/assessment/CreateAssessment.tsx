@@ -421,20 +421,20 @@ const CreateAssessment = () => {
 
                         {form.values.skillsCriteriaRequestModels[index].rule !==
                           "" && (
-                            <NumberInput
-                              withAsterisk
-                              label={t("percentage")}
-                              min={0}
-                              stepHoldDelay={500}
-                              stepHoldInterval={(t) =>
-                                Math.max(1000 / t ** 2, 25)
-                              }
-                              placeholder={t("percentage_placeholder") as string}
-                              {...form.getInputProps(
-                                `skillsCriteriaRequestModels.${index}.percentage`
-                              )}
-                            />
-                          )}
+                          <NumberInput
+                            withAsterisk
+                            label={t("percentage")}
+                            min={0}
+                            stepHoldDelay={500}
+                            stepHoldInterval={(t) =>
+                              Math.max(1000 / t ** 2, 25)
+                            }
+                            placeholder={t("percentage_placeholder") as string}
+                            {...form.getInputProps(
+                              `skillsCriteriaRequestModels.${index}.percentage`
+                            )}
+                          />
+                        )}
 
                         <ActionIcon
                           variant="subtle"

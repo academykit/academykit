@@ -22,8 +22,7 @@
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
         <value>[base64 mime encoded serialized .NET Framework object]</value>
     </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing"
-  mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework
   object]</value>
         <comment>This is a comment</comment>
@@ -117,12 +116,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0,
-      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0,
-      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TrainingRemoved" xml:space="preserve">
     <value> तालिम सफलतापूर्वक हटाइयो।</value>
@@ -924,8 +921,7 @@
   <data name="IncorrectLastName" xml:space="preserve">
     <value>पङ्क्ति नम्बरको अन्तिम नाम अनिवार्य फिल्डमा डाटा प्रविष्ट गर्नुहोस्</value>
   </data>
-  <data name="IncorrectMoblieNumberFormaIncorrectMoblieNumberFormaIncorrectMoblieNumberForma"
-    xml:space="preserve">
+  <data name="IncorrectMoblieNumberFormaIncorrectMoblieNumberFormaIncorrectMoblieNumberForma" xml:space="preserve">
     <value>पङ्क्ति नम्बरको स्तम्भ मोबाइल नम्बर सही गर्नुहोस्</value>
   </data>
   <data name="IncorrectRole" xml:space="preserve">
@@ -1065,5 +1061,8 @@
   </data>
   <data name="AssessmentPublishedSuccessfully" xml:space="preserve">
     <value>मूल्यांकन सफलतापूर्वक प्रकाशित गरियो।</value>
+  </data>
+  <data name="ApiKeyRemovedSuccessfully" xml:space="preserve">
+    <value>API कुञ्जी सफलतापूर्वक हटाइयो</value>
   </data>
 </root>

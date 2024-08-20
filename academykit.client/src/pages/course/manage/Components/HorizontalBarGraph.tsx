@@ -35,7 +35,7 @@ export const options = {
   plugins: {
     legend: {
       position: "top" as const,
-      onClick: function () { },
+      onClick: function () {},
     },
   },
   scales: {
@@ -48,8 +48,8 @@ export const options = {
           const truncatedValue =
             this.getLabelForValue(tickValue as number).toString().length > 6
               ? this.getLabelForValue(tickValue as number)
-                .toString()
-                .substring(0, 6) + "..."
+                  .toString()
+                  .substring(0, 6) + "..."
               : this.getLabelForValue(tickValue as number);
 
           return truncatedValue;

@@ -249,7 +249,7 @@ const assignmentReorder = async ({
 }) =>
   await httpClient.post(
     api.course.reorder(id) +
-    `?lessonIdentity=${lessonIdentity}&lessonType=${lessonType}`,
+      `?lessonIdentity=${lessonIdentity}&lessonType=${lessonType}`,
     data
   );
 
