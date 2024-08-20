@@ -64,6 +64,7 @@ public class ResponseModel
 {
     [JsonProperty("activated")]
     public bool Activated { get; set; }
+
     [JsonProperty("valid")]
     public bool Valid { get; set; }
 

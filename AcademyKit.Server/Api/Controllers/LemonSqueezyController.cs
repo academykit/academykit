@@ -1,3 +1,4 @@
+using AcademyKit.Application.Common.Dtos;
 using AcademyKit.Application.Common.Exceptions;
 using AcademyKit.Domain.Entities;
 using AcademyKit.Infrastructure.Common;
@@ -5,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RestSharp;
-using AcademyKit.Application.Common.Dtos;
 
 namespace AcademyKit.Api.Controllers
 {
@@ -41,10 +41,15 @@ namespace AcademyKit.Api.Controllers
 
                 if (!response.IsSuccessful)
                 {
-                    return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ResponseModel>(response.Content));
+                    return StatusCode(
+                        (int)response.StatusCode,
+                        JsonConvert.DeserializeObject<ResponseModel>(response.Content)
+                    );
                 }
 
-                var licenseResponsess = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
+                var licenseResponsess = JsonConvert.DeserializeObject<ResponseModel>(
+                    response.Content
+                );
                 // _logger.LogInformation(licenseResponse.LicenseKey.Key);
 
                 // Map to the License entity
@@ -58,7 +63,6 @@ namespace AcademyKit.Api.Controllers
                     customerEmail = licenseResponsess.Meta.CustomerEmail,
                     customerName = licenseResponsess.Meta.CustomerName,
                     CreatedOn = DateTime.UtcNow,
-
                 };
 
                 // Save to the database
@@ -66,7 +70,6 @@ namespace AcademyKit.Api.Controllers
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
                 return Ok(data);
-
             }
             catch (Exception ex)
             {
@@ -92,10 +95,15 @@ namespace AcademyKit.Api.Controllers
                 var response = await license.PostAsync(request).ConfigureAwait(false);
                 if (!response.IsSuccessful)
                 {
-                    return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ResponseModel>(response.Content));
+                    return StatusCode(
+                        (int)response.StatusCode,
+                        JsonConvert.DeserializeObject<ResponseModel>(response.Content)
+                    );
                 }
 
-                var licenseResponse = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
+                var licenseResponse = JsonConvert.DeserializeObject<ResponseModel>(
+                    response.Content
+                );
 
                 return Ok(licenseResponse);
             }

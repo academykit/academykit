@@ -10,6 +10,5 @@ namespace AcademyKit.Domain.Entities
         public int licenseKeyId { get; set; }
         public string customerName { get; set; }
         public string customerEmail { get; set; }
-
     }
 }

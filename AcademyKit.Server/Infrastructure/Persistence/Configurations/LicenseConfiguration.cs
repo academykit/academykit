@@ -41,11 +41,11 @@ namespace AcademyKit.Infrastructure.Persistence.Configurations
                 .HasMaxLength(200)
                 .IsRequired();
             builder
-              .Property(x => x.CreatedBy)
-              .HasColumnName("created_by")
-              .HasColumnType("VARCHAR(50)")
-              .HasMaxLength(50)
-              .IsRequired();
+                .Property(x => x.CreatedBy)
+                .HasColumnName("created_by")
+                .HasColumnType("VARCHAR(50)")
+                .HasMaxLength(50)
+                .IsRequired();
             builder
                 .Property(x => x.CreatedOn)
                 .HasColumnName("created_on")
@@ -65,4 +65,3 @@ namespace AcademyKit.Infrastructure.Persistence.Configurations
         }
     }
 }
-
