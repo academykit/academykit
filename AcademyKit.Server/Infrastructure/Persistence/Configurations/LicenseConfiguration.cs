@@ -30,36 +30,36 @@ namespace AcademyKit.Infrastructure.Persistence.Configurations
                 .IsRequired();
             builder
                 .Property(x => x.customerName)
-                .HasColumnName("customerName")
+                .HasColumnName("customer_name")
                 .HasColumnType("VARCHAR(100)")
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsRequired();
             builder
                 .Property(x => x.customerEmail)
-                .HasColumnName("customerEmail")
+                .HasColumnName("customer_email")
                 .HasColumnType("VARCHAR(200)")
-                .HasMaxLength(50)
+                .HasMaxLength(200)
                 .IsRequired();
             builder
-           .Property(x => x.CreatedBy)
-           .HasColumnName("CreatedBy")
-           .HasColumnType("VARCHAR(50)")
-           .HasMaxLength(50)
-           .IsRequired();
+              .Property(x => x.CreatedBy)
+              .HasColumnName("created_by")
+              .HasColumnType("VARCHAR(50)")
+              .HasMaxLength(50)
+              .IsRequired();
             builder
                 .Property(x => x.CreatedOn)
-                .HasColumnName("CreatedOn")
+                .HasColumnName("created_on")
                 .IsRequired()
                 .HasColumnType("DATETIME");
             builder
                 .Property(x => x.UpdatedBy)
-                .HasColumnName("UpdatedBy")
+                .HasColumnName("updated_by")
                 .HasColumnType("VARCHAR(50)")
                 .HasMaxLength(50)
                 .IsRequired(false);
             builder
                 .Property(x => x.UpdatedOn)
-                .HasColumnName("UpdatedOn")
+                .HasColumnName("updated_on")
                 .HasColumnType("DATETIME")
                 .IsRequired(false);
         }
