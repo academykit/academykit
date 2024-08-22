@@ -323,6 +323,7 @@ export const api = {
       `/api/LemonSqueezy/validate?licenseKey=${licenseKey}`,
     activate: "/api/LemonSqueezy/activate",
     list: "/api/LemonSqueezy/license",
+    checkout: "/api/LemonSqueezy/checkout",
   },
   apiKey: {
     list: "/api/ApiKey",

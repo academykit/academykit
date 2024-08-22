@@ -3,11 +3,16 @@ import { Button, Group, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 import { showNotification } from "@mantine/notifications";
-import { useActivatelicense } from "@utils/services/licenseService";
+import {
+  useActivatelicense,
+  useCheckoutLicense,
+} from "@utils/services/licenseService";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const LicenseForm = () => {
   const { t } = useTranslation();
+  const [isCheckout, setIsCheckout] = useState(false);
 
   const form = useForm({
     initialValues: {
@@ -17,6 +22,7 @@ const LicenseForm = () => {
 
   const activateLicense = useActivatelicense();
   const license = useLicenseValidation();
+  const { data } = useCheckoutLicense(isCheckout);
 
   const onSubmit = async ({ license_key }: { license_key: string }) => {
     try {
@@ -31,6 +37,17 @@ const LicenseForm = () => {
         color: "red",
       });
     }
+  };
+
+  useEffect(() => {
+    if (data?.checkoutUrl) {
+      window.open(data.checkoutUrl, "_blank");
+      setIsCheckout(false);
+    }
+  }, [data]);
+
+  const handleCheckout = () => {
+    setIsCheckout(true);
   };
 
   return (
@@ -53,15 +70,7 @@ const LicenseForm = () => {
           <Button loading={activateLicense.isPending} type="submit">
             {t("submit")}
           </Button>
-          <Button
-            variant="outline"
-            onClick={() => {
-              window.open(
-                "https://academykit.lemonsqueezy.com/buy/f83cb9f6-13d5-42f2-9a00-4ac5324e5cf6",
-                "_blank"
-              );
-            }}
-          >
+          <Button variant="outline" type="button" onClick={handleCheckout}>
             {t("Buy Key")}
           </Button>
         </Group>
