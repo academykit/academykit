@@ -2,7 +2,6 @@ using AcademyKit.Application.Common.Dtos;
 using AcademyKit.Application.Common.Exceptions;
 using AcademyKit.Domain.Entities;
 using AcademyKit.Infrastructure.Common;
-using Application.Common.Models.ResponseModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -59,11 +58,11 @@ namespace AcademyKit.Api.Controllers
                 {
                     return StatusCode(
                         (int)response.StatusCode,
-                        JsonConvert.DeserializeObject<LicenseResponseModel>(response.Content)
+                        JsonConvert.DeserializeObject<LemonSqueezyResponseModel>(response.Content)
                     );
                 }
 
-                var licenseResponsess = JsonConvert.DeserializeObject<LicenseResponseModel>(
+                var licenseResponsess = JsonConvert.DeserializeObject<LemonSqueezyResponseModel>(
                     response.Content
                 );
 
@@ -119,11 +118,11 @@ namespace AcademyKit.Api.Controllers
                 {
                     return StatusCode(
                         (int)response.StatusCode,
-                        JsonConvert.DeserializeObject<LicenseResponseModel>(response.Content)
+                        JsonConvert.DeserializeObject<LemonSqueezyResponseModel>(response.Content)
                     );
                 }
 
-                var licenseResponse = JsonConvert.DeserializeObject<LicenseResponseModel>(
+                var licenseResponse = JsonConvert.DeserializeObject<LemonSqueezyResponseModel>(
                     response.Content
                 );
 
@@ -175,45 +174,64 @@ namespace AcademyKit.Api.Controllers
             }
         }
 
-        public class LicenseResponse
+        /// <summary>
+        /// Response From LemonSqueezy
+        /// </summary>
+        private class LicenseKey
         {
-            public bool Valid { get; set; }
-            public string Error { get; set; }
-            public LicenseKey LicenseKey { get; set; }
-            public Instance Instance { get; set; }
-            public Meta Meta { get; set; }
+            public int id { get; set; }
+
+            public string status { get; set; }
+
+            public string key { get; set; }
+
+            public int activation_limit { get; set; }
+
+            public int activation_usage { get; set; }
+
+            public DateTime created_at { get; set; }
+
+            public DateTime? expires_at { get; set; }
+
+            public bool test_mode { get; set; }
         }
 
-        public class LicenseKey
+        private class Meta
         {
-            public int Id { get; set; }
-            public string Status { get; set; }
-            public string Key { get; set; }
-            public int ActivationLimit { get; set; }
-            public int ActivationUsage { get; set; }
-            public DateTime CreatedAt { get; set; }
-            public DateTime ExpiresAt { get; set; }
-        }
+            public int store_id { get; set; }
 
-        public class Instance
-        {
-            public string Id { get; set; }
-            public string Name { get; set; }
-            public DateTime CreatedAt { get; set; }
-        }
+            public int order_id { get; set; }
 
-        public class Meta
-        {
-            public int StoreId { get; set; }
-            public int OrderId { get; set; }
-            public int OrderItemId { get; set; }
+            public int order_item_id { get; set; }
+
+            public int variant_id { get; set; }
+
+            public string variant_name { get; set; }
+
             public int ProductId { get; set; }
-            public string ProductName { get; set; }
-            public int VariantId { get; set; }
-            public string VariantName { get; set; }
-            public int CustomerId { get; set; }
-            public string CustomerName { get; set; }
-            public string CustomerEmail { get; set; }
+
+            public string product_name { get; set; }
+
+            public int customer_id { get; set; }
+
+            public string customer_name { get; set; }
+
+            public string customer_email { get; set; }
+        }
+
+        private class LemonSqueezyResponseModel
+        {
+            public bool activated { get; set; }
+
+            public bool valid { get; set; }
+
+            public string error { get; set; }
+
+            public LicenseKey license_key { get; set; }
+
+            public object instance { get; set; }
+
+            public Meta meta { get; set; }
         }
     }
 }

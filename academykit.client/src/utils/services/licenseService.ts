@@ -42,12 +42,12 @@ export const getLicenses = () =>
     queryKey: [api.license.list],
     queryFn: () => getLicense(),
     select: (data) => data.data,
-    enabled:
-      !!localStorage.getItem(TOKEN_STORAGE) &&
-      !localStorage.getItem(TOKEN_STORAGE),
+    enabled: !!(
+      localStorage.getItem(TOKEN_STORAGE) && !localStorage.getItem(LICENSE_KEY)
+    ),
   });
 
-export const useActivatelicense = () => {
+export const useActivateLicense = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [api.license.activate],

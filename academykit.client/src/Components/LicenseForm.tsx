@@ -3,7 +3,7 @@ import { useForm } from "@mantine/form";
 
 import { showNotification } from "@mantine/notifications";
 import {
-  useActivatelicense,
+  useActivateLicense,
   useCheckoutLicense,
 } from "@utils/services/licenseService";
 import { useTranslation } from "react-i18next";
@@ -18,8 +18,7 @@ const LicenseForm = () => {
     },
   });
 
-  const activateLicense = useActivatelicense();
-  // const license = useLicenseValidation();
+  const activateLicense = useActivateLicense();
 
   const onSubmit = async ({ licenseKey }: { licenseKey: string }) => {
     try {
@@ -68,7 +67,7 @@ const LicenseForm = () => {
             {t("submit")}
           </Button>
           <Button variant="outline" type="button" onClick={handleCheckout}>
-            {t("Buy Key")}
+            {t("buy_key")}
           </Button>
         </Group>
       </form>
