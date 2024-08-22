@@ -3,8 +3,8 @@
     using System.Text;
     using AcademyKit.Application.Common.Exceptions;
     using AcademyKit.Infrastructure.Security;
-    using Microsoft.AspNetCore.Authentication;
     using AcademyKit.Server.Infrastructure.Configurations;
+    using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Authentication.Google;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
