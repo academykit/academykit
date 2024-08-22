@@ -21,8 +21,12 @@ namespace AcademyKit.Api.Controllers
         public LemonSqueezyController(IConfiguration configuration, IUnitOfWork unitOfWork)
         {
             LEMON_SQUEEZY_BASE_URL = configuration.GetSection("LEMON_SQUEEZY:BASE_URL").Value;
-            LEMON_SQUEEZY_CHECKOUT_KEY = configuration.GetSection("LEMON_SQUEEZY:CHECKOUT_KEY").Value;
-            LEMON_SQUEEZY_CHECKOUT_URL = configuration.GetSection("LEMON_SQUEEZY:CHECKOUT_URL").Value;
+            LEMON_SQUEEZY_CHECKOUT_KEY = configuration
+                .GetSection("LEMON_SQUEEZY:CHECKOUT_KEY")
+                .Value;
+            LEMON_SQUEEZY_CHECKOUT_URL = configuration
+                .GetSection("LEMON_SQUEEZY:CHECKOUT_URL")
+                .Value;
             _unitOfWork = unitOfWork;
         }
 
