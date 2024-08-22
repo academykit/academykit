@@ -27,7 +27,7 @@ namespace AcademyKit.Api.Controllers
         }
 
         /// <summary>
-        /// activate license and save the data in database
+        /// activate license and save the data in database.
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -63,7 +63,7 @@ namespace AcademyKit.Api.Controllers
                     response.Content
                 );
 
-                // Map to the License entity
+                // Map to the License entity.
                 var data = new License
                 {
                     Id = new Guid(),
@@ -88,6 +88,13 @@ namespace AcademyKit.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// validate the license key.
+        /// </summary>
+        /// <param name="licenseKey"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ServiceException"></exception>
         [HttpGet("validate")]
         [AllowAnonymous]
         public async Task<ActionResult> ValidateLicenseAsync([FromQuery] string licenseKey)
@@ -124,6 +131,11 @@ namespace AcademyKit.Api.Controllers
             }
         }
 
+        /// <summary>
+        ///  get the list of license
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ServiceException"></exception>
         [HttpGet("license")]
         [AllowAnonymous]
         public IActionResult GetLicenseAsync()
@@ -139,6 +151,11 @@ namespace AcademyKit.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// get the checkout url for license key.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ServiceException"></exception>
         [HttpGet("checkout")]
         [AllowAnonymous]
         public IActionResult CheckoutLicenseAsync()
