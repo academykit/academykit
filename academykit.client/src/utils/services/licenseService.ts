@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LICENSE_KEY, TOKEN_STORAGE } from "@utils/constants";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
@@ -18,18 +18,22 @@ export const useValidateLicense = (licenseKey: string) =>
     queryKey: [api.license.validate(licenseKey)],
     queryFn: () => licenseValidation(licenseKey),
     select: (data) => data.data,
-    enabled: !!localStorage.getItem(TOKEN_STORAGE),
+    enabled: !!(licenseKey && localStorage.getItem(TOKEN_STORAGE)),
   });
 
 const licenseCheckout = () => httpClient.get<ILicense>(api.license.checkout);
 
-export const useCheckoutLicense = (isCheckout: boolean) =>
-  useQuery({
-    queryKey: [api.license.checkout],
-    queryFn: () => licenseCheckout(),
-    select: (data) => data.data,
-    enabled: isCheckout,
+export const useCheckoutLicense = () => {
+  return useMutation({
+    mutationKey: [api.license.checkout],
+
+    mutationFn: licenseCheckout,
+
+    onSuccess: (data) => {
+      window.open(data.data.checkoutUrl, "_blank");
+    },
   });
+};
 
 const getLicense = () => httpClient.get<ILicense[]>(api.license.list);
 
@@ -38,12 +42,13 @@ export const getLicenses = () =>
     queryKey: [api.license.list],
     queryFn: () => getLicense(),
     select: (data) => data.data,
-    enabled: !!(
-      localStorage.getItem(TOKEN_STORAGE) && localStorage.getItem(LICENSE_KEY)
-    ),
+    enabled:
+      !!localStorage.getItem(TOKEN_STORAGE) &&
+      !localStorage.getItem(TOKEN_STORAGE),
   });
 
 export const useActivatelicense = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [api.license.activate],
 
@@ -52,6 +57,7 @@ export const useActivatelicense = () => {
     },
 
     onSuccess: (data) => {
+      queryClient.refetchQueries({ queryKey: [api.license.list] });
       localStorage.setItem(LICENSE_KEY, data?.data?.licenseKey);
     },
   });

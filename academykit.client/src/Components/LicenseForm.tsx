@@ -1,4 +1,3 @@
-import useLicenseValidation from "@hooks/useLicenseValidation";
 import { Button, Group, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
@@ -7,27 +6,25 @@ import {
   useActivatelicense,
   useCheckoutLicense,
 } from "@utils/services/licenseService";
-import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const LicenseForm = () => {
   const { t } = useTranslation();
-  const [isCheckout, setIsCheckout] = useState(false);
+  const { mutateAsync } = useCheckoutLicense();
 
   const form = useForm({
     initialValues: {
-      license_key: "",
+      licenseKey: "",
     },
   });
 
   const activateLicense = useActivatelicense();
-  const license = useLicenseValidation();
-  const { data } = useCheckoutLicense(isCheckout);
+  // const license = useLicenseValidation();
 
-  const onSubmit = async ({ license_key }: { license_key: string }) => {
+  const onSubmit = async ({ licenseKey }: { licenseKey: string }) => {
     try {
-      await activateLicense.mutateAsync({ licenseKey: license_key });
-      license?.setValid(true);
+      await activateLicense.mutateAsync({ licenseKey: licenseKey });
+
       showNotification({
         message: t("license_activation_success"),
       });
@@ -39,15 +36,15 @@ const LicenseForm = () => {
     }
   };
 
-  useEffect(() => {
-    if (data?.checkoutUrl) {
-      window.open(data.checkoutUrl, "_blank");
-      setIsCheckout(false);
+  const handleCheckout = async () => {
+    try {
+      await mutateAsync();
+    } catch (err) {
+      showNotification({
+        message: t("license_activation_fail"),
+        color: "red",
+      });
     }
-  }, [data]);
-
-  const handleCheckout = () => {
-    setIsCheckout(true);
   };
 
   return (
@@ -64,7 +61,7 @@ const LicenseForm = () => {
           autoComplete="off"
           withAsterisk
           placeholder={t("license_key") as string}
-          {...form.getInputProps("license_key")}
+          {...form.getInputProps("licenseKey")}
         />
         <Group justify="center">
           <Button loading={activateLicense.isPending} type="submit">

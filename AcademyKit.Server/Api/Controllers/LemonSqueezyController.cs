@@ -26,6 +26,13 @@ namespace AcademyKit.Api.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// activate license and save the data in database
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ServiceException"></exception>
         [HttpPost("activate")]
         [AllowAnonymous]
         public async Task<IActionResult> ActivateLicenseAsync([FromBody] LicenseRequestModel model)
@@ -55,7 +62,6 @@ namespace AcademyKit.Api.Controllers
                 var licenseResponsess = JsonConvert.DeserializeObject<LicenseResponseModel>(
                     response.Content
                 );
-                // _logger.LogInformation(licenseResponse.LicenseKey.Key);
 
                 // Map to the License entity
                 var data = new License
@@ -63,10 +69,10 @@ namespace AcademyKit.Api.Controllers
                     Id = new Guid(),
                     status = Domain.Enums.LicenseStatusType.Active,
                     licenseKey = model.LicenseKey,
-                    licenseKeyId = licenseResponsess.LicenseKey.Id,
+                    licenseKeyId = licenseResponsess.license_key.id,
                     CreatedBy = new Guid(),
-                    customerEmail = licenseResponsess.Meta.CustomerEmail,
-                    customerName = licenseResponsess.Meta.CustomerName,
+                    customerEmail = licenseResponsess.meta.customer_email,
+                    customerName = licenseResponsess.meta.customer_email,
                     CreatedOn = DateTime.UtcNow,
                 };
 

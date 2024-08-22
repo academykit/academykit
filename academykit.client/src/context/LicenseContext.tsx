@@ -1,7 +1,7 @@
 import LicenseForm from "@components/LicenseForm";
 import useAuth from "@hooks/useAuth";
 import { Modal } from "@mantine/core";
-import { License_Key } from "@utils/constants";
+import { LICENSE_KEY } from "@utils/constants";
 import {
   getLicenses,
   useValidateLicense,
@@ -17,25 +17,22 @@ export const LicenseContext = createContext<ILicenseContext | null>(null);
 
 const LicenseProvider: FC<React.PropsWithChildren> = ({ children }) => {
   const [isValid, setIsValid] = useState<boolean>(true);
-  const [licenseKey, setLicenseKey] = useState("");
   const auth = useAuth();
   const setValid = (value: boolean) => {
     setIsValid(value);
   };
   const licenseKeys = getLicenses();
 
-  const licenseToken = localStorage.getItem(License_Key);
+  const licenseToken = localStorage.getItem(LICENSE_KEY);
 
   const license = useValidateLicense(licenseToken ?? "");
 
   useEffect(() => {
-    if (licenseToken) {
-      setLicenseKey(licenseKey);
-    } else {
-      if (licenseKeys.isSuccess) {
-        if (licenseKeys.data?.length) {
-          localStorage.setItem(License_Key, licenseKeys.data[0]?.licenseKey);
-        }
+    if (licenseKeys.isSuccess) {
+      if (licenseKeys.data?.length) {
+        localStorage.setItem(LICENSE_KEY, licenseKeys.data[0]?.licenseKey);
+      } else {
+        setIsValid(false);
       }
     }
   }, [licenseToken, licenseKeys.isSuccess]);
