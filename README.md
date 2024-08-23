@@ -62,7 +62,7 @@ The Hangfire Dashboard is available at https://localhost:7042/hangfire
 To add a new migration from the root folder
 
 ```
-dotnet ef migrations add "support content for lesson" --project AcademyKit.Server --startup-project AcademyKit.Server -o Infrastructure/Persistence/Migrations
+dotnet ef migrations add "UpdateLicenseTable" --project AcademyKit.Server --startup-project AcademyKit.Server -o Infrastructure/Persistence/Migrations
 ```
 
 To remove migrations
