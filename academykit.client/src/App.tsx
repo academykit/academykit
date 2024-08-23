@@ -6,6 +6,7 @@ import BrandingProvider, {
 } from "@context/BrandingThemeContext";
 import FormProvider from "@context/FormContext";
 import { LayoutProvider } from "@context/LayoutProvider";
+import LicenseProvider from "@context/LicenseContext";
 import {
   CSSVariablesResolver,
   MantineProvider,
@@ -214,16 +215,18 @@ const App = ({ queryClient }: { queryClient: QueryClient }) => {
           <QueryClientProvider client={queryClient}>
             <ErrorBoundary>
               <AuthProvider>
-                <LayoutProvider>
-                  <BrandingProvider
-                    brandingTheme={brandingTheme}
-                    brandingThemeValue={brandingThemeValue}
-                    setBrandingTheme={setBrandingTheme}
-                    setBrandingThemeValue={setBrandingThemeValue}
-                  >
-                    <AppRoutes />
-                  </BrandingProvider>
-                </LayoutProvider>
+                <LicenseProvider>
+                  <LayoutProvider>
+                    <BrandingProvider
+                      brandingTheme={brandingTheme}
+                      brandingThemeValue={brandingThemeValue}
+                      setBrandingTheme={setBrandingTheme}
+                      setBrandingThemeValue={setBrandingThemeValue}
+                    >
+                      <AppRoutes />
+                    </BrandingProvider>
+                  </LayoutProvider>
+                </LicenseProvider>
               </AuthProvider>
               <ReactQueryDevtools initialIsOpen={false} />
             </ErrorBoundary>
