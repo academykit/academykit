@@ -553,17 +553,26 @@ namespace AcademyKit.Infrastructure.Services
                     var newUserEmails = new List<UserEmailDto>();
                     if (newUsersList.Count != default)
                     {
+                        Guid? departmentId = null;
                         foreach (var user in newUsersList)
                         {
-                            var existDepartment = await departmentService
-                                .SearchAsync(
-                                    new DepartmentBaseSearchCriteria
-                                    {
-                                        departmentName = user.Department
-                                    },
-                                    false
-                                )
-                                .ConfigureAwait(false);
+                            if (!string.IsNullOrEmpty(user.Department))
+                            {
+                                var existDepartment = await departmentService
+                                    .SearchAsync(
+                                        new DepartmentBaseSearchCriteria
+                                        {
+                                            departmentName = user.Department
+                                        },
+                                        false
+                                    )
+                                    .ConfigureAwait(false);
+                                if (existDepartment.Items.Count > 0)
+                                {
+                                    departmentId = existDepartment.Items[0].Id;
+                                }
+                            }
+
                             var userEntity = new User()
                             {
                                 Id = Guid.NewGuid(),
@@ -577,10 +586,7 @@ namespace AcademyKit.Infrastructure.Services
                                 Role = (UserRole)Enum.Parse(typeof(UserRole), user.Role, true),
                                 CreatedBy = currentUserId,
                                 CreatedOn = DateTime.UtcNow,
-                                DepartmentId =
-                                    existDepartment.Items.Count > 0
-                                        ? existDepartment.Items[0].Id
-                                        : null,
+                                DepartmentId = departmentId,
                             };
                             var password = await GenerateRandomPassword(8).ConfigureAwait(false);
                             userEntity.HashPassword = HashPassword(password);

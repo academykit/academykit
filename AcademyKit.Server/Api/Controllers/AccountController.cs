@@ -2,9 +2,11 @@
 {
     using System.IdentityModel.Tokens.Jwt;
     using System.Net.Http.Headers;
+    using System.Security.Cryptography;
     using System.Text;
     using System.Text.Encodings.Web;
     using AcademyKit.Api.Common;
+    using AcademyKit.Application.Common.Helpers;
     using AcademyKit.Application.Common.Interfaces;
     using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Application.Common.Models.ResponseModels;
@@ -264,15 +266,13 @@
         [AllowAnonymous]
         public IActionResult SignInWithGoogle()
         {
-            var nonce = "Q2k4UWFtMmZ1NjlBNG1oRU1ENnNNRGhx";
-
             var url =
                 $"{_google.AuthUrl}"
                 + $"response_type=code&"
                 + $"client_id={_google.ClientId}&"
-                + $"scope=openid https://www.googleapis.com/auth/userinfo.email&"
+                + $"scope=openid email&"
                 + $"redirect_uri={_google.RedirectUri}&"
-                + $"nonce={UrlEncoder.Default.Encode(nonce)}&"
+                + $"nonce={CommonHelper.GenerateNonce}&"
                 + $"access_type=offline&"
                 + $"prompt=consent";
 
@@ -309,7 +309,7 @@
                 if (tokenResponse.IsSuccess)
                 {
                     var userEmail = await _googleService.GetGoogleUserEmail(
-                        tokenResponse.access_token
+                        tokenResponse.Access_token
                     );
                     var authenticationModel = await userService.GetTokenForExternalLoginProvider(
                         userEmail
@@ -318,7 +318,7 @@
                 }
                 else
                 {
-                    return BadRequest(new { tokenResponse.error, tokenResponse.error_description });
+                    return BadRequest(new { tokenResponse.Error, tokenResponse.Error_description });
                 }
             }
             catch (Exception ex)
@@ -341,13 +341,15 @@
         /// <returns>the refresh token</returns>
         [HttpPost("google/refreshToken")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetGoogleRefreshToken([FromBody] string refreshToken)
+        public async Task<IActionResult> GetGoogleRefreshToken(
+            [FromBody] RefreshTokenRequestModel model
+        )
         {
             var dicData = new Dictionary<string, string>
             {
                 { "client_id", _google.ClientId },
                 { "client_secret", _google.ClientSecret },
-                { "refresh_token", refreshToken },
+                { "refresh_token", model.Token },
                 { "grant_type", "refresh_token" }
             };
             try
@@ -361,11 +363,11 @@
 
                 if (tokenResponse.IsSuccess)
                 {
-                    return Ok(new { tokenResponse.access_token, tokenResponse.expires_in });
+                    return Ok(new { tokenResponse.Access_token, tokenResponse.Expires_in });
                 }
                 else
                 {
-                    return BadRequest(new { tokenResponse.error, tokenResponse.error_description });
+                    return BadRequest(new { tokenResponse.Error, tokenResponse.Error_description });
                 }
             }
             catch (Exception ex)
@@ -389,8 +391,6 @@
         [AllowAnonymous]
         public IActionResult SignInWithMicrosoft()
         {
-            var nonce = "Q2k4UWFtMmZ1NjlBNG1oRU1ENnNNRGhx";
-
             var url =
                 $"{_microsoft.AuthUrl}"
                 + $"client_id={_microsoft.ClientId}&"
@@ -398,7 +398,7 @@
                 + $"redirect_uri={UrlEncoder.Default.Encode(_microsoft.RedirectUri)}&"
                 + $"response_mode=form_post&"
                 + $"scope=openid email profile User.Read offline_access&"
-                + $"nonce={UrlEncoder.Default.Encode(nonce)}";
+                + $"nonce={CommonHelper.GenerateNonce}";
 
             return Redirect(url);
         }
@@ -442,16 +442,16 @@
                 if (tokenResponse.IsSuccess)
                 {
                     var userEmail = await _microsoftService.GetMicrosoftUserEmail(
-                        tokenResponse.access_token
+                        tokenResponse.Access_token
                     );
                     var authenticationModel = await userService.GetTokenForExternalLoginProvider(
                         userEmail
                     );
-                    return Ok(new { authenticationModel });
+                    return Ok(new { tokenResponse, authenticationModel });
                 }
                 else
                 {
-                    return BadRequest(new { tokenResponse.error, tokenResponse.error_description });
+                    return BadRequest(new { tokenResponse.Error, tokenResponse.Error_description });
                 }
             }
             catch (Exception ex)
@@ -474,16 +474,15 @@
         /// <returns>the microsoft refresh token</returns>
         [HttpPost("microsoft/refreshToken")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetMicrosoftRefreshToken([FromBody] string refreshToken)
+        public async Task<IActionResult> GetMicrosoftRefreshToken(
+            [FromBody] RefreshTokenRequestModel model
+        )
         {
             var dicData = new Dictionary<string, string>
             {
                 { "client_id", _microsoft.ClientId },
-                {
-                    "scope",
-                    "api://65891a3d-bcc4-47af-beb2-6cff844ce15d/openid api://65891a3d-bcc4-47af-beb2-6cff844ce15d/Forecast.Read api://65891a3d-bcc4-47af-beb2-6cff844ce15d/offline_access"
-                },
-                { "refresh_token", refreshToken },
+                { "scope", "openid email profile User.Read offline_access" },
+                { "refresh_token", model.Token },
                 { "grant_type", "refresh_token" },
                 { "client_secret", _microsoft.ClientSecret },
             };
@@ -498,11 +497,11 @@
                 var tokenResponse = JsonConvert.DeserializeObject<OAuthTokenResponse>(json);
                 if (tokenResponse.IsSuccess)
                 {
-                    return Ok(new { tokenResponse.access_token, tokenResponse.expires_in });
+                    return Ok(new { tokenResponse.Access_token, tokenResponse.Expires_in });
                 }
                 else
                 {
-                    return BadRequest(new { tokenResponse.error, tokenResponse.error_description });
+                    return BadRequest(new { tokenResponse.Error, tokenResponse.Error_description });
                 }
             }
             catch (Exception ex)
