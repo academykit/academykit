@@ -1,4 +1,4 @@
-namespace AcademyKit.Api.Controllers
+﻿namespace AcademyKit.Api.Controllers
 {
     using AcademyKit.Api.Common;
     using AcademyKit.Application.Common.Dtos;

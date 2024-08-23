@@ -201,7 +201,8 @@
                 .Include(x => x.Group)
                 .Include(x => x.CourseTeachers)
                 .Include(x => x.CourseEnrollments)
-                .Include(x => x.TrainingEligibilities);
+                .Include(x => x.TrainingEligibilities)
+                .ThenInclude(x => x.EligibilityCreation);
         }
 
         /// <summary>
