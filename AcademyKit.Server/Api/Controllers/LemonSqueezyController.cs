@@ -72,10 +72,10 @@ namespace AcademyKit.Api.Controllers
                     Id = new Guid(),
                     status = Domain.Enums.LicenseStatusType.Active,
                     licenseKey = model.LicenseKey,
-                    licenseKeyId = licenseResponsess.license_key.id,
+                    licenseKeyId = licenseResponsess.LicenseKey.Id,
                     CreatedBy = new Guid(),
-                    customerEmail = licenseResponsess.meta.customer_email,
-                    customerName = licenseResponsess.meta.customer_email,
+                    customerEmail = licenseResponsess.Meta.CustomerEmail,
+                    customerName = licenseResponsess.Meta.CustomerName,
                     CreatedOn = DateTime.UtcNow,
                 };
 
@@ -177,61 +177,85 @@ namespace AcademyKit.Api.Controllers
         /// <summary>
         /// Response From LemonSqueezy
         /// </summary>
-        private class LicenseKey
+        public class LicenseKey
         {
-            public int id { get; set; }
+            [JsonProperty("id")]
+            public int Id { get; set; }
 
-            public string status { get; set; }
+            [JsonProperty("status")]
+            public string Status { get; set; }
 
-            public string key { get; set; }
+            [JsonProperty("key")]
+            public string Key { get; set; }
 
-            public int activation_limit { get; set; }
+            [JsonProperty("activation_limit")]
+            public int ActivationLimit { get; set; }
 
-            public int activation_usage { get; set; }
+            [JsonProperty("activation_usage")]
+            public int ActivationUsage { get; set; }
 
-            public DateTime created_at { get; set; }
+            [JsonProperty("created_at")]
+            public DateTime CreatedAt { get; set; }
 
-            public DateTime? expires_at { get; set; }
+            [JsonProperty("expires_at")]
+            public DateTime? ExpiresAt { get; set; }
 
-            public bool test_mode { get; set; }
+            [JsonProperty("test_mode")]
+            public bool TestMode { get; set; }
         }
 
-        private class Meta
+        public class Meta
         {
-            public int store_id { get; set; }
+            [JsonProperty("store_id")]
+            public int StoreId { get; set; }
 
-            public int order_id { get; set; }
+            [JsonProperty("order_id")]
+            public int OrderId { get; set; }
 
-            public int order_item_id { get; set; }
+            [JsonProperty("order_item_id")]
+            public int OrderItemId { get; set; }
 
-            public int variant_id { get; set; }
+            [JsonProperty("variant_id")]
+            public int VariantId { get; set; }
 
-            public string variant_name { get; set; }
+            [JsonProperty("variant_name")]
+            public string VariantName { get; set; }
 
+            [JsonProperty("product_id")]
             public int ProductId { get; set; }
 
-            public string product_name { get; set; }
+            [JsonProperty("product_name")]
+            public string ProductName { get; set; }
 
-            public int customer_id { get; set; }
+            [JsonProperty("customer_id")]
+            public int CustomerId { get; set; }
 
-            public string customer_name { get; set; }
+            [JsonProperty("customer_name")]
+            public string CustomerName { get; set; }
 
-            public string customer_email { get; set; }
+            [JsonProperty("customer_email")]
+            public string CustomerEmail { get; set; }
         }
 
-        private class LemonSqueezyResponseModel
+        public class LemonSqueezyResponseModel
         {
-            public bool activated { get; set; }
+            [JsonProperty("activated")]
+            public bool Activated { get; set; }
 
-            public bool valid { get; set; }
+            [JsonProperty("valid")]
+            public bool Valid { get; set; }
 
-            public string error { get; set; }
+            [JsonProperty("error")]
+            public string Error { get; set; }
 
-            public LicenseKey license_key { get; set; }
+            [JsonProperty("license_key")]
+            public LicenseKey LicenseKey { get; set; }
 
-            public object instance { get; set; }
+            [JsonProperty("instance")]
+            public object Instance { get; set; }
 
-            public Meta meta { get; set; }
+            [JsonProperty("meta")]
+            public Meta Meta { get; set; }
         }
     }
 }
