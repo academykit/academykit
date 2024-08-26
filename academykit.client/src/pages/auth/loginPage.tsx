@@ -13,9 +13,11 @@ import {
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
+import { IconBrandGoogle } from "@tabler/icons-react";
 import RoutePath from "@utils/routeConstants";
 import { useCompanySetting } from "@utils/services/adminService";
 import { useLogin } from "@utils/services/authService";
+import { api } from "@utils/services/service-api";
 import { IUserProfile } from "@utils/services/types";
 import { AxiosError } from "axios";
 import { useContext, useEffect } from "react";
@@ -177,6 +179,12 @@ const LoginPage = () => {
           </Button>
         </Paper>
       </form>
+      <Center style={{ gap: 10 }}>
+        <IconBrandGoogle />
+        <form action={api.auth.microsoftSignIn} method="get">
+          <button type="submit">MicroSoft </button>
+        </form>
+      </Center>
     </Container>
   );
 };

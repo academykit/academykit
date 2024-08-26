@@ -391,14 +391,15 @@
         [AllowAnonymous]
         public IActionResult SignInWithMicrosoft()
         {
+            var nonce = CommonHelper.GenerateNonce();
             var url =
                 $"{_microsoft.AuthUrl}"
                 + $"client_id={_microsoft.ClientId}&"
-                + $"response_type=code id_token&"
+                + $"response_type=code&"
                 + $"redirect_uri={UrlEncoder.Default.Encode(_microsoft.RedirectUri)}&"
-                + $"response_mode=form_post&"
+                + $"response_mode=query&"
                 + $"scope=openid email profile User.Read offline_access&"
-                + $"nonce={CommonHelper.GenerateNonce}";
+                + $"nonce={nonce}";
 
             return Redirect(url);
         }
@@ -408,9 +409,9 @@
         /// </summary>
         /// <param name="code">the instance of <see cref="string"/></param>
         /// <returns>the access token</returns>
-        [HttpPost("microsoft/getAccessToken")]
+        [HttpGet("oauth/entraId/callback")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetMicrosoftAccessToken([FromForm] string code)
+        public async Task<IActionResult> GetMicrosoftAccessToken(string code)
         {
             var dicData = new Dictionary<string, string>
             {

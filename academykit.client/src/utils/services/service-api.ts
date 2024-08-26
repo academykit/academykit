@@ -13,6 +13,7 @@ export const api = {
     verifyChangeEmail: "/api/user/verifyChangeEmail",
     me: "/api/account",
     resendEmail: (id: string) => `/api/User/${id}/resendEmail`,
+    microsoftSignIn: "/api/Account/signin-with-microsoft",
   },
   adminUser: {
     users: (queryString: any) => `api/user?${queryString}`,
