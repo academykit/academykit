@@ -40,6 +40,9 @@
             RuleFor(x => x.Description)
                 .MaximumLength(5000)
                 .WithMessage(context => stringLocalizer.GetString("DescriptionLength500"));
+            RuleFor(x => x.Content)
+                .MaximumLength(5000)
+                .WithMessage(context => stringLocalizer.GetString("ContentLength500"));
             RuleFor(x => x.QuestionSet)
                 .SetValidator(new QuestionSetValidator(stringLocalizer))
                 .When(x => x.Type == LessonType.Exam);

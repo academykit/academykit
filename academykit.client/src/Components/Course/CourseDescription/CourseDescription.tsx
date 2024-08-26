@@ -226,57 +226,61 @@ const CourseDescription = () => {
                 })}
               />
             </AspectRatio>
-            <Card.Section
-              py={"xs"}
-              px="lg"
-              mt={"sm"}
-              style={{
-                borderTop: "1px solid var(--mantine-color-pool-border)",
-              }}
-            >
-              <Text size="xs" c="dimmed" mb={10}>
-                {t("eligibility")}
-              </Text>
+            <Card>
+              <Card.Section
+                py={"xs"}
+                px="lg"
+                mt={"sm"}
+                style={{
+                  borderTop: "1px solid var(--mantine-color-pool-border)",
+                }}
+              >
+                <Text size="xs" c="dimmed" mb={10}>
+                  {t("eligibility")}
+                </Text>
 
-              <List>
-                {course.data.trainingEligibilities.length >= 1 ? (
-                  course.data.trainingEligibilities
-                    .slice(0, 4)
-                    .map((eligibility, index) => (
-                      <List.Item
-                        key={index}
-                        icon={
-                          // show eligibility status icon only if the user is not admin or super-admin
-                          // and it not the owner of the assessment
-                          course.data.isEligible && (
-                            <>
-                              {eligibility.eligibility ? (
-                                <IconCheck size={18} />
-                              ) : (
-                                <IconX size={18} />
-                              )}
-                            </>
-                          )
-                        }
-                      >
-                        <Text lineClamp={1}>{`Must`}</Text>
-                      </List.Item>
-                    ))
-                ) : (
-                  <Text>{t("no_eligibility_criteria")}</Text>
+                <List>
+                  {course.data.trainingEligibilities.length >= 1 ? (
+                    course.data.trainingEligibilities
+                      .slice(0, 4)
+                      .map((eligibility, index) => (
+                        <List.Item
+                          key={index}
+                          icon={
+                            // show eligibility status icon only if the user is not admin or super-admin
+                            // and it not the owner of the assessment
+                            course.data.isEligible && (
+                              <>
+                                {eligibility.eligibility ? (
+                                  <IconCheck size={18} />
+                                ) : (
+                                  <IconX size={18} />
+                                )}
+                              </>
+                            )
+                          }
+                        >
+                          <Text lineClamp={1}>{`Must`}</Text>
+                        </List.Item>
+                      ))
+                  ) : (
+                    <Text>{t("no_eligibility_criteria")}</Text>
+                  )}
+                </List>
+                {course.data.trainingEligibilities.length > 4 && (
+                  <Anchor
+                    component={Link}
+                    to={
+                      RoutePath.assessment.description(course.data.slug).route
+                    }
+                    size={"md"}
+                    lineClamp={1}
+                  >
+                    <Text truncate>{t("see_more")}</Text>
+                  </Anchor>
                 )}
-              </List>
-              {course.data.trainingEligibilities.length > 4 && (
-                <Anchor
-                  component={Link}
-                  to={RoutePath.assessment.description(course.data.slug).route}
-                  size={"md"}
-                  lineClamp={1}
-                >
-                  <Text truncate>{t("see_more")}</Text>
-                </Anchor>
-              )}
-            </Card.Section>
+              </Card.Section>
+            </Card>
             <Center>
               <Group my={30}>
                 {auth?.auth && Number(auth?.auth?.role) <= UserRole.Admin ? (

@@ -198,6 +198,9 @@
   <data name="DescriptionLength500" xml:space="preserve">
     <value>説明の長さは 5000 文字以下である必要があります。</value>
   </data>
+  <data name="ContentLength500" xml:space="preserve">
+    <value>内容の長さは5000文字以下でなければなりません。</value>
+  </data>
   <data name="DesignationLength50" xml:space="preserve">
     <value>指定の長さは 50 以下である必要があります。</value>
   </data>
