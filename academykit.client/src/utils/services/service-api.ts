@@ -15,15 +15,15 @@ export const api = {
     resendEmail: (id: string) => `/api/User/${id}/resendEmail`,
   },
   adminUser: {
-    users: (queryString: any) => `api/user?${queryString}`,
-    addUsers: `api/user`,
+    users: (queryString: string) => `api/user?${queryString}`,
+    addUsers: "api/user",
     editUsers: (userId: string) => `api/user/${userId}`,
-    getCompanySettings: `api/admin/settings/company`,
-    getGeneralSettings: `api/admin/settings`,
-    getZoomSettings: `api/admin/settings/zoom`,
-    getZoomLicense: `api/zoomLicense`,
+    getCompanySettings: "api/admin/settings/company",
+    getGeneralSettings: "api/admin/settings",
+    getZoomSettings: "api/admin/settings/zoom",
+    getZoomLicense: "api/zoomLicense",
     getActiveZoomLicense: (query: string) => `api/zoomLicense/active?${query}`,
-    getSMTPSettings: `api/admin/settings/smtp`,
+    getSMTPSettings: "api/admin/settings/smtp",
     updateGeneralSettings: (id: string | undefined) =>
       `api/admin/settings/${id}`,
     updateZoomSettings: (id: string | undefined) =>
@@ -35,23 +35,23 @@ export const api = {
     updateZoomLicenseStatus: (userId: string, enabled: boolean) =>
       `/api/ZoomLicense/${userId}/status?enabled=${enabled}`,
     deleteZoomLicense: (id: string) => `/api/ZoomLicense/${id}`,
-    addZoomLicense: `/api/ZoomLicense`,
+    addZoomLicense: "/api/ZoomLicense",
     deleteLevelSetting: (id: string) => `api/level/${id}`,
-    getDepartmentSettings: `api/department`,
-    postDepartmentSetting: () => `/api/department/`,
+    getDepartmentSettings: "api/department",
+    postDepartmentSetting: () => "/api/department/",
     deleteDepartmentSetting: (id: string) => `api/department/${id}`,
     updateDepartmentStatus: (id: string, status: boolean) =>
       `/api/department/${id}/status?enabled=${status}`,
 
-    getLevelSetting: `api/level`,
-    postLevelSetting: `api/level`,
+    getLevelSetting: "api/level",
+    postLevelSetting: "api/level",
     updateLevelSetting: (id: string) => `api/level/${id}`,
     updateDepartmentSetting: (id: string) => `api/department/${id}`,
     getTrainer: (search: string, lessonType?: number, id?: string) =>
       `/api/user/trainer?${search}&LessonType=${lessonType}&Identity=${id}`,
     getLogs: (query: string) => `/api/ServerLog/logs?${query}`,
     getSingleLog: (id: string) => `/api/ServerLog/${id}`,
-    getMailNotification: `/api/mailNotification`,
+    getMailNotification: "/api/mailNotification",
     updateMailNotification: (id: string) => `/api/mailNotification/${id}`,
     testEmail: (id: string) => `/api/mailNotification/${id}/checkSendEmail`,
   },
@@ -63,8 +63,8 @@ export const api = {
     removeMember: (id: string, memberId: string) =>
       `/api/group/${id}/removeMember/${memberId}`,
     course: (groupId: string) => `/api/group/${groupId}/courses`,
-    attachment: `/api/group/files`,
-    addAttachment: `/api/group/file`,
+    attachment: "/api/group/files",
+    addAttachment: "/api/group/file",
     removeAttachment: (identity: string, fileId: string) =>
       `/api/group/${identity}/files/${fileId}`,
     notMembers: (
@@ -74,7 +74,7 @@ export const api = {
     ) => {
       const url = `/api/group/${identity}/notMembers?${query}`;
       if (departmentId) {
-        return url + `&departmentIdentity=${departmentId}`;
+        return `${url}&departmentIdentity=${departmentId}`;
       }
       return url;
     },
@@ -89,7 +89,7 @@ export const api = {
     reorderSection: (id: string) => `/api/course/${id}/section/reorder`,
     update: (id: string) => `/api/course/${id}`,
     enroll: (id: string) => `/api/Course/${id}/enroll`,
-    status: `/api/Course/status`,
+    status: "/api/Course/status",
     lessonStat: (id: string) => `/api/course/${id}/lessonStatistics`,
     lessonStatDetails: (id: string, lessonId: string, qs: string) =>
       `/api/course/${id}/lessonStatistics/${lessonId}?${qs}`,
@@ -113,9 +113,9 @@ export const api = {
       `/api/course/${identity}/certificate?${search}`,
     postCertificate: (identity: string) =>
       `/api/course/${identity}/certificate/issue`,
-    dashboard: `/api/dashboard`,
-    dashboardCourse: `/api/dashboard/course`,
-    dashboardUpcoming: `/api/dashboard/upcominglesson`,
+    dashboard: "/api/dashboard",
+    dashboardCourse: "/api/dashboard/course",
+    dashboardUpcoming: "/api/dashboard/upcomingLesson",
     updateCourse: (id: string) => `/api/course/${id}/updateCourse`,
 
     createSignature: (courseId: string) => `/api/course/${courseId}/signature`,
@@ -156,7 +156,7 @@ export const api = {
   },
   physicalTraining: {
     attendance: (identity: string) =>
-      `/api/PhysicalLesson/Attendance?Idenity=${identity}`,
+      `/api/PhysicalLesson/Attendance?identity=${identity}`,
     review: "/api/PhysicalLesson/Review",
   },
   tags: {
@@ -174,22 +174,22 @@ export const api = {
     detail: (id: string) => `/api/courseTeacher/${id}`,
   },
   questions: {
-    list: (poolId: string) => `/api/questionpool/${poolId}/question`,
+    list: (poolId: string) => `/api/questionPool/${poolId}/question`,
     one: (poolId: string, questionId: string) =>
-      `/api/questionpool/${poolId}/question/${questionId}`,
+      `/api/questionPool/${poolId}/question/${questionId}`,
     delete: (poolId: string, questionId: string) =>
-      `/api/questionpool/${poolId}/question/${questionId}`,
-    put: (poolId: string, quesitonId: string) =>
-      `/api/questionpool/${poolId}/question/${quesitonId}`,
+      `/api/questionPool/${poolId}/question/${questionId}`,
+    put: (poolId: string, questionId: string) =>
+      `/api/questionPool/${poolId}/question/${questionId}`,
   },
   questionSet: {
-    common: "/api/questionset",
+    common: "/api/questionSet",
     addQuestion: (identity: string) =>
-      `/api/questionSet/${identity}/addquestion`,
-    getQuestion: (identity: string) => `/api/questionset/${identity}/questions`,
+      `/api/questionSet/${identity}/addQuestion`,
+    getQuestion: (identity: string) => `/api/questionSet/${identity}/questions`,
   },
   poolTeacher: {
-    list: `/api/questionPoolTeacher`,
+    list: "/api/questionPoolTeacher",
     get: (q_id: string) =>
       `/api/questionPoolTeacher?QuestionPoolIdentity=${q_id}`,
     status: (id: string) => `/api/questionPoolTeacher/${id}/status`,
@@ -199,8 +199,8 @@ export const api = {
     add: "/api/assignment",
     list: (lessonId: string, search?: string) =>
       search
-        ? "/api/Assignment" + `?${search}&LessonIdentity=${lessonId}`
-        : "/api/Assignment" + `?LessonIdentity=${lessonId}`,
+        ? `/api/Assignment?${search}&LessonIdentity=${lessonId}`
+        : `/api/Assignment?LessonIdentity=${lessonId}`,
     listOne: (id: string) => `/api/Assignment/${id}`,
     submitAssignment: (id: string) => `/api/assignment/${id}/submissions`,
     assignmentReview: (id: string, userId: string) =>
@@ -213,15 +213,14 @@ export const api = {
     add: "/api/feedback",
     list: (lessonId: string, search?: string) =>
       search
-        ? "/api/feedback" + `?${search}&LessonIdentity=${lessonId}`
-        : "/api/feedback" + `?LessonIdentity=${lessonId}`,
+        ? `/api/feedback?${search}&LessonIdentity=${lessonId}`
+        : `/api/feedback?LessonIdentity=${lessonId}`,
     listOne: (id: string) => `/api/feedback/${id}`,
     submitFeedback: (id: string) => `/api/feedback/${id}/submissions`,
     userFeedback: (lessonId: string, userId: string, search?: string) =>
       search
-        ? "/api/feedback" +
-          `?${search}&LessonIdentity=${lessonId}&UserId=${userId}`
-        : "/api/feedback" + `?LessonIdentity=${lessonId}&UserId=${userId}`,
+        ? `/api/feedback?${search}&LessonIdentity=${lessonId}&UserId=${userId}`
+        : `/api/feedback?LessonIdentity=${lessonId}&UserId=${userId}`,
     exportFeedback: (lessonId: string) => `/api/Feedback/${lessonId}/export`,
     graph: (id: string) => `/api/Feedback/${id}/chart`,
   },
@@ -241,7 +240,7 @@ export const api = {
     joinMeeting: (courseId?: string, lessonId?: string) =>
       `/api/course/${courseId}/lesson/${lessonId}/join`,
     meetingReport: (courseId: string, lessonId: string, userId: string) =>
-      `/api/course/${courseId}/lesson/${lessonId}/meetingreport/${userId}`,
+      `/api/course/${courseId}/lesson/${lessonId}/meetingReport/${userId}`,
   },
   watchHistory: {
     create: "/api/watchHistory",
@@ -251,7 +250,7 @@ export const api = {
     getFileStorageSetting: "/api/media/setting",
     updateFileStorageSetting: "/api/media/setting",
     getFileStorageSettingValue: (type: string) =>
-      `/api/media/settingvalue?type=${type}`,
+      `/api/media/settingValue?type=${type}`,
   },
   comments: {
     list: (courseId: string) => `/api/course/${courseId}/comments`,
@@ -277,10 +276,10 @@ export const api = {
   externalCertificate: {
     add: "/api/certificate/external",
     user: (id?: string) => `/api/certificate/external/${id}`,
-    list: `/api/certificate/review`,
+    list: "/api/certificate/review",
     updateStatus: (id?: string) => `/api/certificate/${id}/verify`,
     update: (id?: string) => `/api/certificate/${id}/external`,
-    internal: `/api/certificate/internal`,
+    internal: "/api/certificate/internal",
   },
   skill: {
     list: "/api/skills",
@@ -290,7 +289,7 @@ export const api = {
     list: "/api/assessment",
     getSingle: (id: string) => `/api/assessment/${id}`,
     update: (id: string) => `/api/assessment/${id}`,
-    updateStatus: `/api/assessment/status`,
+    updateStatus: "/api/assessment/status",
     getResults: (id: string) => `/api/assessmentExam/${id}/getResults`,
     getStudentResult: (assessmentId: string, userId: string) =>
       `/api/assessmentExam/${assessmentId}/getStudentResults/${userId}`,
@@ -309,11 +308,11 @@ export const api = {
       `/api/assessmentExam/${assessmentId}/AnswerSubmission`,
   },
   ai: {
-    trainingSuggest: `/api/AITrainingGenerator`,
-    aiMasterSetup: `/api/AIKey`,
+    trainingSuggest: "/api/AITrainingGenerator",
+    aiMasterSetup: "/api/AIKey",
   },
   iframely: {
-    oembed: (url: string) => `/api/iframely/oembed?url=${url}`,
+    oEmbed: (url: string) => `/api/iframely/oEmbed?url=${url}`,
   },
   update: {
     checkVersions: "/api/admin/settings/CheckUpdates",

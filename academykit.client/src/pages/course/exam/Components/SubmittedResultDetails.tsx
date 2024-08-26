@@ -137,7 +137,7 @@ const SubmittedResultDetails = ({
                       />
                     )}
 
-                    {/* shoing icon if wrong answer was selected */}
+                    {/* showing icon if wrong answer was selected */}
                     {!x.isCorrect && x.isSelected && (
                       <IconSquareRoundedX
                         size={36}

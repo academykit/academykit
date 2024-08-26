@@ -22,7 +22,8 @@
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
         <value>[base64 mime encoded serialized .NET Framework object]</value>
     </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing"
+  mimetype="application/x-microsoft.net.object.bytearray.base64">
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework
   object]</value>
         <comment>This is a comment</comment>
@@ -116,10 +117,12 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TrainingRemoved" xml:space="preserve">
     <value> तालिम सफलतापूर्वक हटाइयो।</value>
@@ -226,10 +229,10 @@
   <data name="MemberStatus" xml:space="preserve">
     <value>सदस्य स्थिति सफलतापूर्वक परिवर्तन भयो।</value>
   </data>
-  <data name="QuestionpoolRemoved" xml:space="preserve">
+  <data name="QuestionPoolRemoved" xml:space="preserve">
     <value>प्रश्नपुल सफलतापूर्वक हटाइयो।</value>
   </data>
-  <data name="QuestionpoolTeacherRemoved" xml:space="preserve">
+  <data name="QuestionPoolTeacherRemoved" xml:space="preserve">
     <value>प्रश्न पूल शिक्षक सफलतापूर्वक हटाइयो।</value>
   </data>
   <data name="QuestionRemovedSuccessfully" xml:space="preserve">
@@ -298,13 +301,13 @@
   <data name="LessonNotFound" xml:space="preserve">
     <value>पाठ फेला परेन।</value>
   </data>
-  <data name="LessonNotpublished" xml:space="preserve">
+  <data name="LessonNotPublished" xml:space="preserve">
     <value>पाठ प्रकाशित भएको छैन।</value>
   </data>
   <data name="QuestionPoolModifyNotAllowed" xml:space="preserve">
     <value>तपाइँलाई यो प्रश्न पूल परिमार्जन गर्न अनुमति छैन।</value>
   </data>
-  <data name="RecordingFileinS3BucketSave" xml:space="preserve">
+  <data name="RecordingFileInS3BucketSave" xml:space="preserve">
     <value>s3 बाल्टीमा रेकर्डिङ फाइल बचत गर्ने प्रयास गर्दा एउटा त्रुटि भयो।</value>
   </data>
   <data name="RemoveReplyBeforeComment" xml:space="preserve">
@@ -364,10 +367,10 @@
   <data name="UpdateFeedBackError" xml:space="preserve">
     <value>प्रतिक्रिया अद्यावधिक गर्ने प्रयास गर्दा त्रुटि भयो।</value>
   </data>
-  <data name="UploadFileinServerError" xml:space="preserve">
+  <data name="UploadFileInServerError" xml:space="preserve">
     <value>सर्भरमा फाइल अपलोड गर्ने प्रयास गर्दा त्रुटि भयो।</value>
   </data>
-  <data name="UserFoundasTrainingTrainer" xml:space="preserve">
+  <data name="UserFoundAsTrainingTrainer" xml:space="preserve">
     <value>प्रयोगकर्ता पहिले नै प्रशिक्षण प्रशिक्षकको रूपमा फेला परेको छ।</value>
   </data>
   <data name="AssignmentReviewDeleted" xml:space="preserve">
@@ -379,7 +382,7 @@
   <data name="AssignmentReviewUpdate" xml:space="preserve">
     <value>असाइनमेन्ट समीक्षा सफलतापूर्वक अद्यावधिक गरियो।</value>
   </data>
-  <data name="AtleastOneQuestionRequired" xml:space="preserve">
+  <data name="AtLeastOneQuestionRequired" xml:space="preserve">
     <value>कम्तिमा एउटा प्रश्न आवश्यक छ।</value>
   </data>
   <data name="CourseCompleted" xml:space="preserve">
@@ -562,13 +565,13 @@
   <data name="TrainingSectionPublished" xml:space="preserve">
     <value>प्रशिक्षण खण्ड प्रकाशित छ।</value>
   </data>
-  <data name="UpdateRefershTokenError" xml:space="preserve">
+  <data name="UpdateRefreshTokenError" xml:space="preserve">
     <value>ताजा टोकन अपडेट गर्ने प्रयास गर्दा त्रुटि भयो।</value>
   </data>
   <data name="UpdateTagError" xml:space="preserve">
     <value>ट्याग अपडेट गर्ने प्रयास गर्दा त्रुटि भयो।</value>
   </data>
-  <data name="AllLiscensePlaced" xml:space="preserve">
+  <data name="AllLicensePlaced" xml:space="preserve">
     <value>सबै लाइसेन्स आईडी बुक गरिएको छ, कृपया अर्को उदाहरण चयन गर्नुहोस्।</value>
   </data>
   <data name="AssignmentReviewNotFound" xml:space="preserve">
@@ -595,7 +598,7 @@
   <data name="ErrorOccurredDeleteAssignmentReview" xml:space="preserve">
     <value>असाइनमेन्ट समीक्षा मेटाउने प्रयास गर्दा त्रुटि भयो।</value>
   </data>
-  <data name="ErrorOccurredOnMinioCredentails" xml:space="preserve">
+  <data name="ErrorOccurredOnMinioCredentials" xml:space="preserve">
     <value>Minio credentials प्राप्त गर्ने प्रयास गर्दा त्रुटि भयो।</value>
   </data>
   <data name="ErrorOccurredOnUploadFile" xml:space="preserve">
@@ -643,7 +646,7 @@
   <data name="LateSubmission" xml:space="preserve">
     <value>ढिलो सबमिशन।</value>
   </data>
-  <data name="QuestionPoolAuhorCannotRemoved" xml:space="preserve">
+  <data name="QuestionPoolAuthorCannotRemoved" xml:space="preserve">
     <value>प्रश्न पूल लेखक हटाउन सकिँदैन।</value>
   </data>
   <data name="QuestionPoolAuthorCanNotAdded" xml:space="preserve">
@@ -715,7 +718,7 @@
   <data name="CannotSubmitAssignmentStatusCompleted" xml:space="preserve">
     <value>स्थिति पूरा भएपछि तालिमको असाइनमेन्ट पेश गर्न सकिँदैन।</value>
   </data>
-  <data name="CeritificateAlreadyApproved" xml:space="preserve">
+  <data name="CertificateAlreadyApproved" xml:space="preserve">
     <value>संगको प्रमाणपत्र पहिले नै स्वीकृत छ।</value>
   </data>
   <data name="CurrentUserRequired" xml:space="preserve">
@@ -739,10 +742,10 @@
   <data name="EnterUserEmail" xml:space="preserve">
     <value>कृपया प्रयोगकर्ता इमेल प्रविष्ट गर्नुहोस्।</value>
   </data>
-  <data name="ErroprOccurredFetchStudentSubmittedAssignment" xml:space="preserve">
+  <data name="ErrorOccurredFetchStudentSubmittedAssignment" xml:space="preserve">
     <value>विद्यार्थीले पेश गरेको असाइनमेन्ट ल्याउने प्रयास गर्दा एउटा त्रुटि भयो।</value>
   </data>
-  <data name="ErrorOccuredSubmitAssignment" xml:space="preserve">
+  <data name="ErrorOccurredSubmitAssignment" xml:space="preserve">
     <value>असाइनमेन्ट पेश गर्ने प्रयास गर्दा एउटा त्रुटि भयो।</value>
   </data>
   <data name="ErrorOccurredRemoveFileFromGroup" xml:space="preserve">
@@ -852,7 +855,7 @@
   <data name="TrainingTeacherCannotSubmitAssignment" xml:space="preserve">
     <value>तालिम शिक्षकले असाइनमेन्ट पेश गर्न सक्दैन।</value>
   </data>
-  <data name="TraningExamCompletedStatus" xml:space="preserve">
+  <data name="TrainingExamCompletedStatus" xml:space="preserve">
     <value>तालिमको अवस्था पूरा भई परीक्षा दिन नपाउने ।</value>
   </data>
   <data name="UnauthorizedUserToCreateAttachment" xml:space="preserve">
@@ -921,7 +924,8 @@
   <data name="IncorrectLastName" xml:space="preserve">
     <value>पङ्क्ति नम्बरको अन्तिम नाम अनिवार्य फिल्डमा डाटा प्रविष्ट गर्नुहोस्</value>
   </data>
-  <data name="IncorrectMoblieNumberFormaIncorrectMoblieNumberFormaIncorrectMoblieNumberForma" xml:space="preserve">
+  <data name="IncorrectMoblieNumberFormaIncorrectMoblieNumberFormaIncorrectMoblieNumberForma"
+    xml:space="preserve">
     <value>पङ्क्ति नम्बरको स्तम्भ मोबाइल नम्बर सही गर्नुहोस्</value>
   </data>
   <data name="IncorrectRole" xml:space="preserve">
@@ -987,7 +991,7 @@
   <data name="CannotAddSignatureWithoutCertificate" xml:space="preserve">
     <value>कृपया हस्ताक्षर थप्नु अघि प्रमाणपत्र थप्नुहोस्।</value>
   </data>
-  <data name="AddingDuratrionError" xml:space="preserve">
+  <data name="AddingDurationError" xml:space="preserve">
     <value>अवधि थप्दा अन्तिम मिति नाघ्यो।</value>
   </data>
   <data name="EmptyFile" xml:space="preserve">
@@ -1005,7 +1009,7 @@
   <data name="QuestionPoolQuestionNotFound" xml:space="preserve">
     <value>प्रश्न पूल प्रश्न फेला परेन।</value>
   </data>
-  <data name="QuestionpoolUpdatedSuccesfully" xml:space="preserve">
+  <data name="QuestionPoolUpdatedSuccessfully" xml:space="preserve">
     <value>प्रश्न पूल प्रश्नहरू सफलतापूर्वक अपडेट गरियो।</value>
   </data>
   <data name="AssignmentUpdatedSuccessfully" xml:space="preserve">

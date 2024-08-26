@@ -164,12 +164,12 @@ const AddLecture = ({
           <Text size={"md"} mt={10}>
             {isRecordedVideo ? t("recordings") : t("video")}
 
-            <span className="global-astrick"> *</span>
+            <span className="global-asterisk"> *</span>
           </Text>
           <LessonVideoUpload
             formContext={useFormContext}
             currentVideo={videoUrl}
-            marginy={1}
+            marginY={1}
           />
           <Box my={form.errors["videoUrl"] ? 20 : 10}>
             <Text size={"sm"}>

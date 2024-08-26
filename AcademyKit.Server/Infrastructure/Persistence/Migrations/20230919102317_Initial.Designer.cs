@@ -3087,7 +3087,7 @@ namespace Infrastructure.Persistence.Migrations
                             CreatedBy = "30fcd978-f256-4733-840f-759181bc5e63",
                             CreatedOn = new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
                             Email = "academykit@yopmail.com",
-                            FirstName = "Superadmin",
+                            FirstName = "Super Admin",
                             HashPassword = "+gURQgHBT1zJz5AljZhAMyaNRFQBVorq5HIlEmhf+ZQ=:BBLvXedGXzdz0ZlypoKQxQ==",
                             LastName = "User",
                             MobileNumber = "1234567890",

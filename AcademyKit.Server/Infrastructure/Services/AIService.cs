@@ -36,51 +36,51 @@
                 .GetAllAsync()
                 .ConfigureAwait(false);
             var trainingList = new List<object>();
-            var aimode = "";
+            var aiModel = "";
 
             switch (aiModelEnum)
             {
                 case AiModelEnum.ChatGpt3_5Turbo:
-                    aimode = "gpt-3.5-turbo";
+                    aiModel = "gpt-3.5-turbo";
                     break;
                 case AiModelEnum.Gpt_3_5_Turbo:
-                    aimode = "gpt-3.5-turbo";
+                    aiModel = "gpt-3.5-turbo";
                     break;
                 case AiModelEnum.Gpt_3_5_Turbo_16k:
-                    aimode = "gpt-3.5-turbo-16k";
+                    aiModel = "gpt-3.5-turbo-16k";
                     break;
                 case AiModelEnum.ChatGpt3_5Turbo0301:
-                    aimode = "gpt-3.5-turbo-0301";
+                    aiModel = "gpt-3.5-turbo-0301";
                     break;
                 case AiModelEnum.Gpt_3_5_Turbo_0301:
-                    aimode = "gpt-3.5-turbo-0301";
+                    aiModel = "gpt-3.5-turbo-0301";
                     break;
                 case AiModelEnum.Gpt_3_5_Turbo_0613:
-                    aimode = "gpt-3.5-turbo-0613";
+                    aiModel = "gpt-3.5-turbo-0613";
                     break;
                 case AiModelEnum.Gpt_3_5_Turbo_1106:
-                    aimode = "gpt-3.5-turbo-1106";
+                    aiModel = "gpt-3.5-turbo-1106";
                     break;
                 case AiModelEnum.Gpt_3_5_Turbo_16k_0613:
-                    aimode = "gpt-3.5-turbo-16k-0613";
+                    aiModel = "gpt-3.5-turbo-16k-0613";
                     break;
                 case AiModelEnum.Gpt_3_5_Turbo_Instruct:
-                    aimode = "gpt-3.5-turbo-instruct";
+                    aiModel = "gpt-3.5-turbo-instruct";
                     break;
                 case AiModelEnum.WhisperV1:
-                    aimode = "whisper-v1";
+                    aiModel = "whisper-v1";
                     break;
                 case AiModelEnum.Dall_e_2:
-                    aimode = "dall-e-2";
+                    aiModel = "dall-e-2";
                     break;
                 case AiModelEnum.Dall_e_3:
-                    aimode = "dall-e-3";
+                    aiModel = "dall-e-3";
                     break;
                 case AiModelEnum.Tts_1:
-                    aimode = "tts-1";
+                    aiModel = "tts-1";
                     break;
                 case AiModelEnum.Tts_1_hd:
-                    aimode = "tts-1-hd";
+                    aiModel = "tts-1-hd";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(
@@ -97,7 +97,7 @@
                 trainingList.Add(trainingObj);
             }
 
-            var jsondata = JsonConvert.SerializeObject(trainingList);
+            var jsonData = JsonConvert.SerializeObject(trainingList);
 
             var req = new ChatCompletionCreateRequest();
             if (trainingList.Count == 0)
@@ -118,13 +118,13 @@
                 {
                     ChatMessage.FromSystem("You are a training content specialist."),
                     ChatMessage.FromUser(
-                        $"Your main role is to assist users in developing training materials. When given a topic, you will suggest creative and engaging titles for the training sessions, along with concise, informative descriptions that outline the objectives and content of the training. These are some of the existing training Title for my organization: {jsondata}"
+                        $"Your main role is to assist users in developing training materials. When given a topic, you will suggest creative and engaging titles for the training sessions, along with concise, informative descriptions that outline the objectives and content of the training. These are some of the existing training Title for my organization: {jsonData}"
                     )
                 };
             }
             do
             {
-                var reply = await openAIService.ChatCompletion.CreateCompletion(req, aimode);
+                var reply = await openAIService.ChatCompletion.CreateCompletion(req, aiModel);
 
                 if (!reply.Successful)
                 {

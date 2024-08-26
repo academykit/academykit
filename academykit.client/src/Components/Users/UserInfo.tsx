@@ -170,9 +170,9 @@ const UserInfo = () => {
               <TextInput
                 styles={{ input: { border: viewMode ? "none" : "" } }}
                 readOnly={viewMode}
-                label={t("middlename") as string}
+                label={t("middleName") as string}
                 name="middleName"
-                placeholder={t("your_middlename") as string}
+                placeholder={t("your_middleName") as string}
                 {...formData.getInputProps("middleName")}
               />
             </Grid.Col>
@@ -181,9 +181,9 @@ const UserInfo = () => {
                 styles={{ input: { border: viewMode ? "none" : "" } }}
                 readOnly={viewMode}
                 withAsterisk
-                label={t("lastname")}
+                label={t("lastName")}
                 name="lastName"
-                placeholder={t("your_lastname") as string}
+                placeholder={t("your_lastName") as string}
                 {...formData.getInputProps("lastName")}
               />
             </Grid.Col>
@@ -204,7 +204,7 @@ const UserInfo = () => {
                 styles={{ input: { border: viewMode ? "none" : "" } }}
                 readOnly={viewMode}
                 name="mobileNumber"
-                label={t("mobilenumber")}
+                label={t("mobileNumber")}
                 placeholder={t("your_number") as string}
                 {...formData.getInputProps("mobileNumber")}
               />

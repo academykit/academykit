@@ -148,8 +148,8 @@ const AddUpdateUserForm = ({
         </Grid.Col>
         <Grid.Col span={{ xs: 6, lg: 4 }} mt={5}>
           <TextInput
-            label={t("middlename")}
-            placeholder={t("user_middlename") as string}
+            label={t("middleName")}
+            placeholder={t("user_middleName") as string}
             {...form.getInputProps("middleName")}
           />
         </Grid.Col>
@@ -157,8 +157,8 @@ const AddUpdateUserForm = ({
           <TextInput
             styles={{ error: { position: "absolute" } }}
             withAsterisk
-            label={t("lastname")}
-            placeholder={t("user_lastname") as string}
+            label={t("lastName")}
+            placeholder={t("user_lastName") as string}
             {...form.getInputProps("lastName")}
           />
         </Grid.Col>
@@ -175,7 +175,7 @@ const AddUpdateUserForm = ({
         <Grid.Col span={{ xs: 6, lg: 4 }} mt={5}>
           <TextInput
             styles={{ error: { position: "absolute" } }}
-            label={t("mobilenumber")}
+            label={t("mobileNumber")}
             placeholder={t("user_phone_number") as string}
             {...form.getInputProps("mobileNumber")}
           />

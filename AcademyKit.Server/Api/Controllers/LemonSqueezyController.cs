@@ -62,7 +62,7 @@ namespace AcademyKit.Api.Controllers
                     );
                 }
 
-                var licenseResponsess = JsonConvert.DeserializeObject<LemonSqueezyResponseModel>(
+                var licenseResponses = JsonConvert.DeserializeObject<LemonSqueezyResponseModel>(
                     response.Content
                 );
 
@@ -72,10 +72,10 @@ namespace AcademyKit.Api.Controllers
                     Id = new Guid(),
                     status = Domain.Enums.LicenseStatusType.Active,
                     licenseKey = model.LicenseKey,
-                    licenseKeyId = licenseResponsess.LicenseKey.Id,
+                    licenseKeyId = licenseResponses.LicenseKey.Id,
                     CreatedBy = new Guid(),
-                    customerEmail = licenseResponsess.Meta.CustomerEmail,
-                    customerName = licenseResponsess.Meta.CustomerName,
+                    customerEmail = licenseResponses.Meta.CustomerEmail,
+                    customerName = licenseResponses.Meta.CustomerName,
                     CreatedOn = DateTime.UtcNow,
                 };
 
@@ -145,8 +145,8 @@ namespace AcademyKit.Api.Controllers
         {
             try
             {
-                var datas = _unitOfWork.GetRepository<License>().GetAll();
-                return Ok(datas);
+                var data = _unitOfWork.GetRepository<License>().GetAll();
+                return Ok(data);
             }
             catch (Exception ex)
             {

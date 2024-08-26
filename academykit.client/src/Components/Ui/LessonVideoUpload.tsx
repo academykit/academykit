@@ -19,11 +19,11 @@ registerPlugin(
 
 const LessonVideoUpload = ({
   currentVideo,
-  marginy = 10,
+  marginY = 10,
   formContext,
 }: {
   currentVideo?: string;
-  marginy?: number;
+  marginY?: number;
   formContext: () => UseFormReturnType<any, (values: any) => any>;
 }) => {
   const { t } = useTranslation();
@@ -68,7 +68,7 @@ const LessonVideoUpload = ({
 
   return (
     <Tooltip multiline label={t("acceptable_files")} w={320}>
-      <Box my={marginy} style={{ maxWidth: 470 }} pos="relative">
+      <Box my={marginY} style={{ maxWidth: 470 }} pos="relative">
         <FilePond
           files={files}
           onaddfile={() => {}}
@@ -133,9 +133,9 @@ const LessonVideoUpload = ({
           )} <span class="filepond--label-action">${t("browse")}</span>`}
           {...filePondProps}
         />
-        {form.errors["videoUrl"] && (
-          <Text color={"red"} size={"xs"} pos="absolute" top={"100%"}>
-            {form.errors["videoUrl"]}
+        {form.errors.videoUrl && (
+          <Text c={"red"} size={"xs"} pos="absolute" top={"100%"}>
+            {form.errors.videoUrl}
           </Text>
         )}
       </Box>

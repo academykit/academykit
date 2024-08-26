@@ -427,7 +427,7 @@
                         lesson.Id,
                         currentUserId
                     );
-                    throw new EntityNotFoundException(_localizer.GetString("LessonNotpublished"));
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotPublished"));
                 }
 
                 var course = await ValidateAndGetCourse(
@@ -482,14 +482,14 @@
 
                 var feedbackIds = feedbacks.Select(x => x.Id).ToList();
 
-                var feebackSubmissionExists = await _unitOfWork
+                var feedbackSubmissionExists = await _unitOfWork
                     .GetRepository<FeedbackSubmission>()
                     .ExistsAsync(predicate: p =>
                         feedbackIds.Contains(p.FeedbackId) && p.UserId == currentUserId
                     )
                     .ConfigureAwait(false);
 
-                if (feebackSubmissionExists)
+                if (feedbackSubmissionExists)
                 {
                     _logger.LogWarning(
                         "User with id: {userId} cannot resubmit the feedback having id: {feedbackId}.",
@@ -657,22 +657,22 @@
                         ',',
                         StringSplitOptions.RemoveEmptyEntries
                     );
-                    foreach (var qustion in questionList)
+                    foreach (var question in questionList)
                     {
-                        var feedBack = feedback.FirstOrDefault(x => x.Name == qustion);
+                        var feedBack = feedback.FirstOrDefault(x => x.Name == question);
                         if (feedback != null)
                         {
-                            var feedbackanswer = feedbackSubmissions.FirstOrDefault(x =>
+                            var feedbackAnswer = feedbackSubmissions.FirstOrDefault(x =>
                                 x.FeedbackId == feedBack.Id && x.UserId == user.Id
                             );
-                            if (feedbackanswer != default)
+                            if (feedbackAnswer != default)
                             {
                                 if (feedBack.Type == FeedbackTypeEnum.Subjective)
                                 {
-                                    if (!string.IsNullOrEmpty(feedbackanswer.Answer))
+                                    if (!string.IsNullOrEmpty(feedbackAnswer.Answer))
                                     {
                                         var answer = Regex.Replace(
-                                            feedbackanswer.Answer,
+                                            feedbackAnswer.Answer,
                                             "<[a-zA-Z/].*?>",
                                             string.Empty
                                         );
@@ -682,9 +682,9 @@
 
                                 if (feedBack.Type == FeedbackTypeEnum.Rating)
                                 {
-                                    if (feedbackanswer.Rating > 0)
+                                    if (feedbackAnswer.Rating > 0)
                                     {
-                                        builder.Append(feedbackanswer.Rating);
+                                        builder.Append(feedbackAnswer.Rating);
                                     }
                                 }
 
@@ -693,7 +693,7 @@
                                     var singleAnswer =
                                         feedBack.FeedbackQuestionOptions.FirstOrDefault(x =>
                                             x.Id.ToString()
-                                            == feedbackanswer.SelectedOption.ToString()
+                                            == feedbackAnswer.SelectedOption.ToString()
                                         );
                                     if (singleAnswer != null)
                                     {
@@ -711,7 +711,7 @@
 
                                 if (feedBack.Type == FeedbackTypeEnum.MultipleChoice)
                                 {
-                                    var options = feedbackanswer.SelectedOption.Split(",");
+                                    var options = feedbackAnswer.SelectedOption.Split(",");
                                     var choices = new List<string>();
                                     foreach (var opt in options)
                                     {
@@ -956,14 +956,14 @@
         /// reorder feedback questions
         /// </summary>
         /// <param name="currentUserId">current user id</param>
-        /// <param name="lessonIdentiy">lesson id or slug</param>
+        /// <param name="lessonIdentity">lesson id or slug</param>
         /// <param name="ids">list of feedback id</param>
         /// <returns>Task completed</returns>
         /// <exception cref="EntityNotFoundException"></exception>
         /// <exception cref="ForbiddenException"></exception>
         public async Task ReorderFeedbackQuestionsAsync(
             Guid currentUserId,
-            string lessonIdentiy,
+            string lessonIdentity,
             List<Guid> ids
         )
         {
@@ -972,8 +972,8 @@
                 var lesson = await _unitOfWork
                     .GetRepository<Lesson>()
                     .GetFirstOrDefaultAsync(predicate: p =>
-                        p.Id.ToString() == lessonIdentiy
-                        || p.Slug.ToLower() == lessonIdentiy.ToLower()
+                        p.Id.ToString() == lessonIdentity
+                        || p.Slug.ToLower() == lessonIdentity.ToLower()
                     )
                     .ConfigureAwait(false);
                 if (lesson == default)

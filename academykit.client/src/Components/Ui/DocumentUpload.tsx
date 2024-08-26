@@ -15,7 +15,7 @@ registerPlugin(
   FilePondPluginImageValidateSize
 );
 
-const DcoumentUpload = ({ setUrl }: { setUrl: (url: string) => void }) => {
+const DocumentUpload = ({ setUrl }: { setUrl: (url: string) => void }) => {
   const [files, setFiles] = useState<any>([]);
   const { t } = useTranslation();
   const filePondProps = {
@@ -66,4 +66,4 @@ const DcoumentUpload = ({ setUrl }: { setUrl: (url: string) => void }) => {
   );
 };
 
-export default DcoumentUpload;
+export default DocumentUpload;

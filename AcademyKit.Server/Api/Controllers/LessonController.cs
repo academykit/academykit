@@ -234,18 +234,18 @@
         /// <summary>
         /// get user meeting report api.
         /// </summary>
-        /// <param name="identity"> the lesson identity. </param>
+        /// <param name="lessonIdentity"> the lesson identity. </param>
         /// <param name="userId"> the user id. </param>
         /// <returns> the list of  <see cref="MeetingReportResponseModel" />. </returns>
-        [HttpGet("{lessonidentity}/meetingreport/{userId}")]
+        [HttpGet("{lessonIdentity}/meetingReport/{userId}")]
         public async Task<IList<MeetingReportResponseModel>> MeetingReport(
             string identity,
-            string lessonidentity,
+            string lessonIdentity,
             string userId
         )
         {
             var report = await lessonService
-                .GetMeetingReportAsync(identity, lessonidentity, userId, CurrentUser.Id)
+                .GetMeetingReportAsync(identity, lessonIdentity, userId, CurrentUser.Id)
                 .ConfigureAwait(false);
             return report;
         }
@@ -274,7 +274,7 @@
                     break;
                 case LessonType.Exam:
                     await questionSetService
-                        .ReorderQuestionsetQuestionsAsync(CurrentUser.Id, lessonIdentity, ids)
+                        .ReorderQuestionSetQuestionsAsync(CurrentUser.Id, lessonIdentity, ids)
                         .ConfigureAwait(false);
                     break;
                 case LessonType.Feedback:

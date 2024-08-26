@@ -3,7 +3,7 @@ import RequireAuth from "@components/Auth/RequireAuth";
 import Layout from "@components/Layout/Layout";
 import PrivacyLayout from "@components/Layout/PrivacyLayout";
 import ChangeEmail from "@components/Users/ChangeEmail";
-import ZoomMettingMessage from "@components/ZoomMeeting";
+import ZoomMeetingMessage from "@components/ZoomMeeting";
 import NavProvider from "@context/NavContext";
 import { Loader } from "@mantine/core";
 import UnAuthorize from "@pages/401";
@@ -223,7 +223,7 @@ const MainRoutes = () => {
         </Route>
         <Route
           path={"/meet/:courseId/:lessonId"}
-          element={<ZoomMettingMessage />}
+          element={<ZoomMeetingMessage />}
         />
         <Route
           path={RoutePath.courses.description().signature}

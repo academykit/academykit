@@ -18,7 +18,7 @@
                 .NotNull()
                 .NotEmpty()
                 .When(x => x.Type != LessonType.Exam)
-                .WithMessage(context => stringLocalizer.GetString("LessionNameRequired"))
+                .WithMessage(context => stringLocalizer.GetString("LessonNameRequired"))
                 .MaximumLength(250)
                 .WithMessage(context => stringLocalizer.GetString("NameLength250"));
             RuleFor(x => x.Type)
@@ -26,7 +26,7 @@
                 .NotEmpty()
                 .WithMessage(context => stringLocalizer.GetString("LessonIdRequired"))
                 .IsInEnum()
-                .WithMessage(context => stringLocalizer.GetString("InvalidLessionType"));
+                .WithMessage(context => stringLocalizer.GetString("InvalidLessonType"));
             RuleFor(x => x.DocumentUrl)
                 .NotNull()
                 .NotEmpty()
@@ -60,7 +60,7 @@
                 .Must(x =>
                     x.EndDate != default && x.StartDate != default && x.EndDate > x.StartDate
                 )
-                .WithMessage(context => stringLocalizer.GetString("EnddateMustBeGreater"));
+                .WithMessage(context => stringLocalizer.GetString("EndDateMustBeGreater"));
         }
     }
 
@@ -83,7 +83,7 @@
                 .Must(x =>
                     x.EndTime != default && x.StartTime != default && x.EndTime > x.StartTime
                 )
-                .WithMessage(context => stringLocalizer.GetString("EnddateMustBeGreater"));
+                .WithMessage(context => stringLocalizer.GetString("EndDateMustBeGreater"));
         }
     }
 
@@ -102,7 +102,7 @@
             RuleFor(x => x.MeetingDuration)
                 .NotNull()
                 .NotEmpty()
-                .WithMessage(stringLocalizer.GetString("MeedingDurationRequired"))
+                .WithMessage(stringLocalizer.GetString("MeetingDurationRequired"))
                 .LessThanOrEqualTo(1439)
                 .WithMessage(stringLocalizer.GetString("MeetingIdDUrationLength"));
         }

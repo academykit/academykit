@@ -19,7 +19,7 @@ namespace AcademyKit.Api.Controllers
             IFRAMELY_API_KEY = configuration.GetSection("IFRAMELY:API_KEY").Value;
         }
 
-        [HttpGet("oembed")]
+        [HttpGet("oEmbed")]
         [AllowAnonymous]
         public async Task<ActionResult> GetOEmbedContentAsync([FromQuery] string url)
         {
@@ -31,10 +31,10 @@ namespace AcademyKit.Api.Controllers
             try
             {
                 var client = new RestClient(IFRAMELY_API_BASE_URL);
-                var request = new RestRequest("/api/oembed");
+                var request = new RestRequest("/api/oEmbed");
                 request.AddQueryParameter("url", url);
                 request.AddQueryParameter("key", IFRAMELY_API_KEY);
-                request.AddQueryParameter("iframe", 1);
+                request.AddQueryParameter("iFrame", 1);
                 request.AddQueryParameter("omit_script", 1);
                 request.AddHeader("Content-Type", "application/json");
                 var response = await client.GetAsync(request).ConfigureAwait(false);

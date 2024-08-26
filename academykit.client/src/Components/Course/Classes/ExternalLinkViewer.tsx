@@ -1,4 +1,4 @@
-import { getIframelyOembed } from "@utils/services/iframelyService";
+import { getIframelyOEmbed } from "@utils/services/iframelyService";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -19,7 +19,7 @@ export default function ExternalLinkViewer(props: Props) {
 
   useEffect(() => {
     if (props && props.url) {
-      getIframelyOembed(props.url).then(
+      getIframelyOEmbed(props.url).then(
         (response) => {
           const res = response.data;
           console.log(res);

@@ -53,7 +53,7 @@ const schema = () => {
     duration: Yup.number()
       .typeError("Must specify a number")
       .required(t("duration_required") as string)
-      .min(1, t("exam_duration_atleast_one") as string),
+      .min(1, t("exam_duration_at_least_one") as string),
   });
 };
 

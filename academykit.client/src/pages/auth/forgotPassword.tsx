@@ -116,7 +116,7 @@ const ForgotPassword = () => {
       <Title
         ta="center"
         style={(theme) => ({
-          fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+          fontFamily: theme.fontFamily,
           fontWeight: 500,
         })}
       >

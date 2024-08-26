@@ -77,7 +77,7 @@ const UsersList = ({
     setCsvLoad(false);
   };
 
-  const sampleFileURL = "/api/User/samplefile";
+  const sampleFileURL = "/api/User/sampleFile";
 
   return (
     <>

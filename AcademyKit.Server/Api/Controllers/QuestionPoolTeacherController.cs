@@ -185,7 +185,7 @@
                 new CommonResponseModel
                 {
                     Success = true,
-                    Message = localizer.GetString("QuestionpoolTeacherRemoved")
+                    Message = localizer.GetString("QuestionPoolTeacherRemoved")
                 }
             );
         }

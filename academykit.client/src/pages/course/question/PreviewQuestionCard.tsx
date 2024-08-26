@@ -16,7 +16,7 @@ import {
   IconDragDrop,
 } from "@tabler/icons-react";
 import { QuestionType, ReadableEnum } from "@utils/enums";
-import { QuestionSetQuestions } from "@utils/services/questionService";
+import type { QuestionSetQuestions } from "@utils/services/questionService";
 import { useTranslation } from "react-i18next";
 
 const PreviewQuestionCard = ({
@@ -81,12 +81,12 @@ const PreviewQuestionCard = ({
             <>
               <Text>{t("options")}</Text>
               {question.questionOptions.map((option) => (
-                <Group my={10} key={option.id} id="hehe">
+                <Group my={10} key={option.id} id={option.id}>
                   <div style={{ width: "100%" }}>
                     <TextViewer
                       content={option.option}
                       styles={{ root: { flexGrow: 1 } }}
-                    ></TextViewer>
+                    />
                   </div>
                 </Group>
               ))}

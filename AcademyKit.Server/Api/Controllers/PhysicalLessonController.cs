@@ -31,13 +31,13 @@
         /// <summary>
         /// physical lesson attendance.
         /// </summary>
-        /// <param name="idenity">lesson identity.</param>
+        /// <param name="identity">lesson identity.</param>
         /// <returns>Task completed.</returns>
         [HttpPost("Attendance")]
-        public async Task<IActionResult> Attendance(string idenity)
+        public async Task<IActionResult> Attendance(string identity)
         {
             await physicsLessonServices
-                .PhysicalLessonAttendanceAsync(idenity, CurrentUser.Id.ToString())
+                .PhysicalLessonAttendanceAsync(identity, CurrentUser.Id.ToString())
                 .ConfigureAwait(false);
             return Ok(
                 new CommonResponseModel()

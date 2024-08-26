@@ -1843,14 +1843,16 @@ namespace AcademyKit.Infrastructure.Services
 
         public async Task RemoveFromDefaultGroup(Guid userId, Guid CurrentUserId)
         {
-            var existmember = await _unitOfWork
+            var existingMember = await _unitOfWork
                 .GetRepository<GroupMember>()
                 .GetFirstOrDefaultAsync(predicate: p => p.UserId == userId)
                 .ConfigureAwait(false);
-            if (existmember != null)
+
+            if (existingMember != null)
             {
-                _unitOfWork.GetRepository<GroupMember>().Delete(existmember.Id);
+                _unitOfWork.GetRepository<GroupMember>().Delete(existingMember.Id);
             }
+
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }

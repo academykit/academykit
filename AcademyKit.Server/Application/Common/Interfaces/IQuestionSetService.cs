@@ -89,14 +89,14 @@
         );
 
         /// <summary>
-        /// Handel to reorder questionset question
+        /// Handel to reorder question set question
         /// </summary>
         /// <param name="lessonIdentity">Lesson id or slug</param>
         /// <param name="currentUserId">current user id</param>
         /// <param name="ids">list of question set question id</param>
         /// <returns>Task completed</returns>
 
-        Task ReorderQuestionsetQuestionsAsync(
+        Task ReorderQuestionSetQuestionsAsync(
             Guid currentUserId,
             string lessonIdentity,
             List<Guid> ids

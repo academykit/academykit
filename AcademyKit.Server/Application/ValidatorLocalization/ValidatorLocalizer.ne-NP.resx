@@ -22,8 +22,10 @@
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
         <value>[base64 mime encoded serialized .NET Framework object]</value>
     </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing"
+  mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework
+  object]</value>
         <comment>This is a comment</comment>
     </data>
                 
@@ -115,10 +117,12 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddressLength200" xml:space="preserve">
     <value>ठेगाना लम्बाइ 200 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
@@ -135,13 +139,13 @@
   <data name="OAuthClientIdRequired" xml:space="preserve">
     <value> OAuth ग्राहक आईडी आवश्यक छ।</value>
   </data>
-  <data name="AssignementQuestionisRequired" xml:space="preserve">
+  <data name="AssignmentQuestionIsRequired" xml:space="preserve">
     <value>असाइनमेन्ट प्रश्न विकल्प आवश्यक छ।</value>
   </data>
   <data name="AssignmentRequired" xml:space="preserve">
     <value>असाइनमेन्ट नाम आवश्यक छ</value>
   </data>
-  <data name="Assignmenttypeid" xml:space="preserve">
+  <data name="AssignmentTypeId" xml:space="preserve">
     <value>असाइनमेन्ट प्रकार आवश्यक छ।</value>
   </data>
   <data name="BioLength200" xml:space="preserve">
@@ -216,7 +220,7 @@
   <data name="EmailSignatureLengthError" xml:space="preserve">
     <value>इमेल हस्ताक्षर लम्बाइ 1000 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
-  <data name="EnddateMustBeGreater" xml:space="preserve">
+  <data name="EndDateMustBeGreater" xml:space="preserve">
     <value>अन्त्य मिति सुरु मिति भन्दा ठूलो हुनुपर्छ।</value>
   </data>
   <data name="EndTimeEmptyError" xml:space="preserve">
@@ -273,7 +277,7 @@
   <data name="InvalidFileType" xml:space="preserve">
     <value>अवैध असाइनमेन्ट प्रकार।</value>
   </data>
-  <data name="InvalidLessionType" xml:space="preserve">
+  <data name="InvalidLessonType" xml:space="preserve">
     <value>अमान्य पाठ प्रकार।</value>
   </data>
   <data name="InvalidMediaType" xml:space="preserve">
@@ -300,7 +304,7 @@
   <data name="LastNAmeRequired" xml:space="preserve">
     <value>अन्तिम नाम आवश्यक छ।</value>
   </data>
-  <data name="LessionNameRequired" xml:space="preserve">
+  <data name="LessonNameRequired" xml:space="preserve">
     <value>पाठ नाम आवश्यक छ।</value>
   </data>
   <data name="LessonIdRequired" xml:space="preserve">
@@ -330,7 +334,7 @@
   <data name="MediaTypeRequired" xml:space="preserve">
     <value>मिडिया प्रकार आवश्यक छ।</value>
   </data>
-  <data name="MeedingDurationRequired" xml:space="preserve">
+  <data name="MeetingDurationRequired" xml:space="preserve">
     <value>बैठक अवधि आवश्यक छ।</value>
   </data>
   <data name="MeetingIdDUrationLength" xml:space="preserve">
@@ -363,7 +367,7 @@
   <data name="NewPasswordRequired" xml:space="preserve">
     <value>नयाँ पासवर्ड आवश्यक छ।</value>
   </data>
-  <data name="OldAndNewPasswordDoesnotMatch" xml:space="preserve">
+  <data name="OldAndNewPasswordDoesNotMatch" xml:space="preserve">
     <value>नयाँ पासवर्ड र पुष्टि पासवर्ड मिलेन।</value>
   </data>
   <data name="OldEmailRequired" xml:space="preserve">
@@ -429,7 +433,7 @@
   <data name="QuestionMarkingRequired" xml:space="preserve">
     <value>प्रश्न मूल्याङ्कन आवश्यक छ।</value>
   </data>
-  <data name="QuestionpoolIdRequired" xml:space="preserve">
+  <data name="QuestionPoolIdRequired" xml:space="preserve">
     <value>प्रश्न पोखरी पहिचान आवश्यक छ।</value>
   </data>
   <data name="QuestionPoolNameRequired" xml:space="preserve">
@@ -492,7 +496,7 @@
   <data name="SenderNameRequired" xml:space="preserve">
     <value>मेल पोर्ट आवश्यक छ</value>
   </data>
-  <data name="StartdateEmptyError" xml:space="preserve">
+  <data name="StartDateEmptyError" xml:space="preserve">
     <value>सुरु मिति खाली हुन सक्दैन</value>
   </data>
   <data name="StartDateFormat" xml:space="preserve">
@@ -501,7 +505,7 @@
   <data name="timeSpanIssue" xml:space="preserve">
     <value>घटनाको अन्त्य मिति घटना सुरु मिति भन्दा ठूलो वा बराबर हुनुपर्छ।</value>
   </data>
-  <data name="TitleLenghtIssue" xml:space="preserve">
+  <data name="TitleLengthIssue" xml:space="preserve">
     <value>शीर्षक लम्बाइ 100 भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
   <data name="TrainingIdRequired" xml:space="preserve">
