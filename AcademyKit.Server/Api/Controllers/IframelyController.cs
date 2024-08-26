@@ -27,6 +27,7 @@ namespace AcademyKit.Api.Controllers
             {
                 throw new ArgumentException("URL parameter is required.");
             }
+
             try
             {
                 var client = new RestClient(IFRAMELY_API_BASE_URL);
