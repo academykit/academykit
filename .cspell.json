@@ -105,6 +105,7 @@
     "**/**.ne-NP.resx",
     "**/**.ja-JP.resx",
     "**/appsettings.json",
+    "**/**.Development.json",
     "academykit.client/src/config/language/np.json",
     "academykit.client/src/config/language/jp.json",
     "**/**.config",
