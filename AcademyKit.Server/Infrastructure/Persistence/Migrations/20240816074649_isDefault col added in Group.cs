@@ -5,7 +5,7 @@
 namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class isDefaultcoladdedinGroup : Migration
+    public partial class IsDefaultColAddedInGroup : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

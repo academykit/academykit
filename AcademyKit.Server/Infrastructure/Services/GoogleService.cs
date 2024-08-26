@@ -35,7 +35,7 @@ namespace AcademyKit.Server.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occured while retrieving the user email.", ex);
+                throw new Exception("An error occurred while retrieving the user email.", ex);
             }
         }
     }

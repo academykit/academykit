@@ -13,7 +13,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240816074649_isDefault col added in Group")]
-    partial class isDefaultcoladdedinGroup
+    partial class IsDefaultColAddedInGroup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

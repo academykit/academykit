@@ -327,7 +327,7 @@
                     500,
                     new
                     {
-                        Message = "An error occured while retrieving the access token.",
+                        Message = "An error occurred while retrieving the access token.",
                         Details = ex.Message
                     }
                 );
