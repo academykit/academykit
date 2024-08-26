@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240221052300_AssessmentAndTrainigEligibility")]
-    partial class AssessmentAndTrainigEligibility
+    [Migration("20240221052300_AssessmentAndTrainingEligibility")]
+    partial class AssessmentAndTrainingEligibility
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

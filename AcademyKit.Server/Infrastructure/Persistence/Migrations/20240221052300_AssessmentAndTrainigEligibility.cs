@@ -5,7 +5,7 @@
 namespace Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class AssessmentAndTrainigEligibility : Migration
+    public partial class AssessmentAndTrainingEligibility : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

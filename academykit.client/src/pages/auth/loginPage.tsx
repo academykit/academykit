@@ -131,13 +131,13 @@ const LoginPage = () => {
             src={companySettings?.data?.data?.imageUrl}
             alt="logo"
             fit="contain"
-          ></Image>
+          />
         </Link>
       </Center>
       <Title
         ta="center"
         style={(theme) => ({
-          fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+          fontFamily: theme.fontFamily,
           fontWeight: 900,
         })}
       >

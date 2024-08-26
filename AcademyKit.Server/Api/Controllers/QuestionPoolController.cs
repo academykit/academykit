@@ -158,13 +158,13 @@
                 new CommonResponseModel()
                 {
                     Success = true,
-                    Message = localizer.GetString("QuestionpoolRemoved")
+                    Message = localizer.GetString("QuestionPoolRemoved")
                 }
             );
         }
 
         /// <summary>
-        /// reorder questionpool question.
+        /// reorder question pool question.
         /// </summary>
         /// <param name="ids">Question ids.</param>
         /// <returns>task completed.</returns>
@@ -180,7 +180,7 @@
                 new CommonResponseModel()
                 {
                     Success = true,
-                    Message = localizer.GetString("QuestionpoolUpdatedSuccesfully")
+                    Message = localizer.GetString("QuestionPoolUpdatedSuccessfully")
                 }
             );
         }

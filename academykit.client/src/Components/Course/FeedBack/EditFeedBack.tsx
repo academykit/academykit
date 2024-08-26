@@ -160,7 +160,7 @@ const EditFeedback = ({
               autoComplete="off"
               size={fieldSize}
               withAsterisk
-              label={t("title_feeback")}
+              label={t("title_feedback")}
               placeholder={t("enter_feedback") as string}
               {...form.getInputProps("name")}
             />

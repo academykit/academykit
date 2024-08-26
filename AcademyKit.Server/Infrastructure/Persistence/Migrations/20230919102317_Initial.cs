@@ -1864,7 +1864,7 @@ namespace Infrastructure.Persistence.Migrations
                     {
                         table.PrimaryKey("PK_QuestionSetResults", x => x.id);
                         table.ForeignKey(
-                            name: "FK_QuestionSetResults_QuestionSetSubmissions_question_set_submi~",
+                            name: "FK_QuestionSetResults_QuestionSetSubmissions_question_set_sub",
                             column: x => x.question_set_submission_id,
                             principalTable: "QuestionSetSubmissions",
                             principalColumn: "id"
@@ -2446,7 +2446,7 @@ namespace Infrastructure.Persistence.Migrations
                     new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
                     null,
                     "academykit@yopmail.com",
-                    "Superadmin",
+                    "Super Admin",
                     "SKN7zJDnqOtL0+4zVwx68H3p12LoJw0kNZ06d1wRs28=:pbOoXC3dmcTXhib+l/nYuQ==",
                     null,
                     "User",

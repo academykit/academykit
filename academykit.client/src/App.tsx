@@ -1,4 +1,4 @@
-import ErrorBoundary from "@components/ErrorBoundry";
+import ErrorBoundary from "@components/ErrorBoundary";
 import ScrollToTop from "@components/ScrollToTop";
 import { AuthProvider } from "@context/AuthProvider";
 import BrandingProvider, {

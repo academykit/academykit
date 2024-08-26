@@ -44,7 +44,7 @@
         /// <summary>
         /// update external certificate api.
         /// </summary>
-        /// <param name="identity"> the ceritificate id or slug. </param>
+        /// <param name="identity"> the certificate id or slug. </param>
         /// <param name="model"> the instance of <see cref="CertificateRequestModel" /> .</param>
         /// <returns> the instance of <see cref="CertificateResponseModel" /> .</returns>
         [HttpPut("{identity}/external")]

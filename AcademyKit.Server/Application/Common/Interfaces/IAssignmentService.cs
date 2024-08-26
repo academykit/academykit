@@ -96,7 +96,7 @@
         Task DeleteReviewAsync(string lessonIdentity, Guid id, Guid currentUserId);
 
         /// <summary>
-        /// reorder the assignemnt questions
+        /// reorder the assignment questions
         /// </summary>
         /// <param name="currentUserId">current user id</param>
         /// <param name="lessonIdentity">lesson identity</param>

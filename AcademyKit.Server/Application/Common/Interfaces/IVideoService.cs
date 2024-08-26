@@ -10,7 +10,7 @@
         Task<int> GetVideoDuration(string videoPath);
 
         /// <summary>
-        /// Handle to delete tepmp file
+        /// Handle to delete temp file
         /// </summary>
         /// <param name="filePath"> the file path </param>
         void DeleteTempFile(string filePath);

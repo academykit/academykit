@@ -27,7 +27,7 @@
             RuleFor(x => x.Type)
                 .NotNull()
                 .NotEmpty()
-                .WithMessage(context => stringLocalizer.GetString("Assignmenttypeid"))
+                .WithMessage(context => stringLocalizer.GetString("AssignmentTypeId"))
                 .IsInEnum()
                 .WithMessage(context => stringLocalizer.GetString("InvalidFileType"));
             RuleFor(x => x.Answers)
@@ -73,7 +73,7 @@
             RuleFor(x => x.Option)
                 .NotEmpty()
                 .NotNull()
-                .WithMessage(context => stringLocalizer.GetString("AssignementQuestionisRequired"));
+                .WithMessage(context => stringLocalizer.GetString("AssignmentQuestionIsRequired"));
         }
     }
 }

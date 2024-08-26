@@ -23,7 +23,7 @@
                 .WithMessage(context => stringLocalizer.GetString("ConformPassword"));
             RuleFor(x => x.NewPassword)
                 .Equal(x => x.ConfirmPassword)
-                .WithMessage(context => stringLocalizer.GetString("OldAndNewPasswordDoesnotMatch"));
+                .WithMessage(context => stringLocalizer.GetString("OldAndNewPasswordDoesNotMatch"));
         }
 
         public static bool HasValidPassword(string pw)

@@ -22,8 +22,10 @@
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
         <value>[base64 mime encoded serialized .NET Framework object]</value>
     </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing"
+  mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework
+  object]</value>
         <comment>This is a comment</comment>
     </data>
                 
@@ -115,10 +117,12 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddressLength200" xml:space="preserve">
     <value>アドレスの長さは 200 文字以下である必要があります。</value>
@@ -135,13 +139,13 @@
   <data name="OAuthClientIdRequired" xml:space="preserve">
     <value> OAuth クライアント ID は必須です。</value>
   </data>
-  <data name="AssignementQuestionisRequired" xml:space="preserve">
+  <data name="AssignmentQuestionIsRequired" xml:space="preserve">
     <value>割り当ての質問オプションは必須です。</value>
   </data>
   <data name="AssignmentRequired" xml:space="preserve">
     <value>割り当て名は必須です</value>
   </data>
-  <data name="Assignmenttypeid" xml:space="preserve">
+  <data name="AssignmentTypeId" xml:space="preserve">
     <value>割り当てタイプは必須です。</value>
   </data>
   <data name="BioLength200" xml:space="preserve">
@@ -216,7 +220,7 @@
   <data name="EmailSignatureLengthError" xml:space="preserve">
     <value>電子メールの署名の長さは 1000 文字以下である必要があります。</value>
   </data>
-  <data name="EnddateMustBeGreater" xml:space="preserve">
+  <data name="EndDateMustBeGreater" xml:space="preserve">
     <value>終了日は開始日よりも後である必要があります。</value>
   </data>
   <data name="EndTimeEmptyError" xml:space="preserve">
@@ -273,7 +277,7 @@
   <data name="InvalidFileType" xml:space="preserve">
     <value>無効な割り当てタイプです。</value>
   </data>
-  <data name="InvalidLessionType" xml:space="preserve">
+  <data name="InvalidLessonType" xml:space="preserve">
     <value>レッスンタイプが無効です。</value>
   </data>
   <data name="InvalidMediaType" xml:space="preserve">
@@ -300,7 +304,7 @@
   <data name="LastNAmeRequired" xml:space="preserve">
     <value>姓は必須です。</value>
   </data>
-  <data name="LessionNameRequired" xml:space="preserve">
+  <data name="LessonNameRequired" xml:space="preserve">
     <value>レッスン名は必須です。</value>
   </data>
   <data name="LessonIdRequired" xml:space="preserve">
@@ -330,7 +334,7 @@
   <data name="MediaTypeRequired" xml:space="preserve">
     <value>メディアの種類は必須です。</value>
   </data>
-  <data name="MeedingDurationRequired" xml:space="preserve">
+  <data name="MeetingDurationRequired" xml:space="preserve">
     <value>会議の所要時間は必須です。</value>
   </data>
   <data name="MeetingIdDUrationLength" xml:space="preserve">
@@ -363,7 +367,7 @@
   <data name="NewPasswordRequired" xml:space="preserve">
     <value>新しいパスワードが必要です。</value>
   </data>
-  <data name="OldAndNewPasswordDoesnotMatch" xml:space="preserve">
+  <data name="OldAndNewPasswordDoesNotMatch" xml:space="preserve">
     <value>新しいパスワードと確認用のパスワードが一致しません。</value>
   </data>
   <data name="OldEmailRequired" xml:space="preserve">
@@ -429,7 +433,7 @@
   <data name="QuestionMarkingRequired" xml:space="preserve">
     <value>質問の評価は必須です。</value>
   </data>
-  <data name="QuestionpoolIdRequired" xml:space="preserve">
+  <data name="QuestionPoolIdRequired" xml:space="preserve">
     <value>質問プールの ID が必要です。</value>
   </data>
   <data name="QuestionPoolNameRequired" xml:space="preserve">
@@ -492,7 +496,7 @@
   <data name="SenderNameRequired" xml:space="preserve">
     <value>メールポートは必須です</value>
   </data>
-  <data name="StartdateEmptyError" xml:space="preserve">
+  <data name="StartDateEmptyError" xml:space="preserve">
     <value>開始日を空にすることはできません</value>
   </data>
   <data name="StartDateFormat" xml:space="preserve">
@@ -501,7 +505,7 @@
   <data name="timeSpanIssue" xml:space="preserve">
     <value>イベント終了日はイベント開始日以降である必要があります</value>
   </data>
-  <data name="TitleLenghtIssue" xml:space="preserve">
+  <data name="TitleLengthIssue" xml:space="preserve">
     <value>タイトルの長さは 100 以下である必要があります。</value>
   </data>
   <data name="TrainingIdRequired" xml:space="preserve">

@@ -7,7 +7,7 @@ import { useGeneralSetting } from "@utils/services/adminService";
 import { ICourse } from "@utils/services/courseService";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import classes from "./styles/coursecard.module.css";
+import classes from "./styles/courseCard.module.css";
 
 const CourseCard = ({ course }: { course: ICourse }) => {
   const { t } = useTranslation();

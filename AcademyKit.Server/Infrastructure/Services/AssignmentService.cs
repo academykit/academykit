@@ -348,7 +348,7 @@
 
                 if (lesson.Status != CourseStatus.Published)
                 {
-                    throw new EntityNotFoundException(_localizer.GetString("LessonNotpublished"));
+                    throw new EntityNotFoundException(_localizer.GetString("LessonNotPublished"));
                 }
 
                 var course = await ValidateAndGetCourse(
@@ -492,7 +492,7 @@
                 _logger.LogError(ex, "An error occurred while trying to submit the assignment.");
                 throw ex is ServiceException
                     ? ex
-                    : new ServiceException(_localizer.GetString("ErrorOccuredSubmitAssignment"));
+                    : new ServiceException(_localizer.GetString("ErrorOccurredSubmitAssignment"));
             }
         }
 
@@ -631,7 +631,7 @@
                 throw ex is ServiceException
                     ? ex
                     : new ServiceException(
-                        _localizer.GetString("ErroprOccurredFetchStudentSubmittedAssignment")
+                        _localizer.GetString("ErrorOccurredFetchStudentSubmittedAssignment")
                     );
             }
         }
@@ -1045,7 +1045,7 @@
         }
 
         /// <summary>
-        /// reorder the assignemnt questions
+        /// reorder the assignment questions
         /// </summary>
         /// <param name="currentUserId">current user id</param>
         /// <param name="lessonIdentity">lesson identity</param>

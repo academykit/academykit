@@ -41,7 +41,7 @@
                         ? x.StartDate != default
                         : x.StartDate != default && x.EndDate != default && x.EndDate > x.StartDate
                 )
-                .WithMessage(context => stringLocalizer.GetString("EnddateMustBeGreater"));
+                .WithMessage(context => stringLocalizer.GetString("EndDateMustBeGreater"));
         }
     }
 }

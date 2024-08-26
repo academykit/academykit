@@ -10,10 +10,10 @@
         : IGenericService<ZoomLicense, ZoomLicenseBaseSearchCriteria>
     {
         /// <summary>
-        /// Handels to get Active LessonID
+        /// Handles to get Active LessonID
         /// </summary>
         /// <param name="model">the instance of <see cref="LiveClassLicenseRequestModel"/></param>
-        /// <returns>Instance of zoomid <see cref="ZoomLicenseResponseModel"/></returns>
+        /// <returns>Instance of zoom <see cref="ZoomLicenseResponseModel"/></returns>
         Task<IList<ZoomLicenseResponseModel>> GetActiveLicensesAsync(
             LiveClassLicenseRequestModel model
         );

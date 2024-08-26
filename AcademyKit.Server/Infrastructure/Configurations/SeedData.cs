@@ -17,7 +17,7 @@
         //         var adminUser = await userRepository.GetByIdAsync(1).ConfigureAwait(false);
         //         if (adminUser == null)
         //         {
-        //             var hashAdminPassword = userTokenService.HashPassword("Momo@12345");
+        //             var hashAdminPassword = userTokenService.HashPassword("Test@12345");
 
         //             //Super Admin
         //             users.Add(new User

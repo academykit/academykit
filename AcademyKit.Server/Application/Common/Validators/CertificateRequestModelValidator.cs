@@ -15,7 +15,7 @@ namespace AcademyKit.Application.Common.Validators
             RuleFor(x => x.StartDate)
                 .NotNull()
                 .NotEmpty()
-                .WithMessage(contex => stringLocalizer.GetString("StartdateEmptyError"))
+                .WithMessage(context => stringLocalizer.GetString("StartDateEmptyError"))
                 .Must(IsValidDate)
                 .WithMessage(context => stringLocalizer.GetString("CertificateStartTimeError"));
             RuleFor(x => x.EndDate)

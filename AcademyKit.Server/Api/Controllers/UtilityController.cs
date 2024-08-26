@@ -14,7 +14,7 @@
             this.dynamicImageGenerator = dynamicImageGenerator;
         }
 
-        [HttpGet("ogimage")]
+        [HttpGet("ogImage")]
         [AllowAnonymous]
         public async Task<IActionResult> GenerateOpenGraphImage(
             string title,
@@ -45,7 +45,7 @@
         {
             var companyLogo = "https://i.ibb.co/0jZzQYH/Group-1.png";
             var companyName = "AcademyKit";
-            var name = "Aryan Phuyal";
+            var name = "Aryan Thomas";
             var training =
                 "advanceReact js advanceReact js advanceReact js advanceReact js advanceReact js advanceReact js advanceReact js advanceReact js advanceReact js";
             var startDate = "15th June, 2022";
@@ -56,12 +56,12 @@
                 {
                     FileUrl =
                         "https://static.cdn.wisestamp.com/wp-content/uploads/2020/08/Michael-Jordan-personal-autograph.png",
-                    FullName = "Alina KC",
-                    Designation = "Managing Directorrrrrrrrrr r",
+                    FullName = "Thomas KC",
+                    Designation = "Managing Director",
                 },
                 new Signature
                 {
-                    FullName = "Aryan Phuyal Aryan",
+                    FullName = "Aryan Thomas",
                     Designation = "Managing Director",
                     FileUrl =
                         "https://static.cdn.wisestamp.com/wp-content/uploads/2020/08/Oprah-Winfrey-Signature-1.png"

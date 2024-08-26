@@ -1965,7 +1965,7 @@
                 .GetRepository<WatchHistory>()
                 .GetAllAsync(predicate: p => p.CourseId == course.Id && p.LessonId == lesson.Id)
                 .ConfigureAwait(false);
-            var totalAttendies = watchHistories.Count();
+            var totalAttendees = watchHistories.Count();
 
             var totalPass = 0;
             var totalFail = 0;
@@ -2014,7 +2014,7 @@
             var orderedWrongQuestions = sameWrongQuestion.OrderByDescending(a => a.Count());
             var wrongQuestionIds = orderedWrongQuestions.SelectMany(x => x);
             var distinctWrongQuestionId = wrongQuestionIds.Distinct().Take(3);
-            var listofMostWrongQues = new List<MostWrongAnsQues>();
+            var listOfMostWrongQues = new List<MostWrongAnsQues>();
 
             foreach (var wrong in distinctWrongQuestionId)
             {
@@ -2022,7 +2022,7 @@
                     .GetRepository<Question>()
                     .GetFirstOrDefault(predicate: p => p.Id == wrong);
                 var MostWrongAnsQues = new MostWrongAnsQues() { Name = mostWrongQuestion.Name };
-                listofMostWrongQues.Add(MostWrongAnsQues);
+                listOfMostWrongQues.Add(MostWrongAnsQues);
             }
 
             var data = new ExamSummaryResponseModel
@@ -2030,10 +2030,10 @@
                 WeekStudents = weakStudent,
                 TopStudents = topStudent,
                 TotalMarks = marksList,
-                MostWrongAnsQues = listofMostWrongQues,
+                MostWrongAnsQues = listOfMostWrongQues,
                 ExamStatus = new ExamStatus
                 {
-                    TotalAttend = totalAttendies,
+                    TotalAttend = totalAttendees,
                     PassStudents = totalPass,
                     FailStudents = totalFail,
                     AverageMarks = average
@@ -2165,11 +2165,11 @@
                 .Select(x => x.User)
                 .ToList();
 
-            var totalAttendies = assignmentWatchHistory.Count();
+            var totalAttendees = assignmentWatchHistory.Count();
             var assignRank = reviewedAssignment
                 .Where(x => assignmentWatchHistory.Any(wh => wh.UserId == x.UserId && wh.IsPassed))
                 .OrderByDescending(x => x.Mark);
-            var averagemark = reviewedAssignment.Average(x => x.Mark);
+            var averageMark = reviewedAssignment.Average(x => x.Mark);
             var assignedStudents = assignRank.Select(x => x.User).ToList();
 
             var topStudents = new List<UserModel>();
@@ -2215,14 +2215,14 @@
             var orderedWrongQuestions = sameWrongQuestion.OrderByDescending(a => a.Count());
             var wrongQuestionIds = orderedWrongQuestions.SelectMany(x => x);
             var distinctWrongQuestionId = wrongQuestionIds.Distinct().Take(3);
-            var listofMostWrongQues = new List<string>();
+            var listOfMostWrongQues = new List<string>();
 
             foreach (var wrong in distinctWrongQuestionId)
             {
                 var mostWrongQuestion = _unitOfWork
                     .GetRepository<Assignment>()
                     .GetFirstOrDefault(predicate: p => p.Id == wrong);
-                listofMostWrongQues.Add(mostWrongQuestion.Name);
+                listOfMostWrongQues.Add(mostWrongQuestion.Name);
             }
 
             var response = new AssignmentSummaryResponseModel
@@ -2231,12 +2231,12 @@
                 TopStudents = topStudents,
                 AssignmentStatus = new AssignmentStatus
                 {
-                    TotalAttend = totalAttendies,
-                    AverageMarks = averagemark,
+                    TotalAttend = totalAttendees,
+                    AverageMarks = averageMark,
                     TotalPass = totalPass,
                     TotalFail = totalFail
                 },
-                MostWrongAnsQues = listofMostWrongQues
+                MostWrongAnsQues = listOfMostWrongQues
             };
             return response;
         }
