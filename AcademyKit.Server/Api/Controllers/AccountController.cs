@@ -448,7 +448,7 @@
                     var authenticationModel = await userService.GetTokenForExternalLoginProvider(
                         userEmail
                     );
-                    return Ok(new { tokenResponse, authenticationModel });
+                    return Redirect($"https://localhost:44414/redirect/signIn?userId={authenticationModel.UserId}&token={tokenResponse.Access_token}&refresh={tokenResponse.Refresh_token}");
                 }
                 else
                 {
