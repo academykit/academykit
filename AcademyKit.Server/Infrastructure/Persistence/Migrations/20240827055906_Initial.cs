@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -2568,7 +2567,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     {
                         table.PrimaryKey("PK_QuestionSetResults", x => x.id);
                         table.ForeignKey(
-                            name: "FK_QuestionSetResults_QuestionSetSubmissions_question_set_submi~",
+                            name: "FK_QuestionSetResults_QuestionSetSubmissions_question_set_submission",
                             column: x => x.question_set_submission_id,
                             principalTable: "QuestionSetSubmissions",
                             principalColumn: "id"
