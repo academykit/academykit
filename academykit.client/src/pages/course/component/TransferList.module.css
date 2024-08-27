@@ -8,7 +8,7 @@
 }
 
 .controls {
-  [data-type='backward'] & {
+  [data-type="backward"] & {
     flex-direction: row-reverse;
   }
 }
@@ -28,23 +28,23 @@
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 
-  [data-type='backward'] & {
+  [data-type="backward"] & {
     border-left: 0;
     border-top-left-radius: 0;
   }
 
-  [data-type='forward'] & {
+  [data-type="forward"] & {
     border-right: 0;
     border-top-right-radius: 0;
   }
 }
 
 .control {
-  [data-type='backward'] & {
+  [data-type="backward"] & {
     border-top-left-radius: var(--mantine-radius-sm);
   }
 
-  [data-type='forward'] & {
+  [data-type="forward"] & {
     border-top-right-radius: var(--mantine-radius-sm);
   }
 }
@@ -58,7 +58,7 @@
   width: rem(18px);
   height: rem(18px);
 
-  [data-type='backward'] & {
+  [data-type="backward"] & {
     transform: rotate(180deg);
   }
 }
