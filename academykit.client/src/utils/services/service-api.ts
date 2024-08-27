@@ -14,6 +14,7 @@ export const api = {
     me: "/api/account",
     resendEmail: (id: string) => `/api/User/${id}/resendEmail`,
     microsoftSignIn: "/api/Account/signin-with-microsoft",
+    googleSignIn: "/api/Account/signin-with-google",
   },
   adminUser: {
     users: (queryString: string) => `api/user?${queryString}`,

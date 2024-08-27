@@ -5,12 +5,20 @@ using Newtonsoft.Json;
 
 namespace AcademyKit.Server.Infrastructure.Services
 {
+    /// <summary>
+    /// Service to interact with Google APIs to retrieve user information.
+    /// </summary>
     public class GoogleService : IGoogleService
     {
-        public async Task<string> GetGoogleUserEmail(string accessToken)
+        /// <summary>
+        /// Retrieves the full details of a Google user using the provided access token.
+        /// </summary>
+        /// <param name="accessToken">The access token for the Google API.</param>
+        /// <returns>A task that represents the asynchronous operation, containing a <see cref="GoogleUserResponseModel"/> with the user's details.</returns>
+        /// <exception cref="Exception">Thrown when the user details cannot be retrieved.</exception>
+        public async Task<GoogleUserResponseModel> GetGoogleUserDetails(string accessToken)
         {
-            var url = $"https://www.googleapis.com/oauth2/v2/userinfo?fields=email";
-            string json;
+            var url = "https://www.googleapis.com/oauth2/v2/userinfo";
             try
             {
                 using (var client = new HttpClient())
@@ -23,19 +31,21 @@ namespace AcademyKit.Server.Infrastructure.Services
 
                     if (response.IsSuccessStatusCode)
                     {
-                        json = await response.Content.ReadAsStringAsync();
-                        var emailResponse = JsonConvert.DeserializeObject<EmailResponseModel>(json);
-                        return emailResponse.Email;
+                        var json = await response.Content.ReadAsStringAsync();
+                        var userDetails = JsonConvert.DeserializeObject<GoogleUserResponseModel>(
+                            json
+                        );
+                        return userDetails;
                     }
                     else
                     {
-                        throw new Exception("Failed to retrieve user email.");
+                        throw new Exception("Failed to retrieve user details.");
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while retrieving the user email.", ex);
+                throw new Exception("An error occurred while retrieving the user details.", ex);
             }
         }
     }

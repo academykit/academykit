@@ -13,7 +13,6 @@ import {
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import { IconBrandGoogle } from "@tabler/icons-react";
 import RoutePath from "@utils/routeConstants";
 import { useCompanySetting } from "@utils/services/adminService";
 import { useLogin } from "@utils/services/authService";
@@ -180,9 +179,11 @@ const LoginPage = () => {
         </Paper>
       </form>
       <Center style={{ gap: 10 }}>
-        <IconBrandGoogle />
+        <form action={api.auth.googleSignIn} method="get">
+          <button type="submit"> Google </button>
+        </form>
         <form action={api.auth.microsoftSignIn} method="get">
-          <button type="submit">MicroSoft </button>
+          <button type="submit"> MicroSoft </button>
         </form>
       </Center>
     </Container>

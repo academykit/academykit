@@ -2,7 +2,6 @@
 {
     using System.IdentityModel.Tokens.Jwt;
     using System.Net.Http.Headers;
-    using System.Security.Cryptography;
     using System.Text;
     using System.Text.Encodings.Web;
     using AcademyKit.Api.Common;
@@ -16,7 +15,6 @@
     using AcademyKit.Server.Infrastructure.Configurations;
     using Application.Common.Dtos;
     using FluentValidation;
-    using Microsoft.AspNetCore.Authentication.Google;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
@@ -308,13 +306,15 @@
                 var tokenResponse = JsonConvert.DeserializeObject<OAuthTokenResponse>(json);
                 if (tokenResponse.IsSuccess)
                 {
-                    var userEmail = await _googleService.GetGoogleUserEmail(
+                    var user = await _googleService.GetGoogleUserDetails(
                         tokenResponse.Access_token
                     );
-                    var authenticationModel = await userService.GetTokenForExternalLoginProvider(
-                        userEmail
+                    var authenticationModel = await userService.GenerateTokenUsingGoogleSSOAsync(
+                        user
                     );
-                    return Ok(new { tokenResponse, authenticationModel });
+                    return Redirect(
+                        $"https://localhost:44414/redirect/signIn?userId={authenticationModel.UserId}&token={authenticationModel.Token}&refresh={authenticationModel.RefreshToken}"
+                    );
                 }
                 else
                 {
@@ -328,55 +328,6 @@
                     new
                     {
                         Message = "An error occurred while retrieving the access token.",
-                        Details = ex.Message
-                    }
-                );
-            }
-        }
-
-        /// <summary>
-        /// get refresh token of google
-        /// </summary>
-        /// <param name="refreshToken">the instance of <see cref="string"/></param>
-        /// <returns>the refresh token</returns>
-        [HttpPost("google/refreshToken")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetGoogleRefreshToken(
-            [FromBody] RefreshTokenRequestModel model
-        )
-        {
-            var dicData = new Dictionary<string, string>
-            {
-                { "client_id", _google.ClientId },
-                { "client_secret", _google.ClientSecret },
-                { "refresh_token", model.Token },
-                { "grant_type", "refresh_token" }
-            };
-            try
-            {
-                using var client = new HttpClient();
-                using var content = new FormUrlEncodedContent(dicData);
-                var response = await client.PostAsync(_google.AccessTokenUrl, content);
-                var json = await response.Content.ReadAsStringAsync();
-
-                var tokenResponse = JsonConvert.DeserializeObject<OAuthTokenResponse>(json);
-
-                if (tokenResponse.IsSuccess)
-                {
-                    return Ok(new { tokenResponse.Access_token, tokenResponse.Expires_in });
-                }
-                else
-                {
-                    return BadRequest(new { tokenResponse.Error, tokenResponse.Error_description });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(
-                    500,
-                    new
-                    {
-                        Message = "An error occurred while renewing the access token.",
                         Details = ex.Message
                     }
                 );
@@ -442,13 +393,16 @@
 
                 if (tokenResponse.IsSuccess)
                 {
-                    var userEmail = await _microsoftService.GetMicrosoftUserEmail(
-                        tokenResponse.Access_token
+                    var user = await _microsoftService
+                        .GetMicrosoftUserDetails(tokenResponse.Access_token)
+                        .ConfigureAwait(false);
+                    var authenticationModel = await userService
+                        .GenerateTokenUsingMicrosoftSSOAsync(user)
+                        .ConfigureAwait(false);
+
+                    return Redirect(
+                        $"https://localhost:44414/redirect/signIn?userId={authenticationModel.UserId}&token={authenticationModel.Token}&refresh={authenticationModel.RefreshToken}"
                     );
-                    var authenticationModel = await userService.GetTokenForExternalLoginProvider(
-                        userEmail
-                    );
-                    return Redirect($"https://localhost:44414/redirect/signIn?userId={authenticationModel.UserId}&token={tokenResponse.Access_token}&refresh={tokenResponse.Refresh_token}");
                 }
                 else
                 {
@@ -462,56 +416,6 @@
                     new
                     {
                         Message = "An error occurred while retrieving the access token.",
-                        Details = ex.Message
-                    }
-                );
-            }
-        }
-
-        /// <summary>
-        /// get microsoft refresh token
-        /// </summary>
-        /// <param name="refreshToken">the instance of <see cref="string"/></param>
-        /// <returns>the microsoft refresh token</returns>
-        [HttpPost("microsoft/refreshToken")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetMicrosoftRefreshToken(
-            [FromBody] RefreshTokenRequestModel model
-        )
-        {
-            var dicData = new Dictionary<string, string>
-            {
-                { "client_id", _microsoft.ClientId },
-                { "scope", "openid email profile User.Read offline_access" },
-                { "refresh_token", model.Token },
-                { "grant_type", "refresh_token" },
-                { "client_secret", _microsoft.ClientSecret },
-            };
-            try
-            {
-                using var client = new HttpClient();
-                using var content = new FormUrlEncodedContent(dicData);
-
-                var response = await client.PostAsync(_microsoft.AccessTokenUrl, content);
-                var json = await response.Content.ReadAsStringAsync();
-
-                var tokenResponse = JsonConvert.DeserializeObject<OAuthTokenResponse>(json);
-                if (tokenResponse.IsSuccess)
-                {
-                    return Ok(new { tokenResponse.Access_token, tokenResponse.Expires_in });
-                }
-                else
-                {
-                    return BadRequest(new { tokenResponse.Error, tokenResponse.Error_description });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(
-                    500,
-                    new
-                    {
-                        Message = "An error occurred while renewing the access token.",
                         Details = ex.Message
                     }
                 );

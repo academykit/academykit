@@ -8,7 +8,7 @@
         public Guid CourseId { get; set; }
         public Course Course { get; set; }
         public Guid? EligibilityId { get; set; }
-        public EligibilityCreation? EligibilityCreation { get; set; }
+        public virtual EligibilityCreation EligibilityCreation { get; set; }
         public TrainingEligibilityEnum TrainingEligibilityEnum { get; set; }
     }
 }

@@ -4,6 +4,7 @@
     using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Application.Common.Models.ResponseModels;
     using AcademyKit.Domain.Entities;
+    using AcademyKit.Server.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Http;
 
     public interface IUserService : IGenericService<User, UserSearchCriteria>
@@ -16,11 +17,22 @@
         Task<AuthenticationModel> VerifyUserAndGetToken(LoginRequestModel model);
 
         /// <summary>
-        /// Handle to generate the token for the external login provider e.g. Google or Microsoft
+        /// Generates an authentication token for a user using Google SSO information.
         /// </summary>
-        /// <param name="email">user email</param>
-        /// <returns>the instance of <see cref="AuthenticationModel"/></returns>
-        Task<AuthenticationModel> GetTokenForExternalLoginProvider(string email);
+        /// <param name="googleUser">The Google user details retrieved from the Microsoft Graph API.</param>
+        /// <returns>A task representing the asynchronous operation, with an <see cref="AuthenticationModel"/> containing the token and user information.</returns>
+        Task<AuthenticationModel> GenerateTokenUsingGoogleSSOAsync(
+            GoogleUserResponseModel googleUser
+        );
+
+        /// <summary>
+        /// Generates an authentication token for a user using Microsoft SSO information.
+        /// </summary>
+        /// <param name="microsoftUser">The Microsoft user details retrieved from the Microsoft Graph API.</param>
+        /// <returns>A task representing the asynchronous operation, with an <see cref="AuthenticationModel"/> containing the token and user information.</returns>
+        Task<AuthenticationModel> GenerateTokenUsingMicrosoftSSOAsync(
+            MicrosoftUserResponseModel microsoftUser
+        );
 
         /// <summary>
         /// Handle to logout user and set refresh token false

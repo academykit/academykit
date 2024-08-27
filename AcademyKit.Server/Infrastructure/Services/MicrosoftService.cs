@@ -5,12 +5,20 @@ using Newtonsoft.Json;
 
 namespace AcademyKit.Server.Infrastructure.Services
 {
+    /// <summary>
+    /// Service to interact with Microsoft Graph API.
+    /// </summary>
     public class MicrosoftService : IMicrosoftService
     {
-        public async Task<string> GetMicrosoftUserEmail(string accessToken)
+        /// <summary>
+        /// Retrieves the details of the authenticated Microsoft user using the provided access token.
+        /// </summary>
+        /// <param name="accessToken">The OAuth 2.0 access token for the Microsoft Graph API.</param>
+        /// <returns>A <see cref="UserDetailsResponseModel"/> object containing the user's details.</returns>
+        /// <exception cref="Exception">Thrown when the request to the Microsoft Graph API fails or an error occurs during processing.</exception>
+        public async Task<MicrosoftUserResponseModel> GetMicrosoftUserDetails(string accessToken)
         {
             var url = "https://graph.microsoft.com/v1.0/me";
-            string json;
             try
             {
                 using (var client = new HttpClient())
@@ -23,19 +31,21 @@ namespace AcademyKit.Server.Infrastructure.Services
 
                     if (response.IsSuccessStatusCode)
                     {
-                        json = await response.Content.ReadAsStringAsync();
-                        var emailResponse = JsonConvert.DeserializeObject<EmailResponseModel>(json);
-                        return emailResponse.Mail ?? emailResponse.UserPrincipalName;
+                        var json = await response.Content.ReadAsStringAsync();
+                        var userDetails = JsonConvert.DeserializeObject<MicrosoftUserResponseModel>(
+                            json
+                        );
+                        return userDetails;
                     }
                     else
                     {
-                        throw new Exception("Failed to retrieve user email.");
+                        throw new Exception("Failed to retrieve user details.");
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while retrieving the user email.", ex);
+                throw new Exception("An error occurred while retrieving the user details.", ex);
             }
         }
     }

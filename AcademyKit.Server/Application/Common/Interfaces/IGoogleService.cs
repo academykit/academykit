@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AcademyKit.Server.Application.Common.Models.ResponseModels;
 
 namespace AcademyKit.Server.Application.Common.Interfaces
 {
     public interface IGoogleService
     {
         /// <summary>
-        /// get google user email
+        /// Retrieves the full details of a Google user using the provided access token.
         /// </summary>
-        /// <param name="accessToken">the instance of <see cref="string"/></param>
-        /// <returns></returns>
-        Task<string> GetGoogleUserEmail(string accessToken);
+        /// <param name="accessToken">The access token for the Google API.</param>
+        /// <returns>A task that represents the asynchronous operation, containing a <see cref="GoogleUserResponseModel"/> with the user's details.</returns>
+        /// <exception cref="Exception">Thrown when the user details cannot be retrieved.</exception>
+        Task<GoogleUserResponseModel> GetGoogleUserDetails(string accessToken);
     }
 }

@@ -16,6 +16,7 @@ using AcademyKit.Infrastructure.Common;
 using AcademyKit.Infrastructure.Configurations;
 using AcademyKit.Infrastructure.Helpers;
 using AcademyKit.Infrastructure.Localization;
+using AcademyKit.Server.Application.Common.Models.ResponseModels;
 using CsvHelper;
 using Hangfire;
 using LinqKit;
@@ -26,6 +27,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MimeKit;
+using GroupMember = AcademyKit.Domain.Entities.GroupMember;
 
 namespace AcademyKit.Infrastructure.Services
 {
@@ -114,91 +116,52 @@ namespace AcademyKit.Infrastructure.Services
                 user.UpdatedOn = currentTimeStamp;
                 if (user.Role == UserRole.Trainee || user.Role == UserRole.Trainer)
                 {
-                    var defaultGroup = await _unitOfWork
-                        .GetRepository<Domain.Entities.Group>()
-                        .GetFirstOrDefaultAsync(predicate: x => x.IsDefault.Value == true);
-                    if (defaultGroup is null)
-                    {
-                        throw new ForbiddenException(
-                            _localizer.GetString("GroupContainsUsersCannotAdd")
-                        );
-                    }
-                    var existUsers = await _unitOfWork
-                        .GetRepository<GroupMember>()
-                        .ExistsAsync(predicate: p =>
-                            p.GroupId == defaultGroup.Id && p.UserId == user.Id
-                        )
-                        .ConfigureAwait(false);
-
-                    if (existUsers)
-                    {
-                        _logger.LogWarning(
-                            "Group with id: {id} already contains users. User Id: {userId}",
-                            defaultGroup.Id, // Parameter for {id}
-                            user.Id // Parameter for {userId}
-                        );
-                        throw new ForbiddenException(
-                            _localizer.GetString("GroupContainsUsersCannotAdd")
-                        );
-                    }
-
-                    var groupMember = new GroupMember
-                    {
-                        UserId = user.Id,
-                        GroupId = defaultGroup.Id,
-                        IsActive = true,
-                        CreatedBy = user.Id,
-                        CreatedOn = DateTime.Now,
-                    };
-                    await _unitOfWork
-                        .GetRepository<GroupMember>()
-                        .InsertAsync(groupMember)
-                        .ConfigureAwait(false);
+                    await AddUserToDefaultGroup(user).ConfigureAwait(false);
                 }
 
                 _unitOfWork.GetRepository<User>().Update(user);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
 
-            var refreshToken = new RefreshToken
-            {
-                Id = Guid.NewGuid(),
-                Token = await GetUniqueRefreshToken().ConfigureAwait(false),
-                LoginAt = currentTimeStamp,
-                UserId = user.Id,
-                IsActive = true,
-            };
-
-            //Create Token
-            authenticationModel.IsAuthenticated = true;
-            var jwtSecurityToken = await CreateJwtToken(user);
-            authenticationModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-            authenticationModel.ExpirationDuration = Convert.ToInt32(_jwt.DurationInMinutes);
-            authenticationModel.Email = user.Email;
-            authenticationModel.UserId = user.Id;
-            authenticationModel.Role = user.Role;
-            authenticationModel.RefreshToken = refreshToken.Token;
-            authenticationModel.UserId = user.Id;
-
-            await _refreshTokenService.CreateAsync(refreshToken).ConfigureAwait(false);
-            return authenticationModel;
+            return await GenerateAccessAndRefreshToken(authenticationModel, user, currentTimeStamp)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Handle to generate the token for the external login provider e.g. Google or Microsoft
+        /// Generates an authentication token for a user using Google SSO information.
         /// </summary>
-        /// <param name="email">user email</param>
-        /// <returns>the instance of <see cref="AuthenticationModel"/></returns>
-        public async Task<AuthenticationModel> GetTokenForExternalLoginProvider(string email)
+        /// <param name="googleUser">The Google user details retrieved from the Microsoft Graph API.</param>
+        /// <returns>A task representing the asynchronous operation, with an <see cref="AuthenticationModel"/> containing the token and user information.</returns>
+        public async Task<AuthenticationModel> GenerateTokenUsingGoogleSSOAsync(
+            GoogleUserResponseModel googleUser
+        )
         {
+            var currentTimeStamp = DateTime.UtcNow;
             var authenticationModel = new AuthenticationModel();
+            var user = await _unitOfWork
+                .GetRepository<User>()
+                .GetFirstOrDefaultAsync(predicate: p => p.Email == googleUser.Email.Trim())
+                .ConfigureAwait(false);
 
-            var user = await GetUserByEmailAsync(email: email.Trim());
             if (user == null)
             {
-                authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = _localizer.GetString("AccountNotRegistered");
-                return authenticationModel;
+                var id = Guid.NewGuid();
+                var entity = new User()
+                {
+                    Id = id,
+                    FirstName = googleUser.GivenName,
+                    LastName = googleUser.FamilyName,
+                    Email = googleUser.Email.Trim(),
+                    ImageUrl = googleUser.Picture,
+                    Status = UserStatus.Active,
+                    Role = UserRole.Trainee,
+                    CreatedBy = id,
+                    CreatedOn = currentTimeStamp,
+                    UpdatedBy = id,
+                    UpdatedOn = currentTimeStamp,
+                };
+                user = await CreateAsync(entity).ConfigureAwait(false);
+                await AddUserToDefaultGroup(entity).ConfigureAwait(false);
             }
 
             if (user.Status == UserStatus.InActive)
@@ -208,30 +171,56 @@ namespace AcademyKit.Infrastructure.Services
                 return authenticationModel;
             }
 
+            return await GenerateAccessAndRefreshToken(authenticationModel, user, currentTimeStamp)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Generates an authentication token for a user using Microsoft SSO information.
+        /// </summary>
+        /// <param name="microsoftUser">The Microsoft user details retrieved from the Microsoft Graph API.</param>
+        /// <returns>A task representing the asynchronous operation, with an <see cref="AuthenticationModel"/> containing the token and user information.</returns>
+        public async Task<AuthenticationModel> GenerateTokenUsingMicrosoftSSOAsync(
+            MicrosoftUserResponseModel microsoftUser
+        )
+        {
             var currentTimeStamp = DateTime.UtcNow;
+            var authenticationModel = new AuthenticationModel();
+            var user = await _unitOfWork
+                .GetRepository<User>()
+                .GetFirstOrDefaultAsync(predicate: p => p.Email == microsoftUser.Mail.Trim())
+                .ConfigureAwait(false);
 
-            var refreshToken = new RefreshToken
+            if (user == null)
             {
-                Id = Guid.NewGuid(),
-                Token = await GetUniqueRefreshToken().ConfigureAwait(false),
-                LoginAt = currentTimeStamp,
-                UserId = user.Id,
-                IsActive = true,
-            };
+                var id = Guid.NewGuid();
+                var entity = new User()
+                {
+                    Id = id,
+                    FirstName = microsoftUser.GivenName,
+                    LastName = microsoftUser.Surname,
+                    Email = microsoftUser.Mail.Trim(),
+                    MobileNumber = microsoftUser.MobilePhone,
+                    Status = UserStatus.Active,
+                    Role = UserRole.Trainee,
+                    CreatedBy = id,
+                    CreatedOn = currentTimeStamp,
+                    UpdatedBy = id,
+                    UpdatedOn = currentTimeStamp,
+                };
+                user = await CreateAsync(entity).ConfigureAwait(false);
+                await AddUserToDefaultGroup(entity).ConfigureAwait(false);
+            }
 
-            //Create Token
-            authenticationModel.IsAuthenticated = true;
-            var jwtSecurityToken = await CreateJwtToken(user);
-            authenticationModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-            authenticationModel.ExpirationDuration = Convert.ToInt32(_jwt.DurationInMinutes);
-            authenticationModel.Email = user.Email;
-            authenticationModel.UserId = user.Id;
-            authenticationModel.Role = user.Role;
-            authenticationModel.RefreshToken = refreshToken.Token;
-            authenticationModel.UserId = user.Id;
+            if (user.Status == UserStatus.InActive)
+            {
+                authenticationModel.IsAuthenticated = false;
+                authenticationModel.Message = _localizer.GetString("AccountNotActive");
+                return authenticationModel;
+            }
 
-            await _refreshTokenService.CreateAsync(refreshToken).ConfigureAwait(false);
-            return authenticationModel;
+            return await GenerateAccessAndRefreshToken(authenticationModel, user, currentTimeStamp)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1358,6 +1347,90 @@ namespace AcademyKit.Infrastructure.Services
         #endregion Protected Methods
 
         #region Private Methods
+
+        /// <summary>
+        /// Adds the specified user to the default group if they are not already a member.
+        /// </summary>
+        /// <param name="user">The user to be added to the default group.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <exception cref="ForbiddenException">
+        /// Thrown when the default group does not exist or the user is already a member of the group.
+        /// </exception>
+        private async Task AddUserToDefaultGroup(User user)
+        {
+            var defaultGroup = await _unitOfWork
+                .GetRepository<Domain.Entities.Group>()
+                .GetFirstOrDefaultAsync(predicate: x => x.IsDefault.Value == true);
+
+            if (defaultGroup is null)
+            {
+                throw new ForbiddenException(_localizer.GetString("GroupContainsUsersCannotAdd"));
+            }
+
+            var existUsers = await _unitOfWork
+                .GetRepository<GroupMember>()
+                .ExistsAsync(predicate: p => p.GroupId == defaultGroup.Id && p.UserId == user.Id)
+                .ConfigureAwait(false);
+
+            if (existUsers)
+            {
+                _logger.LogWarning(
+                    "Group with id: {id} already contains users. User Id: {userId}",
+                    defaultGroup.Id,
+                    user.Id
+                );
+                throw new ForbiddenException(_localizer.GetString("GroupContainsUsersCannotAdd"));
+            }
+
+            var groupMember = new GroupMember
+            {
+                UserId = user.Id,
+                GroupId = defaultGroup.Id,
+                IsActive = true,
+                CreatedBy = user.Id,
+                CreatedOn = DateTime.Now,
+            };
+            await _unitOfWork
+                .GetRepository<GroupMember>()
+                .InsertAsync(groupMember)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Generates an access token and refresh token for the specified user.
+        /// </summary>
+        /// <param name="authenticationModel">The authentication model to be populated with the generated tokens and user information.</param>
+        /// <param name="user">The user for whom the tokens are being generated.</param>
+        /// <param name="currentTimeStamp">The current timestamp used for token creation.</param>
+        /// <returns>A task representing the asynchronous operation, with an updated <see cref="AuthenticationModel"/> containing the generated tokens.</returns>
+        private async Task<AuthenticationModel> GenerateAccessAndRefreshToken(
+            AuthenticationModel authenticationModel,
+            User user,
+            DateTime currentTimeStamp
+        )
+        {
+            var refreshToken = new RefreshToken
+            {
+                Id = Guid.NewGuid(),
+                Token = await GetUniqueRefreshToken().ConfigureAwait(false),
+                LoginAt = currentTimeStamp,
+                UserId = user.Id,
+                IsActive = true,
+            };
+
+            authenticationModel.IsAuthenticated = true;
+            var jwtSecurityToken = await CreateJwtToken(user);
+            authenticationModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+            authenticationModel.ExpirationDuration = Convert.ToInt32(_jwt.DurationInMinutes);
+            authenticationModel.Email = user.Email;
+            authenticationModel.UserId = user.Id;
+            authenticationModel.Role = user.Role;
+            authenticationModel.RefreshToken = refreshToken.Token;
+            authenticationModel.UserId = user.Id;
+
+            await _refreshTokenService.CreateAsync(refreshToken).ConfigureAwait(false);
+            return authenticationModel;
+        }
 
         /// <summary>
         /// Handle to create jwt token

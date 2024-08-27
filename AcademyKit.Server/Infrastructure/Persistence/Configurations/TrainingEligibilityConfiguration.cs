@@ -27,7 +27,7 @@
                 .HasColumnName("eligibility_id")
                 .HasColumnType("VARCHAR(50)")
                 .HasMaxLength(50)
-                .IsRequired();
+                .IsRequired(false);
             builder
                 .Property(x => x.TrainingEligibilityEnum)
                 .HasColumnName("training_eligibility_enum")
@@ -57,11 +57,6 @@
                 .HasColumnName("updated_on")
                 .HasColumnType("DATETIME")
                 .IsRequired(false);
-            builder
-                .HasOne(x => x.EligibilityCreation)
-                .WithMany()
-                .HasForeignKey(x => x.EligibilityId)
-                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

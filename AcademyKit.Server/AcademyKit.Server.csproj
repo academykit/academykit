@@ -12,6 +12,7 @@
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <Version>1.0.5-alpha</Version>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
@@ -81,9 +82,6 @@
     <EmbeddedResource Remove="Infrastructure\Persistence\FluentConfigurations\**" />
     <EntityDeploy Remove="Infrastructure\Persistence\FluentConfigurations\**" />
     <None Remove="Infrastructure\Persistence\FluentConfigurations\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Infrastructure\Persistence\Migrations\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Application\Common\Mappings\**" />
