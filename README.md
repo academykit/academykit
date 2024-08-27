@@ -101,7 +101,9 @@ sudo lsof -t -i tcp:7042 | xargs kill -9
 ```
 
 ## Formatting
+
 Run
+
 ```bash
 dotnet csharpier .
 ```
