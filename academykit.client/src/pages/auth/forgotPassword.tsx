@@ -81,7 +81,7 @@ const ForgotPassword = () => {
       if (!link) {
         link = document.createElement("link");
         link.rel = "icon";
-        document.getElementsByTagName("head")[0].appendChild(info.logo);
+        document.getElementsByTagName("head")[0].appendChild(link);
       }
       link.href = info.logo;
     }
