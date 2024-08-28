@@ -1,4 +1,4 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Text.Encodings.Web;
 using AcademyKit.Domain.Entities;
 using AcademyKit.Infrastructure.Persistence;

@@ -1,6 +1,6 @@
 ﻿namespace AcademyKit.Server.Infrastructure.Configurations
 {
-    public class Microsoft
+    public class MicrosoftOAuth
     {
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }

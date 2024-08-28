@@ -136,42 +136,26 @@ namespace AcademyKit.Infrastructure.Services
             GoogleUserResponseModel googleUser
         )
         {
+            var id = Guid.NewGuid();
             var currentTimeStamp = DateTime.UtcNow;
-            var authenticationModel = new AuthenticationModel();
-            var user = await _unitOfWork
-                .GetRepository<User>()
-                .GetFirstOrDefaultAsync(predicate: p => p.Email == googleUser.Email.Trim())
-                .ConfigureAwait(false);
-
-            if (user == null)
-            {
-                var id = Guid.NewGuid();
-                var entity = new User()
-                {
-                    Id = id,
-                    FirstName = googleUser.GivenName,
-                    LastName = googleUser.FamilyName,
-                    Email = googleUser.Email.Trim(),
-                    ImageUrl = googleUser.Picture,
-                    Status = UserStatus.Active,
-                    Role = UserRole.Trainee,
-                    CreatedBy = id,
-                    CreatedOn = currentTimeStamp,
-                    UpdatedBy = id,
-                    UpdatedOn = currentTimeStamp,
-                };
-                user = await CreateAsync(entity).ConfigureAwait(false);
-                await AddUserToDefaultGroup(entity).ConfigureAwait(false);
-            }
-
-            if (user.Status == UserStatus.InActive)
-            {
-                authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = _localizer.GetString("AccountNotActive");
-                return authenticationModel;
-            }
-
-            return await GenerateAccessAndRefreshToken(authenticationModel, user, currentTimeStamp)
+            return await GenerateTokenUsingSSOAsync(
+                    googleUser.Email,
+                    googleUser => new User
+                    {
+                        Id = id,
+                        FirstName = googleUser.GivenName,
+                        LastName = googleUser.FamilyName,
+                        Email = googleUser.Email.Trim(),
+                        ImageUrl = googleUser.Picture,
+                        Status = UserStatus.Active,
+                        Role = UserRole.Trainee,
+                        CreatedBy = id,
+                        CreatedOn = currentTimeStamp,
+                        UpdatedBy = id,
+                        UpdatedOn = currentTimeStamp
+                    },
+                    googleUser
+                )
                 .ConfigureAwait(false);
         }
 
@@ -184,42 +168,24 @@ namespace AcademyKit.Infrastructure.Services
             MicrosoftUserResponseModel microsoftUser
         )
         {
-            var currentTimeStamp = DateTime.UtcNow;
-            var authenticationModel = new AuthenticationModel();
-            var user = await _unitOfWork
-                .GetRepository<User>()
-                .GetFirstOrDefaultAsync(predicate: p => p.Email == microsoftUser.Mail.Trim())
-                .ConfigureAwait(false);
-
-            if (user == null)
-            {
-                var id = Guid.NewGuid();
-                var entity = new User()
-                {
-                    Id = id,
-                    FirstName = microsoftUser.GivenName,
-                    LastName = microsoftUser.Surname,
-                    Email = microsoftUser.Mail.Trim(),
-                    MobileNumber = microsoftUser.MobilePhone,
-                    Status = UserStatus.Active,
-                    Role = UserRole.Trainee,
-                    CreatedBy = id,
-                    CreatedOn = currentTimeStamp,
-                    UpdatedBy = id,
-                    UpdatedOn = currentTimeStamp,
-                };
-                user = await CreateAsync(entity).ConfigureAwait(false);
-                await AddUserToDefaultGroup(entity).ConfigureAwait(false);
-            }
-
-            if (user.Status == UserStatus.InActive)
-            {
-                authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = _localizer.GetString("AccountNotActive");
-                return authenticationModel;
-            }
-
-            return await GenerateAccessAndRefreshToken(authenticationModel, user, currentTimeStamp)
+            return await GenerateTokenUsingSSOAsync(
+                    microsoftUser.Mail,
+                    microsoftUser => new User
+                    {
+                        Id = Guid.NewGuid(),
+                        FirstName = microsoftUser.GivenName,
+                        LastName = microsoftUser.Surname,
+                        Email = microsoftUser.Mail.Trim(),
+                        MobileNumber = microsoftUser.MobilePhone,
+                        Status = UserStatus.Active,
+                        Role = UserRole.Trainee,
+                        CreatedBy = Guid.NewGuid(),
+                        CreatedOn = DateTime.UtcNow,
+                        UpdatedBy = Guid.NewGuid(),
+                        UpdatedOn = DateTime.UtcNow
+                    },
+                    microsoftUser
+                )
                 .ConfigureAwait(false);
         }
 
@@ -1512,18 +1478,42 @@ namespace AcademyKit.Infrastructure.Services
         }
 
         /// <summary>
-        /// Handle to remove refresh token
+        /// Generates an authentication token for a user using SSO information.
         /// </summary>
-        /// <param name="currentUserId"> the current user id </param>
-        /// <returns> the task complete </returns>
-        public async Task RemoveRefreshTokenAsync(Guid currentUserId)
+        /// <param name="userEmail">The user email.</param>
+        /// <param name="createUserEntity">A function to create a new user entity if the user does not exist.</param>
+        /// <param name="userDetails">The SSO user details.</param>
+        /// <returns>A task representing the asynchronous operation, with an <see cref="AuthenticationModel"/> containing the token and user information.</returns>
+        private async Task<AuthenticationModel> GenerateTokenUsingSSOAsync<T>(
+            string userEmail,
+            Func<T, User> createUserEntity,
+            T userDetails
+        )
         {
-            var userToken = await _unitOfWork
-                .GetRepository<RefreshToken>()
-                .GetAllAsync(predicate: p => p.UserId == currentUserId)
+            var currentTimeStamp = DateTime.UtcNow;
+            var authenticationModel = new AuthenticationModel();
+
+            var user = await _unitOfWork
+                .GetRepository<User>()
+                .GetFirstOrDefaultAsync(predicate: p => p.Email == userEmail)
                 .ConfigureAwait(false);
-            userToken.ForEach(x => x.IsActive = false);
-            _unitOfWork.GetRepository<RefreshToken>().Update(userToken);
+
+            if (user == null)
+            {
+                var entity = createUserEntity(userDetails);
+                user = await CreateAsync(entity).ConfigureAwait(false);
+                await AddUserToDefaultGroup(entity).ConfigureAwait(false);
+            }
+
+            if (user.Status == UserStatus.InActive)
+            {
+                authenticationModel.IsAuthenticated = false;
+                authenticationModel.Message = _localizer.GetString("AccountNotActive");
+                return authenticationModel;
+            }
+
+            return await GenerateAccessAndRefreshToken(authenticationModel, user, currentTimeStamp)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1568,6 +1558,21 @@ namespace AcademyKit.Infrastructure.Services
             }
         }
         #endregion Private Methods
+
+        /// <summary>
+        /// Handle to remove refresh token
+        /// </summary>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the task complete </returns>
+        public async Task RemoveRefreshTokenAsync(Guid currentUserId)
+        {
+            var userToken = await _unitOfWork
+                .GetRepository<RefreshToken>()
+                .GetAllAsync(predicate: p => p.UserId == currentUserId)
+                .ConfigureAwait(false);
+            userToken.ForEach(x => x.IsActive = false);
+            _unitOfWork.GetRepository<RefreshToken>().Update(userToken);
+        }
 
         /// <summary>
         /// Handle to fetch users detail

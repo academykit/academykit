@@ -1,11 +1,9 @@
 ﻿namespace AcademyKit.Infrastructure.Configurations
 {
     using System.Text;
-    using AcademyKit.Application.Common.Exceptions;
     using AcademyKit.Infrastructure.Security;
     using AcademyKit.Server.Infrastructure.Configurations;
     using Microsoft.AspNetCore.Authentication;
-    using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Authentication.Google;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
@@ -23,16 +21,16 @@
         )
         {
             services.Configure<JWT>(configuration.GetSection("JWT"));
-            services.Configure<ApplicationInfo>(configuration.GetSection("Application"));
-            services.Configure<Google>(configuration.GetSection("Google"));
-            services.Configure<Microsoft>(configuration.GetSection("Microsoft"));
+            services.Configure<AppUrls>(configuration.GetSection("AppUrls"));
+            services.Configure<GoogleOAuth>(configuration.GetSection("GoogleOAuth"));
+            services.Configure<MicrosoftOAuth>(configuration.GetSection("MicrosoftOAuth"));
 
             services
                 .AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
                 .AddJwtBearer(o =>
                 {
@@ -66,14 +64,13 @@
                         }
                     };
                 })
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddGoogle(
                     GoogleDefaults.AuthenticationScheme,
                     options =>
                     {
-                        options.ClientId = configuration.GetSection("Google:ClientId").Value;
+                        options.ClientId = configuration.GetSection("GoogleOAuth:ClientId").Value;
                         options.ClientSecret = configuration
-                            .GetSection("Google:ClientSecret")
+                            .GetSection("GoogleOAuth:ClientSecret")
                             .Value;
                     }
                 )
@@ -81,9 +78,11 @@
                     MicrosoftAccountDefaults.AuthenticationScheme,
                     options =>
                     {
-                        options.ClientId = configuration.GetSection("Microsoft:ClientId").Value;
+                        options.ClientId = configuration
+                            .GetSection("MicrosoftOAuth:ClientId")
+                            .Value;
                         options.ClientSecret = configuration
-                            .GetSection("Microsoft:ClientSecret")
+                            .GetSection("MicrosoftOAuth:ClientSecret")
                             .Value;
                     }
                 )

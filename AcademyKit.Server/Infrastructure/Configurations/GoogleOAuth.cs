@@ -1,6 +1,6 @@
 ﻿namespace AcademyKit.Server.Infrastructure.Configurations
 {
-    public class Google
+    public class GoogleOAuth
     {
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
