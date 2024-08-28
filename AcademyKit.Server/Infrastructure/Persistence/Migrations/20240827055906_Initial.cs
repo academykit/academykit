@@ -3,9 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
-namespace Infrastructure.Persistence.Migrations
+namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -14,6 +12,76 @@ namespace Infrastructure.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase().Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
+                    name: "AIKeys",
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        key = table
+                            .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        ai_model = table.Column<int>(type: "int", nullable: false),
+                        is_active = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: true
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_AIKeys", x => x.id);
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
+                    name: "Licenses",
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        licenseKey = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        status = table.Column<int>(type: "int", nullable: false),
+                        licenseKeyId = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        customer_name = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        customer_email = table
+                            .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_Licenses", x => x.id);
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder
                 .CreateTable(
@@ -55,6 +123,45 @@ namespace Infrastructure.Persistence.Migrations
 
             migrationBuilder
                 .CreateTable(
+                    name: "MailNotifications",
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        mail_name = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        mail_subject = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        mail_message = table
+                            .Column<string>(type: "TEXT", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_active = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: true
+                        ),
+                        mail_type = table.Column<int>(type: "int", nullable: false),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_MailNotifications", x => x.id);
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
                     name: "Settings",
                     columns: table => new
                     {
@@ -68,6 +175,382 @@ namespace Infrastructure.Persistence.Migrations
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Settings", x => x.key);
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
+                    name: "Skills",
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_active = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: true
+                        ),
+                        remarks = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_Skills", x => x.id);
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
+                    name: "ApiKeys",
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        key = table
+                            .Column<string>(type: "VARCHAR(64)", maxLength: 64, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_ApiKeys", x => x.id);
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
+                    name: "AssessmentOptions",
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_question_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        option = table
+                            .Column<string>(type: "VARCHAR(5000)", maxLength: 5000, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        order = table.Column<int>(type: "int", nullable: false),
+                        UserId = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_correct = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_AssessmentOptions", x => x.id);
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
+                    name: "AssessmentQuestion",
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        name = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        description = table
+                            .Column<string>(type: "varchar(5000)", maxLength: 5000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        hints = table
+                            .Column<string>(type: "varchar(5000)", maxLength: 5000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        order = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                        is_active = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        type = table.Column<int>(type: "int", nullable: false),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_AssessmentQuestion", x => x.id);
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
+                    name: "AssessmentResult",
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_submission_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        total_mark = table.Column<decimal>(type: "decimal(20,4)", nullable: false),
+                        negative_mark = table.Column<decimal>(
+                            type: "decimal(20,4)",
+                            nullable: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_AssessmentResult", x => x.id);
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
+                    name: "Assessments",
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        slug = table
+                            .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        title = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        description = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 2000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        retake = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                        assessment_status = table.Column<int>(type: "int", nullable: false),
+                        start_date = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        end_date = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        duration = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                        weightage = table.Column<int>(
+                            type: "int",
+                            nullable: false,
+                            defaultValue: 0
+                        ),
+                        message = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_Assessments", x => x.id);
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
+                    name: "SkillsCriteria",
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        skill_assessment_rule = table.Column<int>(type: "int", nullable: false),
+                        percentage = table.Column<decimal>(type: "decimal(20,4)", nullable: false),
+                        skill_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_SkillsCriteria", x => x.id);
+                        table.ForeignKey(
+                            name: "FK_SkillsCriteria_Assessments_assessment_id",
+                            column: x => x.assessment_id,
+                            principalTable: "Assessments",
+                            principalColumn: "id",
+                            onDelete: ReferentialAction.Cascade
+                        );
+                        table.ForeignKey(
+                            name: "FK_SkillsCriteria_Skills_skill_id",
+                            column: x => x.skill_id,
+                            principalTable: "Skills",
+                            principalColumn: "id"
+                        );
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
+                    name: "AssessmentSubmission",
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        user_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        start_time = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        end_time = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        is_submission_error = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        submission_error_message = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_AssessmentSubmission", x => x.id);
+                        table.ForeignKey(
+                            name: "FK_AssessmentSubmission_Assessments_assessment_id",
+                            column: x => x.assessment_id,
+                            principalTable: "Assessments",
+                            principalColumn: "id"
+                        );
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
+                    name: "AssessmentSubmissionAnswer",
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_submission_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_question_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        selected_answers = table
+                            .Column<string>(type: "VARCHAR(150)", maxLength: 150, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        is_correct = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_AssessmentSubmissionAnswer", x => x.id);
+                        table.ForeignKey(
+                            name: "FK_AssessmentSubmissionAnswer_AssessmentQuestion_assessment_que~",
+                            column: x => x.assessment_question_id,
+                            principalTable: "AssessmentQuestion",
+                            principalColumn: "id",
+                            onDelete: ReferentialAction.Cascade
+                        );
+                        table.ForeignKey(
+                            name: "FK_AssessmentSubmissionAnswer_AssessmentSubmission_assessment_s~",
+                            column: x => x.assessment_submission_id,
+                            principalTable: "AssessmentSubmission",
+                            principalColumn: "id"
+                        );
                     }
                 )
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -564,6 +1047,13 @@ namespace Infrastructure.Persistence.Migrations
                         level_id = table
                             .Column<string>(type: "VARCHAR(50)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
+                        start_date = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                        end_date = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                        is_unlimited_end_date = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
                         created_by = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
@@ -576,6 +1066,46 @@ namespace Infrastructure.Persistence.Migrations
                     constraints: table =>
                     {
                         table.PrimaryKey("PK_Courses", x => x.id);
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
+                    name: "TrainingEligibility",
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        course_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        eligibility_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        training_eligibility_enum = table
+                            .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_TrainingEligibility", x => x.id);
+                        table.ForeignKey(
+                            name: "FK_TrainingEligibility_Courses_course_id",
+                            column: x => x.course_id,
+                            principalTable: "Courses",
+                            principalColumn: "id",
+                            onDelete: ReferentialAction.Cascade
+                        );
                     }
                 )
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -695,8 +1225,26 @@ namespace Infrastructure.Persistence.Migrations
                         id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        member_id = table
-                            .Column<string>(type: "VARCHAR(50)", nullable: true)
+                        role = table.Column<int>(type: "int", nullable: false, defaultValue: 4),
+                        status = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
+                        hash_password = table
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        public_urls = table
+                            .Column<string>(type: "VARCHAR(2000)", maxLength: 2000, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        password_reset_token = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        password_reset_token_expiry = table.Column<DateTime>(
+                            type: "DATETIME",
+                            nullable: true
+                        ),
+                        password_change_token = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        image_url = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         first_name = table
                             .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
@@ -707,44 +1255,26 @@ namespace Infrastructure.Persistence.Migrations
                         last_name = table
                             .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
+                        member_id = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        profession = table
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        department_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        address = table
+                            .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
                         email = table
                             .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         mobile_number = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        role = table.Column<int>(type: "int", nullable: false, defaultValue: 4),
-                        profession = table
-                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: true)
-                            .Annotation("MySql:CharSet", "utf8mb4"),
-                        address = table
-                            .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: true)
-                            .Annotation("MySql:CharSet", "utf8mb4"),
                         bio = table
                             .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
-                            .Annotation("MySql:CharSet", "utf8mb4"),
-                        hash_password = table
-                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
-                            .Annotation("MySql:CharSet", "utf8mb4"),
-                        public_urls = table
-                            .Column<string>(type: "VARCHAR(2000)", maxLength: 2000, nullable: true)
-                            .Annotation("MySql:CharSet", "utf8mb4"),
-                        status = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
-                        password_reset_token = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                            .Annotation("MySql:CharSet", "utf8mb4"),
-                        image_url = table
-                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
-                            .Annotation("MySql:CharSet", "utf8mb4"),
-                        password_reset_token_expiry = table.Column<DateTime>(
-                            type: "DATETIME",
-                            nullable: true
-                        ),
-                        password_change_token = table
-                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
-                            .Annotation("MySql:CharSet", "utf8mb4"),
-                        department_id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -866,7 +1396,7 @@ namespace Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         slug = table
-                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
+                            .Column<string>(type: "VARCHAR(270)", maxLength: 250, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         name = table
                             .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
@@ -910,7 +1440,7 @@ namespace Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         slug = table
-                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Column<string>(type: "VARCHAR(105)", maxLength: 100, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         is_deleted = table.Column<bool>(
                             type: "tinyint(1)",
@@ -1024,6 +1554,17 @@ namespace Infrastructure.Persistence.Migrations
                             type: "tinyint(1)",
                             nullable: false,
                             defaultValue: false
+                        ),
+                        no_of_question = table.Column<int>(type: "int", nullable: false),
+                        is_shuffle = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: false
+                        ),
+                        show_all = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: false,
+                            defaultValue: true
                         ),
                         created_by = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -1202,6 +1743,39 @@ namespace Infrastructure.Persistence.Migrations
 
             migrationBuilder
                 .CreateTable(
+                    name: "SkillsUser",
+                    columns: table => new
+                    {
+                        SkillsId = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        UsersId = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4")
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_SkillsUser", x => new { x.SkillsId, x.UsersId });
+                        table.ForeignKey(
+                            name: "FK_SkillsUser_Skills_SkillsId",
+                            column: x => x.SkillsId,
+                            principalTable: "Skills",
+                            principalColumn: "id",
+                            onDelete: ReferentialAction.Cascade
+                        );
+                        table.ForeignKey(
+                            name: "FK_SkillsUser_Users_UsersId",
+                            column: x => x.UsersId,
+                            principalTable: "Users",
+                            principalColumn: "id",
+                            onDelete: ReferentialAction.Cascade
+                        );
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
                     name: "SMTPSettings",
                     columns: table => new
                     {
@@ -1286,6 +1860,56 @@ namespace Infrastructure.Persistence.Migrations
                             column: x => x.created_by,
                             principalTable: "Users",
                             principalColumn: "id"
+                        );
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
+                    name: "UserSkills",
+                    columns: table => new
+                    {
+                        SkillId = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        UserId = table
+                            .Column<string>(type: "VARCHAR(50)", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        Id = table.Column<Guid>(
+                            type: "char(36)",
+                            nullable: false,
+                            collation: "ascii_general_ci"
+                        ),
+                        CreatedBy = table.Column<Guid>(
+                            type: "char(36)",
+                            nullable: false,
+                            collation: "ascii_general_ci"
+                        ),
+                        CreatedOn = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                        UpdatedBy = table.Column<Guid>(
+                            type: "char(36)",
+                            nullable: true,
+                            collation: "ascii_general_ci"
+                        ),
+                        UpdatedOn = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_UserSkills", x => new { x.SkillId, x.UserId });
+                        table.ForeignKey(
+                            name: "FK_UserSkills_Skills_SkillId",
+                            column: x => x.SkillId,
+                            principalTable: "Skills",
+                            principalColumn: "id",
+                            onDelete: ReferentialAction.Cascade
+                        );
+                        table.ForeignKey(
+                            name: "FK_UserSkills_Users_UserId",
+                            column: x => x.UserId,
+                            principalTable: "Users",
+                            principalColumn: "id",
+                            onDelete: ReferentialAction.Cascade
                         );
                     }
                 )
@@ -1380,6 +2004,85 @@ namespace Infrastructure.Persistence.Migrations
                             name: "FK_ZoomSettings_Users_created_by",
                             column: x => x.created_by,
                             principalTable: "Users",
+                            principalColumn: "id"
+                        );
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
+                    name: "EligibilityCreations",
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        role = table.Column<int>(type: "int", nullable: false),
+                        skill_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        training_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        department_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        group_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        completed_assessment_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        assessment_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_EligibilityCreations", x => x.id);
+                        table.ForeignKey(
+                            name: "FK_EligibilityCreations_Assessments_assessment_id",
+                            column: x => x.assessment_id,
+                            principalTable: "Assessments",
+                            principalColumn: "id"
+                        );
+                        table.ForeignKey(
+                            name: "FK_EligibilityCreations_Assessments_completed_assessment_id",
+                            column: x => x.completed_assessment_id,
+                            principalTable: "Assessments",
+                            principalColumn: "id"
+                        );
+                        table.ForeignKey(
+                            name: "FK_EligibilityCreations_Courses_training_id",
+                            column: x => x.training_id,
+                            principalTable: "Courses",
+                            principalColumn: "id"
+                        );
+                        table.ForeignKey(
+                            name: "FK_EligibilityCreations_Departments_department_id",
+                            column: x => x.department_id,
+                            principalTable: "Departments",
+                            principalColumn: "id"
+                        );
+                        table.ForeignKey(
+                            name: "FK_EligibilityCreations_Groups_group_id",
+                            column: x => x.group_id,
+                            principalTable: "Groups",
+                            principalColumn: "id"
+                        );
+                        table.ForeignKey(
+                            name: "FK_EligibilityCreations_Skills_skill_id",
+                            column: x => x.skill_id,
+                            principalTable: "Skills",
                             principalColumn: "id"
                         );
                     }
@@ -1864,7 +2567,7 @@ namespace Infrastructure.Persistence.Migrations
                     {
                         table.PrimaryKey("PK_QuestionSetResults", x => x.id);
                         table.ForeignKey(
-                            name: "FK_QuestionSetResults_QuestionSetSubmissions_question_set_submi~",
+                            name: "FK_QuestionSetResults_QuestionSetSubmissions_question_set_submission",
                             column: x => x.question_set_submission_id,
                             principalTable: "QuestionSetSubmissions",
                             principalColumn: "id"
@@ -1907,6 +2610,12 @@ namespace Infrastructure.Persistence.Migrations
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         thumbnail_url = table
                             .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        external_url = table
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        content = table
+                            .Column<string>(type: "VARCHAR(5000)", maxLength: 5000, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         document_url = table
                             .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
@@ -2387,226 +3096,88 @@ namespace Infrastructure.Persistence.Migrations
                 )
                 .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.InsertData(
-                table: "Settings",
-                columns: new[] { "key", "value" },
-                values: new object[,]
-                {
-                    { "AWS_AccessKey", null },
-                    { "AWS_CloudFront", null },
-                    { "AWS_FileBucket", null },
-                    { "AWS_RegionEndpoint", null },
-                    { "AWS_SecretKey", null },
-                    { "AWS_VideoBucket", null },
-                    { "Server_AccessKey", null },
-                    { "Server_Bucket", null },
-                    { "Server_EndPoint", null },
-                    { "Server_PresignedExpiryTime", null },
-                    { "Server_PresignedUrl", null },
-                    { "Server_SecretKey", null },
-                    { "Server_Url", null },
-                    { "Storage", "AWS" }
-                }
+            migrationBuilder.CreateIndex(
+                name: "IX_ApiKeys_user_id",
+                table: "ApiKeys",
+                column: "user_id"
             );
 
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[]
-                {
-                    "id",
-                    "address",
-                    "bio",
-                    "created_by",
-                    "created_on",
-                    "department_id",
-                    "email",
-                    "first_name",
-                    "hash_password",
-                    "image_url",
-                    "last_name",
-                    "member_id",
-                    "middle_name",
-                    "mobile_number",
-                    "password_change_token",
-                    "password_reset_token",
-                    "password_reset_token_expiry",
-                    "profession",
-                    "public_urls",
-                    "role",
-                    "status",
-                    "updated_by",
-                    "updated_on"
-                },
-                values: new object[]
-                {
-                    "30fcd978-f256-4733-840f-759181bc5e63",
-                    "ADDRESS",
-                    null,
-                    "30fcd978-f256-4733-840f-759181bc5e63",
-                    new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                    null,
-                    "academykit@yopmail.com",
-                    "Superadmin",
-                    "SKN7zJDnqOtL0+4zVwx68H3p12LoJw0kNZ06d1wRs28=:pbOoXC3dmcTXhib+l/nYuQ==",
-                    null,
-                    "User",
-                    null,
-                    null,
-                    "1234567890",
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    1,
-                    1,
-                    "30fcd978-f256-4733-840f-759181bc5e63",
-                    new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004)
-                }
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentOptions_assessment_question_id",
+                table: "AssessmentOptions",
+                column: "assessment_question_id"
             );
 
-            migrationBuilder.InsertData(
-                table: "GeneralSettings",
-                columns: new[]
-                {
-                    "id",
-                    "company_address",
-                    "company_contact_number",
-                    "company_name",
-                    "created_by",
-                    "created_on",
-                    "custom_configuration",
-                    "email_signature",
-                    "logo_url",
-                    "updated_by",
-                    "updated_on"
-                },
-                values: new object[]
-                {
-                    "2d7867fc-b7e7-461d-9257-d0990b5ac991",
-                    "company address",
-                    "company contact number",
-                    "company name",
-                    "30fcd978-f256-4733-840f-759181bc5e63",
-                    new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                    null,
-                    "company default email signature",
-                    "image path",
-                    "30fcd978-f256-4733-840f-759181bc5e63",
-                    new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004)
-                }
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentOptions_UserId",
+                table: "AssessmentOptions",
+                column: "UserId"
             );
 
-            migrationBuilder.InsertData(
-                table: "Levels",
-                columns: new[]
-                {
-                    "id",
-                    "created_by",
-                    "created_on",
-                    "name",
-                    "slug",
-                    "updated_by",
-                    "updated_on"
-                },
-                values: new object[,]
-                {
-                    {
-                        "7df8d749-6172-482b-b5a1-016fbe478795",
-                        "30fcd978-f256-4733-840f-759181bc5e63",
-                        new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                        "Intermediate",
-                        "intermediate",
-                        null,
-                        null
-                    },
-                    {
-                        "7e6ff101-cfa2-4aec-bd25-42780be476c3",
-                        "30fcd978-f256-4733-840f-759181bc5e63",
-                        new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                        "Beginner",
-                        "beginner",
-                        null,
-                        null
-                    },
-                    {
-                        "9be84cd8-1566-4af5-8442-61cb1796dc46",
-                        "30fcd978-f256-4733-840f-759181bc5e63",
-                        new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                        "Advanced",
-                        "advanced",
-                        null,
-                        null
-                    }
-                }
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentQuestion_assessment_id",
+                table: "AssessmentQuestion",
+                column: "assessment_id"
             );
 
-            migrationBuilder.InsertData(
-                table: "SMTPSettings",
-                columns: new[]
-                {
-                    "id",
-                    "created_by",
-                    "created_on",
-                    "mail_port",
-                    "mail_server",
-                    "password",
-                    "reply_to",
-                    "sender_email",
-                    "sender_name",
-                    "updated_by",
-                    "updated_on",
-                    "UseSSL",
-                    "user_name"
-                },
-                values: new object[]
-                {
-                    "d3c343d8-adf8-45d4-afbe-e09c3285da24",
-                    "30fcd978-f256-4733-840f-759181bc5e63",
-                    new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                    123,
-                    "email-smtp.ap-south-1.amazonaws.com",
-                    "password",
-                    "hello@academykit.co",
-                    "noreply@academykit.co",
-                    "AcademyKit",
-                    "30fcd978-f256-4733-840f-759181bc5e63",
-                    new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                    true,
-                    "username"
-                }
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentQuestion_created_by",
+                table: "AssessmentQuestion",
+                column: "created_by"
             );
 
-            migrationBuilder.InsertData(
-                table: "ZoomSettings",
-                columns: new[]
-                {
-                    "id",
-                    "created_by",
-                    "created_on",
-                    "oauth_account_id",
-                    "oauth_client_id",
-                    "oauth_client_secret",
-                    "sdk_key",
-                    "sdk_secret",
-                    "updated_by",
-                    "updated_on",
-                    "webhook_secret"
-                },
-                values: new object[]
-                {
-                    "f41a902f-fabd-4749-ac28-91137f685cb8",
-                    "30fcd978-f256-4733-840f-759181bc5e63",
-                    new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                    "OAuth account id",
-                    "OAuth client id",
-                    "OAuth client secret",
-                    "sdk key value",
-                    "sdk secret value",
-                    "30fcd978-f256-4733-840f-759181bc5e63",
-                    new DateTime(2022, 11, 4, 10, 35, 19, 307, DateTimeKind.Utc).AddTicks(3004),
-                    null
-                }
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentResult_assessment_id",
+                table: "AssessmentResult",
+                column: "assessment_id"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentResult_assessment_submission_id",
+                table: "AssessmentResult",
+                column: "assessment_submission_id"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentResult_user_id",
+                table: "AssessmentResult",
+                column: "user_id"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Assessments_created_by",
+                table: "Assessments",
+                column: "created_by"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentSubmission_assessment_id",
+                table: "AssessmentSubmission",
+                column: "assessment_id"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentSubmission_user_id",
+                table: "AssessmentSubmission",
+                column: "user_id"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentSubmissionAnswer_assessment_question_id",
+                table: "AssessmentSubmissionAnswer",
+                column: "assessment_question_id"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentSubmissionAnswer_assessment_submission_id",
+                table: "AssessmentSubmissionAnswer",
+                column: "assessment_submission_id"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentSubmissionAnswer_created_by",
+                table: "AssessmentSubmissionAnswer",
+                column: "created_by"
             );
 
             migrationBuilder.CreateIndex(
@@ -2800,6 +3371,42 @@ namespace Infrastructure.Persistence.Migrations
                 name: "IX_Departments_created_by",
                 table: "Departments",
                 column: "created_by"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EligibilityCreations_assessment_id",
+                table: "EligibilityCreations",
+                column: "assessment_id"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EligibilityCreations_completed_assessment_id",
+                table: "EligibilityCreations",
+                column: "completed_assessment_id"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EligibilityCreations_department_id",
+                table: "EligibilityCreations",
+                column: "department_id"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EligibilityCreations_group_id",
+                table: "EligibilityCreations",
+                column: "group_id"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EligibilityCreations_skill_id",
+                table: "EligibilityCreations",
+                column: "skill_id"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EligibilityCreations_training_id",
+                table: "EligibilityCreations",
+                column: "training_id"
             );
 
             migrationBuilder.CreateIndex(
@@ -3135,6 +3742,24 @@ namespace Infrastructure.Persistence.Migrations
             );
 
             migrationBuilder.CreateIndex(
+                name: "IX_SkillsCriteria_assessment_id",
+                table: "SkillsCriteria",
+                column: "assessment_id"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SkillsCriteria_skill_id",
+                table: "SkillsCriteria",
+                column: "skill_id"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SkillsUser_UsersId",
+                table: "SkillsUser",
+                column: "UsersId"
+            );
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SMTPSettings_created_by",
                 table: "SMTPSettings",
                 column: "created_by"
@@ -3147,9 +3772,21 @@ namespace Infrastructure.Persistence.Migrations
             );
 
             migrationBuilder.CreateIndex(
+                name: "IX_TrainingEligibility_course_id",
+                table: "TrainingEligibility",
+                column: "course_id"
+            );
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_department_id",
                 table: "Users",
                 column: "department_id"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSkills_UserId",
+                table: "UserSkills",
+                column: "UserId"
             );
 
             migrationBuilder.CreateIndex(
@@ -3186,6 +3823,96 @@ namespace Infrastructure.Persistence.Migrations
                 name: "IX_ZoomSettings_created_by",
                 table: "ZoomSettings",
                 column: "created_by"
+            );
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_ApiKeys_Users_user_id",
+                table: "ApiKeys",
+                column: "user_id",
+                principalTable: "Users",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade
+            );
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AssessmentOptions_AssessmentQuestion_assessment_question_id",
+                table: "AssessmentOptions",
+                column: "assessment_question_id",
+                principalTable: "AssessmentQuestion",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade
+            );
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AssessmentOptions_Users_UserId",
+                table: "AssessmentOptions",
+                column: "UserId",
+                principalTable: "Users",
+                principalColumn: "id"
+            );
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AssessmentQuestion_Assessments_assessment_id",
+                table: "AssessmentQuestion",
+                column: "assessment_id",
+                principalTable: "Assessments",
+                principalColumn: "id"
+            );
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AssessmentQuestion_Users_created_by",
+                table: "AssessmentQuestion",
+                column: "created_by",
+                principalTable: "Users",
+                principalColumn: "id"
+            );
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AssessmentResult_AssessmentSubmission_assessment_submission_~",
+                table: "AssessmentResult",
+                column: "assessment_submission_id",
+                principalTable: "AssessmentSubmission",
+                principalColumn: "id"
+            );
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AssessmentResult_Assessments_assessment_id",
+                table: "AssessmentResult",
+                column: "assessment_id",
+                principalTable: "Assessments",
+                principalColumn: "id"
+            );
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AssessmentResult_Users_user_id",
+                table: "AssessmentResult",
+                column: "user_id",
+                principalTable: "Users",
+                principalColumn: "id"
+            );
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Assessments_Users_created_by",
+                table: "Assessments",
+                column: "created_by",
+                principalTable: "Users",
+                principalColumn: "id"
+            );
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AssessmentSubmission_Users_user_id",
+                table: "AssessmentSubmission",
+                column: "user_id",
+                principalTable: "Users",
+                principalColumn: "id"
+            );
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AssessmentSubmissionAnswer_Users_created_by",
+                table: "AssessmentSubmissionAnswer",
+                column: "created_by",
+                principalTable: "Users",
+                principalColumn: "id"
             );
 
             migrationBuilder.AddForeignKey(
@@ -3432,6 +4159,16 @@ namespace Infrastructure.Persistence.Migrations
                 table: "Departments"
             );
 
+            migrationBuilder.DropTable(name: "AIKeys");
+
+            migrationBuilder.DropTable(name: "ApiKeys");
+
+            migrationBuilder.DropTable(name: "AssessmentOptions");
+
+            migrationBuilder.DropTable(name: "AssessmentResult");
+
+            migrationBuilder.DropTable(name: "AssessmentSubmissionAnswer");
+
             migrationBuilder.DropTable(name: "AssignmentAttachments");
 
             migrationBuilder.DropTable(name: "AssignmentQuestionOptions");
@@ -3452,6 +4189,8 @@ namespace Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(name: "CourseTeachers");
 
+            migrationBuilder.DropTable(name: "EligibilityCreations");
+
             migrationBuilder.DropTable(name: "FeedbackQuestionOptions");
 
             migrationBuilder.DropTable(name: "FeedbackSubmissions");
@@ -3462,7 +4201,11 @@ namespace Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(name: "GroupMembers");
 
+            migrationBuilder.DropTable(name: "Licenses");
+
             migrationBuilder.DropTable(name: "Logs");
+
+            migrationBuilder.DropTable(name: "MailNotifications");
 
             migrationBuilder.DropTable(name: "MeetingReports");
 
@@ -3484,13 +4227,25 @@ namespace Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(name: "Signature");
 
+            migrationBuilder.DropTable(name: "SkillsCriteria");
+
+            migrationBuilder.DropTable(name: "SkillsUser");
+
             migrationBuilder.DropTable(name: "SMTPSettings");
+
+            migrationBuilder.DropTable(name: "TrainingEligibility");
+
+            migrationBuilder.DropTable(name: "UserSkills");
 
             migrationBuilder.DropTable(name: "VideoQueue");
 
             migrationBuilder.DropTable(name: "WatchHistories");
 
             migrationBuilder.DropTable(name: "ZoomSettings");
+
+            migrationBuilder.DropTable(name: "AssessmentQuestion");
+
+            migrationBuilder.DropTable(name: "AssessmentSubmission");
 
             migrationBuilder.DropTable(name: "AssignmentSubmissions");
 
@@ -3503,6 +4258,10 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder.DropTable(name: "QuestionSetSubmissions");
 
             migrationBuilder.DropTable(name: "Tags");
+
+            migrationBuilder.DropTable(name: "Skills");
+
+            migrationBuilder.DropTable(name: "Assessments");
 
             migrationBuilder.DropTable(name: "Assignments");
 

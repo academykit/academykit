@@ -30,7 +30,7 @@ function SessionCard() {
       </Badge>
 
       <Text fw={500} size="lg" mt="md">
-        Ielts master class
+        React master class
       </Text>
 
       <Group justify="space-between" mt="md" mb="xs">
@@ -39,7 +39,7 @@ function SessionCard() {
       </Group>
 
       <Text mt="xs" c="dimmed" size="sm">
-        Balen name
+        User name
       </Text>
     </Card>
   );

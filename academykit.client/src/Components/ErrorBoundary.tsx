@@ -3,9 +3,9 @@ import Forbidden from "@pages/403";
 import NotFound from "@pages/404";
 import ServerError from "@pages/500";
 import { isDevelopment, isProduction } from "@utils/env";
-import axios, { AxiosError } from "axios";
-import { Component, ErrorInfo, ReactNode } from "react";
+import axios, { type AxiosError } from "axios";
 import i18next from "i18next";
+import { Component, type ErrorInfo, type ReactNode } from "react";
 
 interface Props {
   children?: ReactNode;
@@ -21,15 +21,17 @@ interface State {
 const RenderErrorComponent = ({ statusCode }: { statusCode: number }) => {
   if (statusCode === 401) {
     return <UnAuthorize />;
-  } else if (statusCode === 403) {
-    return <Forbidden />;
-  } else if (statusCode === 404) {
-    return <NotFound />;
-  } else if ((statusCode as number) >= 500) {
-    return <ServerError />;
-  } else {
-    return <></>;
   }
+  if (statusCode === 403) {
+    return <Forbidden />;
+  }
+  if (statusCode === 404) {
+    return <NotFound />;
+  }
+  if ((statusCode as number) >= 500) {
+    return <ServerError />;
+  }
+  return <></>;
 };
 
 class ErrorBoundary extends Component<Props, State> {
@@ -62,7 +64,7 @@ class ErrorBoundary extends Component<Props, State> {
           <div>
             <h2>{i18next.t("something_wrong")}</h2>
             <details style={{ whiteSpace: "pre-wrap" }}>
-              {this.state.error && this.state.error.toString()}
+              {this.state.error?.toString()}
               <br />
               {this.state.errorInfo?.componentStack}
             </details>
@@ -70,7 +72,8 @@ class ErrorBoundary extends Component<Props, State> {
           <RenderErrorComponent statusCode={this.state.errorCode as number} />
         </>
       );
-    } else if (this.state.hasError && isProduction) {
+    }
+    if (this.state.hasError && isProduction) {
       return (
         <RenderErrorComponent statusCode={this.state.errorCode as number} />
       );

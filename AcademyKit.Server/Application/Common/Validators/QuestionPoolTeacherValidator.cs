@@ -12,7 +12,7 @@
             RuleFor(x => x.QuestionPoolIdentity)
                 .NotNull()
                 .NotEmpty()
-                .WithMessage(context => stringLocalizer.GetString("QuestionpoolIdRequired"));
+                .WithMessage(context => stringLocalizer.GetString("QuestionPoolIdRequired"));
             RuleFor(x => x.Email)
                 .NotNull()
                 .NotEmpty()

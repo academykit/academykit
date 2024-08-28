@@ -7,7 +7,7 @@ namespace AcademyKit.Application.Common.Dtos
         /// <summary>
         /// identity of training
         /// </summary>
-        public string Idenitiy { get; set; }
+        public string Identity { get; set; }
 
         /// <summary>
         /// type of training

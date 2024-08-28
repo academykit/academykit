@@ -11,7 +11,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 
-const ZoomMettingMessage = () => {
+const ZoomMeetingMessage = () => {
   const [searchParams] = useSearchParams();
   const { t } = useTranslation();
   const { courseId, lessonId } = useParams();
@@ -121,4 +121,4 @@ const ZoomMettingMessage = () => {
   );
 };
 
-export default ZoomMettingMessage;
+export default ZoomMeetingMessage;

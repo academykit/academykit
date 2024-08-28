@@ -197,7 +197,7 @@
         }
 
         /// <summary>
-        /// Handels to get ZoomLicenseId
+        /// Handles to get ZoomLicenseId
         /// </summary>
         /// <param name="zoomLicenseIdRequestModel"> the instance of <see cref="LiveClassLicenseRequestModel"/></param>
         /// <returns>the instance of <see cref="ZoomLicenseResponseModel"/></returns>
@@ -296,7 +296,7 @@
                 );
                 if (response.Count == 0)
                 {
-                    throw new NullReferenceException(_localizer.GetString("AllLiscensePlaced"));
+                    throw new NullReferenceException(_localizer.GetString("AllLicensePlaced"));
                 }
 
                 return response;
@@ -308,7 +308,7 @@
         }
 
         /// <summary>
-        /// Handels to retrive ZoomID
+        /// Handles to retrieve ZoomID
         /// </summary>
         /// <param name="meetings">the instance of <see cref="Meeting"/></param>
         /// <param name="startDateTime">startDate and Time of the live session</param>
@@ -328,14 +328,14 @@
 
             var endTime = startDateTime.AddMinutes(duration);
 
-            var meetinglist = meetings.ToList();
+            var meetingList = meetings.ToList();
 
             var userMeetings = (
                 await _unitOfWork.GetRepository<Meeting>().GetAllAsync().ConfigureAwait(false)
             )
                 .AsEnumerable()
                 .Where(p =>
-                    meetinglist.Any(m =>
+                    meetingList.Any(m =>
                         m.StartDate.HasValue
                         && p.StartDate.HasValue
                         && m.StartDate.Value.Date == p.StartDate.Value.Date
@@ -597,8 +597,8 @@
 
             var client = new RestClient($"{zoomOAuthTokenApi}");
             var credential = $"{zoomSetting.OAuthClientId}:{zoomSetting.OAuthClientSecret}";
-            var credentailByte = Encoding.UTF8.GetBytes(credential);
-            var token = Convert.ToBase64String(credentailByte);
+            var credentialByte = Encoding.UTF8.GetBytes(credential);
+            var token = Convert.ToBase64String(credentialByte);
             var request = new RestRequest();
             request.AddQueryParameter("grant_type", "account_credentials");
             request.AddQueryParameter("account_id", $"{zoomSetting.OAuthAccountId}");

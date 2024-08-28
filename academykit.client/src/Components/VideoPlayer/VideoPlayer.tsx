@@ -5,7 +5,7 @@ import "rc-slider/assets/index.css";
 import React, { FC, useEffect, useRef, useState } from "react";
 import ReactPlayer, { Config, ReactPlayerProps } from "react-player";
 import PlayerIcon from "./controls/PlayerIcon";
-import RemainingTimeDisplay from "./controls/RemaningTimeDisplay";
+import RemainingTimeDisplay from "./controls/RemainingTimeDisplay";
 import SeekBar from "./controls/SeekBar";
 import VolumeControlBar from "./controls/VolumeControlBar";
 import classes from "./styles/player.module.css";

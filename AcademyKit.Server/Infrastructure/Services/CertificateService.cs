@@ -59,7 +59,7 @@
 
                 if (model.StartDate.AddHours(model.Duration).Date > model.EndDate)
                 {
-                    throw new ForbiddenException(_localizer.GetString("AddingDuratrionError"));
+                    throw new ForbiddenException(_localizer.GetString("AddingDurationError"));
                 }
 
                 await _unitOfWork
@@ -86,69 +86,67 @@
         {
             return await ExecuteWithResultAsync(async () =>
             {
-                var ceritificate = await _unitOfWork
+                var certificate = await _unitOfWork
                     .GetRepository<Certificate>()
                     .GetFirstOrDefaultAsync(predicate: p => p.Id == identity)
                     .ConfigureAwait(false);
-                if (ceritificate == null)
+                if (certificate == null)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("CertificateNotFound"));
                 }
 
-                if (ceritificate.CreatedBy != currentUserId)
+                if (certificate.CreatedBy != currentUserId)
                 {
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
 
-                if (ceritificate.Status == CertificateStatus.Approved)
+                if (certificate.Status == CertificateStatus.Approved)
                 {
-                    throw new ArgumentException(
-                        _localizer.GetString("CeritificateAlreadyApproved")
-                    );
+                    throw new ArgumentException(_localizer.GetString("CertificateAlreadyApproved"));
                 }
 
-                ceritificate.Name = model.Name;
-                ceritificate.StartDate = model.StartDate;
-                ceritificate.EndDate = model.EndDate;
-                ceritificate.ImageUrl = model.ImageUrl;
-                ceritificate.Location = model.Location;
-                ceritificate.Institute = model.Institute;
-                ceritificate.Duration = model.Duration;
-                ceritificate.Status = CertificateStatus.Draft;
-                ceritificate.UpdatedBy = currentUserId;
-                ceritificate.UpdatedOn = DateTime.UtcNow;
-                ceritificate.OptionalCost = model.OptionalCost;
-                _unitOfWork.GetRepository<Certificate>().Update(ceritificate);
+                certificate.Name = model.Name;
+                certificate.StartDate = model.StartDate;
+                certificate.EndDate = model.EndDate;
+                certificate.ImageUrl = model.ImageUrl;
+                certificate.Location = model.Location;
+                certificate.Institute = model.Institute;
+                certificate.Duration = model.Duration;
+                certificate.Status = CertificateStatus.Draft;
+                certificate.UpdatedBy = currentUserId;
+                certificate.UpdatedOn = DateTime.UtcNow;
+                certificate.OptionalCost = model.OptionalCost;
+                _unitOfWork.GetRepository<Certificate>().Update(certificate);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                return new CertificateResponseModel(ceritificate);
+                return new CertificateResponseModel(certificate);
             });
         }
 
         /// <summary>
         /// Handle to delete the external certificate async
         /// </summary>
-        /// <param name="identity"> the ceritifcate id or slug </param>
+        /// <param name="identity"> the certificate id or slug </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
         public async Task DeleteExternalCertificateAsync(Guid identity, Guid currentUserId)
         {
             try
             {
-                var ceritificate = await _unitOfWork
+                var certificate = await _unitOfWork
                     .GetRepository<Certificate>()
                     .GetFirstOrDefaultAsync(predicate: p => p.Id == identity)
                     .ConfigureAwait(false);
-                if (ceritificate == null)
+                if (certificate == null)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("CertificateNotFound"));
                 }
 
-                if (ceritificate.CreatedBy != currentUserId)
+                if (certificate.CreatedBy != currentUserId)
                 {
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
 
-                _unitOfWork.GetRepository<Certificate>().Delete(ceritificate);
+                _unitOfWork.GetRepository<Certificate>().Delete(certificate);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -217,7 +215,7 @@
         {
             return await ExecuteWithResultAsync(async () =>
             {
-                var ceritifcate = await _unitOfWork
+                var certificate = await _unitOfWork
                     .GetRepository<Certificate>()
                     .GetFirstOrDefaultAsync(
                         predicate: p => p.Id == identity,
@@ -225,17 +223,17 @@
                     )
                     .ConfigureAwait(false);
 
-                if (ceritifcate == default)
+                if (certificate == default)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("CertificateNotFound"));
                 }
 
                 if (
-                    ceritifcate.Status == CertificateStatus.Draft
-                    || ceritifcate.Status == CertificateStatus.Rejected
+                    certificate.Status == CertificateStatus.Draft
+                    || certificate.Status == CertificateStatus.Rejected
                 )
                 {
-                    var isAccess = await UnverifiedCertificateAccess(ceritifcate, currentUserId)
+                    var isAccess = await UnverifiedCertificateAccess(certificate, currentUserId)
                         .ConfigureAwait(false);
                     if (!isAccess)
                     {
@@ -245,18 +243,18 @@
 
                 return new CertificateResponseModel
                 {
-                    Id = ceritifcate.Id,
-                    Name = ceritifcate.Name,
-                    StartDate = ceritifcate.StartDate,
-                    EndDate = ceritifcate.EndDate,
-                    Institute = ceritifcate.Institute,
-                    ImageUrl = ceritifcate.ImageUrl,
+                    Id = certificate.Id,
+                    Name = certificate.Name,
+                    StartDate = certificate.StartDate,
+                    EndDate = certificate.EndDate,
+                    Institute = certificate.Institute,
+                    ImageUrl = certificate.ImageUrl,
                     Duration =
-                        ceritifcate.Duration != default ? ceritifcate.Duration.ToString() : null,
-                    Location = ceritifcate.Location,
-                    Status = ceritifcate.Status,
-                    User = new UserModel(ceritifcate.User),
-                    OptionalCost = ceritifcate.OptionalCost
+                        certificate.Duration != default ? certificate.Duration.ToString() : null,
+                    Location = certificate.Location,
+                    Status = certificate.Status,
+                    User = new UserModel(certificate.User),
+                    OptionalCost = certificate.OptionalCost
                 };
             });
         }
@@ -377,18 +375,18 @@
                     throw new ForbiddenException(_localizer.GetString("UnauthorizedUser"));
                 }
 
-                var ceritifcate = await _unitOfWork
+                var certificate = await _unitOfWork
                     .GetRepository<Certificate>()
                     .GetFirstOrDefaultAsync(predicate: p => p.Id == identity)
                     .ConfigureAwait(false);
 
-                if (ceritifcate == default)
+                if (certificate == default)
                 {
                     throw new EntityNotFoundException(_localizer.GetString("CertificateNotFound"));
                 }
 
-                ceritifcate.Status = status;
-                _unitOfWork.GetRepository<Certificate>().Update(ceritifcate);
+                certificate.Status = status;
+                _unitOfWork.GetRepository<Certificate>().Update(certificate);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception ex)

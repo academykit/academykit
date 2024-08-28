@@ -272,7 +272,7 @@
         }
 
         /// <summary>
-        /// Handel to reorder questionset question
+        /// Handel to reorder question set question
         /// </summary>
         /// <param name="lessonIdentity">Lesson id or slug</param>
         /// <param name="currentUserId">current user id</param>
@@ -280,7 +280,7 @@
         /// <returns>Task completed</returns>
         /// <exception cref="EntityNotFoundException"></exception>
         /// <exception cref="ForbiddenException"></exception>
-        public async Task ReorderQuestionsetQuestionsAsync(
+        public async Task ReorderQuestionSetQuestionsAsync(
             Guid currentUserId,
             string lessonIdentity,
             List<Guid> ids
@@ -427,14 +427,14 @@
                         currentUserId
                     );
                     throw new ForbiddenException(
-                        _localizer.GetString("TraningExamCompletedStatus")
+                        _localizer.GetString("TrainingExamCompletedStatus")
                     );
                 }
 
                 var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(currentUserId)
                     .ConfigureAwait(false);
 
-                var isValidUser = await ValdiateUserAsync(
+                var isValidUser = await ValidateUserAsync(
                         currentUserId,
                         questionSet,
                         course,
@@ -924,7 +924,7 @@
         /// <param name="questionSet"> the instance of <see cref="QuestionSet"/> </param>
         /// <param name="course"></param>
         /// <returns></returns>
-        private async Task<bool> ValdiateUserAsync(
+        private async Task<bool> ValidateUserAsync(
             Guid currentUserId,
             QuestionSet questionSet,
             Course course,

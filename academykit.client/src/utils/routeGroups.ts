@@ -6,8 +6,8 @@ export interface IRouteGroup {
 export const routeGroupAdmin = [
   { route: "/settings", group: "account" },
   { route: "/settings/account", group: "account" },
-  { route: "/settings/mycertificate", group: "account" },
-  { route: "/settings/mycertificate/external", group: "account" },
+  { route: "/settings/my-certificate", group: "account" },
+  { route: "/settings/my-certificate/external", group: "account" },
   { route: "/settings/profile-view", group: "account" },
 
   { route: "/settings/general", group: "admin" },

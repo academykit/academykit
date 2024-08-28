@@ -109,7 +109,7 @@ const UserRow = ({
             fw={500}
             lineClamp={1}
             ml={5}
-            className={classes.nameCotainer}
+            className={classes.nameContainer}
           >
             {item?.fullName}
           </Text>
@@ -213,7 +213,7 @@ const UserMemberTable = ({
       >
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>{t("userid")}</Table.Th>
+            <Table.Th>{t("userId")}</Table.Th>
             <Table.Th>
               {sortComponent({ sortKey: "firstName", title: t("username") })}
             </Table.Th>

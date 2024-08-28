@@ -147,7 +147,7 @@ const AddDocument = ({
             </Tooltip>
           </Grid>
           <Text size={"md"} mt={10}>
-            {t("file")} <span className="global-astrick"> *</span>
+            {t("file")} <span className="global-asterisk"> *</span>
           </Text>
           <FileUploadLesson
             currentFile={item?.documentUrl}

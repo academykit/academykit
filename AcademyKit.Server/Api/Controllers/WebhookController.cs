@@ -32,7 +32,7 @@
         /// zoom recording webhook api.
         /// </summary>
         /// <returns>the task complete. </returns>
-        [HttpPost("zoomrecording")]
+        [HttpPost("zoomRecording")]
         [AllowAnonymous]
         public async Task<IActionResult> ZoomRecording()
         {
@@ -71,7 +71,7 @@
         /// join meeting event api.
         /// </summary>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
-        [HttpPost("joinmeeting")]
+        [HttpPost("joinMeeting")]
         [AllowAnonymous]
         public async Task<IActionResult> JoinMeeting()
         {
@@ -108,7 +108,7 @@
         /// left meeting event api.
         /// </summary>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
-        [HttpPost("leftmeeting")]
+        [HttpPost("leftMeeting")]
         [AllowAnonymous]
         public async Task<IActionResult> LeftMeeting()
         {

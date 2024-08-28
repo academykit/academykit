@@ -56,7 +56,7 @@ const Exam = ({
   const [showConfirmation, setShowConfirmation] = useToggle();
 
   const handleCloseModal = () => {
-    setSubmitClicked(false); // disallow user to multiclick the button
+    setSubmitClicked(false); // disallow user to multi click the button
     setShowConfirmation();
   };
 

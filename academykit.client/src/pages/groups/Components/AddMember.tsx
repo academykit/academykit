@@ -32,7 +32,7 @@ interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
   imageUrl: string;
   email: string;
   departmentName: string;
-  departementId: string;
+  departmentId: string;
 }
 
 // eslint-disable-next-line react/display-name, @typescript-eslint/no-unused-vars
@@ -173,7 +173,7 @@ const AddMember = ({
               // controlled the clearable event
               setDepartmentId("");
             }}
-          ></Select>
+          />
           <MultiSelect
             tabIndex={0}
             autoComplete="off"

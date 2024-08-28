@@ -72,13 +72,13 @@ namespace AcademyKit.Api.Controllers
                     item,
                     CurrentUser.Id
                 );
-                var assestmentResponseModel = new AssessmentResponseModel(
+                var assessmentResponseModel = new AssessmentResponseModel(
                     item,
                     eligibilityStatus.Item1
                 );
-                assestmentResponseModel.EligibilityCreationRequestModels =
+                assessmentResponseModel.EligibilityCreationRequestModels =
                     eligibilityStatus.Item2.ToList();
-                response.Items.Add(assestmentResponseModel);
+                response.Items.Add(assessmentResponseModel);
             }
 
             return response;

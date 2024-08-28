@@ -627,7 +627,7 @@ export const useAddZoomLicense = () => {
   });
 };
 
-//filestorage
+//file storage
 export interface IFileStorage {
   type: EFileStorageType;
   values: IFileStorageValues[];
@@ -665,7 +665,7 @@ export const useGetFileStorageSetting = () => {
   });
 };
 
-//putfilestorage
+//put file storage
 
 const updateFileStorage = async (data: IFileStorage[]) =>
   await httpClient.put<IFileStorage>(

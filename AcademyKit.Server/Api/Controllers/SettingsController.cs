@@ -74,9 +74,9 @@
                 .ConfigureAwait(false);
             return new CompanyResponseModel
             {
-                Name = response.CompanyName,
-                ImageUrl = response.LogoUrl,
-                CustomConfiguration = response.CustomConfiguration,
+                Name = response?.CompanyName,
+                ImageUrl = response?.LogoUrl,
+                CustomConfiguration = response?.CustomConfiguration,
                 AppVersion = Assembly
                     .GetEntryAssembly()
                     ?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()

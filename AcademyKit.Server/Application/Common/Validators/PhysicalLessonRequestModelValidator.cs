@@ -18,7 +18,7 @@ namespace AcademyKit.Application.Common.Validators
                 .WithMessage(content => stringLocalizer.GetString("MessageCannotBeEmpty"))
                 .MaximumLength(500)
                 .WithMessage(context => stringLocalizer.GetString("InvalidReviewLength"))
-                .When(x => !x.IsPassed); // Apply this rule when HasAttented is false
+                .When(x => !x.IsPassed); // Apply this rule when Has Attended is false
             RuleFor(x => x.Message)
                 .MaximumLength(500)
                 .WithMessage(context => stringLocalizer.GetString("InvalidReviewLength"))

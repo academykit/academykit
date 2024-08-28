@@ -70,7 +70,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ lesson, onEnded }) => {
                 <Group>
                   {/* Mark as completed button hidden for:
                     - Org Admin
-                    - Org Superadmin
+                    - Org Super admin
                     - Training's trainer
                   */}
                   {!lesson.isCompleted ? (

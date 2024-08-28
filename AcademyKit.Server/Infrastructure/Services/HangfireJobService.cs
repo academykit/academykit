@@ -288,15 +288,15 @@
                         throw new ArgumentException(_localizer.GetString("FileNotFound"));
                     }
 
-                    var vidoePath = await _fileServerService
+                    var videoPath = await _fileServerService
                         .GetFileLocalPathAsync(lesson.VideoUrl)
                         .ConfigureAwait(true);
                     var duration = await _videoService
-                        .GetVideoDuration(vidoePath)
+                        .GetVideoDuration(videoPath)
                         .ConfigureAwait(true);
                     lesson.Duration = duration;
                     _unitOfWork.GetRepository<Lesson>().Update(lesson);
-                    _videoService.DeleteTempFile(vidoePath);
+                    _videoService.DeleteTempFile(videoPath);
                     await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 }
             });
@@ -305,14 +305,14 @@
         /// <summary>
         /// Handle to send mail to new group member
         /// </summary>
-        /// <param name="gropName"> the group name </param>
+        /// <param name="groupName"> the group name </param>
         /// <param name="groupSlug"> the group slug </param>
         /// <param name="userIds"> the list of <see cref="Guid" /> .</param>
         /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
         /// <returns> the task complete </returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
         public async Task SendMailNewGroupMember(
-            string gropName,
+            string groupName,
             string groupSlug,
             IList<Guid> userIds,
             PerformContext context = null
@@ -346,7 +346,7 @@
                         : $"{user.FirstName} {user.MiddleName} {user.LastName}";
                     var html = $"Dear {fullName},<br><br>";
                     html +=
-                        $"You have been added to the {gropName}. Now you can find the Training Materials which has been created for this {gropName}. <br><br>";
+                        $"You have been added to the {groupName}. Now you can find the Training Materials which has been created for this {groupName}. <br><br>";
                     html += $"Link to the group :";
                     html +=
                         $"<a href = '{_appUrl}/groups/{groupSlug}' ><u  style='color:blue;'> Click here </u> </a>";
@@ -434,10 +434,10 @@
         ///<summary>
         ///Handle to send course enrollment mail
         ///</summary>
-        ///<param name="coursename"> the course name</param>
+        ///<param name="courseName"> the course name</param>
         ///<param name="UserId">the list of <see cref="Guid" /></param>
         ////// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
-        ///<returns>the tasl complete </returns>
+        ///<returns>the task complete </returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
         public async Task SendCourseEnrollmentMailAsync(
             string userName,
@@ -614,14 +614,14 @@
         /// handel to send email update mail
         /// </summary>
         /// <param name="fullName">Users full name</param>
-        /// <param name="Newemail">Users new email</param>
+        /// <param name="newEmail">Users new email</param>
         /// <param name="oldEmail">Users old email</param>
         /// <param name="context"></param>
         /// <returns></returns>
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
         public async Task AccountUpdatedMailAsync(
             string fullName,
-            string Newemail,
+            string newEmail,
             string oldEmail,
             PerformContext context = null
         )
@@ -639,7 +639,7 @@
                     .ConfigureAwait(false);
                 var html = $"Dear {fullName}<br><br>";
                 html +=
-                    @$"A recent change has been made to the email address associated with your account to {Newemail}<br>.Please check your email for the login credentials. If you encounter any difficulties, please contact your administrator immediately.";
+                    @$"A recent change has been made to the email address associated with your account to {newEmail}<br>.Please check your email for the login credentials. If you encounter any difficulties, please contact your administrator immediately.";
                 html += $"<br><br>Thank You, <br> {settings.CompanyName}";
                 var model = new EmailRequestDto
                 {
