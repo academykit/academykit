@@ -19,7 +19,10 @@ const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
   const fileStorage = useUpdateFileStorage();
   const submitHandler = async (data: IFileStorage[]) => {
     try {
-      await fileStorage.mutateAsync(data);
+      const formData = Array.isArray(data)
+        ? data
+        : Object.keys(data).map((key) => data[key]);
+      await fileStorage.mutateAsync(formData);
       showNotification({
         message: t("update_file_storage_success"),
       });
@@ -31,6 +34,7 @@ const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
       });
     }
   };
+
   return (
     <form onSubmit={form.onSubmit(submitHandler)}>
       <Group mb={10}>
