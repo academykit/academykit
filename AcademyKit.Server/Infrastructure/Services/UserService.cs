@@ -128,66 +128,54 @@ namespace AcademyKit.Infrastructure.Services
         }
 
         /// <summary>
-        /// Generates an authentication token for a user using Google SSO information.
+        /// Generates an authentication token for a user using SSO information.
         /// </summary>
-        /// <param name="googleUser">The Google user details retrieved from the Microsoft Graph API.</param>
+        /// <param name="model">The SSO user details.</param>
         /// <returns>A task representing the asynchronous operation, with an <see cref="AuthenticationModel"/> containing the token and user information.</returns>
-        public async Task<AuthenticationModel> GenerateTokenUsingGoogleSSOAsync(
-            GoogleUserResponseModel googleUser
+        public async Task<AuthenticationModel> GenerateTokenUsingSSOAsync(
+            OAuthUserResponseModel model
         )
         {
-            var id = Guid.NewGuid();
             var currentTimeStamp = DateTime.UtcNow;
-            return await GenerateTokenUsingSSOAsync(
-                    googleUser.Email,
-                    googleUser => new User
-                    {
-                        Id = id,
-                        FirstName = googleUser.GivenName,
-                        LastName = googleUser.FamilyName,
-                        Email = googleUser.Email.Trim(),
-                        ImageUrl = googleUser.Picture,
-                        Status = UserStatus.Active,
-                        Role = UserRole.Trainee,
-                        CreatedBy = id,
-                        CreatedOn = currentTimeStamp,
-                        UpdatedBy = id,
-                        UpdatedOn = currentTimeStamp
-                    },
-                    googleUser
-                )
+            var authenticationModel = new AuthenticationModel();
+
+            var user = await _unitOfWork
+                .GetRepository<User>()
+                .GetFirstOrDefaultAsync(predicate: p => p.Email == model.Email)
+                .ConfigureAwait(false);
+
+            if (user == null)
+            {
+                user = new User
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email,
+                    MobileNumber = model.MobilePhone,
+                    ImageUrl = model.ProfilePictureUrl,
+                    Status = UserStatus.Active,
+                    Role = UserRole.Trainee,
+                    CreatedBy = Guid.NewGuid(),
+                    CreatedOn = currentTimeStamp,
+                    UpdatedBy = Guid.NewGuid(),
+                    UpdatedOn = currentTimeStamp
+                };
+                await CreateAsync(user).ConfigureAwait(false);
+                await AddUserToDefaultGroup(user).ConfigureAwait(false);
+            }
+
+            if (user.Status == UserStatus.InActive)
+            {
+                authenticationModel.IsAuthenticated = false;
+                authenticationModel.Message = _localizer.GetString("AccountNotActive");
+                return authenticationModel;
+            }
+
+            return await GenerateAccessAndRefreshToken(authenticationModel, user, currentTimeStamp)
                 .ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Generates an authentication token for a user using Microsoft SSO information.
-        /// </summary>
-        /// <param name="microsoftUser">The Microsoft user details retrieved from the Microsoft Graph API.</param>
-        /// <returns>A task representing the asynchronous operation, with an <see cref="AuthenticationModel"/> containing the token and user information.</returns>
-        public async Task<AuthenticationModel> GenerateTokenUsingMicrosoftSSOAsync(
-            MicrosoftUserResponseModel microsoftUser
-        )
-        {
-            return await GenerateTokenUsingSSOAsync(
-                    microsoftUser.Mail,
-                    microsoftUser => new User
-                    {
-                        Id = Guid.NewGuid(),
-                        FirstName = microsoftUser.GivenName,
-                        LastName = microsoftUser.Surname,
-                        Email = microsoftUser.Mail.Trim(),
-                        MobileNumber = microsoftUser.MobilePhone,
-                        Status = UserStatus.Active,
-                        Role = UserRole.Trainee,
-                        CreatedBy = Guid.NewGuid(),
-                        CreatedOn = DateTime.UtcNow,
-                        UpdatedBy = Guid.NewGuid(),
-                        UpdatedOn = DateTime.UtcNow
-                    },
-                    microsoftUser
-                )
-                .ConfigureAwait(false);
-        }
 
         /// <summary>
         /// Handle to logout user and set refresh token false
@@ -1475,45 +1463,6 @@ namespace AcademyKit.Infrastructure.Services
             );
 
             return await Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
-        }
-
-        /// <summary>
-        /// Generates an authentication token for a user using SSO information.
-        /// </summary>
-        /// <param name="userEmail">The user email.</param>
-        /// <param name="createUserEntity">A function to create a new user entity if the user does not exist.</param>
-        /// <param name="userDetails">The SSO user details.</param>
-        /// <returns>A task representing the asynchronous operation, with an <see cref="AuthenticationModel"/> containing the token and user information.</returns>
-        private async Task<AuthenticationModel> GenerateTokenUsingSSOAsync<T>(
-            string userEmail,
-            Func<T, User> createUserEntity,
-            T userDetails
-        )
-        {
-            var currentTimeStamp = DateTime.UtcNow;
-            var authenticationModel = new AuthenticationModel();
-
-            var user = await _unitOfWork
-                .GetRepository<User>()
-                .GetFirstOrDefaultAsync(predicate: p => p.Email == userEmail)
-                .ConfigureAwait(false);
-
-            if (user == null)
-            {
-                var entity = createUserEntity(userDetails);
-                user = await CreateAsync(entity).ConfigureAwait(false);
-                await AddUserToDefaultGroup(entity).ConfigureAwait(false);
-            }
-
-            if (user.Status == UserStatus.InActive)
-            {
-                authenticationModel.IsAuthenticated = false;
-                authenticationModel.Message = _localizer.GetString("AccountNotActive");
-                return authenticationModel;
-            }
-
-            return await GenerateAccessAndRefreshToken(authenticationModel, user, currentTimeStamp)
-                .ConfigureAwait(false);
         }
 
         /// <summary>

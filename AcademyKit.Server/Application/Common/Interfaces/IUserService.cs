@@ -17,22 +17,11 @@
         Task<AuthenticationModel> VerifyUserAndGetToken(LoginRequestModel model);
 
         /// <summary>
-        /// Generates an authentication token for a user using Google SSO information.
+        /// Generates an authentication token for a user using SSO information.
         /// </summary>
-        /// <param name="googleUser">The Google user details retrieved from the Microsoft Graph API.</param>
+        /// <param name="model">The SSO user details.</param>
         /// <returns>A task representing the asynchronous operation, with an <see cref="AuthenticationModel"/> containing the token and user information.</returns>
-        Task<AuthenticationModel> GenerateTokenUsingGoogleSSOAsync(
-            GoogleUserResponseModel googleUser
-        );
-
-        /// <summary>
-        /// Generates an authentication token for a user using Microsoft SSO information.
-        /// </summary>
-        /// <param name="microsoftUser">The Microsoft user details retrieved from the Microsoft Graph API.</param>
-        /// <returns>A task representing the asynchronous operation, with an <see cref="AuthenticationModel"/> containing the token and user information.</returns>
-        Task<AuthenticationModel> GenerateTokenUsingMicrosoftSSOAsync(
-            MicrosoftUserResponseModel microsoftUser
-        );
+        Task<AuthenticationModel> GenerateTokenUsingSSOAsync(OAuthUserResponseModel model);
 
         /// <summary>
         /// Handle to logout user and set refresh token false

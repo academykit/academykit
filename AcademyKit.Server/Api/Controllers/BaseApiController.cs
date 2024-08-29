@@ -1,5 +1,6 @@
 ﻿namespace AcademyKit.Api.Controllers
 {
+    using System.Text.Encodings.Web;
     using AcademyKit.Api.Common;
     using AcademyKit.Application.Common.Exceptions;
     using AcademyKit.Domain.Enums;
@@ -11,7 +12,6 @@
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
-    // [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
     public class BaseApiController : ControllerBase
     {
@@ -83,6 +83,29 @@
             {
                 throw new ForbiddenException("Trainer Access");
             }
+        }
+
+        /// <summary>
+        /// Redirect to page
+        /// </summary>
+        /// <param name="url">the url details</param>
+        /// <returns></returns>
+        protected IActionResult RedirectToFrontend(string url)
+        {
+            return Redirect(url);
+        }
+
+        /// <summary>
+        /// Redirects to the error page with the specified provider and error details
+        /// </summary>
+        /// <param name="error">The error message</param>
+        /// <param name="details">Additional error details</param>
+        /// <returns>The redirection to the error page</returns>
+        protected IActionResult RedirectToErrorPage(string redirectUrl, string error, string details)
+        {
+            return Redirect(
+                $"{redirectUrl}/error?error={UrlEncoder.Default.Encode(error)}&details={UrlEncoder.Default.Encode(details)}"
+            );
         }
     }
 }

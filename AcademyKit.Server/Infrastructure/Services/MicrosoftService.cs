@@ -10,15 +10,16 @@ namespace AcademyKit.Server.Infrastructure.Services
     /// </summary>
     public class MicrosoftService : IMicrosoftService
     {
+        private const string url = "https://graph.microsoft.com/v1.0/me";
+
         /// <summary>
         /// Retrieves the details of the authenticated Microsoft user using the provided access token.
         /// </summary>
         /// <param name="accessToken">The OAuth 2.0 access token for the Microsoft Graph API.</param>
-        /// <returns>A <see cref="UserDetailsResponseModel"/> object containing the user's details.</returns>
+        /// <returns>A <see cref="OAuthUserResponseModel"/> object containing the user's details.</returns>
         /// <exception cref="Exception">Thrown when the request to the Microsoft Graph API fails or an error occurs during processing.</exception>
-        public async Task<MicrosoftUserResponseModel> GetMicrosoftUserDetails(string accessToken)
+        public async Task<OAuthUserResponseModel> GetMicrosoftUserDetails(string accessToken)
         {
-            var url = "https://graph.microsoft.com/v1.0/me";
             try
             {
                 using (var client = new HttpClient())
@@ -32,10 +33,17 @@ namespace AcademyKit.Server.Infrastructure.Services
                     if (response.IsSuccessStatusCode)
                     {
                         var json = await response.Content.ReadAsStringAsync();
-                        var userDetails = JsonConvert.DeserializeObject<MicrosoftUserResponseModel>(
+                        var userDetail = JsonConvert.DeserializeObject<MicrosoftUserResponseModel>(
                             json
                         );
-                        return userDetails;
+
+                        return new OAuthUserResponseModel
+                        {
+                            Email = userDetail.Mail,
+                            FirstName = userDetail.GivenName,
+                            LastName = userDetail.Surname,
+                            MobilePhone = userDetail.MobilePhone,
+                        };
                     }
                     else
                     {

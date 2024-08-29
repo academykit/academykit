@@ -1071,4 +1071,16 @@ recorded cannot be deleted.</value>
   <data name="ApiKeyRemovedSuccessfully" xml:space="preserve">
     <value>API Key removed successfully.</value>
   </data>
+  <data name="TokenRetrievalError" xml:space="preserve">
+    <value>An error occurred while retrieving the access token.</value>
+  </data>
+  <data name="MissingClientIdOrSecret" xml:space="preserve">
+    <value>Missing Client ID or Client Secret.</value>
+  </data>
+  <data name="AuthenticationFailedInvalidToken" xml:space="preserve">
+    <value>Authentication failed. Invalid or missing or expired Bearer Token.</value>
+  </data>
+  <data name="AuthenticationFailedApiKey" xml:space="preserve">
+    <value>Authentication failed. Invalid or missing API key.</value>
+  </data>
 </root>

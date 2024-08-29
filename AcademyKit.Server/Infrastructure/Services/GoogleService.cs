@@ -10,15 +10,15 @@ namespace AcademyKit.Server.Infrastructure.Services
     /// </summary>
     public class GoogleService : IGoogleService
     {
+        private const string url = "https://www.googleapis.com/oauth2/v2/userinfo";
         /// <summary>
         /// Retrieves the full details of a Google user using the provided access token.
         /// </summary>
         /// <param name="accessToken">The access token for the Google API.</param>
-        /// <returns>A task that represents the asynchronous operation, containing a <see cref="GoogleUserResponseModel"/> with the user's details.</returns>
+        /// <returns>A task that represents the asynchronous operation, containing a <see cref="OAuthUserResponseModel"/> with the user's details.</returns>
         /// <exception cref="Exception">Thrown when the user details cannot be retrieved.</exception>
-        public async Task<GoogleUserResponseModel> GetGoogleUserDetails(string accessToken)
+        public async Task<OAuthUserResponseModel> GetGoogleUserDetails(string accessToken)
         {
-            var url = "https://www.googleapis.com/oauth2/v2/userinfo";
             try
             {
                 using (var client = new HttpClient())
@@ -32,10 +32,16 @@ namespace AcademyKit.Server.Infrastructure.Services
                     if (response.IsSuccessStatusCode)
                     {
                         var json = await response.Content.ReadAsStringAsync();
-                        var userDetails = JsonConvert.DeserializeObject<GoogleUserResponseModel>(
+                        var userDetail = JsonConvert.DeserializeObject<GoogleUserResponseModel>(
                             json
                         );
-                        return userDetails;
+                        return new OAuthUserResponseModel
+                        {
+                            Email = userDetail.Email,
+                            FirstName = userDetail.GivenName,
+                            LastName = userDetail.FamilyName,
+                            ProfilePictureUrl = userDetail.Picture,
+                        };
                     }
                     else
                     {

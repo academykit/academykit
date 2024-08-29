@@ -8,25 +8,9 @@ namespace AcademyKit.Server.Application.Common.Models.ResponseModels;
 public class GoogleUserResponseModel
 {
     /// <summary>
-    /// Gets or sets the unique identifier of the user.
-    /// </summary>
-    public string Id { get; set; }
-
-    /// <summary>
     /// Gets or sets the user's email address.
     /// </summary>
     public string Email { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the user's email is verified.
-    /// </summary>
-    [JsonProperty("verified_email")]
-    public bool VerifiedEmail { get; set; }
-
-    /// <summary>
-    /// Gets or sets the user's full name.
-    /// </summary>
-    public string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the user's given name (first name).

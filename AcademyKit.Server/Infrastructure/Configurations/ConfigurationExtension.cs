@@ -4,9 +4,7 @@
     using AcademyKit.Infrastructure.Security;
     using AcademyKit.Server.Infrastructure.Configurations;
     using Microsoft.AspNetCore.Authentication;
-    using Microsoft.AspNetCore.Authentication.Google;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
-    using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -53,39 +51,17 @@
                     {
                         OnAuthenticationFailed = context =>
                         {
-                            if (
-                                context.Exception.GetType() == typeof(SecurityTokenExpiredException)
-                            )
+                            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
                             {
                                 context.Response.Headers.Append("IS-TOKEN-EXPIRED", "true");
                             }
 
-                            return Task.CompletedTask;
+                            throw new AuthenticationFailureException(
+                                "Authentication failed. Invalid or missing or expired Bearer Token."
+                            );
                         }
                     };
                 })
-                .AddGoogle(
-                    GoogleDefaults.AuthenticationScheme,
-                    options =>
-                    {
-                        options.ClientId = configuration.GetSection("GoogleOAuth:ClientId").Value;
-                        options.ClientSecret = configuration
-                            .GetSection("GoogleOAuth:ClientSecret")
-                            .Value;
-                    }
-                )
-                .AddMicrosoftAccount(
-                    MicrosoftAccountDefaults.AuthenticationScheme,
-                    options =>
-                    {
-                        options.ClientId = configuration
-                            .GetSection("MicrosoftOAuth:ClientId")
-                            .Value;
-                        options.ClientSecret = configuration
-                            .GetSection("MicrosoftOAuth:ClientSecret")
-                            .Value;
-                    }
-                )
                 .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(
                     "ApiKey",
                     null

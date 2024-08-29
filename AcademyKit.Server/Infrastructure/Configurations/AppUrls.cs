@@ -1,8 +1,12 @@
-﻿namespace AcademyKit.Infrastructure.Configurations
+﻿namespace AcademyKit.Infrastructure.Configurations;
+
+/// <summary>
+/// Configuration settings for application information.
+/// </summary>
+public class AppUrls
 {
-    public class AppUrls
-    {
-        public string App { get; set; }
-        public string Client { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the app url of the application.
+    /// </summary>
+    public string App { get; set; }
 }

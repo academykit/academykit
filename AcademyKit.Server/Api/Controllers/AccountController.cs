@@ -1,5 +1,4 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Encodings.Web;
 using AcademyKit.Api.Common;
@@ -27,6 +26,7 @@ namespace AcademyKit.Api.Controllers;
 /// </summary>
 public class AccountController : BaseApiController
 {
+    private readonly ILogger<AccountController> _logger;
     private readonly IUserService _userService;
     private readonly IValidator<LoginRequestModel> _validator;
     private readonly IValidator<ResetPasswordRequestModel> _resetPasswordValidator;
@@ -38,9 +38,16 @@ public class AccountController : BaseApiController
     private readonly MicrosoftOAuth _microsoftOAuth;
     private readonly AppUrls _appUrls;
 
+    private const string _oAuthRedirectUrlTemplate = "api/Account/oauth/{0}/callback";
+    private const string _googleAuthUrl = "https://accounts.google.com/o/oauth2/v2/auth?";
+    private const string _googleAccessTokenUrl = "https://oauth2.googleapis.com/token";
+    private const string _microsoftAuthUrl = "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize?";
+    private const string _microsoftAccessTokenUrl = "https://login.microsoftonline.com/organizations/oauth2/v2.0/token";
+
     /// <summary>
     /// Initializes a new instance of the <see cref="AccountController"/> class.
     /// </summary>
+    /// <param name="logger">The logger used for logging information and errors.</param>
     /// <param name="userService">The instance of <see cref="IUserService"/> used for user management.</param>
     /// <param name="validator">The instance of <see cref="IValidator{LoginRequestModel}"/> for validating login requests.</param>
     /// <param name="resetPasswordValidator">The instance of <see cref="IValidator{ResetPasswordRequestModel}"/> for validating password reset requests.</param>
@@ -52,6 +59,7 @@ public class AccountController : BaseApiController
     /// <param name="microsoftOAuth">The configuration options for Microsoft OAuth as an instance of <see cref="MicrosoftOAuth"/>.</param>
     /// <param name="appUrls">The configuration options for application urls as an instance of <see cref="AppUrls"/>.</param>
     public AccountController(
+        ILogger<AccountController> logger,
         IUserService userService,
         IValidator<LoginRequestModel> validator,
         IValidator<ResetPasswordRequestModel> resetPasswordValidator,
@@ -64,6 +72,7 @@ public class AccountController : BaseApiController
         IOptions<AppUrls> appUrls
     )
     {
+        _logger = logger;
         _userService = userService;
         _validator = validator;
         _resetPasswordValidator = resetPasswordValidator;
@@ -271,29 +280,18 @@ public class AccountController : BaseApiController
     [AllowAnonymous]
     public IActionResult SignInWithGoogle()
     {
-        if (
-            string.IsNullOrWhiteSpace(_googleOAuth.ClientId)
-            || string.IsNullOrWhiteSpace(_googleOAuth.ClientSecret)
-        )
-        {
-            return RedirectToErrorPage(
-                "Google",
-                "Missing Client ID or Client Secret",
-                "The Client ID and Client Secret must be configured properly."
-            );
-        }
-
-        var url =
-            $"{_googleOAuth.AuthUrl}"
-            + $"response_type=code&"
-            + $"client_id={_googleOAuth.ClientId}&"
-            + $"scope=openid email profile&"
-            + $"redirect_uri={_googleOAuth.RedirectUri}&"
-            + $"nonce={CommonHelper.GenerateNonce()}&"
-            + $"access_type=offline&"
-            + $"prompt=consent";
-
-        return Redirect(url);
+        return SignInWithOAuthProvider(
+            _googleOAuth.ClientId,
+            _googleOAuth.ClientSecret,
+            _googleAuthUrl,
+            "google",
+            scope: "openid email profile",
+            extraParams: new Dictionary<string, string>
+            {
+            { "access_type", "offline" },
+            { "prompt", "consent" }
+            }
+        );
     }
 
     /// <summary>
@@ -305,62 +303,15 @@ public class AccountController : BaseApiController
     [AllowAnonymous]
     public async Task<IActionResult> GetGoogleAccessToken([FromQuery] string code)
     {
-        if (
-            string.IsNullOrWhiteSpace(_googleOAuth.ClientId)
-            || string.IsNullOrWhiteSpace(_googleOAuth.ClientSecret)
-        )
-        {
-            return RedirectToErrorPage(
-                "Google",
-                "Missing Client ID or Client Secret",
-                "The Client ID and Client Secret must be configured properly."
-            );
-        }
-
-        var dicData = new Dictionary<string, string>
-        {
-            { "client_id", _googleOAuth.ClientId },
-            { "client_secret", _googleOAuth.ClientSecret },
-            { "code", code },
-            { "grant_type", "authorization_code" },
-            { "redirect_uri", _googleOAuth.RedirectUri },
-            { "access_type", "offline" }
-        };
-
-        try
-        {
-            using var client = new HttpClient();
-            using var content = new FormUrlEncodedContent(dicData);
-            var response = await client.PostAsync(_googleOAuth.AccessTokenUrl, content);
-            var json = await response.Content.ReadAsStringAsync();
-
-            var tokenResponse = JsonConvert.DeserializeObject<OAuthTokenResponse>(json);
-            if (tokenResponse.IsSuccess)
-            {
-                var user = await _googleService.GetGoogleUserDetails(tokenResponse.AccessToken);
-                var authenticationModel = await _userService.GenerateTokenUsingGoogleSSOAsync(user);
-
-                return Redirect(
-                    $"{_appUrls.Client}/redirect/signIn?userId={authenticationModel.UserId}&token={authenticationModel.Token}&refresh={authenticationModel.RefreshToken}"
-                );
-            }
-            else
-            {
-                return RedirectToErrorPage(
-                    "Google",
-                    tokenResponse.Error,
-                    tokenResponse.ErrorDescription
-                );
-            }
-        }
-        catch (Exception ex)
-        {
-            return RedirectToErrorPage(
-                "Google",
-                "An error occurred while retrieving the access token.",
-                ex.Message
-            );
-        }
+        return await GetOAuthAccessToken(
+            code,
+            _googleOAuth.ClientId,
+            _googleOAuth.ClientSecret,
+            _googleAccessTokenUrl,
+            "google",
+            _googleService.GetGoogleUserDetails,
+            _userService.GenerateTokenUsingSSOAsync
+        );
     }
 
     /// <summary>
@@ -371,29 +322,13 @@ public class AccountController : BaseApiController
     [AllowAnonymous]
     public IActionResult SignInWithMicrosoft()
     {
-        if (
-            string.IsNullOrWhiteSpace(_microsoftOAuth.ClientId)
-            || string.IsNullOrWhiteSpace(_microsoftOAuth.ClientSecret)
-        )
-        {
-            return RedirectToErrorPage(
-                "Microsoft",
-                "Missing Client ID or Client Secret",
-                "The Client ID and Client Secret must be configured properly."
-            );
-        }
-
-        var nonce = CommonHelper.GenerateNonce();
-        var url =
-            $"{_microsoftOAuth.AuthUrl}"
-            + $"client_id={_microsoftOAuth.ClientId}&"
-            + $"response_type=code&"
-            + $"redirect_uri={UrlEncoder.Default.Encode(_microsoftOAuth.RedirectUri)}&"
-            + $"response_mode=query&"
-            + $"scope=openid email profile User.Read offline_access&"
-            + $"nonce={nonce}";
-
-        return Redirect(url);
+        return SignInWithOAuthProvider(
+            _microsoftOAuth.ClientId,
+            _microsoftOAuth.ClientSecret,
+            _microsoftAuthUrl,
+            "entraId",
+            scope: "openid email profile User.Read offline_access"
+        );
     }
 
     /// <summary>
@@ -405,62 +340,112 @@ public class AccountController : BaseApiController
     [AllowAnonymous]
     public async Task<IActionResult> GetMicrosoftAccessToken(string code)
     {
-        if (
-            string.IsNullOrWhiteSpace(_microsoftOAuth.ClientId)
-            || string.IsNullOrWhiteSpace(_microsoftOAuth.ClientSecret)
-        )
+        return await GetOAuthAccessToken(
+            code,
+            _microsoftOAuth.ClientId,
+            _microsoftOAuth.ClientSecret,
+            _microsoftAccessTokenUrl,
+            "entraId",
+            _microsoftService.GetMicrosoftUserDetails,
+            _userService.GenerateTokenUsingSSOAsync
+        );
+    }
+
+    /// <summary>
+    /// Common method to handle OAuth sign-in.
+    /// </summary>
+    /// <param name="clientId">The OAuth Client ID.</param>
+    /// <param name="clientSecret">The OAuth Client Secret.</param>
+    /// <param name="authUrl">The authorization URL of the OAuth provider.</param>
+    /// <param name="providerName">The provider name</param>
+    /// <param name="scope">The scope of the OAuth request.</param>
+    /// <param name="extraParams">Additional parameters to include in the OAuth request, if any.</param>
+    /// <returns>The OAuth sign-in interface or an error page if configuration is missing.</returns>
+    private IActionResult SignInWithOAuthProvider(
+        string clientId,
+        string clientSecret,
+        string authUrl,
+        string providerName,
+        string scope,
+        Dictionary<string, string>? extraParams = null)
+    {
+        var redirectUrl = $"{_appUrls.App}/{string.Format(_oAuthRedirectUrlTemplate, providerName)}";
+        var validationResult = ValidateClientConfiguration(clientId, clientSecret);
+        if (validationResult != null)
+            return validationResult;
+
+        var nonce = CommonHelper.GenerateNonce();
+        var url = $"{authUrl}client_id={clientId}&response_type=code&redirect_uri={UrlEncoder.Default.Encode(redirectUrl)}&response_mode=query&scope={scope}&nonce={nonce}";
+
+        if (extraParams != null)
         {
-            return RedirectToErrorPage(
-                "Microsoft",
-                "Missing Client ID or Client Secret",
-                "The Client ID and Client Secret must be configured properly."
-            );
+            foreach (var param in extraParams)
+            {
+                url += $"&{param.Key}={param.Value}";
+            }
         }
 
+        return RedirectToFrontend(url);
+    }
+
+    /// <summary>
+    /// Common method to handle OAuth access token retrieval.
+    /// </summary>
+    /// <param name="code">The authorization code returned by the OAuth provider.</param>
+    /// <param name="clientId">The OAuth Client ID.</param>
+    /// <param name="clientSecret">The OAuth Client Secret.</param>
+    /// <param name="tokenUrl">The token URL of the OAuth provider.</param>
+    /// <param name="providerName">The provider name.</param>
+    /// <param name="getUserDetails">A function to retrieve user details using the access token.</param>
+    /// <param name="generateToken">A function to generate an authentication token using the retrieved user details.</param>
+    /// <returns>A task representing the asynchronous operation, which returns an <see cref="IActionResult"/>.</returns>
+    private async Task<IActionResult> GetOAuthAccessToken(
+        string code,
+        string clientId,
+        string clientSecret,
+        string tokenUrl,
+        string providerName,
+        Func<string, Task<OAuthUserResponseModel>> getUserDetails,
+        Func<OAuthUserResponseModel, Task<AuthenticationModel>> generateToken)
+    {
+        var redirectUrl = $"{_appUrls.App}/{string.Format(_oAuthRedirectUrlTemplate, providerName)}";
+
+        var validationResult = ValidateClientConfiguration(clientId, clientSecret);
+        if (validationResult != null)
+            return validationResult;
+
         var dicData = new Dictionary<string, string>
-        {
-            { "client_id", _microsoftOAuth.ClientId },
-            { "scope", "openid email profile User.Read offline_access" },
-            { "code", code },
-            { "redirect_uri", _microsoftOAuth.RedirectUri },
-            { "grant_type", "authorization_code" },
-            { "client_secret", _microsoftOAuth.ClientSecret },
-        };
+    {
+        { "client_id", clientId },
+        { "client_secret", clientSecret },
+        { "code", code },
+        { "grant_type", "authorization_code" },
+        { "redirect_uri", redirectUrl }
+    };
 
         try
         {
             using var client = new HttpClient();
-            var authHeader = Convert.ToBase64String(
-                Encoding.ASCII.GetBytes("client_id:client_secret")
-            );
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Basic",
-                authHeader
-            );
-
             using var content = new FormUrlEncodedContent(dicData);
-            var response = await client.PostAsync(_microsoftOAuth.AccessTokenUrl, content);
+            var response = await client.PostAsync(tokenUrl, content);
             var json = await response.Content.ReadAsStringAsync();
 
             var tokenResponse = JsonConvert.DeserializeObject<OAuthTokenResponse>(json);
 
             if (tokenResponse.IsSuccess)
             {
-                var user = await _microsoftService.GetMicrosoftUserDetails(
-                    tokenResponse.AccessToken
-                );
-                var authenticationModel = await _userService.GenerateTokenUsingMicrosoftSSOAsync(
-                    user
-                );
+                var user = await getUserDetails(tokenResponse.AccessToken);
+                var authenticationModel = await generateToken(user);
 
-                return Redirect(
-                    $"{_appUrls.Client}/redirect/signIn?userId={authenticationModel.UserId}&token={authenticationModel.Token}&refresh={authenticationModel.RefreshToken}"
+                return RedirectToFrontend(
+                    $"{_appUrls.App}/redirect/signIn?userId={authenticationModel.UserId}&token={authenticationModel.Token}&refresh={authenticationModel.RefreshToken}"
                 );
             }
             else
             {
+                _logger.LogError("OAuth token retrieval failed. Error: {Error}, Description: {Description}", tokenResponse.Error, tokenResponse.ErrorDescription);
                 return RedirectToErrorPage(
-                    "Microsoft",
+                    _appUrls.App,
                     tokenResponse.Error,
                     tokenResponse.ErrorDescription
                 );
@@ -468,25 +453,34 @@ public class AccountController : BaseApiController
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "An error occurred while retrieving the access token.");
             return RedirectToErrorPage(
-                "Microsoft",
-                "An error occurred while retrieving the access token.",
+                _appUrls.App,
+                _localizer.GetString("TokenRetrievalError"),
                 ex.Message
             );
         }
     }
 
     /// <summary>
-    /// Redirects to the error page with the specified provider and error details
+    /// Validates the OAuth client configuration.
     /// </summary>
-    /// <param name="provider">The OAuth provider (Google or Microsoft)</param>
-    /// <param name="error">The error message</param>
-    /// <param name="details">Additional error details</param>
-    /// <returns>The redirection to the error page</returns>
-    private IActionResult RedirectToErrorPage(string provider, string error, string details)
+    /// <param name="clientId">The OAuth Client ID.</param>
+    /// <param name="clientSecret">The OAuth Client Secret.</param>
+    /// <returns>An <see cref="IActionResult"/> that redirects to an error page if validation fails, or <c>null</c> if validation passes.</returns>
+    private IActionResult ValidateClientConfiguration(string clientId, string clientSecret)
     {
-        return Redirect(
-            $"{_appUrls.Client}/error/oauth?provider={provider}&error={UrlEncoder.Default.Encode(error)}&details={UrlEncoder.Default.Encode(details)}"
-        );
+        if (string.IsNullOrWhiteSpace(clientId) || string.IsNullOrWhiteSpace(clientSecret))
+        {
+            _logger.LogError("The client id or client secret is missing");
+            return RedirectToErrorPage(
+                _appUrls.App,
+                _localizer.GetString("MissingClientIdOrSecret"),
+                "The Client ID and Client Secret must be configured properly."
+            );
+        }
+
+        return null;
     }
+
 }
