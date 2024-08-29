@@ -2,19 +2,17 @@ import useAuth from "@hooks/useAuth";
 import { Container, Loader } from "@mantine/core";
 import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from "@utils/constants";
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const RedirectHandler = () => {
-  const location = useLocation();
+  const search = window.location.search;
   const navigate = useNavigate();
-
   const auth = useAuth();
 
-  const queryParams = new URLSearchParams(location.search);
-  const userId = queryParams.get("userId");
-  const token = queryParams.get("token");
-  const refresh = queryParams.get("refresh");
-
+  const params = new URLSearchParams(search);
+  const userId = params.get("userId")?.replace(/ /g, "+");
+  const token = params.get("token")?.replace(/ /g, "+");
+  const refresh = params.get("refresh")?.replace(/ /g, "+");
   useEffect(() => {
     if (token && refresh && userId) {
       token && localStorage.setItem(TOKEN_STORAGE, token);
