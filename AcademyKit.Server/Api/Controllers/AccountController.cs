@@ -301,7 +301,7 @@ public class AccountController : BaseApiController
     /// </summary>
     /// <param name="code">The instance of <see cref="string"/></param>
     /// <returns>The access token</returns>
-    [HttpGet("google/getAccessToken")]
+    [HttpGet("oauth/google/callback")]
     [AllowAnonymous]
     public async Task<IActionResult> GetGoogleAccessToken([FromQuery] string code)
     {
