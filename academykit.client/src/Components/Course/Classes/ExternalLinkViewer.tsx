@@ -1,6 +1,7 @@
 import { Badge, Button } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { ICourseLesson } from "@utils/services/courseService";
+import { getIframelyOEmbed } from "@utils/services/iframelyService";
 import { useWatchHistory } from "@utils/services/watchHistory";
 import { t } from "i18next";
 import { useEffect, useState } from "react";
