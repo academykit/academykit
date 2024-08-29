@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { EFileStorageType, MailType } from "@utils/enums";
 import queryStringGenerator from "@utils/queryStringGenerator";
-import axios from "axios";
 import errorType from "./axiosError";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
@@ -655,13 +654,6 @@ export const useGetFileStorageSetting = () => {
     // retry: 0,
     // refetchOnMount: false,
     // refetchOnWindowFocus: false,
-    onError: (err) => {
-      if (axios.isAxiosError(err)) {
-        if (err.response?.status === 403) {
-          return null;
-        }
-      }
-    },
   });
 };
 
