@@ -213,7 +213,7 @@
   "training_name": "प्रशिक्षणको नाम",
   "completion": "समापन",
   "is_issued": "जारी गरिएको छ",
-  "certificate_url": "प्रमाणपत्र URL",
+  "certificate_url": "प्रमाणपत्र युएरएल",
   "external_certificate": "बाह्य प्रमाणपत्र",
   "external_url_title": "बाह्य युएरएल शीर्षक",
   "verified": "प्रमाणित गरियो",
@@ -1167,5 +1167,7 @@
   "license_key": "लाइसेंस कुञ्जी",
   "license_activation_success": "लाइसेंस सफलतापूर्वक सक्रिय गरिएको छ।",
   "license_activation_fail": "कृपया पुन: प्रयास गर्नुहोस्। लाइसेन्स सक्रियता असफल भयो।",
-  "buy_key": "की किन्नुहोस्"
+  "buy_key": "की किन्नुहोस्",
+  "logo_url": "लोगोको युएरएल",
+  "enter_logo_url": "लोगोको युएरएल प्रविष्ट गर्नुहोस्।"
 }

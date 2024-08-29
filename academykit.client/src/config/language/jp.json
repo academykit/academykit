@@ -1167,5 +1167,7 @@
   "license_key": "ライセンスキ",
   "license_activation_success": "ライセンスが正常にアクティブ化されました",
   "license_activation_fail": "もう一度お試しください。ライセンスのアクティベーションに失敗しました。",
-  "buy_key": "キーを購入する"
+  "buy_key": "キーを購入する",
+  "logo_url": "ロゴのURL",
+  "enter_logo_url": "ロゴのURLを入力してください"
 }
