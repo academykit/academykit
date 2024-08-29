@@ -1168,5 +1168,11 @@
   "license_activation_success": "लाइसेंस सफलतापूर्वक सक्रिय गरिएको छ।",
   "license_activation_fail": "कृपया पुन: प्रयास गर्नुहोस्। लाइसेन्स सक्रियता असफल भयो।",
   "buy_key": "की किन्नुहोस्",
-  "go_back_login": "लगइनमा फर्कनुहोस्"
+  "go_back_login": "लगइनमा फर्कनुहोस्",
+  "create_new_agreement": "खाता सिर्जना गरेर तपाईं हामीसँग सहमत हुनुहुन्छ",
+  "terms_service": "सेवा सर्तहरू",
+  "privacy_policy": "गोपनीयता नीति",
+  "and_our_default": "र हाम्रो डिफल्ट",
+  "notification_settings": "सूचना सेटिङहरू",
+  "or_sign_in_with": "वा यसबाट साइन इन गर्नुहोस्"
 }

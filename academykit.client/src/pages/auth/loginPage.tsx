@@ -182,10 +182,9 @@ const LoginPage = () => {
       </form>
       <Center my={18}>
         <Text size="sm">
-          By creating an account you agree with our{" "}
-          <Link to={"/"}>Terms of Service</Link>,{" "}
-          <Link to={"/"}>Privacy Policy</Link>, and our default{" "}
-          <Link to={"/"}>Notification Settings</Link>.
+          {t("create_new_agreement")} <Link to={"/"}>{t("terms_service")}</Link>
+          , <Link to={"/"}>{t("privacy_policy")}</Link>, {t("and_our_default")}{" "}
+          <Link to={"/"}>{t("notification_settings")}</Link>.
         </Text>
       </Center>
       <div
@@ -200,7 +199,7 @@ const LoginPage = () => {
           }}
         ></div>
         <Text size="sm" style={{ whiteSpace: "nowrap" }}>
-          Or Sign In with
+          {t("or_sign_in_with")}
         </Text>
         <div
           style={{
