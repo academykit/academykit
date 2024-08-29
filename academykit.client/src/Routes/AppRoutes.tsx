@@ -14,10 +14,10 @@ import AboutPage from "@pages/about";
 import AssessmentLayout from "@pages/assessment/AssessmentLayout";
 import ConfirmToken from "@pages/auth/confirmToken";
 import LoginPage from "@pages/auth/loginPage";
-import OAuthErrorPage from "@pages/auth/oAuthError";
 import RedirectHandler from "@pages/auth/redirectHandler";
 import TeamsRoute from "@pages/groups/details/Route";
 import PrivacyPage from "@pages/privacy";
+import RedirectError from "@pages/redirectError";
 import TermsPage from "@pages/terms";
 import Verify from "@pages/verify";
 import lazyWithRetry from "@utils/lazyImportWithReload";
@@ -123,7 +123,7 @@ const AppRoutes = () => {
             element={<RedirectHandler />}
           />
         </Route>
-        <Route path={RoutePath.oAuthError} element={<OAuthErrorPage />} />
+        <Route path={RoutePath.oAuthError} element={<RedirectError />} />
         <Route path={RoutePath[404]} element={<NotFound />} />
         <Route path={RoutePath[500]} element={<ServerError />} />
         <Route path={RoutePath[401]} element={<UnAuthorize />} />
