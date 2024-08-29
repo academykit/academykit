@@ -1,8 +1,8 @@
 ﻿namespace AcademyKit.Application.Common.Validators
 {
-    using System.Text.RegularExpressions;
     using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Application.ValidatorLocalization;
+    using AcademyKit.Server.Application.Common.Validators;
     using FluentValidation;
     using Microsoft.Extensions.Localization;
 
@@ -15,7 +15,7 @@
                 .NotEmpty()
                 .WithMessage(context => stringLocalizer.GetString("NewPasswordRequired"))
                 .Length(6, 100)
-                .Must(email => ValidEmail(email))
+                .Must(email => ValidationHelpers.ValidEmail(email))
                 .WithMessage(context => stringLocalizer.GetString("InvalidEmailError"));
             RuleFor(x => x.OldEmail)
                 .NotNull()
@@ -32,16 +32,6 @@
             RuleFor(x => x.NewEmail)
                 .Equal(x => x.ConfirmEmail)
                 .WithMessage("NewEmailConformedRequired");
-        }
-
-        public static bool ValidEmail(string email)
-        {
-            const string emailRegex =
-                @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}"
-                + @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\"
-                + @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
-
-            return new Regex(emailRegex).IsMatch(email);
         }
     }
 }

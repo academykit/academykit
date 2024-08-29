@@ -3,6 +3,7 @@
     using System.Text.RegularExpressions;
     using AcademyKit.Application.Common.Dtos;
     using AcademyKit.Application.ValidatorLocalization;
+    using AcademyKit.Server.Application.Common.Validators;
     using FluentValidation;
     using Microsoft.Extensions.Localization;
 
@@ -15,7 +16,7 @@
                 .NotEmpty()
                 .WithMessage(context => stringLocalizer.GetString("NewPasswordRequired"))
                 .Length(6, 20)
-                .Must(pw => HasValidPassword(pw))
+                .Must(pw => ValidationHelpers.HasValidPassword(pw))
                 .WithMessage("InvalidPasswordFormat");
             RuleFor(x => x.ConfirmPassword)
                 .NotNull()
@@ -24,18 +25,6 @@
             RuleFor(x => x.NewPassword)
                 .Equal(x => x.ConfirmPassword)
                 .WithMessage(context => stringLocalizer.GetString("OldAndNewPasswordDoesNotMatch"));
-        }
-
-        public static bool HasValidPassword(string pw)
-        {
-            var lowercase = new Regex("[a-z]+");
-            var uppercase = new Regex("[A-Z]+");
-            var digit = new Regex("(\\d)+");
-            var symbol = new Regex("(\\W)+");
-            return lowercase.IsMatch(pw)
-                && uppercase.IsMatch(pw)
-                && digit.IsMatch(pw)
-                && symbol.IsMatch(pw);
         }
     }
 }

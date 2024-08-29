@@ -6,6 +6,7 @@
     using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Application.Common.Models.ResponseModels;
     using AcademyKit.Infrastructure.Localization;
+    using AcademyKit.Server.Application.Common.Interfaces;
     using Application.Common.Dtos;
     using FluentValidation;
     using Microsoft.AspNetCore.Authorization;
@@ -18,6 +19,7 @@
     public class AccountController : BaseApiController
     {
         private readonly IUserService userService;
+        private readonly IPasswordHasher _passwordHasher;
         private readonly IValidator<LoginRequestModel> _validator;
         private readonly IValidator<ResetPasswordRequestModel> _resetPasswordValidator;
         private readonly IValidator<ChangePasswordRequestModel> _changePasswordValidator;
@@ -27,12 +29,14 @@
         /// Initializes the new instance of <see cref="AccountController" />
         /// </summary>
         /// <param name="userService"> the instance of <see cref="IUserService" /> .</param>
+        /// <param name="passwordHasher"> the instance of <see cref="IPasswordHasher" /> .</param>
         /// <param name="validator"> the instance of <se cref="IValidator" />  for the instance of <see cref="LoginRequestModel" /> </param>
         /// <param name="resetPasswordValidator"> the instance of <se cref="IValidator" />  for the instance of <see cref="ResetPasswordRequestModel" /> </param>
         /// <param name="changePasswordValidator"> the instance of <se cref="IValidator" />  for the instance of <see cref="ChangePasswordRequestModel" /> </param>
         /// <param name="localizer">the instance of <se cref="IStringLocalizer" />  for the instance of <see cref="ExceptionLocalizer" /> </param>
         public AccountController(
             IUserService userService,
+            IPasswordHasher passwordHasher,
             IValidator<LoginRequestModel> validator,
             IValidator<ResetPasswordRequestModel> resetPasswordValidator,
             IValidator<ChangePasswordRequestModel> changePasswordValidator,
@@ -40,6 +44,7 @@
         )
         {
             this.userService = userService;
+            _passwordHasher = passwordHasher;
             _validator = validator;
             _resetPasswordValidator = resetPasswordValidator;
             _changePasswordValidator = changePasswordValidator;
@@ -181,7 +186,7 @@
                 );
             }
 
-            user.HashPassword = userService.HashPassword(model.NewPassword);
+            user.HashPassword = _passwordHasher.HashPassword(model.NewPassword);
             await userService.UpdateAsync(user, includeProperties: false);
             return Ok(
                 new CommonResponseModel

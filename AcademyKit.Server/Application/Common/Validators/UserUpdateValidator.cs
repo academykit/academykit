@@ -1,8 +1,8 @@
 ﻿namespace AcademyKit.Application.Common.Validators
 {
-    using System.Text.RegularExpressions;
     using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Application.ValidatorLocalization;
+    using AcademyKit.Server.Application.Common.Validators;
     using FluentValidation;
     using Microsoft.Extensions.Localization;
 
@@ -27,7 +27,8 @@
                 .WithMessage(context => stringLocalizer.GetString("LastNameLength100"));
             RuleFor(x => x.MobileNumber)
                 .Must(mobileNumber =>
-                    string.IsNullOrWhiteSpace(mobileNumber) || ValidMobileNumber(mobileNumber)
+                    string.IsNullOrWhiteSpace(mobileNumber)
+                    || ValidationHelpers.ValidMobileNumber(mobileNumber)
                 )
                 .When(x => !string.IsNullOrWhiteSpace(x.MobileNumber))
                 .WithMessage(context => stringLocalizer.GetString("InvalidMobileNumber"))
@@ -74,8 +75,9 @@
                 .MaximumLength(100)
                 .WithMessage(context => stringLocalizer.GetString("GrandFatherNameLength100"));
             RuleFor(x => x.MemberPhone)
-                .Must(MemberPhone =>
-                    string.IsNullOrWhiteSpace(MemberPhone) || ValidMobileNumber(MemberPhone)
+                .Must(memberPhone =>
+                    string.IsNullOrWhiteSpace(memberPhone)
+                    || ValidationHelpers.ValidMobileNumber(memberPhone)
                 )
                 .When(x => !string.IsNullOrWhiteSpace(x.MemberPhone))
                 .WithMessage(context => stringLocalizer.GetString("InvalidMobileNumber"))
@@ -87,12 +89,6 @@
             RuleFor(x => x.MemberCurrentAddress)
                 .MaximumLength(200)
                 .WithMessage(context => stringLocalizer.GetString("AddressLength200"));
-        }
-
-        public static bool ValidMobileNumber(string mobileNumber)
-        {
-            const string mobilePattern = @"^[+\d]+$";
-            return new Regex(mobilePattern).IsMatch(mobileNumber);
         }
     }
 }

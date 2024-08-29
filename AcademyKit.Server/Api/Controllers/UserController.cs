@@ -11,6 +11,7 @@
     using AcademyKit.Domain.Enums;
     using AcademyKit.Infrastructure.Helpers;
     using AcademyKit.Infrastructure.Localization;
+    using AcademyKit.Server.Application.Common.Interfaces;
     using CsvHelper;
     using FluentValidation;
     using Hangfire;
@@ -29,6 +30,7 @@
         private readonly IValidator<UserRequestModel> validator;
         private readonly IValidator<ChangeEmailRequestModel> changeEmailValidator;
         private readonly IStringLocalizer<ExceptionLocalizer> localizer;
+        private readonly IPasswordHasher _passwordHasher;
 
         public UserController(
             ILogger<UserController> logger,
@@ -38,7 +40,8 @@
             IGeneralSettingService generalSettingService,
             IValidator<ChangeEmailRequestModel> changeEmailValidator,
             IStringLocalizer<ExceptionLocalizer> localizer,
-            IDepartmentService departmentService
+            IDepartmentService departmentService,
+            IPasswordHasher passwordHasher
         )
         {
             this.fileServerService = fileServerService;
@@ -49,6 +52,7 @@
             this.generalSettingService = generalSettingService;
             this.localizer = localizer;
             this.departmentService = departmentService;
+            _passwordHasher = passwordHasher;
         }
 
         /// <summary>
@@ -133,7 +137,7 @@
             };
 
             var password = await userService.GenerateRandomPassword(8).ConfigureAwait(false);
-            entity.HashPassword = userService.HashPassword(password);
+            entity.HashPassword = _passwordHasher.HashPassword(password);
 
             var response = await userService.CreateAsync(entity).ConfigureAwait(false);
             var company = await generalSettingService
@@ -320,7 +324,7 @@
             if (isEmailChanged == true)
             {
                 password = await userService.GenerateRandomPassword(8).ConfigureAwait(false);
-                existing.HashPassword = userService.HashPassword(password);
+                existing.HashPassword = _passwordHasher.HashPassword(password);
             }
 
             if (oldRole != model.Role)

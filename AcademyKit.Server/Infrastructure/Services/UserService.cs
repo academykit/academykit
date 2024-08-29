@@ -16,10 +16,10 @@ using AcademyKit.Infrastructure.Common;
 using AcademyKit.Infrastructure.Configurations;
 using AcademyKit.Infrastructure.Helpers;
 using AcademyKit.Infrastructure.Localization;
+using AcademyKit.Server.Application.Common.Interfaces;
 using CsvHelper;
 using Hangfire;
 using LinqKit;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
@@ -40,6 +40,7 @@ namespace AcademyKit.Infrastructure.Services
         private readonly int _resendChangeEmailTokenExpiry;
         private readonly IGeneralSettingService _generalSettingService;
         private readonly IDepartmentService departmentService;
+        private readonly IPasswordHasher _passwordHasher;
 
         public UserService(
             IUnitOfWork unitOfWork,
@@ -50,7 +51,8 @@ namespace AcademyKit.Infrastructure.Services
             IConfiguration configuration,
             IStringLocalizer<ExceptionLocalizer> localizer,
             IGeneralSettingService generalSettingService,
-            IDepartmentService departmentService
+            IDepartmentService departmentService,
+            IPasswordHasher passwordHasher
         )
             : base(unitOfWork, logger, localizer)
         {
@@ -69,6 +71,7 @@ namespace AcademyKit.Infrastructure.Services
             );
             _generalSettingService = generalSettingService;
             this.departmentService = departmentService;
+            _passwordHasher = passwordHasher;
         }
 
         #region Account Services
@@ -97,7 +100,10 @@ namespace AcademyKit.Infrastructure.Services
                 return authenticationModel;
             }
 
-            var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password);
+            var isUserAuthenticated = _passwordHasher.VerifyPassword(
+                user.HashPassword,
+                model.Password
+            );
             if (!isUserAuthenticated)
             {
                 authenticationModel.IsAuthenticated = false;
@@ -307,45 +313,12 @@ namespace AcademyKit.Infrastructure.Services
         }
 
         /// <summary>
-        /// Handle to hash password
-        /// </summary>
-        /// <param name="password">the password</param>
-        /// <param name="salt"></param>
-        /// <param name="needsOnlyHash"></param>
-        /// <returns></returns>
-        public string HashPassword(string password, byte[] salt = null, bool needsOnlyHash = false)
-        {
-            if (salt == null || salt.Length != 16)
-            {
-                // generate a 128-bit salt using a secure PRNG
-                salt = new byte[128 / 8];
-                using var rng = RandomNumberGenerator.Create();
-                rng.GetBytes(salt);
-            }
-
-            var hashed = Convert.ToBase64String(
-                KeyDerivation.Pbkdf2(
-                    password: password,
-                    salt: salt,
-                    prf: KeyDerivationPrf.HMACSHA256,
-                    iterationCount: 10000,
-                    numBytesRequested: 256 / 8
-                )
-            );
-
-            if (needsOnlyHash)
-            {
-                return hashed;
-            }
-            // password will be concatenated with salt using ':'
-            return $"{hashed}:{Convert.ToBase64String(salt)}";
-        }
-
-        /// <summary>
         /// Handle to get trainer
         /// </summary>
         /// <param name="currentUserId"> the current user id </param>
-        /// <param name="criteria"> the instance of <see cr            const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";/></returns>
+        /// <param name="criteria"> the instance of <see cref="TeacherSearchCriteria"/></returns>
+        /// <returns>the list of <see cref="TrainerResponseModel"/></returns>
+        /// <exception cref="ForbiddenException"></exception>
         public async Task<IList<TrainerResponseModel>> GetTrainerAsync(
             Guid currentUserId,
             TeacherSearchCriteria criteria
@@ -525,7 +498,7 @@ namespace AcademyKit.Infrastructure.Services
                                         : null,
                             };
                             var password = await GenerateRandomPassword(8).ConfigureAwait(false);
-                            userEntity.HashPassword = HashPassword(password);
+                            userEntity.HashPassword = _passwordHasher.HashPassword(password);
 
                             var userEmailDto = new UserEmailDto
                             {
@@ -566,32 +539,6 @@ namespace AcademyKit.Infrastructure.Services
                     ? ex
                     : new ServiceException(_localizer.GetString("NoUserImported"));
             }
-        }
-
-        /// <summary>
-        /// Handle to verify password
-        /// </summary>
-        /// <param name="hashedPasswordWithSalt">the hashed password</param>
-        /// <param name="password">the password</param>
-        /// <returns></returns>
-        public bool VerifyPassword(string hashedPasswordWithSalt, string password)
-        {
-            // retrieve both salt and password from 'hashedPasswordWithSalt'
-            var passwordAndHash = hashedPasswordWithSalt.Split(':');
-            if (passwordAndHash == null || passwordAndHash.Length != 2)
-            {
-                return false;
-            }
-
-            var salt = Convert.FromBase64String(passwordAndHash[1]);
-            if (salt == null)
-            {
-                return false;
-            }
-            // hash the given password
-            var hashOfPasswordToCheck = HashPassword(password, salt, true);
-            // compare both hashes
-            return string.Compare(passwordAndHash[0], hashOfPasswordToCheck) == 0;
         }
 
         /// <summary>
@@ -706,7 +653,10 @@ namespace AcademyKit.Infrastructure.Services
             var user = await GetAsync(currentUserId, includeProperties: false)
                 .ConfigureAwait(false);
 
-            var currentPasswordMatched = VerifyPassword(user.HashPassword, model.CurrentPassword);
+            var currentPasswordMatched = _passwordHasher.VerifyPassword(
+                user.HashPassword,
+                model.CurrentPassword
+            );
 
             if (!currentPasswordMatched)
             {
@@ -717,7 +667,7 @@ namespace AcademyKit.Infrastructure.Services
                 throw new ForbiddenException(_localizer.GetString("CurrentPasswordNotMatched"));
             }
 
-            user.HashPassword = HashPassword(model.NewPassword);
+            user.HashPassword = _passwordHasher.HashPassword(model.NewPassword);
             user.UpdatedOn = DateTime.UtcNow;
 
             _unitOfWork.GetRepository<User>().Update(user);
@@ -761,7 +711,10 @@ namespace AcademyKit.Infrastructure.Services
                 );
             }
 
-            var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password);
+            var isUserAuthenticated = _passwordHasher.VerifyPassword(
+                user.HashPassword,
+                model.Password
+            );
             if (!isUserAuthenticated)
             {
                 _logger.LogWarning(
@@ -841,7 +794,7 @@ namespace AcademyKit.Infrastructure.Services
                 }
 
                 var password = await GenerateRandomPassword(8).ConfigureAwait(false);
-                var hashPassword = HashPassword(password);
+                var hashPassword = _passwordHasher.HashPassword(password);
                 user.HashPassword = hashPassword;
                 user.UpdatedBy = currentUserId;
                 user.UpdatedOn = DateTime.UtcNow;

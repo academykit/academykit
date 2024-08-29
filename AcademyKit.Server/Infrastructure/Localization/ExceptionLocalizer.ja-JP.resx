@@ -1071,4 +1071,21 @@
   <data name="ApiKeyRemovedSuccessfully" xml:space="preserve">
     <value>APIキーが正常に削除されました</value>
   </data>
+  <data name="InitialSetupError" xml:space="preserve">
+  <value>初期設定中にエラーが発生しました。</value>
+</data>
+  <data name="CompanySetupAlreadyCompleted" xml:space="preserve">
+  <value>会社の設定は既に完了しています。これ以上の操作は必要ありません。</value>
+</data>
+  <data name="PasswordRequired" xml:space="preserve">
+  <value>パスワードは必須です。パスワードを入力してください。</value>
+</data>
+  <data name="ConfirmPasswordRequired" xml:space="preserve">
+  <value>確認用パスワードは必須です。確認用パスワードを入力してください。</value>
+</data>
+
+  <data name="PasswordAndConfirmPasswordNotMatched" xml:space="preserve">
+  <value>パスワードと確認用パスワードが一致しません。もう一度お試しください。</value>
+</data>
+
 </root>

@@ -6,6 +6,7 @@
     using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Application.Common.Models.ResponseModels;
     using AcademyKit.Infrastructure.Localization;
+    using AcademyKit.Server.Application.Common.Models.RequestModels;
     using FluentValidation;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@
         private readonly IValidator<GeneralSettingRequestModel> generalSettingValidator;
         private readonly IValidator<ZoomSettingRequestModel> zoomSettingValidator;
         private readonly IValidator<SMTPSettingRequestModel> smtpSettingValidator;
+        private readonly IValidator<InitialSetupRequestModel> _initialSetupValidator;
         private readonly IStringLocalizer<ExceptionLocalizer> localizer;
         private readonly IConfiguration configuration;
 
@@ -33,8 +35,9 @@
             IFileServerService fileServerService,
             IValidator<GeneralSettingRequestModel> generalSettingValidator,
             IValidator<ZoomSettingRequestModel> zoomSettingValidator,
-            IStringLocalizer<ExceptionLocalizer> localizer,
             IValidator<SMTPSettingRequestModel> smtpSettingValidator,
+            IValidator<InitialSetupRequestModel> initialSetupValidator,
+            IStringLocalizer<ExceptionLocalizer> localizer,
             IConfiguration configuration
         )
         {
@@ -46,6 +49,7 @@
             this.generalSettingValidator = generalSettingValidator;
             this.zoomSettingValidator = zoomSettingValidator;
             this.smtpSettingValidator = smtpSettingValidator;
+            _initialSetupValidator = initialSetupValidator;
             this.localizer = localizer;
             this.configuration = configuration;
         }
@@ -298,6 +302,25 @@
                     ) < 0,
                 ReleaseNotesUrl = releaseNotesUrl
             };
+        }
+
+        /// <summary>
+        /// initial setup api
+        /// </summary>
+        /// <param name="model">the instance of <see cref="InitialSetupRequestModel"/></param>
+        /// <returns>the instance of <see cref="GeneralSettingResponseModel"/></returns>
+        [HttpPost("/api/initialSetup")]
+        [AllowAnonymous]
+        public async Task<GeneralSettingResponseModel> InitialSetup(InitialSetupRequestModel model)
+        {
+            await _initialSetupValidator
+                .ValidateAsync(model, options => options.ThrowOnFailures())
+                .ConfigureAwait(false);
+            var savedEntity = await generalSettingService
+                .InitialSetupAsync(model)
+                .ConfigureAwait(false);
+
+            return new GeneralSettingResponseModel(savedEntity);
         }
     }
 }

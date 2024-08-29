@@ -1069,4 +1069,21 @@
   <data name="ApiKeyRemovedSuccessfully" xml:space="preserve">
     <value>API कुञ्जी सफलतापूर्वक हटाइयो</value>
   </data>
+  <data name="InitialSetupError" xml:space="preserve">
+  <value>प्रारम्भिक सेटअपको क्रममा त्रुटि भयो।</value>
+</data>
+  <data name="CompanySetupAlreadyCompleted" xml:space="preserve">
+  <value>कम्पनी सेटअप पहिले नै सम्पन्न भइसकेको छ। थप कुनै कारबाही आवश्यक छैन।</value>
+</data>
+  <data name="PasswordRequired" xml:space="preserve">
+  <value>पासवर्ड आवश्यक छ। कृपया पासवर्ड प्रदान गर्नुहोस्।</value>
+</data>
+  <data name="ConfirmPasswordRequired" xml:space="preserve">
+  <value>पुष्टि पासवर्ड आवश्यक छ। कृपया पुष्टि पासवर्ड प्रदान गर्नुहोस्।</value>
+</data>
+
+  <data name="PasswordAndConfirmPasswordNotMatched" xml:space="preserve">
+  <value>पासवर्ड र पुष्टि पासवर्ड मिल्दैन। कृपया फेरि प्रयास गर्नुहोस्।</value>
+</data>
+
 </root>

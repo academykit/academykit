@@ -5,6 +5,9 @@
     using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Infrastructure.Common;
     using AcademyKit.Infrastructure.Persistence;
+    using AcademyKit.Server.Application.Common.Interfaces;
+    using AcademyKit.Server.Application.Common.Models.RequestModels;
+    using AcademyKit.Server.Infrastructure.Services;
     using Application.Common.Validators;
     using FluentValidation;
     using Hangfire;
@@ -107,6 +110,7 @@
             services.AddTransient<IAiKeyService, AiKeyService>();
             services.AddTransient<IMailNotificationService, MailNotificationService>();
             services.AddTransient<IApiKeyService, ApiKeyService>();
+            services.AddTransient<IPasswordHasher, PasswordHasher>();
 
             #endregion Service DI
 
@@ -190,6 +194,7 @@
                 IValidator<AssessmentQuestionRequestModel>,
                 AssessmentQuestionValidator
             >();
+            services.AddSingleton<IValidator<InitialSetupRequestModel>, InitialSetupValidator>();
 
             #endregion Validator DI
 

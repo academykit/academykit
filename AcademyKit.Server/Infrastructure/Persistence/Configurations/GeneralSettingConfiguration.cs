@@ -45,7 +45,10 @@
                 .HasColumnType("VARCHAR(1000)")
                 .HasMaxLength(1000)
                 .IsRequired(false);
-            builder.Property(x => x.IsSetupCompleted).HasColumnName("is_setup_completed").HasDefaultValue(false);
+            builder
+                .Property(x => x.IsSetupCompleted)
+                .HasColumnName("is_setup_completed")
+                .HasDefaultValue(false);
             builder
                 .Property(x => x.CustomConfiguration)
                 .HasColumnName("custom_configuration")
@@ -73,7 +76,6 @@
                 .HasColumnName("updated_on")
                 .HasColumnType("DATETIME")
                 .IsRequired(false);
-
         }
     }
 }

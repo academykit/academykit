@@ -1,8 +1,8 @@
 ﻿namespace AcademyKit.Application.Common.Validators
 {
-    using System.Text.RegularExpressions;
     using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Application.ValidatorLocalization;
+    using AcademyKit.Server.Application.Common.Validators;
     using FluentValidation;
     using Microsoft.Extensions.Localization;
 
@@ -31,11 +31,12 @@
                 .WithMessage(context => stringLocalizer.GetString("EmailRequired"))
                 .MaximumLength(100)
                 .WithMessage(context => stringLocalizer.GetString("EmailLength100"))
-                .Must(email => ValidEmail(email))
+                .Must(email => ValidationHelpers.ValidEmail(email))
                 .WithMessage(context => stringLocalizer.GetString("InvalidEmailError"));
             RuleFor(x => x.MobileNumber)
                 .Must(mobileNumber =>
-                    string.IsNullOrWhiteSpace(mobileNumber) || ValidMobileNumber(mobileNumber)
+                    string.IsNullOrWhiteSpace(mobileNumber)
+                    || ValidationHelpers.ValidMobileNumber(mobileNumber)
                 )
                 .When(x => !string.IsNullOrWhiteSpace(x.MobileNumber))
                 .WithMessage(context => stringLocalizer.GetString("InvalidMobileNumber"))
@@ -57,22 +58,6 @@
                 .NotNull()
                 .NotEmpty()
                 .WithMessage(context => stringLocalizer.GetString("RoleRequired"));
-        }
-
-        public static bool ValidEmail(string email)
-        {
-            const string emailRegex =
-                @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}"
-                + @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\"
-                + @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
-
-            return new Regex(emailRegex).IsMatch(email);
-        }
-
-        public static bool ValidMobileNumber(string mobileNumber)
-        {
-            const string mobilePattern = @"^[+\d]+$";
-            return new Regex(mobilePattern).IsMatch(mobileNumber);
         }
     }
 }

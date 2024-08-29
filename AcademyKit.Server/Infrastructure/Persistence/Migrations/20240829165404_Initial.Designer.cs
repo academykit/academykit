@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240827055906_Initial")]
+    [Migration("20240829165404_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -1798,13 +1798,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("CompanyAddress")
-                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("VARCHAR(250)")
                         .HasColumnName("company_address");
 
                     b.Property<string>("CompanyContactNumber")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("VARCHAR(30)")
                         .HasColumnName("company_contact_number");
@@ -1834,8 +1832,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(1000)")
                         .HasColumnName("email_signature");
 
+                    b.Property<bool>("IsSetupCompleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_setup_completed");
+
                     b.Property<string>("LogoUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("VARCHAR(500)")
                         .HasColumnName("logo_url");
@@ -1879,6 +1882,12 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false)
                         .HasColumnName("is_active");
+
+                    b.Property<bool>("IsDefault")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_default");
 
                     b.Property<string>("Name")
                         .IsRequired()
