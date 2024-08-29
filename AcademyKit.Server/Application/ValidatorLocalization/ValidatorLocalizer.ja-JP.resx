@@ -161,22 +161,22 @@
     <value>証明書の開始時刻は現在の日付以降であってはなりません</value>
   </data>
   <data name="CompanyAddressLengthError" xml:space="preserve">
-    <value>会社の住所の長さは 250 文字以下である必要があります。</value>
+    <value>組織の住所の長さは 250 文字以下である必要があります。</value>
   </data>
   <data name="CompanyAddressRequired" xml:space="preserve">
-    <value>会社住所は必須です。</value>
+    <value>組織住所は必須です。</value>
   </data>
   <data name="CompanyContactNumberLengthError" xml:space="preserve">
-    <value>会社の連絡先は 30 文字以下である必要があります。</value>
+    <value>組織の連絡先は 30 文字以下である必要があります。</value>
   </data>
   <data name="CompanyContactNumberRequired" xml:space="preserve">
-    <value>会社の連絡先番号は必須です。</value>
+    <value>組織の連絡先番号は必須です。</value>
   </data>
   <data name="CompanyNameLengthError" xml:space="preserve">
-    <value>会社名の長さは 250 文字以下である必要があります</value>
+    <value>組織名の長さは 250 文字以下である必要があります</value>
   </data>
   <data name="CompanyNameRequired" xml:space="preserve">
-    <value>会社名は必須です。</value>
+    <value>組織名は必須です。</value>
   </data>
   <data name="Confirm email is required" xml:space="preserve">
     <value>確認メールは必須です。</value>

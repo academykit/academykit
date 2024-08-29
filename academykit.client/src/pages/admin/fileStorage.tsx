@@ -10,7 +10,7 @@ const FileStorage = () => {
   if (files.isError) {
     throw files.error;
   }
-  return <FileStorageUI data={files.data} />;
+  return <FileStorageUI data={files?.data} />;
 };
 
 export default FileStorage;

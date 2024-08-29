@@ -161,22 +161,22 @@
     <value>Certificate start date must not be greater than current date.</value>
   </data>
   <data name="CompanyAddressLengthError" xml:space="preserve">
-    <value>Company address length must be less than or equal to 250 characters.</value>
+    <value>Organization address length must be less than or equal to 250 characters.</value>
   </data>
   <data name="CompanyAddressRequired" xml:space="preserve">
-    <value>Company address is required.</value>
+    <value>Organization address is required.</value>
   </data>
   <data name="CompanyContactNumberLengthError" xml:space="preserve">
-    <value>Company contact must be less than or equal to 30 characters.</value>
+    <value>Organization contact must be less than or equal to 30 characters.</value>
   </data>
   <data name="CompanyContactNumberRequired" xml:space="preserve">
-    <value>Company contact number is required.</value>
+    <value>Organization contact number is required.</value>
   </data>
   <data name="CompanyNameLengthError" xml:space="preserve">
-    <value>Company name length must be less than or equal to 250 characters.</value>
+    <value>Organization name length must be less than or equal to 250 characters.</value>
   </data>
   <data name="CompanyNameRequired" xml:space="preserve">
-    <value>Company name is required.</value>
+    <value>Organization name is required.</value>
   </data>
   <data name="ConfirmMailRequired" xml:space="preserve">
     <value>Confirm email is required.</value>

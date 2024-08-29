@@ -161,22 +161,22 @@
     <value>प्रमाणपत्र सुरु हुने समय हालको मिति भन्दा बढी हुनु हुँदैन</value>
   </data>
   <data name="CompanyAddressLengthError" xml:space="preserve">
-    <value>कम्पनी ठेगाना लम्बाइ 250 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <value>संगठन ठेगाना लम्बाइ 250 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
   <data name="CompanyAddressRequired" xml:space="preserve">
-    <value>कम्पनी ठेगाना आवश्यक छ।</value>
+    <value>संगठन ठेगाना आवश्यक छ।</value>
   </data>
   <data name="CompanyContactNumberLengthError" xml:space="preserve">
-    <value>कम्पनीको सम्पर्क ३० वर्णभन्दा कम वा बराबर हुनुपर्छ।</value>
+    <value>संगठनको सम्पर्क ३० वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
   <data name="CompanyContactNumberRequired" xml:space="preserve">
-    <value>कम्पनी सम्पर्क नम्बर आवश्यक छ।</value>
+    <value>संगठन सम्पर्क नम्बर आवश्यक छ।</value>
   </data>
   <data name="CompanyNameLengthError" xml:space="preserve">
-    <value>कम्पनीको नाम लम्बाइ 250 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
+    <value>संगठनको नाम लम्बाइ 250 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
   <data name="CompanyNameRequired" xml:space="preserve">
-    <value>कम्पनीको नाम आवश्यक छ।</value>
+    <value>संगठनको नाम आवश्यक छ।</value>
   </data>
   <data name="Confirm email is required." xml:space="preserve">
     <value>इमेल आवश्यक छ भनेर पुष्टि गर्नुहोस्।</value>
