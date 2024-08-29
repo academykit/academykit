@@ -20,7 +20,7 @@ import { IUserProfile } from "@utils/services/types";
 import { AxiosError } from "axios";
 import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import useAuth from "../../hooks/useAuth";
 
@@ -50,6 +50,7 @@ const LoginPage = () => {
     login.mutate({ email: values.email, password: values.password });
   };
   const context = useContext(BrandingContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (login.isError) {
@@ -102,6 +103,10 @@ const LoginPage = () => {
     setHeader();
 
     if (companySettings.isSuccess) {
+      if (!companySettings.data.data.name) {
+        navigate("/organization/setup");
+      }
+      console.log("companySetting", companySettings.data.data);
       const branding = JSON.parse(
         companySettings.data.data.customConfiguration ?? "{}"
       );

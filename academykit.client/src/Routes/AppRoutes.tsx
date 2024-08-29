@@ -14,6 +14,7 @@ import AboutPage from "@pages/about";
 import AssessmentLayout from "@pages/assessment/AssessmentLayout";
 import ConfirmToken from "@pages/auth/confirmToken";
 import LoginPage from "@pages/auth/loginPage";
+import OrganizationSetup from "@pages/auth/organizationSetup";
 import TeamsRoute from "@pages/groups/details/Route";
 import PrivacyPage from "@pages/privacy";
 import TermsPage from "@pages/terms";
@@ -116,6 +117,10 @@ const AppRoutes = () => {
           <Route path={RoutePath.login} element={<LoginPage />} />
           <Route path={RoutePath.forgotPassword} element={<ForgotPassword />} />
           <Route path={RoutePath.confirmToken} element={<ConfirmToken />} />
+          <Route
+            path={RoutePath.organizationSetup}
+            element={<OrganizationSetup />}
+          />
         </Route>
         <Route path={RoutePath[404]} element={<NotFound />} />
         <Route path={RoutePath[500]} element={<ServerError />} />

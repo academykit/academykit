@@ -4,6 +4,7 @@ const RoutePath = {
   login: "/login",
   forgotPassword: "/forgot-password",
   confirmToken: "/confirm",
+  organizationSetup: "/organization/setup",
   404: "/404",
   500: "/500",
   403: "/403",
