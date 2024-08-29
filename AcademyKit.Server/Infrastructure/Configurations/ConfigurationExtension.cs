@@ -51,7 +51,9 @@
                     {
                         OnAuthenticationFailed = context =>
                         {
-                            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                            if (
+                                context.Exception.GetType() == typeof(SecurityTokenExpiredException)
+                            )
                             {
                                 context.Response.Headers.Append("IS-TOKEN-EXPIRED", "true");
                             }

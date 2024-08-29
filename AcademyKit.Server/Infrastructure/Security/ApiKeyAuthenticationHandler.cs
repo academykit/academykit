@@ -14,6 +14,7 @@ namespace AcademyKit.Infrastructure.Security
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IStringLocalizer<ExceptionLocalizer> _localizer;
+
         public ApiKeyAuthenticationHandler(
             IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,

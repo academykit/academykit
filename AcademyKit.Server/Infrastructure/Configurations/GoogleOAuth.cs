@@ -3,6 +3,4 @@
 /// <summary>
 /// Configuration settings for Google OAuth authentication.
 /// </summary>
-public class GoogleOAuth : OAuthConfiguration
-{
-}
+public class GoogleOAuth : OAuthConfiguration { }

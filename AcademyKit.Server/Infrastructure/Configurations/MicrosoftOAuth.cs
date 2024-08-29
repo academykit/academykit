@@ -3,6 +3,4 @@
 /// <summary>
 /// Configuration settings for Microsoft OAuth authentication.
 /// </summary>
-public class MicrosoftOAuth : OAuthConfiguration
-{
-}
+public class MicrosoftOAuth : OAuthConfiguration { }

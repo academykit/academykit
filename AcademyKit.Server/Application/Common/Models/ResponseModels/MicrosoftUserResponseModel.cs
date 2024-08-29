@@ -5,7 +5,6 @@
 /// </summary>
 public class MicrosoftUserResponseModel
 {
-
     /// <summary>
     /// Gets or sets the given name (first name) of the user.
     /// </summary>
@@ -15,7 +14,6 @@ public class MicrosoftUserResponseModel
     /// Gets or sets the surname (last name) of the user.
     /// </summary>
     public string Surname { get; set; }
-
 
     /// <summary>
     /// Gets or sets the email address of the user.

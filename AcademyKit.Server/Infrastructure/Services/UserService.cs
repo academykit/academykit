@@ -176,7 +176,6 @@ namespace AcademyKit.Infrastructure.Services
                 .ConfigureAwait(false);
         }
 
-
         /// <summary>
         /// Handle to logout user and set refresh token false
         /// </summary>

@@ -101,7 +101,11 @@
         /// <param name="error">The error message</param>
         /// <param name="details">Additional error details</param>
         /// <returns>The redirection to the error page</returns>
-        protected IActionResult RedirectToErrorPage(string redirectUrl, string error, string details)
+        protected IActionResult RedirectToErrorPage(
+            string redirectUrl,
+            string error,
+            string details
+        )
         {
             return Redirect(
                 $"{redirectUrl}/error?error={UrlEncoder.Default.Encode(error)}&details={UrlEncoder.Default.Encode(details)}"

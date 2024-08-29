@@ -41,8 +41,10 @@ public class AccountController : BaseApiController
     private const string _oAuthRedirectUrlTemplate = "api/Account/oauth/{0}/callback";
     private const string _googleAuthUrl = "https://accounts.google.com/o/oauth2/v2/auth?";
     private const string _googleAccessTokenUrl = "https://oauth2.googleapis.com/token";
-    private const string _microsoftAuthUrl = "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize?";
-    private const string _microsoftAccessTokenUrl = "https://login.microsoftonline.com/organizations/oauth2/v2.0/token";
+    private const string _microsoftAuthUrl =
+        "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize?";
+    private const string _microsoftAccessTokenUrl =
+        "https://login.microsoftonline.com/organizations/oauth2/v2.0/token";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AccountController"/> class.
@@ -288,8 +290,8 @@ public class AccountController : BaseApiController
             scope: "openid email profile",
             extraParams: new Dictionary<string, string>
             {
-            { "access_type", "offline" },
-            { "prompt", "consent" }
+                { "access_type", "offline" },
+                { "prompt", "consent" }
             }
         );
     }
@@ -367,15 +369,18 @@ public class AccountController : BaseApiController
         string authUrl,
         string providerName,
         string scope,
-        Dictionary<string, string>? extraParams = null)
+        Dictionary<string, string>? extraParams = null
+    )
     {
-        var redirectUrl = $"{_appUrls.App}/{string.Format(_oAuthRedirectUrlTemplate, providerName)}";
+        var redirectUrl =
+            $"{_appUrls.App}/{string.Format(_oAuthRedirectUrlTemplate, providerName)}";
         var validationResult = ValidateClientConfiguration(clientId, clientSecret);
         if (validationResult != null)
             return validationResult;
 
         var nonce = CommonHelper.GenerateNonce();
-        var url = $"{authUrl}client_id={clientId}&response_type=code&redirect_uri={UrlEncoder.Default.Encode(redirectUrl)}&response_mode=query&scope={scope}&nonce={nonce}";
+        var url =
+            $"{authUrl}client_id={clientId}&response_type=code&redirect_uri={UrlEncoder.Default.Encode(redirectUrl)}&response_mode=query&scope={scope}&nonce={nonce}";
 
         if (extraParams != null)
         {
@@ -406,22 +411,24 @@ public class AccountController : BaseApiController
         string tokenUrl,
         string providerName,
         Func<string, Task<OAuthUserResponseModel>> getUserDetails,
-        Func<OAuthUserResponseModel, Task<AuthenticationModel>> generateToken)
+        Func<OAuthUserResponseModel, Task<AuthenticationModel>> generateToken
+    )
     {
-        var redirectUrl = $"{_appUrls.App}/{string.Format(_oAuthRedirectUrlTemplate, providerName)}";
+        var redirectUrl =
+            $"{_appUrls.App}/{string.Format(_oAuthRedirectUrlTemplate, providerName)}";
 
         var validationResult = ValidateClientConfiguration(clientId, clientSecret);
         if (validationResult != null)
             return validationResult;
 
         var dicData = new Dictionary<string, string>
-    {
-        { "client_id", clientId },
-        { "client_secret", clientSecret },
-        { "code", code },
-        { "grant_type", "authorization_code" },
-        { "redirect_uri", redirectUrl }
-    };
+        {
+            { "client_id", clientId },
+            { "client_secret", clientSecret },
+            { "code", code },
+            { "grant_type", "authorization_code" },
+            { "redirect_uri", redirectUrl }
+        };
 
         try
         {
@@ -443,7 +450,11 @@ public class AccountController : BaseApiController
             }
             else
             {
-                _logger.LogError("OAuth token retrieval failed. Error: {Error}, Description: {Description}", tokenResponse.Error, tokenResponse.ErrorDescription);
+                _logger.LogError(
+                    "OAuth token retrieval failed. Error: {Error}, Description: {Description}",
+                    tokenResponse.Error,
+                    tokenResponse.ErrorDescription
+                );
                 return RedirectToErrorPage(
                     _appUrls.App,
                     tokenResponse.Error,
@@ -482,5 +493,4 @@ public class AccountController : BaseApiController
 
         return null;
     }
-
 }

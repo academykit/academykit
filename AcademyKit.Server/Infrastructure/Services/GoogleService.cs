@@ -11,6 +11,7 @@ namespace AcademyKit.Server.Infrastructure.Services
     public class GoogleService : IGoogleService
     {
         private const string url = "https://www.googleapis.com/oauth2/v2/userinfo";
+
         /// <summary>
         /// Retrieves the full details of a Google user using the provided access token.
         /// </summary>
