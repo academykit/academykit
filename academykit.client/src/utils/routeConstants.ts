@@ -5,6 +5,7 @@ const RoutePath = {
   forgotPassword: "/forgot-password",
   confirmToken: "/confirm",
   signInRedirect: "/redirect/signIn",
+  oAuthError: "/error/oauth",
   404: "/404",
   500: "/500",
   403: "/403",

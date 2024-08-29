@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const RedirectHandler = () => {
-  // const [loading, setLoading] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -17,7 +16,6 @@ const RedirectHandler = () => {
   const refresh = queryParams.get("refresh");
 
   useEffect(() => {
-    // setLoading(true);
     if (token && refresh && userId) {
       token && localStorage.setItem(TOKEN_STORAGE, token);
       refresh && localStorage.setItem(REFRESH_TOKEN_STORAGE, refresh);
@@ -26,7 +24,6 @@ const RedirectHandler = () => {
       auth?.setRefreshToken(refresh ?? null);
       auth?.setIsLoggedIn(true);
       navigate("/");
-      // setLoading(false);
     }
   }, []);
 
