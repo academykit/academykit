@@ -436,7 +436,7 @@
         /// <remarks>
         /// It should be overridden in child services to do other updates after entity is saved.
         /// </remarks>
-        protected virtual async Task CreatePostHookAsync(T entityRetrived)
+        protected virtual async Task CreatePostHookAsync(T entityRetrieved)
         {
             // do nothing by default
             await Task.FromResult(0);

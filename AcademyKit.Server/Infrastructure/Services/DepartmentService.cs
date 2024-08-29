@@ -265,7 +265,7 @@
                             include: src => src.Include(x => x.Users)
                         )
                         .ConfigureAwait(false);
-                    var resopnse = new List<UserResponseModel>();
+                    var response = new List<UserResponseModel>();
                     foreach (
                         var departmentUser in department.SelectMany(x =>
                             x.Users.Where(x =>
@@ -274,7 +274,7 @@
                         )
                     )
                     {
-                        resopnse.Add(
+                        response.Add(
                             new UserResponseModel
                             {
                                 Id = departmentUser.Id,
@@ -298,7 +298,7 @@
                         );
                     }
 
-                    return resopnse;
+                    return response;
                 }
                 else
                 {

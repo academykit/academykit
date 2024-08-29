@@ -56,10 +56,6 @@ builder.Services.Configure<RateLimitSettings>(
     builder.Configuration.GetSection(RateLimitSettings.RateLimit)
 );
 
-// var logger = LogManager.Setup().LoadConfigurationFromFile("nlog.config").GetCurrentClassLogger();
-// //var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
-// builder.Logging.ClearProviders();
-// builder.Host.UseNLog();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

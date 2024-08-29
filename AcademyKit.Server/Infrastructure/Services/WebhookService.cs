@@ -120,12 +120,12 @@
                         .ToList();
                     if (lessonOrderList.Count != default)
                     {
-                        var reoderNo = recordingFileDtos.Count - 1;
+                        var reorderNo = recordingFileDtos.Count - 1;
                         var reorderLessons = new List<Lesson>();
-                        foreach (var lessonorder in lessonOrderList)
+                        foreach (var lessonOrderItem in lessonOrderList)
                         {
-                            lessonorder.Order = lessonorder.Order + reoderNo;
-                            reorderLessons.Add(lessonorder);
+                            lessonOrderItem.Order = lessonOrderItem.Order + reorderNo;
+                            reorderLessons.Add(lessonOrderItem);
                         }
 
                         _unitOfWork.GetRepository<Lesson>().Update(reorderLessons);

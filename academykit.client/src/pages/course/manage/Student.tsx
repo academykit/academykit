@@ -1,7 +1,7 @@
 import ConfirmationModal from "@components/Ui/ConfirmationModal";
 import ProgressBar from "@components/Ui/ProgressBar";
 import withSearchPagination, {
-  IWithSearchPagination,
+  type IWithSearchPagination,
 } from "@hoc/useSearchPagination";
 import {
   Anchor,
@@ -31,12 +31,12 @@ import { getInitials } from "@utils/getInitialName";
 import RoutePath from "@utils/routeConstants";
 import errorType from "@utils/services/axiosError";
 import {
-  IStudentStat,
+  type IStudentStat,
   useGetStudentStatistics,
   usePostStatisticsCertificate,
 } from "@utils/services/manageCourseService";
 import moment from "moment";
-import { Dispatch, SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 import AddTrainee from "./AddTrainee";
@@ -126,7 +126,7 @@ const Rows = ({
             <div style={{ marginTop: "10px" }}>
               <Text>
                 {t("issued_on")}{" "}
-                {moment(item?.certificateIssuedDate + "Z").format(DATE_FORMAT)}
+                {moment(`${item?.certificateIssuedDate}Z`).format(DATE_FORMAT)}
               </Text>
               <Flex justify={"center"} mt={8}>
                 <Tooltip label={t("view_certificate")}>
@@ -187,7 +187,7 @@ const ManageStudents = ({
   const course_id = id as string;
 
   const getStudentStat = useGetStudentStatistics(course_id, searchParams);
-  const [openMoal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const postUserData = usePostStatisticsCertificate(course_id, searchParams);
   const [selected, setSelected] = useState<string[]>([]);
   const [submitModal, setSubmitModal] = useState(false);
@@ -238,7 +238,7 @@ const ManageStudents = ({
     <ScrollArea>
       <ConfirmationModal
         title={t("sure_to_issue_certificate_everyone")}
-        open={openMoal}
+        open={openModal}
         onClose={() => setOpenModal(false)}
         onConfirm={handleIssueAll}
       />
@@ -303,7 +303,7 @@ const ManageStudents = ({
           >
             <Table.Thead>
               <Table.Tr>
-                <Table.Th></Table.Th>
+                <Table.Th />
                 <Table.Th>{t("name")}</Table.Th>
                 <Table.Th>{t("progress")}</Table.Th>
                 <Table.Th>

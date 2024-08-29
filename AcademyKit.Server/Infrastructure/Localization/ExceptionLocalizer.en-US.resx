@@ -22,7 +22,8 @@
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
         <value>[base64 mime encoded serialized .NET Framework object]</value>
     </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing"
+  mimetype="application/x-microsoft.net.object.bytearray.base64">
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework
   object]</value>
         <comment>This is a comment</comment>
@@ -38,7 +39,7 @@
     mimetype set.
     
     The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+    ResXResourceReader how to deserialize the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
     
     Note - application/x-microsoft.net.object.binary.base64 is the format 
@@ -116,10 +117,12 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TrainingRemoved" xml:space="preserve">
     <value>Training removed successfully.</value>
@@ -170,7 +173,7 @@
     <value>File extension should be csv format.</value>
   </data>
   <data name="AlreadyRegistered" xml:space="preserve">
-    <value>User is Already regestered</value>
+    <value>User is Already registered</value>
   </data>
   <data name="ResetTokenNotMatched" xml:space="preserve">
     <value>Reset token not matched.</value>
@@ -229,10 +232,10 @@
   <data name="MemberStatus" xml:space="preserve">
     <value>Member status changed successfully.</value>
   </data>
-  <data name="QuestionpoolRemoved" xml:space="preserve">
+  <data name="QuestionPoolRemoved" xml:space="preserve">
     <value>QuestionPool removed successfully.</value>
   </data>
-  <data name="QuestionpoolTeacherRemoved" xml:space="preserve">
+  <data name="QuestionPoolTeacherRemoved" xml:space="preserve">
     <value>Question pool teacher removed successfully.</value>
   </data>
   <data name="QuestionRemovedSuccessfully" xml:space="preserve">
@@ -301,13 +304,13 @@
   <data name="LessonNotFound" xml:space="preserve">
     <value>Lesson not found.</value>
   </data>
-  <data name="LessonNotpublished" xml:space="preserve">
+  <data name="LessonNotPublished" xml:space="preserve">
     <value>Lesson not published.</value>
   </data>
   <data name="QuestionPoolModifyNotAllowed" xml:space="preserve">
     <value>You are not allowed to modify this question pool.</value>
   </data>
-  <data name="RecordingFileinS3BucketSave" xml:space="preserve">
+  <data name="RecordingFileInS3BucketSave" xml:space="preserve">
     <value>An error occurred while trying to save recording file in s3 bucket.</value>
   </data>
   <data name="RemoveReplyBeforeComment" xml:space="preserve">
@@ -367,10 +370,10 @@
   <data name="UpdateFeedBackError" xml:space="preserve">
     <value>An error occurred while trying to update feedback.</value>
   </data>
-  <data name="UploadFileinServerError" xml:space="preserve">
+  <data name="UploadFileInServerError" xml:space="preserve">
     <value>An error occurred while attempting to upload file to the server.</value>
   </data>
-  <data name="UserFoundasTrainingTrainer" xml:space="preserve">
+  <data name="UserFoundAsTrainingTrainer" xml:space="preserve">
     <value>User is already found as training trainer.</value>
   </data>
   <data name="AssignmentReviewDeleted" xml:space="preserve">
@@ -382,7 +385,7 @@
   <data name="AssignmentReviewUpdate" xml:space="preserve">
     <value>Assignment review update successfully.</value>
   </data>
-  <data name="AtleastOneQuestionRequired" xml:space="preserve">
+  <data name="AtLeastOneQuestionRequired" xml:space="preserve">
     <value>At least one question is required.</value>
   </data>
   <data name="CourseCompleted" xml:space="preserve">
@@ -565,14 +568,14 @@
   <data name="TrainingSectionPublished" xml:space="preserve">
     <value>Training section is published.</value>
   </data>
-  <data name="UpdateRefershTokenError" xml:space="preserve">
+  <data name="UpdateRefreshTokenError" xml:space="preserve">
     <value>An error occurred while attempting to update refresh token.</value>
   </data>
   <data name="UpdateTagError" xml:space="preserve">
     <value>An error occurred while trying to update tag.</value>
   </data>
-  <data name="AllLiscensePlaced" xml:space="preserve">
-    <value>All Liscense Id have been booked, please select another instance.</value>
+  <data name="AllLicensePlaced" xml:space="preserve">
+    <value>All License Id have been booked, please select another instance.</value>
   </data>
   <data name="AssignmentReviewNotFound" xml:space="preserve">
     <value>Assignment review not found.</value>
@@ -598,7 +601,7 @@
   <data name="ErrorOccurredDeleteAssignmentReview" xml:space="preserve">
     <value>An error occurred while trying to delete assignment review.</value>
   </data>
-  <data name="ErrorOccurredOnMinioCredentails" xml:space="preserve">
+  <data name="ErrorOccurredOnMinioCredentials" xml:space="preserve">
     <value>An error occurred while attempting to get the minio credentials.</value>
   </data>
   <data name="ErrorOccurredOnUploadFile" xml:space="preserve">
@@ -646,7 +649,7 @@
   <data name="LateSubmission" xml:space="preserve">
     <value>Late Submission.</value>
   </data>
-  <data name="QuestionPoolAuhorCannotRemoved" xml:space="preserve">
+  <data name="QuestionPoolAuthorCannotRemoved" xml:space="preserve">
     <value>Question pool author cannot be removed.</value>
   </data>
   <data name="QuestionPoolAuthorCanNotAdded" xml:space="preserve">
@@ -721,8 +724,8 @@
   <data name="CannotSubmitAssignmentStatusCompleted" xml:space="preserve">
     <value>Cannot submit assignment of the training having completed status.</value>
   </data>
-  <data name="CeritificateAlreadyApproved" xml:space="preserve">
-    <value>Ceritificate with is already approved.</value>
+  <data name="CertificateAlreadyApproved" xml:space="preserve">
+    <value>Certificate with is already approved.</value>
   </data>
   <data name="CurrentUserRequired" xml:space="preserve">
     <value>CurrentUser Id is required.</value>
@@ -745,10 +748,10 @@
   <data name="EnterUserEmail" xml:space="preserve">
     <value>Please enter user email.</value>
   </data>
-  <data name="ErroprOccurredFetchStudentSubmittedAssignment" xml:space="preserve">
+  <data name="ErrorOccurredFetchStudentSubmittedAssignment" xml:space="preserve">
     <value>An error occurred while trying to fetch the student submitted assignment.</value>
   </data>
-  <data name="ErrorOccuredSubmitAssignment" xml:space="preserve">
+  <data name="ErrorOccurredSubmitAssignment" xml:space="preserve">
     <value>An error occurred while trying to submit the assignment.</value>
   </data>
   <data name="ErrorOccurredRemoveFileFromGroup" xml:space="preserve">
@@ -858,7 +861,7 @@ recorded cannot be deleted.</value>
   <data name="TrainingTeacherCannotSubmitAssignment" xml:space="preserve">
     <value>Training teacher cannot submit the assignment.</value>
   </data>
-  <data name="TraningExamCompletedStatus" xml:space="preserve">
+  <data name="TrainingExamCompletedStatus" xml:space="preserve">
     <value>Cannot give exam to the training having completed status.</value>
   </data>
   <data name="UnauthorizedUserToCreateAttachment" xml:space="preserve">
@@ -883,7 +886,7 @@ recorded cannot be deleted.</value>
     <value>Exam start time and end time must be greater than current time.</value>
   </data>
   <data name="InvalidMeetingTimeIssue" xml:space="preserve">
-    <value>Live lesson start time must be greater than curttent time.</value>
+    <value>Live lesson start time must be greater than current time.</value>
   </data>
   <data name="NoUserImported" xml:space="preserve">
     <value>Unable to import user due to incorrect file format</value>
@@ -892,13 +895,13 @@ recorded cannot be deleted.</value>
     <value>Completed course cannot be modified</value>
   </data>
   <data name="TrainingWithDraftStatusCanOnlyRemoved" xml:space="preserve">
-    <value>Traning with draft status can only be removed</value>
+    <value>Training with draft status can only be removed</value>
   </data>
   <data name="TraineeCannotBeTrainer" xml:space="preserve">
     <value>Trainee cannot be added as trainer</value>
   </data>
   <data name="AdminOrSuperAdmin" xml:space="preserve">
-    <value>these user were admin or superadmin</value>
+    <value>these user were admin or super admin</value>
   </data>
   <data name="AlreadyAddedMember" xml:space="preserve">
     <value>User is already added in group</value>
@@ -990,7 +993,7 @@ recorded cannot be deleted.</value>
   <data name="CannotAddSignatureWithoutCertificate" xml:space="preserve">
     <value>Please add certificate before adding signature.</value>
   </data>
-  <data name="AddingDuratrionError" xml:space="preserve">
+  <data name="AddingDurationError" xml:space="preserve">
     <value>Adding duration exceeds the end date.</value>
   </data>
   <data name="EmptyFile" xml:space="preserve">
@@ -1008,7 +1011,7 @@ recorded cannot be deleted.</value>
   <data name="QuestionPoolQuestionNotFound" xml:space="preserve">
     <value>Question Pool question was not found.</value>
   </data>
-  <data name="QuestionpoolUpdatedSuccesfully" xml:space="preserve">
+  <data name="QuestionPoolUpdatedSuccessfully" xml:space="preserve">
     <value>Question pool questions updated successfully.</value>
   </data>
   <data name="AssignmentUpdatedSuccessfully" xml:space="preserve">
@@ -1018,7 +1021,7 @@ recorded cannot be deleted.</value>
     <value>Already enrolled email or mobile number :</value>
   </data>
   <data name="InvalidEmailFormat" xml:space="preserve">
-    <value>Invalid email adderss :</value>
+    <value>Invalid email address :</value>
   </data>
   <data name="TrainingPublishedSuccessfully" xml:space="preserve">
     <value>Training published successfully.</value>
@@ -1060,7 +1063,7 @@ recorded cannot be deleted.</value>
     <value>Zoom License Email is already used.</value>
   </data>
   <data name="AssessmentCannotBeDeleted" xml:space="preserve">
-    <value>Assessment Conatins Submission so Cannot be Deleted.</value>
+    <value>Assessment Contains Submission so Cannot be Deleted.</value>
   </data>
   <data name="AssessmentPublishedSuccessfully" xml:space="preserve">
     <value>Assessment published successfully.</value>

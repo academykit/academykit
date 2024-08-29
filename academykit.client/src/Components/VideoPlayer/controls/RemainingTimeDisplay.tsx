@@ -1,6 +1,7 @@
 import { Text } from "@mantine/core";
 import formatDuration from "@utils/formatDuration";
-import React, { FC, useEffect, useState } from "react";
+import type React from "react";
+import { type FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface Props {

@@ -28,7 +28,7 @@ const MyTrainings = () => {
   const { id } = useParams();
   const { t } = useTranslation();
   const authorCourse = useCourse(
-    `UserId=${id}&Enrollmentstatus=1&size=12&page=${page}`
+    `UserId=${id}&EnrollmentStatus=1&size=12&page=${page}`
   );
 
   return (

@@ -20,12 +20,9 @@ using CsvHelper;
 using Hangfire;
 using LinqKit;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MimeKit;
@@ -1843,14 +1840,16 @@ namespace AcademyKit.Infrastructure.Services
 
         public async Task RemoveFromDefaultGroup(Guid userId, Guid CurrentUserId)
         {
-            var existmember = await _unitOfWork
+            var existingMember = await _unitOfWork
                 .GetRepository<GroupMember>()
                 .GetFirstOrDefaultAsync(predicate: p => p.UserId == userId)
                 .ConfigureAwait(false);
-            if (existmember != null)
+
+            if (existingMember != null)
             {
-                _unitOfWork.GetRepository<GroupMember>().Delete(existmember.Id);
+                _unitOfWork.GetRepository<GroupMember>().Delete(existingMember.Id);
             }
+
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }

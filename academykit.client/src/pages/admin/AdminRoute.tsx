@@ -51,9 +51,9 @@ const AdminRoutesChild = () => {
         <Route path={"/"} element={<Settings />} />
         <Route path={"/account"} element={<Account />} />
         <Route element={<MyTrainings />}>
-          <Route path={"/mycertificate"} element={<MyTrainingInternal />} />
+          <Route path={"/my-certificate"} element={<MyTrainingInternal />} />
           <Route
-            path={"/mycertificate/external"}
+            path={"/my-certificate/external"}
             element={<AdminViewCertificate />}
           />
         </Route>
@@ -95,8 +95,8 @@ const MyTrainings = () => {
         onChange={(value) => navigate(`${value}`)}
       >
         <Tabs.List>
-          <Tabs.Tab value="/settings/mycertificate">{t("internal")}</Tabs.Tab>
-          <Tabs.Tab value="/settings/mycertificate/external">
+          <Tabs.Tab value="/settings/my-certificate">{t("internal")}</Tabs.Tab>
+          <Tabs.Tab value="/settings/my-certificate/external">
             {t("external")}
           </Tabs.Tab>
         </Tabs.List>

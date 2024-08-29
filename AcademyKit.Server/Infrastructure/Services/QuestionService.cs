@@ -344,11 +344,11 @@
                         throw new ForbiddenException(_localizer.GetString("QuestionCannotEdit"));
                     }
 
-                    var existingquestionpool = await _unitOfWork
+                    var existingQuestionPool = await _unitOfWork
                         .GetRepository<QuestionPool>()
                         .GetFirstOrDefaultAsync(predicate: p => p.Id == question.QuestionPoolId)
                         .ConfigureAwait(false);
-                    questionPoolQuestion.QuestionPool = existingquestionpool;
+                    questionPoolQuestion.QuestionPool = existingQuestionPool;
                     questionPoolQuestion.QuestionPoolId = question.QuestionPoolId;
                     _unitOfWork.GetRepository<QuestionPoolQuestion>().Update(questionPoolQuestion);
                     await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);

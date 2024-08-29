@@ -63,8 +63,8 @@ namespace AcademyKit.Infrastructure.Services
 
                 if (criteria.Severity.HasValue)
                 {
-                    var serverity = criteria.Severity.Value.ToString();
-                    predicate = predicate.And(x => x.Level == serverity);
+                    var severity = criteria.Severity.Value.ToString();
+                    predicate = predicate.And(x => x.Level == severity);
                 }
 
                 var response = await _unitOfWork

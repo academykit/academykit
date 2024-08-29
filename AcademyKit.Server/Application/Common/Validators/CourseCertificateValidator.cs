@@ -14,7 +14,7 @@
                 .NotNull()
                 .WithMessage(context => stringLocalizer.GetString("UserIDrequired"))
                 .MaximumLength(100)
-                .WithMessage(context => stringLocalizer.GetString("TitleLenghtIssue"));
+                .WithMessage(context => stringLocalizer.GetString("TitleLengthIssue"));
             RuleFor(x => x.EventStartDate)
                 .NotEmpty()
                 .NotNull()

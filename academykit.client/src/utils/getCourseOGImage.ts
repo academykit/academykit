@@ -17,7 +17,7 @@ const getCourseOgImageUrl = ({
 }) => {
   return thumbnailUrl && thumbnailUrl !== ""
     ? thumbnailUrl
-    : `/api/utility/ogimage?title=${encodeURIComponent(
+    : `/api/utility/ogImage?title=${encodeURIComponent(
         title
       )}&author=${encodeURIComponent(
         author.fullName ?? ""

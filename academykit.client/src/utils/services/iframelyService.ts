@@ -7,6 +7,6 @@ type IFramely = {
   message: string;
 };
 
-export const getIframelyOembed = async (url: string) => {
-  return await httpClient.get<IFramely>(api.iframely.oembed(url));
+export const getIframelyOEmbed = async (url: string) => {
+  return await httpClient.get<IFramely>(api.iframely.oEmbed(url));
 };

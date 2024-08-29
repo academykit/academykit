@@ -77,7 +77,7 @@ const UserProfile = () => {
             {t("address")} : {data?.address}
           </Text>
           <Text size={"md"} style={{ padding: "5px 50px" }}>
-            {t("mobilenumber")} : {data?.mobileNumber}
+            {t("mobileNumber")} : {data?.mobileNumber}
           </Text>
           <Text size={"md"} style={{ padding: "5px 50px" }} mb={10}>
             {t("email")} : {data?.email}

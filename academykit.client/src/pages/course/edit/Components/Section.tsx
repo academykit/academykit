@@ -10,7 +10,7 @@ import { useMemo, useState } from "react";
 import {
   DragDropContext,
   Draggable,
-  DropResult,
+  type DropResult,
   Droppable,
 } from "react-beautiful-dnd";
 
@@ -57,11 +57,11 @@ const CourseSection = ({
         const tempLesson = lessons?.splice(source.index, 1);
         newList[draggableIndex].lessons = lessons;
         // eslint-disable-next-line no-case-declarations
-        const dropableIndex = newList.findIndex(
+        const droppableIndex = newList.findIndex(
           (x) => x.slug == destination.droppableId
         );
         tempLesson &&
-          newList[dropableIndex].lessons?.splice(
+          newList[droppableIndex].lessons?.splice(
             destination.index,
             0,
             tempLesson[0]
@@ -69,8 +69,8 @@ const CourseSection = ({
         setLessonData(newList);
         // eslint-disable-next-line no-case-declarations
         const requestData = {
-          sectionIdentity: newList[dropableIndex].id,
-          ids: newList[dropableIndex].lessons?.map((x) => x.id),
+          sectionIdentity: newList[droppableIndex].id,
+          ids: newList[droppableIndex].lessons?.map((x) => x.id),
         };
         lessonReorder.mutateAsync({ id: slug, data: requestData });
     }

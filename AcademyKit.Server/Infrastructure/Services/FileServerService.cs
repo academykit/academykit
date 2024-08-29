@@ -31,10 +31,10 @@
         {
             try
             {
-                var credentails = await GetCredentialAsync().ConfigureAwait(false);
+                var credentials = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient()
-                    .WithEndpoint(credentails.EndPoint)
-                    .WithCredentials(credentails.AccessKey, credentails.SecretKey)
+                    .WithEndpoint(credentials.EndPoint)
+                    .WithCredentials(credentials.AccessKey, credentials.SecretKey)
                     .WithSSL()
                     .Build();
                 var fileName = string.Concat(model.File.FileName.Where(c => !char.IsWhiteSpace(c)));
@@ -58,14 +58,14 @@
 
                 var objectArgs = new Minio.PutObjectArgs()
                     .WithObject(fileName)
-                    .WithBucket(credentails.Bucket)
+                    .WithBucket(credentials.Bucket)
                     .WithStreamData(model.File.OpenReadStream())
                     .WithContentType(model.File.ContentType)
                     .WithObjectSize(model.File.Length);
                 await minio.PutObjectAsync(objectArgs);
                 return model.Type == MediaType.Private
                     ? fileName
-                    : $"{credentails.Url}/{credentails.Bucket}/{fileName}";
+                    : $"{credentials.Url}/{credentials.Bucket}/{fileName}";
             }
             catch (Exception ex)
             {
@@ -87,16 +87,16 @@
         {
             try
             {
-                var credentails = await GetCredentialAsync().ConfigureAwait(false);
+                var credentials = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient()
-                    .WithEndpoint(credentails.EndPoint)
-                    .WithCredentials(credentails.AccessKey, credentails.SecretKey)
+                    .WithEndpoint(credentials.EndPoint)
+                    .WithCredentials(credentials.AccessKey, credentials.SecretKey)
                     .WithSSL()
                     .Build();
                 var fileName = $"private/{Guid.NewGuid()}.mp4";
                 var objectArgs = new Minio.PutObjectArgs()
                     .WithObject(fileName)
-                    .WithBucket(credentails.Bucket)
+                    .WithBucket(credentials.Bucket)
                     .WithFileName(filePath)
                     .WithContentType("video/mp4")
                     .WithObjectSize(fileSize);
@@ -125,16 +125,16 @@
         {
             try
             {
-                var credentails = await GetCredentialAsync().ConfigureAwait(false);
+                var credentials = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient()
-                    .WithEndpoint(credentails.PresignedUrl)
-                    .WithCredentials(credentails.AccessKey, credentails.SecretKey)
+                    .WithEndpoint(credentials.PresignedUrl)
+                    .WithCredentials(credentials.AccessKey, credentials.SecretKey)
                     .WithSSL()
                     .Build();
                 var objectArgs = new Minio.PresignedGetObjectArgs()
                     .WithObject(key)
-                    .WithBucket(credentails.Bucket)
-                    .WithExpiry(credentails.ExpiryTime);
+                    .WithBucket(credentials.Bucket)
+                    .WithExpiry(credentials.ExpiryTime);
                 return await minio.PresignedGetObjectAsync(objectArgs).ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -153,16 +153,16 @@
         /// <returns> the local file path </returns>
         public async Task<string> GetFileLocalPathAsync(string key)
         {
-            var credentails = await GetCredentialAsync().ConfigureAwait(false);
+            var credentials = await GetCredentialAsync().ConfigureAwait(false);
             var minio = new Minio.MinioClient()
-                .WithEndpoint(credentails.EndPoint)
-                .WithCredentials(credentails.AccessKey, credentails.SecretKey)
+                .WithEndpoint(credentials.EndPoint)
+                .WithCredentials(credentials.AccessKey, credentials.SecretKey)
                 .WithSSL()
                 .Build();
             var objectArgs = new Minio.PresignedGetObjectArgs()
                 .WithObject(key)
-                .WithBucket(credentails.Bucket)
-                .WithExpiry(credentails.ExpiryTime);
+                .WithBucket(credentials.Bucket)
+                .WithExpiry(credentials.ExpiryTime);
             var fileUrl = await minio.PresignedGetObjectAsync(objectArgs).ConfigureAwait(false);
 
             if (string.IsNullOrEmpty(fileUrl))
@@ -188,15 +188,15 @@
         {
             try
             {
-                var credentails = await GetCredentialAsync().ConfigureAwait(false);
+                var credentials = await GetCredentialAsync().ConfigureAwait(false);
                 var minio = new Minio.MinioClient()
-                    .WithEndpoint(credentails.EndPoint)
-                    .WithCredentials(credentails.AccessKey, credentails.SecretKey)
+                    .WithEndpoint(credentials.EndPoint)
+                    .WithCredentials(credentials.AccessKey, credentials.SecretKey)
                     .WithSSL()
                     .Build();
 
                 var objectArgs = new Minio.RemoveObjectArgs()
-                    .WithBucket(credentails.Bucket)
+                    .WithBucket(credentials.Bucket)
                     .WithObject(key);
                 await minio.RemoveObjectAsync(objectArgs);
             }
@@ -208,7 +208,7 @@
                 );
                 throw ex is ServiceException
                     ? ex
-                    : new ServiceException(_localizer.GetString("UploadFileinServerError"));
+                    : new ServiceException(_localizer.GetString("UploadFileInServerError"));
             }
         }
 
@@ -222,7 +222,7 @@
         {
             try
             {
-                var miniodto = new MinIoDto();
+                var minioDto = new MinIoDto();
                 var settings = await _unitOfWork
                     .GetRepository<Setting>()
                     .GetAllAsync(predicate: x => x.Key.StartsWith("Server"))
@@ -281,14 +281,14 @@
                     );
                 }
 
-                miniodto.AccessKey = accessKey;
-                miniodto.SecretKey = secretKey;
-                miniodto.PresignedUrl = preSigned;
-                miniodto.Url = url;
-                miniodto.ExpiryTime = Convert.ToInt32(expiryTime);
-                miniodto.EndPoint = endPoint;
-                miniodto.Bucket = bucket;
-                return miniodto;
+                minioDto.AccessKey = accessKey;
+                minioDto.SecretKey = secretKey;
+                minioDto.PresignedUrl = preSigned;
+                minioDto.Url = url;
+                minioDto.ExpiryTime = Convert.ToInt32(expiryTime);
+                minioDto.EndPoint = endPoint;
+                minioDto.Bucket = bucket;
+                return minioDto;
             }
             catch (Exception ex)
             {
@@ -298,7 +298,7 @@
                 );
                 throw ex is ServiceException
                     ? ex
-                    : new ServiceException(_localizer.GetString("ErrorOccurredOnMinioCredentails"));
+                    : new ServiceException(_localizer.GetString("ErrorOccurredOnMinioCredentials"));
             }
         }
         #endregion

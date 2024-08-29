@@ -114,7 +114,7 @@ const AddMeeting = ({
         isMandatory: data?.isMandatory,
         description: data?.description ?? "",
       });
-      changeZoomLiscense();
+      changeZoomLicense();
     }
   }, [lessonDetails.isSuccess]);
 
@@ -146,7 +146,7 @@ const AddMeeting = ({
         },
       ];
 
-  const changeZoomLiscense = () => {
+  const changeZoomLicense = () => {
     const { meetingDuration, meetingStartTime, meetingStartDate } = form.values;
     if (meetingDuration && meetingStartTime && meetingStartDate) {
       // const time = new Date(meetingStartTime).toLocaleTimeString();
@@ -267,10 +267,10 @@ const AddMeeting = ({
         />
 
         <Select
-          onClick={changeZoomLiscense}
+          onClick={changeZoomLicense}
           onKeyDown={(e) => {
             if (e.code === "Space") {
-              changeZoomLiscense();
+              changeZoomLicense();
             }
           }}
           defaultValue={t("pick_license")}

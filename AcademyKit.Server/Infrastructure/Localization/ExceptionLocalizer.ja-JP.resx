@@ -22,7 +22,8 @@
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
         <value>[base64 mime encoded serialized .NET Framework object]</value>
     </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing"
+  mimetype="application/x-microsoft.net.object.bytearray.base64">
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework
   object]</value>
         <comment>This is a comment</comment>
@@ -116,10 +117,12 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TrainingRemoved" xml:space="preserve">
     <value>トレーニングは正常に削除されました。</value>
@@ -229,10 +232,10 @@
   <data name="MemberStatus" xml:space="preserve">
     <value>メンバーステータスが正常に変更されました</value>
   </data>
-  <data name="QuestionpoolRemoved" xml:space="preserve">
+  <data name="QuestionPoolRemoved" xml:space="preserve">
     <value>質問プールは正常に削除されました</value>
   </data>
-  <data name="QuestionpoolTeacherRemoved" xml:space="preserve">
+  <data name="QuestionPoolTeacherRemoved" xml:space="preserve">
     <value>質問プールの教師が正常に削除されました</value>
   </data>
   <data name="QuestionRemovedSuccessfully" xml:space="preserve">
@@ -301,13 +304,13 @@
   <data name="LessonNotFound" xml:space="preserve">
     <value>レッスンが見つかりませんでした</value>
   </data>
-  <data name="LessonNotpublished" xml:space="preserve">
+  <data name="LessonNotPublished" xml:space="preserve">
     <value>レッスンは公開されていません</value>
   </data>
   <data name="QuestionPoolModifyNotAllowed" xml:space="preserve">
     <value>この質問プールを変更することはできません</value>
   </data>
-  <data name="RecordingFileinS3BucketSave" xml:space="preserve">
+  <data name="RecordingFileInS3BucketSave" xml:space="preserve">
     <value>録画ファイルを s3 バケットに保存しようとしたときにエラーが発生しました</value>
   </data>
   <data name="RemoveReplyBeforeComment" xml:space="preserve">
@@ -367,10 +370,10 @@
   <data name="UpdateFeedBackError" xml:space="preserve">
     <value>フィードバックを更新しようとしたときにエラーが発生しました</value>
   </data>
-  <data name="UploadFileinServerError" xml:space="preserve">
+  <data name="UploadFileInServerError" xml:space="preserve">
     <value>ファイルをサーバーにアップロードしようとしたときにエラーが発生しました</value>
   </data>
-  <data name="UserFoundasTrainingTrainer" xml:space="preserve">
+  <data name="UserFoundAsTrainingTrainer" xml:space="preserve">
     <value>ユーザーはすでにトレーニング トレーナーとして検出されています</value>
   </data>
   <data name="AssignmentReviewDeleted" xml:space="preserve">
@@ -382,7 +385,7 @@
   <data name="AssignmentReviewUpdate" xml:space="preserve">
     <value>課題レビューが正常に更新されました</value>
   </data>
-  <data name="AtleastOneQuestionRequired" xml:space="preserve">
+  <data name="AtLeastOneQuestionRequired" xml:space="preserve">
     <value>少なくとも 1 つの質問が必要です</value>
   </data>
   <data name="CourseCompleted" xml:space="preserve">
@@ -565,13 +568,13 @@
   <data name="TrainingSectionPublished" xml:space="preserve">
     <value>トレーニングセクションが公開されました</value>
   </data>
-  <data name="UpdateRefershTokenError" xml:space="preserve">
+  <data name="UpdateRefreshTokenError" xml:space="preserve">
     <value>リフレッシュトークンを更新しようとしたときにエラーが発生しました</value>
   </data>
   <data name="UpdateTagError" xml:space="preserve">
     <value>タグを更新しようとしたときにエラーが発生しました</value>
   </data>
-  <data name="AllLiscensePlaced" xml:space="preserve">
+  <data name="AllLicensePlaced" xml:space="preserve">
     <value>すべてのライセンス ID が予約されています。別のインスタンスを選択してください</value>
   </data>
   <data name="AssignmentReviewNotFound" xml:space="preserve">
@@ -598,7 +601,7 @@
   <data name="ErrorOccurredDeleteAssignmentReview" xml:space="preserve">
     <value>課題レビューを削除しようとしたときにエラーが発生しました</value>
   </data>
-  <data name="ErrorOccurredOnMinioCredentails" xml:space="preserve">
+  <data name="ErrorOccurredOnMinioCredentials" xml:space="preserve">
     <value>Minio 資格情報を取得しようとしたときにエラーが発生しました</value>
   </data>
   <data name="ErrorOccurredOnUploadFile" xml:space="preserve">
@@ -646,7 +649,7 @@
   <data name="LateSubmission" xml:space="preserve">
     <value>提出が遅れています</value>
   </data>
-  <data name="QuestionPoolAuhorCannotRemoved" xml:space="preserve">
+  <data name="QuestionPoolAuthorCannotRemoved" xml:space="preserve">
     <value>質問プールの作成者は削除できません</value>
   </data>
   <data name="QuestionPoolAuthorCanNotAdded" xml:space="preserve">
@@ -718,7 +721,7 @@
   <data name="CannotSubmitAssignmentStatusCompleted" xml:space="preserve">
     <value>完了ステータスのトレーニングの課題を提出することはできません</value>
   </data>
-  <data name="CeritificateAlreadyApproved" xml:space="preserve">
+  <data name="CertificateAlreadyApproved" xml:space="preserve">
     <value>の付いた証明書はすでに承認されています</value>
   </data>
   <data name="CurrentUserRequired" xml:space="preserve">
@@ -742,10 +745,10 @@
   <data name="EnterUserEmail" xml:space="preserve">
     <value>ユーザーのメールアドレスを入力してください</value>
   </data>
-  <data name="ErroprOccurredFetchStudentSubmittedAssignment" xml:space="preserve">
+  <data name="ErrorOccurredFetchStudentSubmittedAssignment" xml:space="preserve">
     <value>学生が提出した課題を取得しようとしたときにエラーが発生しました</value>
   </data>
-  <data name="ErrorOccuredSubmitAssignment" xml:space="preserve">
+  <data name="ErrorOccurredSubmitAssignment" xml:space="preserve">
     <value>課題を送信しようとしたときにエラーが発生しました</value>
   </data>
   <data name="ErrorOccurredRemoveFileFromGroup" xml:space="preserve">
@@ -855,7 +858,7 @@
   <data name="TrainingTeacherCannotSubmitAssignment" xml:space="preserve">
     <value>研修講師は課題を提出できません</value>
   </data>
-  <data name="TraningExamCompletedStatus" xml:space="preserve">
+  <data name="TrainingExamCompletedStatus" xml:space="preserve">
     <value>研修修了者は試験を受けることができません</value>
   </data>
   <data name="UnauthorizedUserToCreateAttachment" xml:space="preserve">
@@ -990,7 +993,7 @@
   <data name="CannotAddSignatureWithoutCertificate" xml:space="preserve">
     <value>署名を追加する前に証明書を追加してください。</value>
   </data>
-  <data name="AddingDuratrionError" xml:space="preserve">
+  <data name="AddingDurationError" xml:space="preserve">
     <value>期間を追加すると終了日を超えます。</value>
   </data>
   <data name="EmptyFile" xml:space="preserve">
@@ -1008,7 +1011,7 @@
   <data name="QuestionPoolQuestionNotFound" xml:space="preserve">
     <value>質問プールの質問が見つかりませんでした。</value>
   </data>
-  <data name="QuestionpoolUpdatedSuccesfully" xml:space="preserve">
+  <data name="QuestionPoolUpdatedSuccessfully" xml:space="preserve">
     <value>質問プールの質問が正常に更新されました。</value>
   </data>
   <data name="AssignmentUpdatedSuccessfully" xml:space="preserve">

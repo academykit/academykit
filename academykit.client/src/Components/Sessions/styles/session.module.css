@@ -38,7 +38,7 @@
 /* Title */
 .title {
   color: pink;
-  font-family: 'Greycliff CF', var(--mantine-font-family);
+  font-family: var(--mantine-font-family);
   font-size: 42px;
   line-height: 1.2;
   font-weight: 800;

@@ -1,7 +1,6 @@
 import { Badge, Button } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { ICourseLesson } from "@utils/services/courseService";
-import { getIframelyOembed } from "@utils/services/iframelyService";
 import { useWatchHistory } from "@utils/services/watchHistory";
 import { t } from "i18next";
 import { useEffect, useState } from "react";
@@ -38,7 +37,7 @@ export default function ExternalLinkViewer(props: Props) {
 
   useEffect(() => {
     if (props && props.url) {
-      getIframelyOembed(props.url).then(
+      getIframelyOEmbed(props.url).then(
         (response) => {
           const res = response.data;
           console.log(res);
