@@ -45,9 +45,7 @@
                 .HasColumnType("VARCHAR(1000)")
                 .HasMaxLength(1000)
                 .IsRequired(false);
-            builder
-                .Property(x => x.IsSetupCompleted)
-                .HasColumnName("is_setup_completed");
+            builder.Property(x => x.IsSetupCompleted).HasColumnName("is_setup_completed");
             builder
                 .Property(x => x.CustomConfiguration)
                 .HasColumnName("custom_configuration")
