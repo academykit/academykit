@@ -79,7 +79,7 @@
     "react-player": "^2.16.0",
     "react-router-dom": "^6.25.1",
     "sanitize-html": "^2.13.0",
-    "webpack": "^5.93.0",
+    "webpack": "^5.94.0",
     "yup": "^1.4.0"
   },
   "devDependencies": {
