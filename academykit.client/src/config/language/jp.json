@@ -1169,5 +1169,9 @@
   "license_activation_fail": "もう一度お試しください。ライセンスのアクティベーションに失敗しました。",
   "buy_key": "キーを購入する",
   "logo_url": "ロゴのURL",
-  "enter_logo_url": "ロゴのURLを入力してください"
+  "logo_url_setup_later": "ロゴのURLは後で設定できます。",
+  "user_is_super_admin": "このユーザーはスーパ管理者です。",
+  "organization_detail": "組織の詳細",
+  "user_detail": "ユーザーの詳細",
+  "back": "戻る"
 }

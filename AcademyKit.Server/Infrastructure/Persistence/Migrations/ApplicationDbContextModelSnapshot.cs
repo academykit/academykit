@@ -1830,9 +1830,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnName("email_signature");
 
                     b.Property<bool>("IsSetupCompleted")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(false)
                         .HasColumnName("is_setup_completed");
 
                     b.Property<string>("LogoUrl")

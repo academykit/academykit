@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240829165404_Initial")]
+    [Migration("20240830101141_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -1833,9 +1833,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnName("email_signature");
 
                     b.Property<bool>("IsSetupCompleted")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(false)
                         .HasColumnName("is_setup_completed");
 
                     b.Property<string>("LogoUrl")

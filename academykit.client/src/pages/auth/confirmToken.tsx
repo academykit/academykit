@@ -1,11 +1,10 @@
+import Logo from "@components/Logo";
 import {
   Anchor,
   Box,
   Button,
-  Center,
   Container,
   Group,
-  Image,
   Paper,
   PasswordInput,
   TextInput,
@@ -132,8 +131,8 @@ const ConfirmToken = () => {
       localStorage.setItem(
         "app-info",
         JSON.stringify({
-          name: companySettings.data.data.name,
-          logo: companySettings.data.data.imageUrl,
+          name: companySettings.data.data?.name ?? "AcademyKit",
+          logo: companySettings.data.data.imageUrl ?? "/favicon.png",
         })
       );
       setHeader();
@@ -142,16 +141,11 @@ const ConfirmToken = () => {
 
   return (
     <Container size={470} my={40} style={{ position: "relative" }}>
-      <Center m={"lg"}>
-        <Link to={"/"}>
-          <Image
-            height={100}
-            width={100}
-            src={companySettings?.data?.data?.imageUrl}
-          ></Image>
-        </Link>
-      </Center>
-
+      <Logo
+        height={100}
+        width={100}
+        url={companySettings?.data?.data?.imageUrl}
+      />
       <Box style={{ position: "absolute", width: "100%" }}>
         <Transition
           mounted={!toggle}

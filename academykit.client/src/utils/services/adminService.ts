@@ -82,6 +82,7 @@ export interface ICompanySetting {
   imageUrl: string;
   customConfiguration?: string;
   appVersion: string;
+  isSetupCompleted?: boolean;
 }
 
 export interface IGeneralSettingUpdate {
@@ -90,6 +91,17 @@ export interface IGeneralSettingUpdate {
   companyAddress: string;
   companyContactNumber: string;
   emailSignature: string;
+}
+
+export interface ISetupInitial {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  companyName: string;
+  companyAddress: string;
+  logoUrl: string;
 }
 
 export interface IZoomLicense<T> {
@@ -863,6 +875,22 @@ export const useDeleteMailNotification = () => {
 
     onError: (err) => {
       return errorType(err);
+    },
+  });
+};
+
+export const useInitialSetup = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: [api.adminUser.initialSetup],
+
+    mutationFn: (data: ISetupInitial) => {
+      return httpClient.post(api.adminUser.initialSetup, data);
+    },
+    onSuccess: () => {
+      queryClient.refetchQueries({
+        queryKey: [api.adminUser.getCompanySettings],
+      });
     },
   });
 };

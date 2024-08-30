@@ -1227,5 +1227,10 @@
   "license_activation_fail": "Please try again.License Activation Failed.",
   "buy_key": "Buy Key",
   "logo_url": "Logo Url",
-  "enter_logo_url": "Enter logo url"
+  "enter_logo_url": "Enter logo url",
+  "logo_url_setup_later": "Logo Url can be setup later.",
+  "user_is_super_admin": "This user will be super admin.",
+  "organization_detail": "Organization Detail",
+  "user_detail": "User Detail",
+  "back": "Back"
 }

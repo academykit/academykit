@@ -1,10 +1,9 @@
+import Logo from "@components/Logo";
 import {
   Anchor,
   Button,
-  Center,
   Container,
   Group,
-  Image,
   Paper,
   TextInput,
   Title,
@@ -94,8 +93,8 @@ const ForgotPassword = () => {
       localStorage.setItem(
         "app-info",
         JSON.stringify({
-          name: companySettings.data.data.name,
-          logo: companySettings.data.data.imageUrl,
+          name: companySettings.data.data?.name ?? "AcademyKit",
+          logo: companySettings.data.data.imageUrl ?? "/favicon.png",
         })
       );
       setHeader();
@@ -104,15 +103,11 @@ const ForgotPassword = () => {
 
   return (
     <Container size={470} my={40}>
-      <Center m={"lg"}>
-        <Link to={"/"}>
-          <Image
-            height={50}
-            width={50}
-            src={companySettings?.data?.data?.imageUrl}
-          ></Image>
-        </Link>
-      </Center>
+      <Logo
+        height={50}
+        width={50}
+        url={companySettings?.data?.data?.imageUrl}
+      />
       <Title
         ta="center"
         style={(theme) => ({

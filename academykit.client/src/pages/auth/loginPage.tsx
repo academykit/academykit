@@ -1,12 +1,11 @@
+import Logo from "@components/Logo";
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 import { BrandingContext } from "@context/BrandingThemeContext";
 import {
   Anchor,
   Button,
-  Center,
   Container,
   Group,
-  Image,
   Paper,
   PasswordInput,
   Title,
@@ -103,18 +102,17 @@ const LoginPage = () => {
     setHeader();
 
     if (companySettings.isSuccess) {
-      if (!companySettings.data.data.name) {
-        navigate("/organization/setup");
+      if (!companySettings?.data?.data?.isSetupCompleted) {
+        return navigate("/initial/setup", { replace: true });
       }
-      console.log("companySetting", companySettings.data.data);
       const branding = JSON.parse(
         companySettings.data.data.customConfiguration ?? "{}"
       );
       localStorage.setItem(
         "app-info",
         JSON.stringify({
-          name: companySettings.data.data.name,
-          logo: companySettings.data.data.imageUrl,
+          name: companySettings.data.data?.name ?? "AcademyKit",
+          logo: companySettings.data.data.imageUrl ?? "/favicon.png",
         })
       );
       localStorage.setItem("branding", branding.accent);
@@ -126,17 +124,11 @@ const LoginPage = () => {
 
   return (
     <Container size={420} my={40}>
-      <Center m={"lg"}>
-        <Link to={"/"}>
-          <Image
-            height={50}
-            width={140}
-            src={companySettings?.data?.data?.imageUrl}
-            alt="logo"
-            fit="contain"
-          />
-        </Link>
-      </Center>
+      <Logo
+        height={50}
+        width={140}
+        url={companySettings?.data?.data?.imageUrl}
+      />
       <Title
         ta="center"
         style={(theme) => ({

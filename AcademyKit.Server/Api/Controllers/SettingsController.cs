@@ -81,6 +81,7 @@
                 Name = response?.CompanyName,
                 ImageUrl = response?.LogoUrl,
                 CustomConfiguration = response?.CustomConfiguration,
+                IsSetupCompleted = response?.IsSetupCompleted,
                 AppVersion = Assembly
                     .GetEntryAssembly()
                     ?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
