@@ -19,41 +19,48 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 oldClrType: typeof(bool),
                 oldType: "tinyint(1)",
                 oldNullable: true,
-                oldDefaultValue: false);
+                oldDefaultValue: false
+            );
 
-            migrationBuilder.AlterColumn<string>(
-                name: "logo_url",
-                table: "GeneralSettings",
-                type: "VARCHAR(500)",
-                maxLength: 500,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "VARCHAR(500)",
-                oldMaxLength: 500)
+            migrationBuilder
+                .AlterColumn<string>(
+                    name: "logo_url",
+                    table: "GeneralSettings",
+                    type: "VARCHAR(500)",
+                    maxLength: 500,
+                    nullable: true,
+                    oldClrType: typeof(string),
+                    oldType: "VARCHAR(500)",
+                    oldMaxLength: 500
+                )
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .OldAnnotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "company_contact_number",
-                table: "GeneralSettings",
-                type: "VARCHAR(30)",
-                maxLength: 30,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "VARCHAR(30)",
-                oldMaxLength: 30)
+            migrationBuilder
+                .AlterColumn<string>(
+                    name: "company_contact_number",
+                    table: "GeneralSettings",
+                    type: "VARCHAR(30)",
+                    maxLength: 30,
+                    nullable: true,
+                    oldClrType: typeof(string),
+                    oldType: "VARCHAR(30)",
+                    oldMaxLength: 30
+                )
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .OldAnnotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "company_address",
-                table: "GeneralSettings",
-                type: "VARCHAR(250)",
-                maxLength: 250,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "VARCHAR(250)",
-                oldMaxLength: 250)
+            migrationBuilder
+                .AlterColumn<string>(
+                    name: "company_address",
+                    table: "GeneralSettings",
+                    type: "VARCHAR(250)",
+                    maxLength: 250,
+                    nullable: true,
+                    oldClrType: typeof(string),
+                    oldType: "VARCHAR(250)",
+                    oldMaxLength: 250
+                )
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .OldAnnotation("MySql:CharSet", "utf8mb4");
 
@@ -62,15 +69,14 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 table: "GeneralSettings",
                 type: "tinyint(1)",
                 nullable: false,
-                defaultValue: false);
+                defaultValue: false
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "is_setup_completed",
-                table: "GeneralSettings");
+            migrationBuilder.DropColumn(name: "is_setup_completed", table: "GeneralSettings");
 
             migrationBuilder.AlterColumn<bool>(
                 name: "is_default",
@@ -80,25 +86,29 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 defaultValue: false,
                 oldClrType: typeof(bool),
                 oldType: "tinyint(1)",
-                oldDefaultValue: false);
+                oldDefaultValue: false
+            );
 
             migrationBuilder.UpdateData(
                 table: "GeneralSettings",
                 keyColumn: "logo_url",
                 keyValue: null,
                 column: "logo_url",
-                value: "");
+                value: ""
+            );
 
-            migrationBuilder.AlterColumn<string>(
-                name: "logo_url",
-                table: "GeneralSettings",
-                type: "VARCHAR(500)",
-                maxLength: 500,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "VARCHAR(500)",
-                oldMaxLength: 500,
-                oldNullable: true)
+            migrationBuilder
+                .AlterColumn<string>(
+                    name: "logo_url",
+                    table: "GeneralSettings",
+                    type: "VARCHAR(500)",
+                    maxLength: 500,
+                    nullable: false,
+                    oldClrType: typeof(string),
+                    oldType: "VARCHAR(500)",
+                    oldMaxLength: 500,
+                    oldNullable: true
+                )
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .OldAnnotation("MySql:CharSet", "utf8mb4");
 
@@ -107,18 +117,21 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 keyColumn: "company_contact_number",
                 keyValue: null,
                 column: "company_contact_number",
-                value: "");
+                value: ""
+            );
 
-            migrationBuilder.AlterColumn<string>(
-                name: "company_contact_number",
-                table: "GeneralSettings",
-                type: "VARCHAR(30)",
-                maxLength: 30,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "VARCHAR(30)",
-                oldMaxLength: 30,
-                oldNullable: true)
+            migrationBuilder
+                .AlterColumn<string>(
+                    name: "company_contact_number",
+                    table: "GeneralSettings",
+                    type: "VARCHAR(30)",
+                    maxLength: 30,
+                    nullable: false,
+                    oldClrType: typeof(string),
+                    oldType: "VARCHAR(30)",
+                    oldMaxLength: 30,
+                    oldNullable: true
+                )
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .OldAnnotation("MySql:CharSet", "utf8mb4");
 
@@ -127,18 +140,21 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 keyColumn: "company_address",
                 keyValue: null,
                 column: "company_address",
-                value: "");
+                value: ""
+            );
 
-            migrationBuilder.AlterColumn<string>(
-                name: "company_address",
-                table: "GeneralSettings",
-                type: "VARCHAR(250)",
-                maxLength: 250,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "VARCHAR(250)",
-                oldMaxLength: 250,
-                oldNullable: true)
+            migrationBuilder
+                .AlterColumn<string>(
+                    name: "company_address",
+                    table: "GeneralSettings",
+                    type: "VARCHAR(250)",
+                    maxLength: 250,
+                    nullable: false,
+                    oldClrType: typeof(string),
+                    oldType: "VARCHAR(250)",
+                    oldMaxLength: 250,
+                    oldNullable: true
+                )
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .OldAnnotation("MySql:CharSet", "utf8mb4");
         }
