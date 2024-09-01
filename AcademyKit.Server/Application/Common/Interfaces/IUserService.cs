@@ -4,6 +4,7 @@
     using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Application.Common.Models.ResponseModels;
     using AcademyKit.Domain.Entities;
+    using AcademyKit.Server.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Http;
 
     public interface IUserService : IGenericService<User, UserSearchCriteria>
@@ -14,6 +15,13 @@
         /// <param name="model">the instance of <see cref="LoginRequestModel"/></param>
         /// <returns>the instance of <see cref="AuthenticationModel"/></returns>
         Task<AuthenticationModel> VerifyUserAndGetToken(LoginRequestModel model);
+
+        /// <summary>
+        /// Generates an authentication token for a user using SSO information.
+        /// </summary>
+        /// <param name="model">The SSO user details.</param>
+        /// <returns>A task representing the asynchronous operation, with an <see cref="AuthenticationModel"/> containing the token and user information.</returns>
+        Task<AuthenticationModel> GenerateTokenUsingSSOAsync(OAuthUserResponseModel model);
 
         /// <summary>
         /// Handle to logout user and set refresh token false

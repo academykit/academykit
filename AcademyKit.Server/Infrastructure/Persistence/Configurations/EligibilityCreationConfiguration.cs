@@ -1,4 +1,4 @@
-namespace AcademyKit.Infrastructure.Persistence.Configurations
+﻿namespace AcademyKit.Infrastructure.Persistence.Configurations
 {
     using AcademyKit.Domain.Entities;
     using Microsoft.EntityFrameworkCore;
@@ -75,6 +75,12 @@ namespace AcademyKit.Infrastructure.Persistence.Configurations
                 .HasColumnName("updated_on")
                 .HasColumnType("DATETIME")
                 .IsRequired(false);
+
+            builder
+                .HasOne(x => x.TrainingEligibility)
+                .WithOne(x => x.EligibilityCreation)
+                .HasForeignKey<TrainingEligibility>(x => x.EligibilityId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

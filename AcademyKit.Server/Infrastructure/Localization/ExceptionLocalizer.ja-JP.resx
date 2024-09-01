@@ -1071,4 +1071,16 @@
   <data name="ApiKeyRemovedSuccessfully" xml:space="preserve">
     <value>APIキーが正常に削除されました</value>
   </data>
+  <data name="TokenRetrievalError" xml:space="preserve">
+    <value>アクセストークンの取得中にエラーが発生しました。</value>
+  </data>
+  <data name="MissingClientIdOrSecret" xml:space="preserve">
+    <value>クライアントIDまたはクライアントシークレットがありません。</value>
+  </data>
+  <data name="AuthenticationFailedInvalidToken" xml:space="preserve">
+    <value>認証に失敗しました。無効、不足、または期限切れのベアラートークンです。</value>
+  </data>
+  <data name="AuthenticationFailedApiKey" xml:space="preserve">
+    <value>認証に失敗しました。無効または欠落しているAPIキーです。</value>
+  </data>
 </root>

@@ -1,8 +1,9 @@
 {
   "scripts": {
     "clean": "rimraf node_modules && rimraf src/Api/ClientApp/node_modules && dotnet clean",
-    "format": "dotnet csharpier . && prettier --write .",
-    "format:check": "dotnet csharpier --check . && prettier --check . && cspell --config .cspell.json"
+    "format": "dotnet csharpier . && prettier --write . && cspell .",
+    "checkSpell": "cspell .",
+    "format:check": "dotnet csharpier --check . && prettier --check . && cspell --config .cspell.json ."
   },
   "devDependencies": {
     "@swc/cli": "^0.1.62",

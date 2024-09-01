@@ -1,4 +1,4 @@
-namespace AcademyKit.Domain.Entities
+﻿namespace AcademyKit.Domain.Entities
 {
     using AcademyKit.Domain.Common;
     using AcademyKit.Domain.Enums;
@@ -18,5 +18,6 @@ namespace AcademyKit.Domain.Entities
         public Assessment CompletedAssessment { get; set; }
         public Assessment Assessment { get; set; }
         public Guid? AssessmentId { get; set; }
+        public virtual TrainingEligibility TrainingEligibility { get; set; }
     }
 }

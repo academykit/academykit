@@ -117,12 +117,16 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0,
-      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>
+      System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089
+    </value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0,
-      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>
+      System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089
+    </value>
   </resheader>
   <data name="TrainingRemoved" xml:space="preserve">
     <value> तालिम सफलतापूर्वक हटाइयो।</value>
@@ -1069,4 +1073,16 @@
   <data name="ApiKeyRemovedSuccessfully" xml:space="preserve">
     <value>API कुञ्जी सफलतापूर्वक हटाइयो</value>
   </data>
+  <data name="TokenRetrievalError" xml:space="preserve">
+  <value>एक्सेस टोकन प्राप्त गर्दा एक त्रुटि आएको छ।</value>
+</data>
+  <data name="MissingClientIdOrSecret" xml:space="preserve">
+  <value>क्लाइन्ट आईडी वा क्लाइन्ट सेक्रेट हराइयो।</value>
+</data>
+  <data name="AuthenticationFailedInvalidToken" xml:space="preserve">
+  <value>प्रमाणीकरण असफल भयो। अमान्य, हराएको, वा समाप्त भएको बियरर टोकन।</value>
+</data>
+  <data name="AuthenticationFailedApiKey" xml:space="preserve">
+  <value>प्रमाणीकरण असफल भयो। अमान्य वा हराइरहेको API कुञ्जी।</value>
+</data>
 </root>

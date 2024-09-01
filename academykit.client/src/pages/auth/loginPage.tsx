@@ -1,3 +1,4 @@
+import { Google, Microsoft } from "@components/Icons";
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 import { BrandingContext } from "@context/BrandingThemeContext";
 import {
@@ -9,6 +10,7 @@ import {
   Image,
   Paper,
   PasswordInput,
+  Text,
   Title,
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
@@ -16,6 +18,7 @@ import { showNotification } from "@mantine/notifications";
 import RoutePath from "@utils/routeConstants";
 import { useCompanySetting } from "@utils/services/adminService";
 import { useLogin } from "@utils/services/authService";
+import { api } from "@utils/services/service-api";
 import { IUserProfile } from "@utils/services/types";
 import { AxiosError } from "axios";
 import { useContext, useEffect } from "react";
@@ -177,6 +180,68 @@ const LoginPage = () => {
           </Button>
         </Paper>
       </form>
+      <Center my={18}>
+        <Text size="sm">
+          {t("create_new_agreement")} <Link to={"/"}>{t("terms_service")}</Link>
+          , <Link to={"/"}>{t("privacy_policy")}</Link>, {t("and_our_default")}{" "}
+          <Link to={"/"}>{t("notification_settings")}</Link>.
+        </Text>
+      </Center>
+      <div
+        style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 5 }}
+      >
+        <div
+          style={{
+            flex: "1",
+            height: "1px",
+            width: "100%",
+            background: "black",
+          }}
+        ></div>
+        <Text size="sm" style={{ whiteSpace: "nowrap" }}>
+          {t("or_sign_in_with")}
+        </Text>
+        <div
+          style={{
+            flex: "1",
+            height: "1px",
+            width: "100%",
+            background: "black",
+          }}
+        ></div>
+      </div>
+      <Center style={{ gap: 30, marginTop: 5 }}>
+        <form action={api.auth.googleSignIn} method="get">
+          <button
+            style={{
+              border: "none",
+              margin: "0",
+              padding: "0",
+              background: "transparent",
+              cursor: "pointer",
+            }}
+            type="submit"
+          >
+            {" "}
+            <Google height={28} width={28} />{" "}
+          </button>
+        </form>
+        <form action={api.auth.microsoftSignIn} method="get">
+          <button
+            style={{
+              border: "none",
+              margin: "0",
+              padding: "0",
+              background: "transparent",
+              cursor: "pointer",
+            }}
+            type="submit"
+          >
+            {" "}
+            <Microsoft height={28} width={28} />
+          </button>
+        </form>
+      </Center>
     </Container>
   );
 };

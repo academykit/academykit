@@ -201,7 +201,8 @@
                 .Include(x => x.Group)
                 .Include(x => x.CourseTeachers)
                 .Include(x => x.CourseEnrollments)
-                .Include(x => x.TrainingEligibilities);
+                .Include(x => x.TrainingEligibilities)
+                .ThenInclude(x => x.EligibilityCreation);
         }
 
         /// <summary>
@@ -1924,10 +1925,15 @@
                 )
                 .ConfigureAwait(false);
 
-            var average = examResult.Average(ex => ex.TotalMark);
-            var examRank = examResult.OrderByDescending(ex => ex.TotalMark);
-
-            var examStudent = examRank.Select(result => result.User).ToList();
+            decimal average = 0;
+            var examRank = Enumerable.Empty<QuestionSetResult>().OrderBy(q => 0);
+            var examStudent = new List<User>();
+            if (examResult.Count > 0)
+            {
+                average = examResult.Average(ex => ex.TotalMark);
+                examRank = examResult.OrderByDescending(ex => ex.TotalMark);
+                examStudent = examRank.Select(result => result.User).ToList();
+            }
 
             var weakStudent = new List<UserModel>();
             var topStudent = new List<UserModel>();
@@ -2131,14 +2137,14 @@
                 )
                 .ConfigureAwait(false);
 
-            var AssignmentWatchHistory = await _unitOfWork
+            var assignmentWatchHistory = await _unitOfWork
                 .GetRepository<WatchHistory>()
                 .GetAllAsync(predicate: p => p.LessonId == lesson.Id)
                 .ConfigureAwait(false);
 
             var totalPass = 0;
             var totalFail = 0;
-            foreach (var wh in AssignmentWatchHistory)
+            foreach (var wh in assignmentWatchHistory)
             {
                 if (wh.IsPassed == true)
                 {
@@ -2149,9 +2155,20 @@
                     totalFail++;
                 }
             }
+            var failedStudents = assignmentWatchHistory
+                .Where(x => !x.IsPassed)
+                .Select(x => x.UserId)
+                .ToList();
 
-            var totalAttendees = AssignmentWatchHistory.Count();
-            var assignRank = reviewedAssignment.OrderByDescending(x => x.Mark);
+            var failedStudentReviews = reviewedAssignment
+                .Where(x => failedStudents.Contains(x.UserId))
+                .Select(x => x.User)
+                .ToList();
+
+            var totalAttendees = assignmentWatchHistory.Count();
+            var assignRank = reviewedAssignment
+                .Where(x => assignmentWatchHistory.Any(wh => wh.UserId == x.UserId && wh.IsPassed))
+                .OrderByDescending(x => x.Mark);
             var averageMark = reviewedAssignment.Average(x => x.Mark);
             var assignedStudents = assignRank.Select(x => x.User).ToList();
 
@@ -2168,7 +2185,7 @@
                 }
             }
 
-            var weakStd = assignedStudents.TakeLast(3).ToList();
+            var weakStd = failedStudentReviews.ToList();
             foreach (var std in weakStd)
             {
                 weakStudents.Add(new UserModel(std));

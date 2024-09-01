@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -1072,46 +1073,6 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
             migrationBuilder
                 .CreateTable(
-                    name: "TrainingEligibility",
-                    columns: table => new
-                    {
-                        id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                            .Annotation("MySql:CharSet", "utf8mb4"),
-                        course_id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                            .Annotation("MySql:CharSet", "utf8mb4"),
-                        eligibility_id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                            .Annotation("MySql:CharSet", "utf8mb4"),
-                        training_eligibility_enum = table
-                            .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
-                            .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
-                            .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                        updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
-                            .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
-                    },
-                    constraints: table =>
-                    {
-                        table.PrimaryKey("PK_TrainingEligibility", x => x.id);
-                        table.ForeignKey(
-                            name: "FK_TrainingEligibility_Courses_course_id",
-                            column: x => x.course_id,
-                            principalTable: "Courses",
-                            principalColumn: "id",
-                            onDelete: ReferentialAction.Cascade
-                        );
-                    }
-                )
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder
-                .CreateTable(
                     name: "CourseTags",
                     columns: table => new
                     {
@@ -1228,7 +1189,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         role = table.Column<int>(type: "int", nullable: false, defaultValue: 4),
                         status = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                         hash_password = table
-                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                            .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         public_urls = table
                             .Column<string>(type: "VARCHAR(2000)", maxLength: 2000, nullable: true)
@@ -1363,6 +1324,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         is_active = table.Column<bool>(
                             type: "tinyint(1)",
                             nullable: false,
+                            defaultValue: false
+                        ),
+                        is_default = table.Column<bool>(
+                            type: "tinyint(1)",
+                            nullable: true,
                             defaultValue: false
                         ),
                         created_by = table
@@ -2476,6 +2442,53 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
             migrationBuilder
                 .CreateTable(
+                    name: "TrainingEligibility",
+                    columns: table => new
+                    {
+                        id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        course_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        eligibility_id = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        training_eligibility_enum = table
+                            .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        updated_by = table
+                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_TrainingEligibility", x => x.id);
+                        table.ForeignKey(
+                            name: "FK_TrainingEligibility_Courses_course_id",
+                            column: x => x.course_id,
+                            principalTable: "Courses",
+                            principalColumn: "id",
+                            onDelete: ReferentialAction.Cascade
+                        );
+                        table.ForeignKey(
+                            name: "FK_TrainingEligibility_EligibilityCreations_eligibility_id",
+                            column: x => x.eligibility_id,
+                            principalTable: "EligibilityCreations",
+                            principalColumn: "id",
+                            onDelete: ReferentialAction.SetNull
+                        );
+                    }
+                )
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder
+                .CreateTable(
                     name: "QuestionSetQuestions",
                     columns: table => new
                     {
@@ -2567,7 +2580,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     {
                         table.PrimaryKey("PK_QuestionSetResults", x => x.id);
                         table.ForeignKey(
-                            name: "FK_QuestionSetResults_QuestionSetSubmissions_question_set_submission",
+                            name: "FK_QuestionSetResults_QuestionSetSubmissions_question_set_submission_id",
                             column: x => x.question_set_submission_id,
                             principalTable: "QuestionSetSubmissions",
                             principalColumn: "id"
@@ -3778,6 +3791,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
             );
 
             migrationBuilder.CreateIndex(
+                name: "IX_TrainingEligibility_eligibility_id",
+                table: "TrainingEligibility",
+                column: "eligibility_id",
+                unique: true
+            );
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_department_id",
                 table: "Users",
                 column: "department_id"
@@ -4189,8 +4209,6 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(name: "CourseTeachers");
 
-            migrationBuilder.DropTable(name: "EligibilityCreations");
-
             migrationBuilder.DropTable(name: "FeedbackQuestionOptions");
 
             migrationBuilder.DropTable(name: "FeedbackSubmissions");
@@ -4259,13 +4277,15 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(name: "Tags");
 
-            migrationBuilder.DropTable(name: "Skills");
-
-            migrationBuilder.DropTable(name: "Assessments");
+            migrationBuilder.DropTable(name: "EligibilityCreations");
 
             migrationBuilder.DropTable(name: "Assignments");
 
             migrationBuilder.DropTable(name: "QuestionPoolQuestions");
+
+            migrationBuilder.DropTable(name: "Assessments");
+
+            migrationBuilder.DropTable(name: "Skills");
 
             migrationBuilder.DropTable(name: "Lessons");
 

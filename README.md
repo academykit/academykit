@@ -106,4 +106,5 @@ Run
 
 ```bash
 dotnet csharpier .
+npm run cspell .
 ```
