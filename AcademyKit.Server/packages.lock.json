@@ -427,9 +427,9 @@
       },
       "RestSharp": {
         "type": "Direct",
-        "requested": "[111.4.0, )",
-        "resolved": "111.4.0",
-        "contentHash": "GcOIOyYYFm3oCFHbGBwGtDawC9yqvv6m7Ixyt+qeI+/UrPNyCJK31VOPRfEgj5M+3AfigSP6a8jZyFtBZxouTA=="
+        "requested": "[112.0.0, )",
+        "resolved": "112.0.0",
+        "contentHash": "vezxJ6DLk0eDx+rmXwVHQvJ3elZCJfnLd8neRrkA+IvTs9falf2CEAolsjI1YKkkHTOvG13xWTnHK7gU0zgaaw=="
       },
       "Swashbuckle.AspNetCore": {
         "type": "Direct",

@@ -1225,5 +1225,12 @@
   "license_key": "License Key",
   "license_activation_success": "License Activate Successfully.",
   "license_activation_fail": "Please try again.License Activation Failed.",
-  "buy_key": "Buy Key"
+  "buy_key": "Buy Key",
+  "go_back_login": "Back to Login",
+  "create_new_agreement": "By creating an account you agree with our",
+  "terms_service": "Terms of Service",
+  "privacy_policy": "Privacy Policy",
+  "and_our_default": "and our default",
+  "notification_settings": "Notification Settings",
+  "or_sign_in_with": "Or Sign In with"
 }

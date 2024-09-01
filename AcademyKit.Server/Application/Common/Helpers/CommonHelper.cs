@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace AcademyKit.Application.Common.Helpers
 {
@@ -26,6 +27,17 @@ namespace AcademyKit.Application.Common.Helpers
             var textOnly = Regex.Replace(text, "<.*?>", "");
 
             return textOnly;
+        }
+
+        /// <summary>
+        /// Generates a random nonce using a secure random number generator.
+        /// </summary>
+        /// <returns>A base64-encoded string representing the nonce.</returns>
+        public static string GenerateNonce()
+        {
+            var randomBytes = new byte[32];
+            RandomNumberGenerator.Fill(randomBytes);
+            return Convert.ToBase64String(randomBytes);
         }
     }
 }

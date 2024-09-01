@@ -1167,5 +1167,12 @@
   "license_key": "ライセンスキ",
   "license_activation_success": "ライセンスが正常にアクティブ化されました",
   "license_activation_fail": "もう一度お試しください。ライセンスのアクティベーションに失敗しました。",
-  "buy_key": "キーを購入する"
+  "buy_key": "キーを購入する",
+  "go_back_login": "ログインに戻る",
+  "create_new_agreement": "アカウントを作成することにより、以下に同意したことになります",
+  "terms_service": "利用規約",
+  "privacy_policy": "プライバシーポリシー",
+  "and_our_default": "およびデフォルトの",
+  "notification_settings": "通知設定",
+  "or_sign_in_with": "または以下でサインイン"
 }

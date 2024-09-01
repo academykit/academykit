@@ -1,9 +1,8 @@
 ﻿namespace AcademyKit.Infrastructure.Configurations
 {
-    using System.Security.Claims;
     using System.Text;
-    using AcademyKit.Application.Common.Exceptions;
     using AcademyKit.Infrastructure.Security;
+    using AcademyKit.Server.Infrastructure.Configurations;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Http;
@@ -20,13 +19,16 @@
         )
         {
             services.Configure<JWT>(configuration.GetSection("JWT"));
-            services.Configure<ApplicationInfo>(configuration.GetSection("Application"));
+            services.Configure<AppUrls>(configuration.GetSection("AppUrls"));
+            services.Configure<GoogleOAuth>(configuration.GetSection("GoogleOAuth"));
+            services.Configure<MicrosoftOAuth>(configuration.GetSection("MicrosoftOAuth"));
 
             services
                 .AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
                 .AddJwtBearer(o =>
                 {
