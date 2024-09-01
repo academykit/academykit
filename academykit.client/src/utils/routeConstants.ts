@@ -4,6 +4,7 @@ const RoutePath = {
   login: "/login",
   forgotPassword: "/forgot-password",
   confirmToken: "/confirm",
+  initialSetup: "/initial/setup",
   signInRedirect: "/redirect/signIn",
   oAuthError: "/error",
   404: "/404",

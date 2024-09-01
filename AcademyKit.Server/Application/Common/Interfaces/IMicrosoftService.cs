@@ -1,6 +1,6 @@
-﻿using AcademyKit.Server.Application.Common.Models.ResponseModels;
+﻿using AcademyKit.Application.Common.Models.ResponseModels;
 
-namespace AcademyKit.Server.Application.Common.Interfaces;
+namespace AcademyKit.Application.Common.Interfaces;
 
 public interface IMicrosoftService
 {

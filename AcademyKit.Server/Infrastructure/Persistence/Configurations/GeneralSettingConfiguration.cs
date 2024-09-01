@@ -20,7 +20,7 @@
                 .HasColumnName("logo_url")
                 .HasColumnType("VARCHAR(500)")
                 .HasMaxLength(500)
-                .IsRequired();
+                .IsRequired(false);
             builder
                 .Property(x => x.CompanyName)
                 .HasColumnName("company_name")
@@ -32,18 +32,24 @@
                 .HasColumnName("company_address")
                 .HasColumnType("VARCHAR(250)")
                 .HasMaxLength(250)
-                .IsRequired();
+                .IsRequired(false);
             builder
                 .Property(x => x.CompanyContactNumber)
                 .HasColumnName("company_contact_number")
                 .HasColumnType("VARCHAR(30)")
                 .HasMaxLength(30)
-                .IsRequired();
+                .IsRequired(false);
             builder
                 .Property(x => x.EmailSignature)
                 .HasColumnName("email_signature")
                 .HasColumnType("VARCHAR(1000)")
                 .HasMaxLength(1000)
+                .IsRequired(false);
+            builder.Property(x => x.IsSetupCompleted).HasColumnName("is_setup_completed");
+            builder
+                .Property(x => x.CustomConfiguration)
+                .HasColumnName("custom_configuration")
+                .HasColumnType("VARCHAR(5000)")
                 .IsRequired(false);
             builder
                 .Property(x => x.CreatedBy)
@@ -66,11 +72,6 @@
                 .Property(x => x.UpdatedOn)
                 .HasColumnName("updated_on")
                 .HasColumnType("DATETIME")
-                .IsRequired(false);
-            builder
-                .Property(x => x.CustomConfiguration)
-                .HasColumnName("custom_configuration")
-                .HasColumnType("VARCHAR(5000)")
                 .IsRequired(false);
         }
     }

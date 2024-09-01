@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace AcademyKit.Server.Application.Common.Models.ResponseModels;
+namespace AcademyKit.Application.Common.Models.ResponseModels;
 
 /// <summary>
 /// Represents the user information returned by the Google API.

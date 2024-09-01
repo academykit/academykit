@@ -1,4 +1,4 @@
-﻿namespace AcademyKit.Server.Infrastructure.Configurations;
+﻿namespace AcademyKit.Infrastructure.Configurations;
 
 /// <summary>
 /// Base class for OAuth configuration settings.

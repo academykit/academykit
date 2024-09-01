@@ -213,7 +213,7 @@
   "training_name": "प्रशिक्षणको नाम",
   "completion": "समापन",
   "is_issued": "जारी गरिएको छ",
-  "certificate_url": "प्रमाणपत्र URL",
+  "certificate_url": "प्रमाणपत्र युएरएल",
   "external_certificate": "बाह्य प्रमाणपत्र",
   "external_url_title": "बाह्य युएरएल शीर्षक",
   "verified": "प्रमाणित गरियो",
@@ -1174,5 +1174,12 @@
   "privacy_policy": "गोपनीयता नीति",
   "and_our_default": "र हाम्रो डिफल्ट",
   "notification_settings": "सूचना सेटिङहरू",
-  "or_sign_in_with": "वा यसबाट साइन इन गर्नुहोस्"
+  "or_sign_in_with": "वा यसबाट साइन इन गर्नुहोस्",
+  "logo_url": "लोगोको युएरएल",
+  "enter_logo_url": "लोगोको युएरएल प्रविष्ट गर्नुहोस्।",
+  "logo_url_setup_later": "लोगो यूआरएल बाद में सेट किया जा सकता है।",
+  "user_is_super_admin": "यह उपयोगकर्ता सुपर व्यवस्थापक होगा।",
+  "organization_detail": "संगठन विवरण",
+  "user_detail": "उपयोगकर्ता विवरण",
+  "back": "फिर्ता"
 }

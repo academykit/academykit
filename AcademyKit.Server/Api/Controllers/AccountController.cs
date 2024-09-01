@@ -9,9 +9,6 @@ using AcademyKit.Application.Common.Models.RequestModels;
 using AcademyKit.Application.Common.Models.ResponseModels;
 using AcademyKit.Infrastructure.Configurations;
 using AcademyKit.Infrastructure.Localization;
-using AcademyKit.Server.Application.Common.Interfaces;
-using AcademyKit.Server.Application.Common.Models.ResponseModels;
-using AcademyKit.Server.Infrastructure.Configurations;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +25,7 @@ public class AccountController : BaseApiController
 {
     private readonly ILogger<AccountController> _logger;
     private readonly IUserService _userService;
+    private readonly IPasswordHasher _passwordHasher;
     private readonly IValidator<LoginRequestModel> _validator;
     private readonly IValidator<ResetPasswordRequestModel> _resetPasswordValidator;
     private readonly IValidator<ChangePasswordRequestModel> _changePasswordValidator;
@@ -63,6 +61,7 @@ public class AccountController : BaseApiController
     public AccountController(
         ILogger<AccountController> logger,
         IUserService userService,
+        IPasswordHasher passwordHasher,
         IValidator<LoginRequestModel> validator,
         IValidator<ResetPasswordRequestModel> resetPasswordValidator,
         IValidator<ChangePasswordRequestModel> changePasswordValidator,
@@ -76,6 +75,7 @@ public class AccountController : BaseApiController
     {
         _logger = logger;
         _userService = userService;
+        _passwordHasher = passwordHasher;
         _validator = validator;
         _resetPasswordValidator = resetPasswordValidator;
         _changePasswordValidator = changePasswordValidator;
@@ -222,7 +222,7 @@ public class AccountController : BaseApiController
             );
         }
 
-        user.HashPassword = _userService.HashPassword(model.NewPassword);
+        user.HashPassword = _passwordHasher.HashPassword(model.NewPassword);
         await _userService.UpdateAsync(user, includeProperties: false);
         return Ok(
             new CommonResponseModel

@@ -56,6 +56,7 @@ export const api = {
     getMailNotification: "/api/mailNotification",
     updateMailNotification: (id: string) => `/api/mailNotification/${id}`,
     testEmail: (id: string) => `/api/mailNotification/${id}/checkSendEmail`,
+    initialSetup: "/api/initialSetup",
   },
   groups: {
     list: "/api/Group",

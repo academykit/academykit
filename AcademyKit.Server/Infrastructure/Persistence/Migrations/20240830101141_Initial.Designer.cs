@@ -4,6 +4,7 @@ using AcademyKit.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240827164027_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1795,11 +1798,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("CompanyAddress")
+                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("VARCHAR(250)")
                         .HasColumnName("company_address");
 
                     b.Property<string>("CompanyContactNumber")
+                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("VARCHAR(30)")
                         .HasColumnName("company_contact_number");
@@ -1829,11 +1834,8 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(1000)")
                         .HasColumnName("email_signature");
 
-                    b.Property<bool>("IsSetupCompleted")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("is_setup_completed");
-
                     b.Property<string>("LogoUrl")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("VARCHAR(500)")
                         .HasColumnName("logo_url");
@@ -1878,7 +1880,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasDefaultValue(false)
                         .HasColumnName("is_active");
 
-                    b.Property<bool>("IsDefault")
+                    b.Property<bool?>("IsDefault")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false)

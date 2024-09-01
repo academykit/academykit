@@ -1,203 +1,189 @@
-﻿namespace AcademyKit.Infrastructure.Configurations
+﻿using AcademyKit.Application.Common.Dtos;
+using AcademyKit.Application.Common.Interfaces;
+using AcademyKit.Application.Common.Models.RequestModels;
+using AcademyKit.Application.Common.Validators;
+using AcademyKit.Infrastructure.Common;
+using AcademyKit.Infrastructure.Persistence;
+using AcademyKit.Infrastructure.Services;
+using FluentValidation;
+using Hangfire;
+using Hangfire.MySql;
+using Microsoft.EntityFrameworkCore;
+
+namespace AcademyKit.Infrastructure.Configurations;
+
+public static class ServiceConfigurationExtensions
 {
-    using AcademyKit.Application.Common.Dtos;
-    using AcademyKit.Application.Common.Interfaces;
-    using AcademyKit.Application.Common.Models.RequestModels;
-    using AcademyKit.Infrastructure.Common;
-    using AcademyKit.Infrastructure.Persistence;
-    using AcademyKit.Server.Application.Common.Interfaces;
-    using AcademyKit.Server.Infrastructure.Services;
-    using Application.Common.Validators;
-    using FluentValidation;
-    using Hangfire;
-    using Hangfire.MySql;
-    using Infrastructure.Services;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
-
-    public static class ServiceConfigurationExtensions
+    public static IServiceCollection AddInfrastructureServices(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment environment
+    )
     {
-        public static IServiceCollection AddInfrastructureServices(
-            this IServiceCollection services,
-            IConfiguration configuration,
-            IWebHostEnvironment environment
-        )
-        {
-            services.AddDbContext<ApplicationDbContext>(
-                options =>
-                    options.UseMySql(
-                        configuration.GetConnectionString("DefaultConnection"),
-                        MySqlServerVersion.LatestSupportedServerVersion
-                    ),
-                ServiceLifetime.Scoped
-            );
+        services.AddDbContext<ApplicationDbContext>(
+            options =>
+                options.UseMySql(
+                    configuration.GetConnectionString("DefaultConnection"),
+                    MySqlServerVersion.LatestSupportedServerVersion
+                ),
+            ServiceLifetime.Scoped
+        );
 
-            services
-                .AddHangfireServer(x => x.WorkerCount = 2)
-                .AddHangfire(x =>
+        services
+            .AddHangfireServer(x => x.WorkerCount = 2)
+            .AddHangfire(x =>
+            {
+                x.UseFilter(new AutomaticRetryAttribute());
+                if (environment.IsProduction())
                 {
-                    x.UseFilter(new AutomaticRetryAttribute());
-                    if (environment.IsProduction())
-                    {
-                        x.UseStorage(
-                            new MySqlStorage(
-                                configuration.GetConnectionString("HangfireConnection"),
-                                new MySqlStorageOptions
-                                {
-                                    QueuePollInterval = TimeSpan.FromSeconds(15),
-                                    JobExpirationCheckInterval = TimeSpan.FromHours(1),
-                                    CountersAggregateInterval = TimeSpan.FromMinutes(5),
-                                    PrepareSchemaIfNecessary = true,
-                                    DashboardJobListLimit = 50000,
-                                    TablesPrefix = "Hangfire"
-                                }
-                            )
-                        );
-                    }
-                    else
-                    {
-                        GlobalConfiguration.Configuration.UseInMemoryStorage();
-                    }
-                });
+                    x.UseStorage(
+                        new MySqlStorage(
+                            configuration.GetConnectionString("HangfireConnection"),
+                            new MySqlStorageOptions
+                            {
+                                QueuePollInterval = TimeSpan.FromSeconds(15),
+                                JobExpirationCheckInterval = TimeSpan.FromHours(1),
+                                CountersAggregateInterval = TimeSpan.FromMinutes(5),
+                                PrepareSchemaIfNecessary = true,
+                                DashboardJobListLimit = 50000,
+                                TablesPrefix = "Hangfire"
+                            }
+                        )
+                    );
+                }
+                else
+                {
+                    GlobalConfiguration.Configuration.UseInMemoryStorage();
+                }
+            });
 
-            #region Service DI
+        #region Service DI
 
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IRefreshTokenService, RefreshTokenService>();
-            services.AddTransient<IEmailService, EmailService>();
-            services.AddTransient<IGroupService, GroupService>();
-            services.AddTransient<ITagService, TagService>();
-            services.AddTransient<ILevelService, LevelService>();
-            services.AddTransient<IZoomSettingService, ZoomSettingService>();
-            services.AddTransient<ISMTPSettingService, SMTPSettingService>();
-            services.AddTransient<IGeneralSettingService, GeneralSettingService>();
-            services.AddTransient<IDepartmentService, DepartmentService>();
-            services.AddTransient<IGroupMemberService, GroupMemberService>();
-            services.AddTransient<ISectionService, SectionService>();
-            services.AddTransient<ILessonService, LessonService>();
-            services.AddTransient<ICourseService, CourseService>();
-            services.AddTransient<IZoomLicenseService, ZoomLicenseService>();
-            services.AddTransient<ICourseTeacherService, CourseTeacherService>();
-            services.AddTransient<IMediaService, MediaService>();
-            services.AddTransient<IQuestionPoolService, QuestionPoolService>();
-            services.AddTransient<IQuestionPoolTeacherService, QuestionPoolTeacherService>();
-            services.AddTransient<IQuestionService, QuestionService>();
-            services.AddTransient<IQuestionSetService, QuestionSetService>();
-            services.AddTransient<IAssignmentService, AssignmentService>();
-            services.AddTransient<IWatchHistoryService, WatchHistoryService>();
-            services.AddTransient<ICommentService, CommentService>();
-            services.AddTransient<IFileServerService, FileServerService>();
-            services.AddTransient<IAmazonS3Service, AmazonS3Service>();
-            services.AddTransient<IFeedbackService, FeedbackService>();
-            services.AddTransient<IWebhookService, WebhookService>();
-            services.AddTransient<IHangfireJobService, HangfireJobService>();
-            services.AddTransient<ICertificateService, CertificateService>();
-            services.AddTransient<IVideoService, VideoService>();
-            services.AddTransient<ILogsService, LogsService>();
-            services.AddTransient<IPhysicalLessonServices, PhysicalLessonService>();
-            services.AddTransient<IDynamicImageGenerator, DynamicImageGenerator>();
-            services.AddTransient<IEnrollmentService, EnrollmentService>();
-            services.AddTransient<ISkillService, SkillsServices>();
-            services.AddTransient<IAssessmentService, AssessmentService>();
-            services.AddTransient<IAssessmentQuestionService, AssessmentQuestionService>();
-            services.AddTransient<IAssessmentSubmissionService, AssessmentSubmissionService>();
-            services.AddTransient<IAIService, AIService>();
-            services.AddTransient<IAiKeyService, AiKeyService>();
-            services.AddTransient<IMailNotificationService, MailNotificationService>();
-            services.AddTransient<IGoogleService, GoogleService>();
-            services.AddTransient<IMicrosoftService, MicrosoftService>();
-            services.AddTransient<IApiKeyService, ApiKeyService>();
+        services.AddTransient<IUnitOfWork, UnitOfWork>();
+        services.AddTransient<IUserService, UserService>();
+        services.AddTransient<IRefreshTokenService, RefreshTokenService>();
+        services.AddTransient<IEmailService, EmailService>();
+        services.AddTransient<IGroupService, GroupService>();
+        services.AddTransient<ITagService, TagService>();
+        services.AddTransient<ILevelService, LevelService>();
+        services.AddTransient<IZoomSettingService, ZoomSettingService>();
+        services.AddTransient<ISMTPSettingService, SMTPSettingService>();
+        services.AddTransient<IGeneralSettingService, GeneralSettingService>();
+        services.AddTransient<IDepartmentService, DepartmentService>();
+        services.AddTransient<IGroupMemberService, GroupMemberService>();
+        services.AddTransient<ISectionService, SectionService>();
+        services.AddTransient<ILessonService, LessonService>();
+        services.AddTransient<ICourseService, CourseService>();
+        services.AddTransient<IZoomLicenseService, ZoomLicenseService>();
+        services.AddTransient<ICourseTeacherService, CourseTeacherService>();
+        services.AddTransient<IMediaService, MediaService>();
+        services.AddTransient<IQuestionPoolService, QuestionPoolService>();
+        services.AddTransient<IQuestionPoolTeacherService, QuestionPoolTeacherService>();
+        services.AddTransient<IQuestionService, QuestionService>();
+        services.AddTransient<IQuestionSetService, QuestionSetService>();
+        services.AddTransient<IAssignmentService, AssignmentService>();
+        services.AddTransient<IWatchHistoryService, WatchHistoryService>();
+        services.AddTransient<ICommentService, CommentService>();
+        services.AddTransient<IFileServerService, FileServerService>();
+        services.AddTransient<IAmazonS3Service, AmazonS3Service>();
+        services.AddTransient<IFeedbackService, FeedbackService>();
+        services.AddTransient<IWebhookService, WebhookService>();
+        services.AddTransient<IHangfireJobService, HangfireJobService>();
+        services.AddTransient<ICertificateService, CertificateService>();
+        services.AddTransient<IVideoService, VideoService>();
+        services.AddTransient<ILogsService, LogsService>();
+        services.AddTransient<IPhysicalLessonServices, PhysicalLessonService>();
+        services.AddTransient<IDynamicImageGenerator, DynamicImageGenerator>();
+        services.AddTransient<IEnrollmentService, EnrollmentService>();
+        services.AddTransient<ISkillService, SkillsServices>();
+        services.AddTransient<IAssessmentService, AssessmentService>();
+        services.AddTransient<IAssessmentQuestionService, AssessmentQuestionService>();
+        services.AddTransient<IAssessmentSubmissionService, AssessmentSubmissionService>();
+        services.AddTransient<IAIService, AIService>();
+        services.AddTransient<IAiKeyService, AiKeyService>();
+        services.AddTransient<IMailNotificationService, MailNotificationService>();
+        services.AddTransient<IGoogleService, GoogleService>();
+        services.AddTransient<IMicrosoftService, MicrosoftService>();
+        services.AddTransient<IApiKeyService, ApiKeyService>();
+        services.AddTransient<IPasswordHasher, PasswordHasher>();
 
-            #endregion Service DI
+        #endregion Service DI
 
-            #region Validator DI
-            services.AddSingleton<IValidator<SettingValue>, SettingValueValidator>();
-            services.AddSingleton<
-                IValidator<StorageSettingRequestModel>,
-                StorageSettingRequestModelValidation
-            >();
-            services.AddSingleton<
-                IValidator<CertificateRequestModel>,
-                CertificateRequestModelValidator
-            >();
-            services.AddSingleton<
-                IValidator<LiveClassLicenseRequestModel>,
-                ZoomLicenseIdValidator
-            >();
-            services.AddSingleton<IValidator<LoginRequestModel>, LoginValidator>();
-            services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();
-            services.AddSingleton<IValidator<GroupRequestModel>, GroupValidator>();
-            services.AddSingleton<IValidator<ZoomSettingRequestModel>, ZoomSettingValidator>();
-            services.AddSingleton<IValidator<SMTPSettingRequestModel>, SMTPSettingValidator>();
-            services.AddSingleton<
-                IValidator<GeneralSettingRequestModel>,
-                GeneralSettingValidator
-            >();
-            services.AddSingleton<IValidator<DepartmentRequestModel>, DepartmentValidator>();
-            services.AddSingleton<
-                IValidator<MailNotificationRequestModel>,
-                MailNotificationValidator
-            >();
-            services.AddSingleton<IValidator<ZoomLicenseRequestModel>, ZoomLicenseValidator>();
-            services.AddSingleton<IValidator<SectionRequestModel>, SectionValidator>();
-            services.AddSingleton<IValidator<CourseStatusRequestModel>, CourseStatusValidator>();
-            services.AddSingleton<
-                IValidator<AssessmentStatusRequestModel>,
-                AssessmentStatusValidator
-            >();
-            services.AddSingleton<IValidator<CourseRequestModel>, CourseValidator>();
-            services.AddSingleton<IValidator<CourseTeacherRequestModel>, CourseTeacherValidator>();
-            services.AddSingleton<IValidator<LessonRequestModel>, LessonValidator>();
-            services.AddSingleton<
-                IValidator<ChangePasswordRequestModel>,
-                ChangePasswordValidator
-            >();
-            services.AddSingleton<IValidator<ResetPasswordRequestModel>, ResetPasswordValidator>();
-            services.AddSingleton<IValidator<QuestionPoolRequestModel>, QuestionPoolValidator>();
-            services.AddSingleton<
-                IValidator<QuestionPoolTeacherRequestModel>,
-                QuestionPoolTeacherValidator
-            >();
-            services.AddSingleton<IValidator<QuestionRequestModel>, QuestionValidator>();
-            services.AddSingleton<IValidator<AssignmentRequestModel>, AssignmentValidator>();
-            services.AddSingleton<IValidator<WatchHistoryRequestModel>, WatchHistoryValidator>();
-            services.AddSingleton<IValidator<ChangeEmailRequestModel>, ChangeEmailValidator>();
-            services.AddSingleton<IValidator<LevelRequestModel>, LevelValidator>();
-            services.AddSingleton<IValidator<CommentRequestModel>, CommentValidator>();
-            services.AddSingleton<
-                IValidator<AssignmentReviewRequestModel>,
-                AssignmentReviewValidator
-            >();
-            services.AddSingleton<IValidator<MediaRequestModel>, MediaValidator>();
-            services.AddSingleton<IValidator<FeedbackRequestModel>, FeedbackValidator>();
-            services.AddSingleton<
-                IValidator<IList<FeedbackSubmissionRequestModel>>,
-                FeedbackSubmissionValidator
-            >();
-            services.AddSingleton<IValidator<SignatureRequestModel>, SignatureValidator>();
-            services.AddSingleton<
-                IValidator<CourseCertificateRequestModel>,
-                CourseCertificateValidator
-            >();
-            services.AddSingleton<
-                IValidator<PhysicalLessonReviewRequestModel>,
-                PhysicalLessonReviewRequestModelValidator
-            >();
-            services.AddSingleton<IValidator<UserUpdateRequestModel>, UserUpdateValidator>();
-            services.AddSingleton<IValidator<SkillsRequestModel>, SkillsValidator>();
-            services.AddSingleton<IValidator<AssessmentRequestModel>, AssessmentValidator>();
-            services.AddSingleton<
-                IValidator<AssessmentQuestionRequestModel>,
-                AssessmentQuestionValidator
-            >();
+        #region Validator DI
+        services.AddSingleton<IValidator<SettingValue>, SettingValueValidator>();
+        services.AddSingleton<
+            IValidator<StorageSettingRequestModel>,
+            StorageSettingRequestModelValidation
+        >();
+        services.AddSingleton<
+            IValidator<CertificateRequestModel>,
+            CertificateRequestModelValidator
+        >();
+        services.AddSingleton<IValidator<LiveClassLicenseRequestModel>, ZoomLicenseIdValidator>();
+        services.AddSingleton<IValidator<LoginRequestModel>, LoginValidator>();
+        services.AddSingleton<IValidator<UserRequestModel>, UserValidator>();
+        services.AddSingleton<IValidator<GroupRequestModel>, GroupValidator>();
+        services.AddSingleton<IValidator<ZoomSettingRequestModel>, ZoomSettingValidator>();
+        services.AddSingleton<IValidator<SMTPSettingRequestModel>, SMTPSettingValidator>();
+        services.AddSingleton<IValidator<GeneralSettingRequestModel>, GeneralSettingValidator>();
+        services.AddSingleton<IValidator<DepartmentRequestModel>, DepartmentValidator>();
+        services.AddSingleton<
+            IValidator<MailNotificationRequestModel>,
+            MailNotificationValidator
+        >();
+        services.AddSingleton<IValidator<ZoomLicenseRequestModel>, ZoomLicenseValidator>();
+        services.AddSingleton<IValidator<SectionRequestModel>, SectionValidator>();
+        services.AddSingleton<IValidator<CourseStatusRequestModel>, CourseStatusValidator>();
+        services.AddSingleton<
+            IValidator<AssessmentStatusRequestModel>,
+            AssessmentStatusValidator
+        >();
+        services.AddSingleton<IValidator<CourseRequestModel>, CourseValidator>();
+        services.AddSingleton<IValidator<CourseTeacherRequestModel>, CourseTeacherValidator>();
+        services.AddSingleton<IValidator<LessonRequestModel>, LessonValidator>();
+        services.AddSingleton<IValidator<ChangePasswordRequestModel>, ChangePasswordValidator>();
+        services.AddSingleton<IValidator<ResetPasswordRequestModel>, ResetPasswordValidator>();
+        services.AddSingleton<IValidator<QuestionPoolRequestModel>, QuestionPoolValidator>();
+        services.AddSingleton<
+            IValidator<QuestionPoolTeacherRequestModel>,
+            QuestionPoolTeacherValidator
+        >();
+        services.AddSingleton<IValidator<QuestionRequestModel>, QuestionValidator>();
+        services.AddSingleton<IValidator<AssignmentRequestModel>, AssignmentValidator>();
+        services.AddSingleton<IValidator<WatchHistoryRequestModel>, WatchHistoryValidator>();
+        services.AddSingleton<IValidator<ChangeEmailRequestModel>, ChangeEmailValidator>();
+        services.AddSingleton<IValidator<LevelRequestModel>, LevelValidator>();
+        services.AddSingleton<IValidator<CommentRequestModel>, CommentValidator>();
+        services.AddSingleton<
+            IValidator<AssignmentReviewRequestModel>,
+            AssignmentReviewValidator
+        >();
+        services.AddSingleton<IValidator<MediaRequestModel>, MediaValidator>();
+        services.AddSingleton<IValidator<FeedbackRequestModel>, FeedbackValidator>();
+        services.AddSingleton<
+            IValidator<IList<FeedbackSubmissionRequestModel>>,
+            FeedbackSubmissionValidator
+        >();
+        services.AddSingleton<IValidator<SignatureRequestModel>, SignatureValidator>();
+        services.AddSingleton<
+            IValidator<CourseCertificateRequestModel>,
+            CourseCertificateValidator
+        >();
+        services.AddSingleton<
+            IValidator<PhysicalLessonReviewRequestModel>,
+            PhysicalLessonReviewRequestModelValidator
+        >();
+        services.AddSingleton<IValidator<UserUpdateRequestModel>, UserUpdateValidator>();
+        services.AddSingleton<IValidator<SkillsRequestModel>, SkillsValidator>();
+        services.AddSingleton<IValidator<AssessmentRequestModel>, AssessmentValidator>();
+        services.AddSingleton<
+            IValidator<AssessmentQuestionRequestModel>,
+            AssessmentQuestionValidator
+        >();
+        services.AddSingleton<IValidator<InitialSetupRequestModel>, InitialSetupValidator>();
 
-            #endregion Validator DI
+        #endregion Validator DI
 
-            return services;
-        }
+        return services;
     }
 }

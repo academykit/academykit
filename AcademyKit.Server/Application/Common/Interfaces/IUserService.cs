@@ -4,7 +4,6 @@
     using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Application.Common.Models.ResponseModels;
     using AcademyKit.Domain.Entities;
-    using AcademyKit.Server.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Http;
 
     public interface IUserService : IGenericService<User, UserSearchCriteria>
@@ -51,23 +50,6 @@
         /// <param name="email">the user email</param>
         /// <returns>the instance of <see cref="User"/></returns>
         Task<User> GetUserByEmailAsync(string email);
-
-        /// <summary>
-        /// Handle to hash password
-        /// </summary>
-        /// <param name="password">the password</param>
-        /// <param name="salt"></param>
-        /// <param name="needsOnlyHash"></param>
-        /// <returns></returns>
-        string HashPassword(string password, byte[] salt = null, bool needsOnlyHash = false);
-
-        /// <summary>
-        /// Handle to verify password
-        /// </summary>
-        /// <param name="hashedPasswordWithSalt">the hashed password</param>
-        /// <param name="password">the password</param>
-        /// <returns></returns>
-        bool VerifyPassword(string hashedPasswordWithSalt, string password);
 
         /// <summary>
         /// Handle to reset password

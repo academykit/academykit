@@ -1083,4 +1083,22 @@ recorded cannot be deleted.</value>
   <data name="AuthenticationFailedApiKey" xml:space="preserve">
     <value>Authentication failed. Invalid or missing API key.</value>
   </data>
+  <data name="InitialSetupError" xml:space="preserve">
+  <value>An error occurred during the initial setup.</value>
+</data>
+  <data name="CompanySetupAlreadyCompleted" xml:space="preserve">
+  <value>The company setup has already been completed. No further action is required.</value>
+</data>
+  <data name="PasswordRequired" xml:space="preserve">
+  <value>Password is required. Please provide a password.</value>
+</data>
+  <data name="ConfirmPasswordRequired" xml:space="preserve">
+  <value>Confirmation password is required. Please provide the confirmation password.</value>
+</data>
+
+  <data name="PasswordAndConfirmPasswordNotMatched" xml:space="preserve">
+  <value>The password and confirmation password do not match. Please try again.</value>
+</data>
+
+
 </root>

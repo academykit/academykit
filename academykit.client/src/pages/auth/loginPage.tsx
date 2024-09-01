@@ -1,4 +1,5 @@
 import { Google, Microsoft } from "@components/Icons";
+import Logo from "@components/Logo";
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 import { BrandingContext } from "@context/BrandingThemeContext";
 import {
@@ -7,7 +8,6 @@ import {
   Center,
   Container,
   Group,
-  Image,
   Paper,
   PasswordInput,
   Text,
@@ -19,11 +19,11 @@ import RoutePath from "@utils/routeConstants";
 import { useCompanySetting } from "@utils/services/adminService";
 import { useLogin } from "@utils/services/authService";
 import { api } from "@utils/services/service-api";
-import { IUserProfile } from "@utils/services/types";
-import { AxiosError } from "axios";
+import type { IUserProfile } from "@utils/services/types";
+import type { AxiosError } from "axios";
 import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import useAuth from "../../hooks/useAuth";
 
@@ -53,6 +53,7 @@ const LoginPage = () => {
     login.mutate({ email: values.email, password: values.password });
   };
   const context = useContext(BrandingContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (login.isError) {
@@ -105,14 +106,17 @@ const LoginPage = () => {
     setHeader();
 
     if (companySettings.isSuccess) {
+      if (!companySettings?.data?.data?.isSetupCompleted) {
+        return navigate("/initial/setup", { replace: true });
+      }
       const branding = JSON.parse(
         companySettings.data.data.customConfiguration ?? "{}"
       );
       localStorage.setItem(
         "app-info",
         JSON.stringify({
-          name: companySettings.data.data.name,
-          logo: companySettings.data.data.imageUrl,
+          name: companySettings.data.data?.name ?? "AcademyKit",
+          logo: companySettings.data.data.imageUrl ?? "/favicon.png",
         })
       );
       localStorage.setItem("branding", branding.accent);
@@ -124,17 +128,11 @@ const LoginPage = () => {
 
   return (
     <Container size={420} my={40}>
-      <Center m={"lg"}>
-        <Link to={"/"}>
-          <Image
-            height={50}
-            width={140}
-            src={companySettings?.data?.data?.imageUrl}
-            alt="logo"
-            fit="contain"
-          />
-        </Link>
-      </Center>
+      <Logo
+        height={50}
+        width={140}
+        url={companySettings?.data?.data?.imageUrl}
+      />
       <Title
         ta="center"
         style={(theme) => ({
@@ -197,7 +195,7 @@ const LoginPage = () => {
             width: "100%",
             background: "black",
           }}
-        ></div>
+        />
         <Text size="sm" style={{ whiteSpace: "nowrap" }}>
           {t("or_sign_in_with")}
         </Text>
@@ -208,7 +206,7 @@ const LoginPage = () => {
             width: "100%",
             background: "black",
           }}
-        ></div>
+        />
       </div>
       <Center style={{ gap: 30, marginTop: 5 }}>
         <form action={api.auth.googleSignIn} method="get">

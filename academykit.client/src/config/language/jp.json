@@ -1174,5 +1174,11 @@
   "privacy_policy": "プライバシーポリシー",
   "and_our_default": "およびデフォルトの",
   "notification_settings": "通知設定",
-  "or_sign_in_with": "または以下でサインイン"
+  "or_sign_in_with": "または以下でサインイン",
+  "logo_url": "ロゴのURL",
+  "logo_url_setup_later": "ロゴのURLは後で設定できます。",
+  "user_is_super_admin": "このユーザーはスーパ管理者です。",
+  "organization_detail": "組織の詳細",
+  "user_detail": "ユーザーの詳細",
+  "back": "戻る"
 }
