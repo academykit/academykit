@@ -3,13 +3,12 @@
     using AcademyKit.Application.Common.Dtos;
     using AcademyKit.Application.Common.Exceptions;
     using AcademyKit.Application.Common.Interfaces;
+    using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Domain.Entities;
     using AcademyKit.Domain.Enums;
     using AcademyKit.Infrastructure.Common;
     using AcademyKit.Infrastructure.Helpers;
     using AcademyKit.Infrastructure.Localization;
-    using AcademyKit.Server.Application.Common.Interfaces;
-    using AcademyKit.Server.Application.Common.Models.RequestModels;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query;
     using Microsoft.Extensions.Localization;

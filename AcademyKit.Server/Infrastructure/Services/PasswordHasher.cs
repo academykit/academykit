@@ -1,8 +1,8 @@
 ﻿using System.Security.Cryptography;
-using AcademyKit.Server.Application.Common.Interfaces;
+using AcademyKit.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
-namespace AcademyKit.Server.Infrastructure.Services;
+namespace AcademyKit.Infrastructure.Services;
 
 /// <summary>
 /// Provides methods for hashing and verifying passwords using PBKDF2.

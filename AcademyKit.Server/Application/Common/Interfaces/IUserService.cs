@@ -4,7 +4,6 @@
     using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Application.Common.Models.ResponseModels;
     using AcademyKit.Domain.Entities;
-    using AcademyKit.Server.Application.Common.Models.ResponseModels;
     using Microsoft.AspNetCore.Http;
 
     public interface IUserService : IGenericService<User, UserSearchCriteria>

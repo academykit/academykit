@@ -12,11 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:AcademyKit.Server/Infrastructure/Persistence/Migrations/20240830101141_Initial.Designer.cs
-    [Migration("20240830101141_Initial")]
-========
     [Migration("20240827164027_Initial")]
->>>>>>>> main:AcademyKit.Server/Infrastructure/Persistence/Migrations/20240827164027_Initial.Designer.cs
     partial class Initial
     {
         /// <inheritdoc />
@@ -1802,11 +1798,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("CompanyAddress")
+                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("VARCHAR(250)")
                         .HasColumnName("company_address");
 
                     b.Property<string>("CompanyContactNumber")
+                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("VARCHAR(30)")
                         .HasColumnName("company_contact_number");
@@ -1836,11 +1834,8 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(1000)")
                         .HasColumnName("email_signature");
 
-                    b.Property<bool>("IsSetupCompleted")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("is_setup_completed");
-
                     b.Property<string>("LogoUrl")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("VARCHAR(500)")
                         .HasColumnName("logo_url");
@@ -1885,11 +1880,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasDefaultValue(false)
                         .HasColumnName("is_active");
 
-<<<<<<<< HEAD:AcademyKit.Server/Infrastructure/Persistence/Migrations/20240830101141_Initial.Designer.cs
-                    b.Property<bool>("IsDefault")
-========
                     b.Property<bool?>("IsDefault")
->>>>>>>> main:AcademyKit.Server/Infrastructure/Persistence/Migrations/20240827164027_Initial.Designer.cs
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false)

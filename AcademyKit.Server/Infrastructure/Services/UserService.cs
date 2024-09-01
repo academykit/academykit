@@ -16,8 +16,6 @@ using AcademyKit.Infrastructure.Common;
 using AcademyKit.Infrastructure.Configurations;
 using AcademyKit.Infrastructure.Helpers;
 using AcademyKit.Infrastructure.Localization;
-using AcademyKit.Server.Application.Common.Interfaces;
-using AcademyKit.Server.Application.Common.Models.ResponseModels;
 using CsvHelper;
 using Hangfire;
 using LinqKit;
@@ -1266,7 +1264,7 @@ namespace AcademyKit.Infrastructure.Services
         {
             var defaultGroup = await _unitOfWork
                 .GetRepository<Domain.Entities.Group>()
-                .GetFirstOrDefaultAsync(predicate: x => x.IsDefault.Value == true);
+                .GetFirstOrDefaultAsync(predicate: x => x.IsDefault == true);
 
             if (defaultGroup is null)
             {

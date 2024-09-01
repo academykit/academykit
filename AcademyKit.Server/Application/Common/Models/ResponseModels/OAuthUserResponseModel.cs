@@ -1,4 +1,4 @@
-﻿namespace AcademyKit.Server.Application.Common.Models.ResponseModels;
+﻿namespace AcademyKit.Application.Common.Models.ResponseModels;
 
 /// <summary>
 /// Represents a common user response model for both Google and Microsoft.

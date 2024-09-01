@@ -1,6 +1,5 @@
-﻿using AcademyKit.Application.ValidatorLocalization;
-using AcademyKit.Server.Application.Common.Models.RequestModels;
-using AcademyKit.Server.Application.Common.Validators;
+﻿using AcademyKit.Application.Common.Models.RequestModels;
+using AcademyKit.Application.ValidatorLocalization;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 

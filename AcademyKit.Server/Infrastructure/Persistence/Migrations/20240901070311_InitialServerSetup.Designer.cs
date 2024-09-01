@@ -12,12 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:AcademyKit.Server/Infrastructure/Persistence/Migrations/20240830101141_Initial.Designer.cs
-    [Migration("20240830101141_Initial")]
-========
-    [Migration("20240827164027_Initial")]
->>>>>>>> main:AcademyKit.Server/Infrastructure/Persistence/Migrations/20240827164027_Initial.Designer.cs
-    partial class Initial
+    [Migration("20240901070311_InitialServerSetup")]
+    partial class InitialServerSetup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1885,11 +1881,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasDefaultValue(false)
                         .HasColumnName("is_active");
 
-<<<<<<<< HEAD:AcademyKit.Server/Infrastructure/Persistence/Migrations/20240830101141_Initial.Designer.cs
                     b.Property<bool>("IsDefault")
-========
-                    b.Property<bool?>("IsDefault")
->>>>>>>> main:AcademyKit.Server/Infrastructure/Persistence/Migrations/20240827164027_Initial.Designer.cs
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false)

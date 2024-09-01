@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace AcademyKit.Server.Application.Common.Validators;
+namespace AcademyKit.Application.Common.Validators;
 
 /// <summary>
 /// Provides common validation methods.

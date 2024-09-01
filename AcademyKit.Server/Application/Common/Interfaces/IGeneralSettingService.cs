@@ -1,8 +1,8 @@
 ﻿namespace AcademyKit.Application.Common.Interfaces
 {
     using AcademyKit.Application.Common.Dtos;
+    using AcademyKit.Application.Common.Models.RequestModels;
     using AcademyKit.Domain.Entities;
-    using AcademyKit.Server.Application.Common.Models.RequestModels;
 
     public interface IGeneralSettingService : IGenericService<GeneralSetting, BaseSearchCriteria>
     {

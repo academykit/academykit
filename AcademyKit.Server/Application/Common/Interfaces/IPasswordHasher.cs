@@ -1,4 +1,4 @@
-﻿namespace AcademyKit.Server.Application.Common.Interfaces;
+﻿namespace AcademyKit.Application.Common.Interfaces;
 
 /// <summary>
 /// Provides methods for hashing and verifying passwords.

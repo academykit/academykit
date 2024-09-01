@@ -1268,16 +1268,16 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         logo_url = table
-                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
+                            .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         company_name = table
                             .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         company_address = table
-                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: true)
+                            .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         company_contact_number = table
-                            .Column<string>(type: "VARCHAR(30)", maxLength: 30, nullable: true)
+                            .Column<string>(type: "VARCHAR(30)", maxLength: 30, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         email_signature = table
                             .Column<string>(type: "VARCHAR(1000)", maxLength: 1000, nullable: true)
@@ -1285,10 +1285,6 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         custom_configuration = table
                             .Column<string>(type: "VARCHAR(5000)", nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        is_setup_completed = table.Column<bool>(
-                            type: "tinyint(1)",
-                            nullable: false
-                        ),
                         created_by = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
@@ -1325,11 +1321,6 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         name = table
                             .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        is_default = table.Column<bool>(
-                            type: "tinyint(1)",
-                            nullable: false,
-                            defaultValue: false
-                        ),
                         is_active = table.Column<bool>(
                             type: "tinyint(1)",
                             nullable: false,

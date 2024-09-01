@@ -11,7 +11,6 @@
     using AcademyKit.Domain.Enums;
     using AcademyKit.Infrastructure.Helpers;
     using AcademyKit.Infrastructure.Localization;
-    using AcademyKit.Server.Application.Common.Interfaces;
     using CsvHelper;
     using FluentValidation;
     using Hangfire;
