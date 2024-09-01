@@ -9,6 +9,7 @@ using AcademyKit.Application.Common.Models.RequestModels;
 using AcademyKit.Application.Common.Models.ResponseModels;
 using AcademyKit.Infrastructure.Configurations;
 using AcademyKit.Infrastructure.Localization;
+using AcademyKit.Server.Application.Common.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ public class AccountController : BaseApiController
 {
     private readonly ILogger<AccountController> _logger;
     private readonly IUserService _userService;
+    private readonly ISettingService _settingService;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IValidator<LoginRequestModel> _validator;
     private readonly IValidator<ResetPasswordRequestModel> _resetPasswordValidator;
@@ -34,7 +36,6 @@ public class AccountController : BaseApiController
     private readonly IMicrosoftService _microsoftService;
     private readonly GoogleOAuth _googleOAuth;
     private readonly MicrosoftOAuth _microsoftOAuth;
-    private readonly AppUrls _appUrls;
 
     private const string _oAuthRedirectUrlTemplate = "api/Account/oauth/{0}/callback";
     private const string _googleAuthUrl = "https://accounts.google.com/o/oauth2/v2/auth?";
@@ -47,8 +48,10 @@ public class AccountController : BaseApiController
     /// <summary>
     /// Initializes a new instance of the <see cref="AccountController"/> class.
     /// </summary>
+    /// <param name="appUrls">The configuration options for application urls as an instance of <see cref="AppUrls"/>.</param>
     /// <param name="logger">The logger used for logging information and errors.</param>
     /// <param name="userService">The instance of <see cref="IUserService"/> used for user management.</param>
+    /// <param name="settingService">The instance of <see cref="ISettingService"/> used for setting.</param>
     /// <param name="validator">The instance of <see cref="IValidator{LoginRequestModel}"/> for validating login requests.</param>
     /// <param name="resetPasswordValidator">The instance of <see cref="IValidator{ResetPasswordRequestModel}"/> for validating password reset requests.</param>
     /// <param name="changePasswordValidator">The instance of <see cref="IValidator{ChangePasswordRequestModel}"/> for validating password change requests.</param>
@@ -57,10 +60,12 @@ public class AccountController : BaseApiController
     /// <param name="microsoftService">The instance of <see cref="IMicrosoftService"/> for Microsoft authentication.</param>
     /// <param name="googleOAuth">The configuration options for Google OAuth as an instance of <see cref="GoogleOAuth"/>.</param>
     /// <param name="microsoftOAuth">The configuration options for Microsoft OAuth as an instance of <see cref="MicrosoftOAuth"/>.</param>
-    /// <param name="appUrls">The configuration options for application urls as an instance of <see cref="AppUrls"/>.</param>
+
     public AccountController(
+        IOptions<AppUrls> appUrls,
         ILogger<AccountController> logger,
         IUserService userService,
+        ISettingService settingService,
         IPasswordHasher passwordHasher,
         IValidator<LoginRequestModel> validator,
         IValidator<ResetPasswordRequestModel> resetPasswordValidator,
@@ -69,12 +74,12 @@ public class AccountController : BaseApiController
         IGoogleService googleService,
         IMicrosoftService microsoftService,
         IOptions<GoogleOAuth> googleOAuth,
-        IOptions<MicrosoftOAuth> microsoftOAuth,
-        IOptions<AppUrls> appUrls
+        IOptions<MicrosoftOAuth> microsoftOAuth
     )
     {
         _logger = logger;
         _userService = userService;
+        _settingService = settingService;
         _passwordHasher = passwordHasher;
         _validator = validator;
         _resetPasswordValidator = resetPasswordValidator;
@@ -84,7 +89,7 @@ public class AccountController : BaseApiController
         _microsoftService = microsoftService;
         _googleOAuth = googleOAuth.Value;
         _microsoftOAuth = microsoftOAuth.Value;
-        _appUrls = appUrls.Value;
+        InitializeAppUrls(appUrls);
     }
 
     /// <summary>
@@ -372,8 +377,7 @@ public class AccountController : BaseApiController
         Dictionary<string, string> extraParams = null
     )
     {
-        var redirectUrl =
-            $"{_appUrls.App}/{string.Format(_oAuthRedirectUrlTemplate, providerName)}";
+        var redirectUrl = $"{AppUrls.App}/{string.Format(_oAuthRedirectUrlTemplate, providerName)}";
         var validationResult = ValidateClientConfiguration(clientId, clientSecret);
         if (validationResult != null)
         {
@@ -416,8 +420,7 @@ public class AccountController : BaseApiController
         Func<OAuthUserResponseModel, Task<AuthenticationModel>> generateToken
     )
     {
-        var redirectUrl =
-            $"{_appUrls.App}/{string.Format(_oAuthRedirectUrlTemplate, providerName)}";
+        var redirectUrl = $"{AppUrls.App}/{string.Format(_oAuthRedirectUrlTemplate, providerName)}";
 
         var validationResult = ValidateClientConfiguration(clientId, clientSecret);
         if (validationResult != null)
@@ -446,10 +449,22 @@ public class AccountController : BaseApiController
             if (tokenResponse.IsSuccess)
             {
                 var user = await getUserDetails(tokenResponse.AccessToken);
-                var authenticationModel = await generateToken(user);
+                var isValidDomain = await CheckIfDomainIsAllowed(user.Email).ConfigureAwait(false);
+                if (!isValidDomain)
+                {
+                    _logger.LogError(
+                        "Unauthorized email domain: {EmailDomain}",
+                        user.Email.Split('@').Last()
+                    );
+                    return RedirectToErrorPage(
+                        _localizer.GetString("UnauthorizedEmailDomain"),
+                        "The email domain is not authorized."
+                    );
+                }
 
+                var authenticationModel = await generateToken(user);
                 return RedirectToFrontend(
-                    $"{_appUrls.App}/redirect/signIn?userId={authenticationModel.UserId}&token={authenticationModel.Token}&refresh={authenticationModel.RefreshToken}"
+                    $"{AppUrls.App}/redirect/signIn?userId={authenticationModel.UserId}&token={authenticationModel.Token}&refresh={authenticationModel.RefreshToken}"
                 );
             }
             else
@@ -459,22 +474,34 @@ public class AccountController : BaseApiController
                     tokenResponse.Error,
                     tokenResponse.ErrorDescription
                 );
-                return RedirectToErrorPage(
-                    _appUrls.App,
-                    tokenResponse.Error,
-                    tokenResponse.ErrorDescription
-                );
+                return RedirectToErrorPage(tokenResponse.Error, tokenResponse.ErrorDescription);
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred while retrieving the access token.");
-            return RedirectToErrorPage(
-                _appUrls.App,
-                _localizer.GetString("TokenRetrievalError"),
-                ex.Message
-            );
+            return RedirectToErrorPage(_localizer.GetString("TokenRetrievalError"), ex.Message);
         }
+    }
+
+    /// <summary>
+    /// Check whether domain is valid or not
+    /// </summary>
+    /// <param name="email">the user requested email</param>
+    /// <returns>the true or false</returns>
+    private async Task<bool> CheckIfDomainIsAllowed(string email)
+    {
+        var allowedDomains = await _settingService.GetAllowedDomainsAsync().ConfigureAwait(false);
+        var validDomains = string.IsNullOrWhiteSpace(allowedDomains)
+            ? new List<string>()
+            : allowedDomains.Split(',').ToList();
+        var emailDomain = email.Split('@').Last();
+
+        if (validDomains.Any() && !validDomains.Contains(emailDomain))
+        {
+            return false;
+        }
+        return true;
     }
 
     /// <summary>
@@ -489,7 +516,6 @@ public class AccountController : BaseApiController
         {
             _logger.LogError("The client id or client secret is missing");
             return RedirectToErrorPage(
-                _appUrls.App,
                 _localizer.GetString("MissingClientIdOrSecret"),
                 "The Client ID and Client Secret must be configured properly."
             );

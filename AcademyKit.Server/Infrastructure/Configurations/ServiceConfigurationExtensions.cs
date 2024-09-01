@@ -5,6 +5,8 @@ using AcademyKit.Application.Common.Validators;
 using AcademyKit.Infrastructure.Common;
 using AcademyKit.Infrastructure.Persistence;
 using AcademyKit.Infrastructure.Services;
+using AcademyKit.Server.Application.Common.Interfaces;
+using AcademyKit.Server.Infrastructure.Services;
 using FluentValidation;
 using Hangfire;
 using Hangfire.MySql;
@@ -106,6 +108,7 @@ public static class ServiceConfigurationExtensions
         services.AddTransient<IMicrosoftService, MicrosoftService>();
         services.AddTransient<IApiKeyService, ApiKeyService>();
         services.AddTransient<IPasswordHasher, PasswordHasher>();
+        services.AddTransient<ISettingService, SettingService>();
 
         #endregion Service DI
 
