@@ -23,7 +23,7 @@
                 .HasColumnName("hash_password")
                 .HasColumnType("VARCHAR(100)")
                 .HasMaxLength(100)
-                .IsRequired();
+                .IsRequired(false);
             builder
                 .Property(x => x.PublicUrls)
                 .HasColumnName("public_urls")

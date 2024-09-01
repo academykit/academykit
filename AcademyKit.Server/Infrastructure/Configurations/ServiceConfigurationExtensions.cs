@@ -6,6 +6,7 @@
     using AcademyKit.Infrastructure.Common;
     using AcademyKit.Infrastructure.Persistence;
     using AcademyKit.Server.Application.Common.Interfaces;
+    using AcademyKit.Server.Application.Common.Interfaces;
     using AcademyKit.Server.Application.Common.Models.RequestModels;
     using AcademyKit.Server.Infrastructure.Services;
     using Application.Common.Validators;
@@ -109,6 +110,8 @@
             services.AddTransient<IAIService, AIService>();
             services.AddTransient<IAiKeyService, AiKeyService>();
             services.AddTransient<IMailNotificationService, MailNotificationService>();
+            services.AddTransient<IGoogleService, GoogleService>();
+            services.AddTransient<IMicrosoftService, MicrosoftService>();
             services.AddTransient<IApiKeyService, ApiKeyService>();
             services.AddTransient<IPasswordHasher, PasswordHasher>();
 
