@@ -20,6 +20,9 @@
         /// </summary>
         private CurrentUser currentUser;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseApiController"/> class.
+        /// </summary>
         protected BaseApiController() { }
 
         /// <summary>

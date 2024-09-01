@@ -369,14 +369,16 @@ public class AccountController : BaseApiController
         string authUrl,
         string providerName,
         string scope,
-        Dictionary<string, string>? extraParams = null
+        Dictionary<string, string> extraParams = null
     )
     {
         var redirectUrl =
             $"{_appUrls.App}/{string.Format(_oAuthRedirectUrlTemplate, providerName)}";
         var validationResult = ValidateClientConfiguration(clientId, clientSecret);
         if (validationResult != null)
+        {
             return validationResult;
+        }
 
         var nonce = CommonHelper.GenerateNonce();
         var url =
@@ -419,7 +421,9 @@ public class AccountController : BaseApiController
 
         var validationResult = ValidateClientConfiguration(clientId, clientSecret);
         if (validationResult != null)
+        {
             return validationResult;
+        }
 
         var dicData = new Dictionary<string, string>
         {

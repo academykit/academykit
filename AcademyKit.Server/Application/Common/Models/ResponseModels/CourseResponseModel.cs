@@ -70,6 +70,7 @@
                     .CourseTags.ToList()
                     .ForEach(item => Tags.Add(new CourseTagResponseModel(item)));
             }
+
             if (fetchSection)
             {
                 model
@@ -78,6 +79,7 @@
                         Sections.Add(new SectionResponseModel(item, fetchLesson: true))
                     );
             }
+
             if (model.TrainingEligibilities != null)
             {
                 model
@@ -113,7 +115,7 @@
 
         public TrainingEligibilityEnum Eligibility { get; set; }
         public Guid? EligibilityId { get; set; }
-        public EligibilityCreationResponseModel? EligibilityCreation { get; set; }
+        public EligibilityCreationResponseModel EligibilityCreation { get; set; }
 
         public TrainingEligibilityCriteriaResponseModel(TrainingEligibility model)
         {

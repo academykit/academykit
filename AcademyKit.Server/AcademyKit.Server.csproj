@@ -32,9 +32,7 @@
     <PackageReference Include="LaserCatEyes.HttpClientListener" Version="8.0.1" />
     <PackageReference Include="LinqKit" Version="1.3.0" />
     <PackageReference Include="MailKit" Version="4.6.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
@@ -82,6 +80,9 @@
     <EmbeddedResource Remove="Infrastructure\Persistence\FluentConfigurations\**" />
     <EntityDeploy Remove="Infrastructure\Persistence\FluentConfigurations\**" />
     <None Remove="Infrastructure\Persistence\FluentConfigurations\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Infrastructure\Persistence\Migrations\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Application\Common\Mappings\**" />
