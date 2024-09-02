@@ -1,11 +1,10 @@
-﻿using AcademyKit.Domain.Entities;
+﻿using AcademyKit.Application.Common.Interfaces;
+using AcademyKit.Domain.Entities;
 using AcademyKit.Infrastructure.Common;
 using AcademyKit.Infrastructure.Localization;
-using AcademyKit.Infrastructure.Services;
-using AcademyKit.Server.Application.Common.Interfaces;
 using Microsoft.Extensions.Localization;
 
-namespace AcademyKit.Server.Infrastructure.Services;
+namespace AcademyKit.Infrastructure.Services;
 
 /// <summary>
 /// Provides services for managing application settings, including retrieving and updating allowed domains.

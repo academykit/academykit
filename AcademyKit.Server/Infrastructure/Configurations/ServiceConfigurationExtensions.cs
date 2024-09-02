@@ -5,8 +5,6 @@ using AcademyKit.Application.Common.Validators;
 using AcademyKit.Infrastructure.Common;
 using AcademyKit.Infrastructure.Persistence;
 using AcademyKit.Infrastructure.Services;
-using AcademyKit.Server.Application.Common.Interfaces;
-using AcademyKit.Server.Infrastructure.Services;
 using FluentValidation;
 using Hangfire;
 using Hangfire.MySql;

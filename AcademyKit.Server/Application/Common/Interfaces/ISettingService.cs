@@ -1,4 +1,4 @@
-﻿namespace AcademyKit.Server.Application.Common.Interfaces;
+﻿namespace AcademyKit.Application.Common.Interfaces;
 
 public interface ISettingService
 {

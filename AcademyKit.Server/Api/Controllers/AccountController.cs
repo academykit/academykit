@@ -9,7 +9,6 @@ using AcademyKit.Application.Common.Models.RequestModels;
 using AcademyKit.Application.Common.Models.ResponseModels;
 using AcademyKit.Infrastructure.Configurations;
 using AcademyKit.Infrastructure.Localization;
-using AcademyKit.Server.Application.Common.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -492,15 +491,18 @@ public class AccountController : BaseApiController
     private async Task<bool> CheckIfDomainIsAllowed(string email)
     {
         var allowedDomains = await _settingService.GetAllowedDomainsAsync().ConfigureAwait(false);
-        var validDomains = string.IsNullOrWhiteSpace(allowedDomains)
-            ? new List<string>()
-            : allowedDomains.Split(',').ToList();
-        var emailDomain = email.Split('@').Last();
+        if (string.IsNullOrWhiteSpace(allowedDomains))
+        {
+            return true;
+        }
 
+        var validDomains = allowedDomains.Split(',').ToList();
+        var emailDomain = email.Split('@').Last();
         if (validDomains.Any() && !validDomains.Contains(emailDomain))
         {
             return false;
         }
+
         return true;
     }
 
