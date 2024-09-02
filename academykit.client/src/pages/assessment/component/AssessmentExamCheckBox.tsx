@@ -1,27 +1,21 @@
 import TextViewer from "@components/Ui/RichTextViewer";
 import { Box, Card, Group, Title } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
 import { IAssessmentExam } from "@utils/services/assessmentService";
-import cx from "clsx";
 import { t } from "i18next";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import classes from "../styles/assessmentQuestion.module.css";
 
 type Props = {
-  form: UseFormReturnType<
-    IAssessmentExam[],
-    (values: IAssessmentExam[]) => IAssessmentExam[]
-  >;
-  options: [
-    {
-      optionId: string;
-      option: string;
-      order: number;
-    },
-  ];
+  
   currentIndex: number;
 };
 
-const AssessmentExamCheckBox = ({ form, options, currentIndex }: Props) => {
+const AssessmentExamCheckBox = ({ currentIndex }: Props) => {
+  const form = useFormContext<{ questions: IAssessmentExam[] }>();
+  const { fields } = useFieldArray({
+    name: `questions.${currentIndex}.assessmentQuestionOptions`,
+    control: form.control,
+  });
   return (
     <Box mt={10} px={20} className={classes.option}>
       <Group>
@@ -29,25 +23,30 @@ const AssessmentExamCheckBox = ({ form, options, currentIndex }: Props) => {
           {t("options")} ({t("multiple_choice")})
         </Title>
       </Group>
-      {options.map((option, index) => (
-        <label key={option.optionId} htmlFor={option.optionId}>
+      {fields.map((option, index) => (
+        <label
+          htmlFor={
+            `questions.${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`
+          }
+          key={option.optionId}
+        >
           <input
+             className={classes.checkbox}
             type={"checkbox"}
-            id={option.optionId}
+            id={
+              `questions.${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`
+            }
             style={{ display: "none" }}
-            {...form.getInputProps(
-              `${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`
+            {...form.register(
+              `questions.${currentIndex}.assessmentQuestionOptions.${index}.isCorrect` as keyof {questions:IAssessmentExam[]},
             )}
+           
           ></input>
           <Card
             shadow={"md"}
             my={10}
             p={10}
-            className={cx({
-              [classes.active]:
-                form.values[currentIndex].assessmentQuestionOptions[index]
-                  .isCorrect,
-            })}
+            className={classes.card}
           >
             <TextViewer
               styles={{
