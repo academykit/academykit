@@ -1095,9 +1095,10 @@
   <data name="ConfirmPasswordRequired" xml:space="preserve">
   <value>確認用パスワードは必須です。確認用パスワードを入力してください。</value>
 </data>
-
   <data name="PasswordAndConfirmPasswordNotMatched" xml:space="preserve">
   <value>パスワードと確認用パスワードが一致しません。もう一度お試しください。</value>
 </data>
-
+  <data name="UnauthorizedEmailDomain" xml:space="preserve">
+  <value>許可されていないメールドメイン</value>
+</data>
 </root>

@@ -19,6 +19,7 @@ public class SettingsController : BaseApiController
     private readonly IZoomSettingService zoomSettingService;
     private readonly ISMTPSettingService smtpSettingService;
     private readonly IFileServerService fileServerService;
+    private readonly ISettingService _settingService;
     private readonly IValidator<GeneralSettingRequestModel> generalSettingValidator;
     private readonly IValidator<ZoomSettingRequestModel> zoomSettingValidator;
     private readonly IValidator<SMTPSettingRequestModel> smtpSettingValidator;
@@ -32,6 +33,7 @@ public class SettingsController : BaseApiController
         IZoomSettingService zoomSettingService,
         ISMTPSettingService smtpSettingService,
         IFileServerService fileServerService,
+        ISettingService settingService,
         IValidator<GeneralSettingRequestModel> generalSettingValidator,
         IValidator<ZoomSettingRequestModel> zoomSettingValidator,
         IValidator<SMTPSettingRequestModel> smtpSettingValidator,
@@ -45,6 +47,7 @@ public class SettingsController : BaseApiController
         this.zoomSettingService = zoomSettingService;
         this.smtpSettingService = smtpSettingService;
         this.fileServerService = fileServerService;
+        _settingService = settingService;
         this.generalSettingValidator = generalSettingValidator;
         this.zoomSettingValidator = zoomSettingValidator;
         this.smtpSettingValidator = smtpSettingValidator;
@@ -292,6 +295,31 @@ public class SettingsController : BaseApiController
                 ) < 0,
             ReleaseNotesUrl = releaseNotesUrl
         };
+    }
+
+    /// <summary>
+    /// Retrieves the list of allowed domains.
+    /// </summary>
+    /// <returns>A string containing the allowed domains, separated by commas.</returns>
+    [HttpGet("allowed-domains")]
+    public async Task<ActionResult<string>> GetAllowedDomains()
+    {
+        IsSuperAdminOrAdmin(CurrentUser.Role);
+        var domains = await _settingService.GetAllowedDomainsAsync();
+        return Ok(domains);
+    }
+
+    /// <summary>
+    /// Updates the list of allowed domains.
+    /// </summary>
+    /// <param name="domains">A string containing the new allowed domains, separated by commas.</param>
+    /// <returns>A string containing the updated list of allowed domains.</returns>
+    [HttpPut("allowed-domains")]
+    public async Task<ActionResult<string>> UpdateAllowedDomains([FromBody] string domains)
+    {
+        IsSuperAdminOrAdmin(CurrentUser.Role);
+        var updatedDomains = await _settingService.UpdateAllowedDomainsAsync(domains);
+        return Ok(updatedDomains);
     }
 
     /// <summary>

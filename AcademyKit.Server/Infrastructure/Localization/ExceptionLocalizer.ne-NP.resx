@@ -1089,7 +1089,6 @@
   <data name="PasswordAndConfirmPasswordNotMatched" xml:space="preserve">
   <value>पासवर्ड र पुष्टि पासवर्ड मिल्दैन। कृपया फेरि प्रयास गर्नुहोस्।</value>
 </data>
-
   <data name="TokenRetrievalError" xml:space="preserve">
   <value>एक्सेस टोकन प्राप्त गर्दा एक त्रुटि आएको छ।</value>
 </data>
@@ -1101,5 +1100,8 @@
 </data>
   <data name="AuthenticationFailedApiKey" xml:space="preserve">
   <value>प्रमाणीकरण असफल भयो। अमान्य वा हराइरहेको API कुञ्जी।</value>
+</data>
+  <data name="UnauthorizedEmailDomain" xml:space="preserve">
+  <value>अनधिकृत इमेल डोमेन</value>
 </data>
 </root>
