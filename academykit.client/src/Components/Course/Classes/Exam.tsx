@@ -262,7 +262,7 @@ const Exam = ({
         {/* question counter section */}
         {/* <Grid.Col span={matches ? 3 : 12} m={0}> */}
         <Grid.Col
-          span={matches ? 3 : 3}
+          span={3}
           m={0}
           className={classes.optionsGridCol}
         >
