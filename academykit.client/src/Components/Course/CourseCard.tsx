@@ -1,3 +1,4 @@
+import classes from "@components/Course/styles/coursecard.module.css";
 import TextViewer from "@components/Ui/RichTextViewer";
 import { Badge, Button, Card, Group, Image, Text } from "@mantine/core";
 import { CourseLanguage } from "@utils/enums";
@@ -7,7 +8,6 @@ import { useGeneralSetting } from "@utils/services/adminService";
 import { ICourse } from "@utils/services/courseService";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import classes from "./styles/courseCard.module.css";
 
 const CourseCard = ({ course }: { course: ICourse }) => {
   const { t } = useTranslation();
