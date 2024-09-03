@@ -6,7 +6,6 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import classes from "../styles/assessmentQuestion.module.css";
 
 type Props = {
-  
   currentIndex: number;
 };
 
@@ -25,29 +24,21 @@ const AssessmentExamCheckBox = ({ currentIndex }: Props) => {
       </Group>
       {fields.map((option, index) => (
         <label
-          htmlFor={
-            `questions.${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`
-          }
+          htmlFor={`questions.${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`}
           key={option.optionId}
         >
           <input
-             className={classes.checkbox}
+            className={classes.checkbox}
             type={"checkbox"}
-            id={
-              `questions.${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`
-            }
+            id={`questions.${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`}
             style={{ display: "none" }}
             {...form.register(
-              `questions.${currentIndex}.assessmentQuestionOptions.${index}.isCorrect` as keyof {questions:IAssessmentExam[]},
+              `questions.${currentIndex}.assessmentQuestionOptions.${index}.isCorrect` as keyof {
+                questions: IAssessmentExam[];
+              }
             )}
-           
           ></input>
-          <Card
-            shadow={"md"}
-            my={10}
-            p={10}
-            className={classes.card}
-          >
+          <Card shadow={"md"} my={10} p={10} className={classes.card}>
             <TextViewer
               styles={{
                 root: {
