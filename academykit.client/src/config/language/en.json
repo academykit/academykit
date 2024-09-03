@@ -1240,5 +1240,10 @@
   "user_is_super_admin": "This user will be super admin.",
   "organization_detail": "Organization Detail",
   "user_detail": "User Detail",
-  "back": "Back"
+  "back": "Back",
+  "lesson_name_required": "Lesson Name is required.",
+  "externalUrl": "External Url",
+  "externalUrl_required": "External Url is required.",
+  "url_invalid": "Url is invalid.",
+  "content_required": "Content is required."
 }

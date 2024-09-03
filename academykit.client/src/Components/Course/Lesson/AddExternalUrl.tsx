@@ -29,10 +29,10 @@ const schema = () => {
   const { t } = useTranslation();
 
   return Yup.object().shape({
-    name: Yup.string().required(t("feedback_name_required") as string),
+    name: Yup.string().required(t("lesson_name_required") as string),
     externalUrl: Yup.string()
-      .url("Invalid URL format.")
-      .required(t("externalUrl") as string),
+      .url(t("url_invalid") as string)
+      .required(t("externalUrl_required") as string),
   });
 };
 

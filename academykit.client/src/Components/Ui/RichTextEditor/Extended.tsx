@@ -27,6 +27,8 @@ type IProps = {
   value?: string;
   error?: string;
   sx?: any[] | undefined;
+  required?: boolean;
+  labelSize?: "sm" | "md" | "lg";
 };
 const TextEditorExtended = ({
   formContext,
@@ -36,6 +38,8 @@ const TextEditorExtended = ({
   error,
   value,
   sx,
+  required,
+  labelSize = "sm",
 }: IProps) => {
   const { t } = useTranslation();
   const cPlaceholder = t(placeholder ?? "");
@@ -85,74 +89,85 @@ const TextEditorExtended = ({
   // );
 
   return (
-    <Box>
-      {/* {label && <label>{t(label)}</label>} */}
-      <RichTextEditor editor={editor} style={sx}>
-        <RichTextEditor.Toolbar sticky stickyOffset={60}>
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.Bold />
-            <RichTextEditor.Italic />
-            <RichTextEditor.Underline />
-            <RichTextEditor.Strikethrough />
-            <RichTextEditor.ClearFormatting />
-            <RichTextEditor.Highlight />
-            <RichTextEditor.Code />
-          </RichTextEditor.ControlsGroup>
+    <>
+      {label && (
+        <div style={{ display: "flex", alignItems: "baseline", gap: "5px" }}>
+          <Text size={labelSize} mb={5}>
+            {label}
+          </Text>
+          {required && (
+            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+          )}
+        </div>
+      )}
+      <Box>
+        <RichTextEditor editor={editor} style={sx}>
+          <RichTextEditor.Toolbar sticky stickyOffset={60}>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.Bold />
+              <RichTextEditor.Italic />
+              <RichTextEditor.Underline />
+              <RichTextEditor.Strikethrough />
+              <RichTextEditor.ClearFormatting />
+              <RichTextEditor.Highlight />
+              <RichTextEditor.Code />
+            </RichTextEditor.ControlsGroup>
 
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.H1 />
-            <RichTextEditor.H2 />
-            <RichTextEditor.H3 />
-            <RichTextEditor.H4 />
-          </RichTextEditor.ControlsGroup>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.H1 />
+              <RichTextEditor.H2 />
+              <RichTextEditor.H3 />
+              <RichTextEditor.H4 />
+            </RichTextEditor.ControlsGroup>
 
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.Blockquote />
-            <RichTextEditor.Hr />
-            <RichTextEditor.BulletList />
-            <RichTextEditor.OrderedList />
-            <RichTextEditor.Subscript />
-            <RichTextEditor.Superscript />
-          </RichTextEditor.ControlsGroup>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.Blockquote />
+              <RichTextEditor.Hr />
+              <RichTextEditor.BulletList />
+              <RichTextEditor.OrderedList />
+              <RichTextEditor.Subscript />
+              <RichTextEditor.Superscript />
+            </RichTextEditor.ControlsGroup>
 
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.Link />
-            <RichTextEditor.Unlink />
-          </RichTextEditor.ControlsGroup>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.Link />
+              <RichTextEditor.Unlink />
+            </RichTextEditor.ControlsGroup>
 
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.AlignLeft />
-            <RichTextEditor.AlignCenter />
-            <RichTextEditor.AlignJustify />
-            <RichTextEditor.AlignRight />
-          </RichTextEditor.ControlsGroup>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.AlignLeft />
+              <RichTextEditor.AlignCenter />
+              <RichTextEditor.AlignJustify />
+              <RichTextEditor.AlignRight />
+            </RichTextEditor.ControlsGroup>
 
-          <RichTextEditor.ColorPicker
-            colors={[
-              "#25262b",
-              "#868e96",
-              "#fa5252",
-              "#e64980",
-              "#be4bdb",
-              "#7950f2",
-              "#4c6ef5",
-              "#228be6",
-              "#15aabf",
-              "#12b886",
-              "#40c057",
-              "#82c91e",
-              "#fab005",
-              "#fd7e14",
-            ]}
-          />
-          {/* <YoutubeVideoControl></YoutubeVideoControl> */}
-        </RichTextEditor.Toolbar>
-        <RichTextEditor.Content />
-      </RichTextEditor>
-      <Text c="red" size={"xs"} mt={3}>
-        {form ? form.errors[label ?? "description"] : error}
-      </Text>
-    </Box>
+            <RichTextEditor.ColorPicker
+              colors={[
+                "#25262b",
+                "#868e96",
+                "#fa5252",
+                "#e64980",
+                "#be4bdb",
+                "#7950f2",
+                "#4c6ef5",
+                "#228be6",
+                "#15aabf",
+                "#12b886",
+                "#40c057",
+                "#82c91e",
+                "#fab005",
+                "#fd7e14",
+              ]}
+            />
+            {/* <YoutubeVideoControl></YoutubeVideoControl> */}
+          </RichTextEditor.Toolbar>
+          <RichTextEditor.Content />
+        </RichTextEditor>
+        <Text c="red" size={"xs"} mt={3}>
+          {form ? form.errors[label ?? "description"] : error}
+        </Text>
+      </Box>
+    </>
   );
 };
 

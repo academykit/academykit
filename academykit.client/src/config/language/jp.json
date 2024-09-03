@@ -1181,5 +1181,8 @@
   "user_is_super_admin": "このユーザーはスーパ管理者です。",
   "organization_detail": "組織の詳細",
   "user_detail": "ユーザーの詳細",
-  "back": "戻る"
+  "back": "戻る",
+  "lesson_name_required": "レッスン名は必須です。",
+  "externalUrl": "外部URL",
+  "externalUrl_required": "外部URLは必須です。"
 }

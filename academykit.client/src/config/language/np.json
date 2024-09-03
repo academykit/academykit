@@ -1182,5 +1182,10 @@
   "user_is_super_admin": "यह उपयोगकर्ता सुपर व्यवस्थापक होगा।",
   "organization_detail": "संगठन विवरण",
   "user_detail": "उपयोगकर्ता विवरण",
-  "back": "फिर्ता"
+  "back": "फिर्ता",
+  "lesson_name_required": "कृपया अध्यायको नाम भर्नुहोस्।",
+  "externalUrl": "बाहरी युएरएल",
+  "externalUrl_required": "बाहरी युएरएल आवश्यक छ।",
+  "url_invalid": "युएरएल अवैध छ।",
+  "content_required": "कृपया कोई सामग्री भर्नुहोस्।"
 }
