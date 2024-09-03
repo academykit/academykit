@@ -13,7 +13,7 @@ import {
   Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useMediaQuery, useToggle } from "@mantine/hooks";
+import { useToggle } from "@mantine/hooks";
 import { CourseUserStatus, QuestionType, UserRole } from "@utils/enums";
 import {
   ILessonExamStart,
@@ -87,7 +87,6 @@ const Exam = ({
     };
   }, [customLayout.examPage]);
 
-  const matches = useMediaQuery("(min-width: 56.25em)");
   const [visited, setVisited] = useState<number[]>([]);
 
   const onQuestionVisit = (index: number) => {
@@ -157,13 +156,15 @@ const Exam = ({
       <Modal
         opened={examSubmission.isSuccess}
         onClose={() => {
-          navigate(location.state ?location.state + "?invalidate=true" : "/");
+          navigate(location.state ? location.state + "?invalidate=true" : "/");
         }}
         title={t("submission_success")}
       >
         <Button
           onClick={() => {
-            navigate(location.state?location.state + "?invalidate=true" : "/");
+            navigate(
+              location.state ? location.state + "?invalidate=true" : "/"
+            );
           }}
         >
           {t("close")}

@@ -207,12 +207,10 @@ const Exam = ({
                 </Box>
                 <Container className={classes.option}>
                   {questions[currentIndex]?.type ===
-                  QuestionType.MultipleChoice &&
-                  questions[currentIndex]?.assessmentQuestionOptions && (
-                    <AssessmentExamCheckBox
-                      currentIndex={currentIndex}
-                    />
-                  )}
+                    QuestionType.MultipleChoice &&
+                    questions[currentIndex]?.assessmentQuestionOptions && (
+                      <AssessmentExamCheckBox currentIndex={currentIndex} />
+                    )}
                   {questions[currentIndex]?.type ===
                     QuestionType.SingleChoice &&
                     questions[currentIndex]?.assessmentQuestionOptions && (
@@ -265,7 +263,12 @@ const Exam = ({
               </Card>
             </Grid.Col>
 
-            <QuestionIndex  currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} setVisited={setVisited} visited={visited} />
+            <QuestionIndex
+              currentIndex={currentIndex}
+              setCurrentIndex={setCurrentIndex}
+              setVisited={setVisited}
+              visited={visited}
+            />
           </Grid>
         </form>
       </FormProvider>
