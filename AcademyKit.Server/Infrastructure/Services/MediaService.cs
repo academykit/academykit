@@ -102,7 +102,9 @@
                 awsSetting.Values = await GetStorageTypeValue(StorageType.AWS)
                     .ConfigureAwait(false);
                 awsSetting.IsActive =
-                    System.Enum.Parse<StorageType>(setting.Value) == StorageType.AWS;
+                    setting?.Value != null
+                        ? Enum.Parse<StorageType>(setting.Value) == StorageType.AWS
+                        : null;
                 response.Add(awsSetting);
 
                 var serverSetting = new StorageSettingResponseModel();
@@ -110,7 +112,9 @@
                 serverSetting.Values = await GetStorageTypeValue(StorageType.Server)
                     .ConfigureAwait(false);
                 serverSetting.IsActive =
-                    System.Enum.Parse<StorageType>(setting.Value) == StorageType.Server;
+                    setting?.Value != null
+                        ? Enum.Parse<StorageType>(setting.Value) == StorageType.Server
+                        : null;
                 response.Add(serverSetting);
                 return response;
             }

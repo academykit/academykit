@@ -1095,9 +1095,23 @@
   <data name="ConfirmPasswordRequired" xml:space="preserve">
   <value>確認用パスワードは必須です。確認用パスワードを入力してください。</value>
 </data>
-
   <data name="PasswordAndConfirmPasswordNotMatched" xml:space="preserve">
   <value>パスワードと確認用パスワードが一致しません。もう一度お試しください。</value>
+</data>
+  <data name="UnauthorizedEmailDomain" xml:space="preserve">
+  <value>許可されていないメールドメイン</value>
+</data>
+  <data name="DefaultGroupNotFound" xml:space="preserve">
+  <value>デフォルトのグループが見つかりません。</value>
+</data>
+  <data name="GroupContainsUsersCannotAdd" xml:space="preserve">
+  <value>グループにユーザーが含まれているため、新しいユーザーを追加できません。</value>
+</data>
+  <data name="UnauthorizedToResendEmail" xml:space="preserve">
+  <value>メールを再送する権限がありません。</value>
+</data>
+  <data name="UserAlreadyActive" xml:space="preserve">
+  <value>ユーザーは既にアクティブです。</value>
 </data>
 
 </root>
