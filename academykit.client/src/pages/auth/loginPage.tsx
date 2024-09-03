@@ -8,6 +8,7 @@ import {
   Center,
   Container,
   Group,
+  Loader,
   Paper,
   PasswordInput,
   Text,
@@ -128,7 +129,8 @@ const LoginPage = () => {
 
   return (
     <Container size={420} my={40}>
-      {companySettings.isSuccess && (
+      {companySettings.isSuccess &&
+      companySettings?.data?.data?.isSetupCompleted ? (
         <>
           <Logo
             height={50}
@@ -250,6 +252,10 @@ const LoginPage = () => {
             </form>
           </Center>
         </>
+      ) : (
+        <div>
+          <Loader />
+        </div>
       )}
     </Container>
   );

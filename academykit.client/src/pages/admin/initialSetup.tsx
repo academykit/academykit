@@ -4,6 +4,7 @@ import {
   Button,
   Container,
   Group,
+  Loader,
   Paper,
   PasswordInput,
   Stepper,
@@ -139,99 +140,111 @@ const InitialSetup = () => {
 
   return (
     <Container my={40} style={{ position: "relative" }}>
-      <Logo
-        height={100}
-        width={100}
-        url={companySettings?.data?.data?.imageUrl}
-      />
-      <form onSubmit={form.onSubmit(onFormSubmit)}>
-        <Paper p={30} radius="md">
-          <Stepper active={active}>
-            <Stepper.Step label="Step 1" description={t("organization_detail")}>
-              <Box size={100} p={20}>
-                <Text mb={10}>{t("logo_url_setup_later")}</Text>
-                <TextInput
-                  mb={10}
-                  withAsterisk
-                  label={t("company_name")}
-                  placeholder={t("enter_company_name") as string}
-                  name="companyName"
-                  {...form.getInputProps("companyName")}
-                  required
-                />
-                <TextInput
-                  mb={10}
-                  {...form.getInputProps("companyAddress")}
-                  label={t("company_address")}
-                  placeholder={t("enter_company_address") as string}
-                />
-                <TextInput
-                  mb={10}
-                  {...form.getInputProps("logoUrl")}
-                  label={t("logo_url")}
-                  placeholder={t("enter_logo_url") as string}
-                />
-              </Box>
-            </Stepper.Step>
-            <Stepper.Step label="Step 2" description={t("user_detail")}>
-              <Box p={20}>
-                <Text mb={10}>{t("user_is_super_admin")}</Text>
-                <TextInput
-                  mb={10}
-                  withAsterisk
-                  label={t("firstname")}
-                  placeholder={t("name_placeholder") as string}
-                  name="Name"
-                  {...form.getInputProps("firstName")}
-                  required
-                />
-                <TextInput
-                  mb={10}
-                  label={t("lastName")}
-                  placeholder={t("name_placeholder") as string}
-                  {...form.getInputProps("lastName")}
-                  required
-                />
-                <TextInput
-                  mb={10}
-                  {...form.getInputProps("email")}
-                  label={t("email")}
-                  placeholder={t("your_email") as string}
-                  required
-                />
-                <PasswordInput
-                  mb={10}
-                  {...form.getInputProps("password")}
-                  label={t("password")}
-                  placeholder={t("password_placeholder") as string}
-                  required
-                />
+      {companySettings.isSuccess &&
+      !companySettings?.data?.data?.isSetupCompleted ? (
+        <>
+          <Logo
+            height={100}
+            width={100}
+            url={companySettings?.data?.data?.imageUrl}
+          />
+          <form onSubmit={form.onSubmit(onFormSubmit)}>
+            <Paper p={30} radius="md">
+              <Stepper active={active}>
+                <Stepper.Step
+                  label="Step 1"
+                  description={t("organization_detail")}
+                >
+                  <Box size={100} p={20}>
+                    <Text mb={10}>{t("logo_url_setup_later")}</Text>
+                    <TextInput
+                      mb={10}
+                      withAsterisk
+                      label={t("company_name")}
+                      placeholder={t("enter_company_name") as string}
+                      name="companyName"
+                      {...form.getInputProps("companyName")}
+                      required
+                    />
+                    <TextInput
+                      mb={10}
+                      {...form.getInputProps("companyAddress")}
+                      label={t("company_address")}
+                      placeholder={t("enter_company_address") as string}
+                    />
+                    <TextInput
+                      mb={10}
+                      {...form.getInputProps("logoUrl")}
+                      label={t("logo_url")}
+                      placeholder={t("enter_logo_url") as string}
+                    />
+                  </Box>
+                </Stepper.Step>
+                <Stepper.Step label="Step 2" description={t("user_detail")}>
+                  <Box p={20}>
+                    <Text mb={10}>{t("user_is_super_admin")}</Text>
+                    <TextInput
+                      mb={10}
+                      withAsterisk
+                      label={t("firstname")}
+                      placeholder={t("name_placeholder") as string}
+                      name="Name"
+                      {...form.getInputProps("firstName")}
+                      required
+                    />
+                    <TextInput
+                      mb={10}
+                      label={t("lastName")}
+                      placeholder={t("name_placeholder") as string}
+                      {...form.getInputProps("lastName")}
+                      required
+                    />
+                    <TextInput
+                      mb={10}
+                      {...form.getInputProps("email")}
+                      label={t("email")}
+                      placeholder={t("your_email") as string}
+                      required
+                    />
+                    <PasswordInput
+                      mb={10}
+                      {...form.getInputProps("password")}
+                      label={t("password")}
+                      placeholder={t("password_placeholder") as string}
+                      required
+                    />
 
-                <PasswordInput
-                  mt={10}
-                  {...form.getInputProps("confirmPassword")}
-                  label={t("confirm_password")}
-                  placeholder={t("confirm_password") as string}
-                  required
-                />
-              </Box>
-            </Stepper.Step>
-          </Stepper>
-          <Group justify="flex-end" mt="xl">
-            <Button
-              variant="default"
-              onClick={active === 0 ? nextStep : prevStep}
-            >
-              {active === 0 ? t("next") : t("back")}
-            </Button>
-            {active === 1 && (
-              <Button type="submit" onClick={nextStep}>
-                {t("submit")}
-              </Button>
-            )}
-          </Group>
-        </Paper>
-      </form>
+                    <PasswordInput
+                      mt={10}
+                      {...form.getInputProps("confirmPassword")}
+                      label={t("confirm_password")}
+                      placeholder={t("confirm_password") as string}
+                      required
+                    />
+                  </Box>
+                </Stepper.Step>
+              </Stepper>
+              <Group justify="flex-end" mt="xl">
+                <Button
+                  variant="default"
+                  onClick={active === 0 ? nextStep : prevStep}
+                >
+                  {active === 0 ? t("next") : t("back")}
+                </Button>
+                {active === 1 && (
+                  <Button type="submit" onClick={nextStep}>
+                    {t("submit")}
+                  </Button>
+                )}
+              </Group>
+            </Paper>
+          </form>
+        </>
+      ) : (
+        <div>
+          <Loader />
+        </div>
+      )}
     </Container>
   );
 };
