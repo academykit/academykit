@@ -7,7 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Check Formatting
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: |
           dotnet tool restore
           dotnet csharpier --check .
+      - uses: streetsidesoftware/cspell-action@v6
+        with:
+          config: ".cspell.json"

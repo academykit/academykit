@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Infrastructure.Persistence.Migrations
+namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -1795,13 +1795,11 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("CompanyAddress")
-                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("VARCHAR(250)")
                         .HasColumnName("company_address");
 
                     b.Property<string>("CompanyContactNumber")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("VARCHAR(30)")
                         .HasColumnName("company_contact_number");
@@ -1831,8 +1829,11 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(1000)")
                         .HasColumnName("email_signature");
 
+                    b.Property<bool>("IsSetupCompleted")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_setup_completed");
+
                     b.Property<string>("LogoUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("VARCHAR(500)")
                         .HasColumnName("logo_url");
@@ -1876,6 +1877,12 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false)
                         .HasColumnName("is_active");
+
+                    b.Property<bool>("IsDefault")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_default");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -3710,7 +3717,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnName("created_on");
 
                     b.Property<string>("EligibilityId")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("VARCHAR(50)")
                         .HasColumnName("eligibility_id");
@@ -3733,6 +3739,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
+
+                    b.HasIndex("EligibilityId")
+                        .IsUnique();
 
                     b.ToTable("TrainingEligibility");
                 });
@@ -3783,7 +3792,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnName("first_name");
 
                     b.Property<string>("HashPassword")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("hash_password");
@@ -5175,7 +5183,14 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AcademyKit.Domain.Entities.EligibilityCreation", "EligibilityCreation")
+                        .WithOne("TrainingEligibility")
+                        .HasForeignKey("AcademyKit.Domain.Entities.TrainingEligibility", "EligibilityId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("Course");
+
+                    b.Navigation("EligibilityCreation");
                 });
 
             modelBuilder.Entity("AcademyKit.Domain.Entities.User", b =>
@@ -5358,6 +5373,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("EligibilityCreations");
 
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("AcademyKit.Domain.Entities.EligibilityCreation", b =>
+                {
+                    b.Navigation("TrainingEligibility");
                 });
 
             modelBuilder.Entity("AcademyKit.Domain.Entities.Feedback", b =>

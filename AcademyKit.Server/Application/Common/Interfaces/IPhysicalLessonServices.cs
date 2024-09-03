@@ -9,7 +9,7 @@ namespace AcademyKit.Infrastructure.Services
         : IGenericService<PhysicalLessonReview, BaseSearchCriteria>
     {
         /// <summary>
-        /// Insetrs or updates physical lesson stats
+        /// Inserts or updates physical lesson stats
         /// </summary>
         /// <param name="lessonIdentity">Lesson identity</param>
         /// <param name="currentUserId">Current user id</param>

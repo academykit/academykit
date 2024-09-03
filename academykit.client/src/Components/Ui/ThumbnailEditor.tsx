@@ -111,10 +111,7 @@ const ThumbnailEditor = ({
         imageValidateSizeMinHeight={359}
         allowImageResize={true}
         imageValidateSizeMinResolution={229401}
-        onaddfile={() => {}}
         onupdatefiles={setFiles}
-        // onremovefile={() => form.setFieldValue(FormField, '')}
-        onremovefile={() => {}}
         allowMultiple={false}
         imageResizeTargetWidth={1280}
         imageResizeTargetHeight={700}

@@ -10,10 +10,10 @@ import {
   Flex,
   Group,
   Loader,
-  rem,
   ScrollArea,
   SegmentedControl,
   Title,
+  rem,
 } from "@mantine/core";
 import { IconColumns, IconLayoutGrid } from "@tabler/icons-react";
 import { CourseStatus, CourseUserStatus, UserRole } from "@utils/enums";
@@ -100,7 +100,7 @@ const CoursePage = ({
         {multiFilterComponent(
           filterValue,
           t("enrollment_status"),
-          "Enrollmentstatus"
+          "EnrollmentStatus"
         )}
         {filterComponent(filterStatusValue, t("status"), "Status")}
 

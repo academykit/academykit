@@ -1,4 +1,4 @@
-namespace AcademyKit.Infrastructure.Persistence.Configurations
+﻿namespace AcademyKit.Infrastructure.Persistence.Configurations
 {
     using AcademyKit.Domain.Entities;
     using Microsoft.EntityFrameworkCore;
@@ -27,7 +27,7 @@ namespace AcademyKit.Infrastructure.Persistence.Configurations
                 .HasColumnName("eligibility_id")
                 .HasColumnType("VARCHAR(50)")
                 .HasMaxLength(50)
-                .IsRequired();
+                .IsRequired(false);
             builder
                 .Property(x => x.TrainingEligibilityEnum)
                 .HasColumnName("training_eligibility_enum")

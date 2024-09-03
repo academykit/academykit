@@ -127,7 +127,7 @@
                     entity.UserId,
                     course.Id
                 );
-                throw new ForbiddenException(_localizer.GetString("UserFoundasTrainingTrainer"));
+                throw new ForbiddenException(_localizer.GetString("UserFoundAsTrainingTrainer"));
             }
 
             var isSuperAdminOrAdmin = await IsSuperAdminOrAdmin(entity.UserId)

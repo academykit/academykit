@@ -16,6 +16,13 @@
         Task<AuthenticationModel> VerifyUserAndGetToken(LoginRequestModel model);
 
         /// <summary>
+        /// Generates an authentication token for a user using SSO information.
+        /// </summary>
+        /// <param name="model">The SSO user details.</param>
+        /// <returns>A task representing the asynchronous operation, with an <see cref="AuthenticationModel"/> containing the token and user information.</returns>
+        Task<AuthenticationModel> GenerateTokenUsingSSOAsync(OAuthUserResponseModel model);
+
+        /// <summary>
         /// Handle to logout user and set refresh token false
         /// </summary>
         /// <param name="token">the refresh token</param>
@@ -43,23 +50,6 @@
         /// <param name="email">the user email</param>
         /// <returns>the instance of <see cref="User"/></returns>
         Task<User> GetUserByEmailAsync(string email);
-
-        /// <summary>
-        /// Handle to hash password
-        /// </summary>
-        /// <param name="password">the password</param>
-        /// <param name="salt"></param>
-        /// <param name="needsOnlyHash"></param>
-        /// <returns></returns>
-        string HashPassword(string password, byte[] salt = null, bool needsOnlyHash = false);
-
-        /// <summary>
-        /// Handle to verify password
-        /// </summary>
-        /// <param name="hashedPasswordWithSalt">the hashed password</param>
-        /// <param name="password">the password</param>
-        /// <returns></returns>
-        bool VerifyPassword(string hashedPasswordWithSalt, string password);
 
         /// <summary>
         /// Handle to reset password

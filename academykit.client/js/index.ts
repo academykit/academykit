@@ -3,7 +3,7 @@ import { UserRole } from "@utils/enums";
 // eslint-disable-next-line no-var
 declare var ZoomMtg: any;
 
-const BASE_URL = ``;
+const BASE_URL = "";
 const api = (courseId: string, lessonId: string) =>
   `/api/course/${courseId}/lesson/${lessonId}/join`;
 

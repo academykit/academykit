@@ -3,7 +3,7 @@ import RequireAuth from "@components/Auth/RequireAuth";
 import Layout from "@components/Layout/Layout";
 import PrivacyLayout from "@components/Layout/PrivacyLayout";
 import ChangeEmail from "@components/Users/ChangeEmail";
-import ZoomMettingMessage from "@components/ZoomMeeting";
+import ZoomMeetingMessage from "@components/ZoomMeeting";
 import NavProvider from "@context/NavContext";
 import { Loader } from "@mantine/core";
 import UnAuthorize from "@pages/401";
@@ -11,11 +11,14 @@ import Forbidden from "@pages/403";
 import NotFound from "@pages/404";
 import ServerError from "@pages/500";
 import AboutPage from "@pages/about";
+import InitialSetup from "@pages/admin/initialSetup";
 import AssessmentLayout from "@pages/assessment/AssessmentLayout";
 import ConfirmToken from "@pages/auth/confirmToken";
 import LoginPage from "@pages/auth/loginPage";
+import RedirectHandler from "@pages/auth/redirectHandler";
 import TeamsRoute from "@pages/groups/details/Route";
 import PrivacyPage from "@pages/privacy";
+import RedirectError from "@pages/redirectError";
 import TermsPage from "@pages/terms";
 import Verify from "@pages/verify";
 import lazyWithRetry from "@utils/lazyImportWithReload";
@@ -116,7 +119,13 @@ const AppRoutes = () => {
           <Route path={RoutePath.login} element={<LoginPage />} />
           <Route path={RoutePath.forgotPassword} element={<ForgotPassword />} />
           <Route path={RoutePath.confirmToken} element={<ConfirmToken />} />
+          <Route path={RoutePath.initialSetup} element={<InitialSetup />} />
+          <Route
+            path={RoutePath.signInRedirect}
+            element={<RedirectHandler />}
+          />
         </Route>
+        <Route path={RoutePath.oAuthError} element={<RedirectError />} />
         <Route path={RoutePath[404]} element={<NotFound />} />
         <Route path={RoutePath[500]} element={<ServerError />} />
         <Route path={RoutePath[401]} element={<UnAuthorize />} />
@@ -140,12 +149,12 @@ const MainRoutes = () => {
       <Routes>
         <Route path={RoutePath.userDashboard} element={<Dashboard />} />
         <Route
-          path={RoutePath.courses.courseList + "*"}
+          path={`${RoutePath.courses.courseList}*`}
           element={<CourseListRoute />}
         />
         <Route element={<AssessmentLayout />}>
           <Route
-            path={RoutePath.assessment.assessmentList + "*"}
+            path={`${RoutePath.assessment.assessmentList}*`}
             element={<AssessmentListRoute />}
           />
         </Route>
@@ -160,7 +169,7 @@ const MainRoutes = () => {
             element={<CreateAssessment />}
           />
           <Route
-            path={RoutePath.manageAssessment.description().signature + "/*"}
+            path={`${RoutePath.manageAssessment.description().signature}/*`}
             element={
               <NavProvider>
                 <AssessmentDetailRoutes />
@@ -194,7 +203,7 @@ const MainRoutes = () => {
             element={<CreateCoursePage />}
           />
           <Route
-            path={RoutePath.pool.base + "/:id/*"}
+            path={`${RoutePath.pool.base}/:id/*`}
             element={
               <NavProvider>
                 <MCQPoolRoute />
@@ -202,7 +211,7 @@ const MainRoutes = () => {
             }
           />
           <Route
-            path={RoutePath.manageCourse.description().signature + "/*"}
+            path={`${RoutePath.manageCourse.description().signature}/*`}
             element={
               <NavProvider>
                 <CourseRoute />
@@ -214,16 +223,16 @@ const MainRoutes = () => {
         <Route element={<AdminAuthRoute />}>
           <Route path={RoutePath.users} element={<UsersList />} />
         </Route>
-        <Route path={RoutePath.userInfo + `/:id`} element={<UserInfo />} />
+        <Route path={`${RoutePath.userInfo}/:id`} element={<UserInfo />} />
         <Route
-          path={RoutePath.userProfile + `/:id/*`}
+          path={`${RoutePath.userProfile}/:id/*`}
           element={<UserProfile />}
         >
-          <Route path={`*`} element={<UserProfileRoute />} />
+          <Route path={"*"} element={<UserProfileRoute />} />
         </Route>
         <Route
           path={"/meet/:courseId/:lessonId"}
-          element={<ZoomMettingMessage />}
+          element={<ZoomMeetingMessage />}
         />
         <Route
           path={RoutePath.courses.description().signature}
@@ -231,24 +240,23 @@ const MainRoutes = () => {
         />
         <Route path="/settings/*" element={<AdminRoute />} />
         <Route
-          path={RoutePath.classes + "/:id/:lessonId/*"}
+          path={`${RoutePath.classes}/:id/:lessonId/*`}
           element={<Classes />}
         >
           <Route path="*" element={<ClassesRoute />} />
         </Route>
         <Route
-          path={RoutePath.meeting.base + "/*"}
+          path={`${RoutePath.meeting.base}/*`}
           element={<MeetingRoute />}
         />
         <Route
-          path={RoutePath.groups.details().signature + "/*"}
+          path={`${RoutePath.groups.details().signature}/*`}
           element={
             <NavProvider>
               <TeamsRoute />
             </NavProvider>
           }
-        ></Route>
-
+        />
         <Route
           path={RoutePath.exam.details().signature}
           element={<LessonExam />}

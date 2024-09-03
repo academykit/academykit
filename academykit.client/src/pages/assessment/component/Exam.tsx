@@ -13,23 +13,22 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import { useMediaQuery, useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { QuestionType, UserRole } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
 import {
+  IAssessmentExam,
   IAssessmentExamDetail,
   IAssessmentExamSubmit,
   useSubmitAssessmentExam,
 } from "@utils/services/assessmentService";
 import errorType from "@utils/services/axiosError";
-import cx from "clsx";
 import { t } from "i18next";
 import { useEffect, useRef, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import classes from "../styles/assessmentExam.module.css";
-import AssessmentExamCheckBox from "./AssessmentExamCheckBox";
 import AssessmentExamRadio from "./AssessmentExamRadio";
 
 const Exam = ({
@@ -54,7 +53,9 @@ const Exam = ({
   const questions = data.questions;
 
   const form = useForm({
-    initialValues: questions,
+    defaultValues: {
+      questions: [...questions],
+    },
   });
 
   const onQuestionVisit = (index: number) => {
@@ -90,8 +91,9 @@ const Exam = ({
     };
   }, [customLayout.examPage]);
 
-  const onSubmitHandler = async (values: typeof form.values) => {
+  const onSubmitHandler = async (d: { questions: IAssessmentExam[] }) => {
     try {
+      const values = d.questions;
       const finalData: IAssessmentExamSubmit[] = [];
       values.forEach((x) => {
         const answers = x.assessmentQuestionOptions
@@ -169,42 +171,42 @@ const Exam = ({
           {t("close")}
         </Button>
       </Modal>
-
-      <form onSubmit={form.onSubmit(onSubmitHandler)}>
-        <Grid m={20} className={classes.parentGrid}>
-          {/* exam display section */}
-          <Grid.Col
-            span={matches ? 9 : 9}
-            style={{ maxWidth: "100%" }}
-            className={classes.questionGridCol}
-          >
-            <Box
-              style={{
-                flexDirection: "column",
-                overflow: "auto",
-              }}
+      <FormProvider {...form}>
+        <form onSubmit={form.handleSubmit(onSubmitHandler)}>
+          <Grid m={20} className={classes.parentGrid}>
+            {/* exam display section */}
+            <Grid.Col
+              span={matches ? 9 : 9}
+              style={{ maxWidth: "100%" }}
+              className={classes.questionGridCol}
             >
               <Box
-                p={10}
-                pb={20}
                 style={{
                   flexDirection: "column",
-                  width: "100%",
-                  justifyContent: "start",
-                  alignContent: "start",
+                  overflow: "auto",
                 }}
               >
-                <Title mb={20}>{questions[currentIndex]?.questionName}</Title>
-                {questions[currentIndex]?.description && (
-                  <TextViewer
-                    key={currentIndex}
-                    content={questions[currentIndex]?.description}
-                    styles={{ wordBreak: "break-all" }}
-                  />
-                )}
-              </Box>
-              <Container className={classes.option}>
-                {questions[currentIndex]?.type ===
+                <Box
+                  p={10}
+                  pb={20}
+                  style={{
+                    flexDirection: "column",
+                    width: "100%",
+                    justifyContent: "start",
+                    alignContent: "start",
+                  }}
+                >
+                  <Title mb={20}>{questions[currentIndex]?.questionName}</Title>
+                  {questions[currentIndex]?.description && (
+                    <TextViewer
+                      key={currentIndex}
+                      content={questions[currentIndex]?.description}
+                      styles={{ wordBreak: "break-all" }}
+                    />
+                  )}
+                </Box>
+                <Container className={classes.option}>
+                  {/* {questions[currentIndex]?.type ===
                   QuestionType.MultipleChoice &&
                   questions[currentIndex]?.assessmentQuestionOptions && (
                     <AssessmentExamCheckBox
@@ -214,69 +216,69 @@ const Exam = ({
                         questions[currentIndex]?.assessmentQuestionOptions
                       }
                     />
-                  )}
-                {questions[currentIndex]?.type === QuestionType.SingleChoice &&
-                  questions[currentIndex]?.assessmentQuestionOptions && (
-                    <AssessmentExamRadio
-                      currentIndex={currentIndex}
-                      form={form}
-                      options={
-                        questions[currentIndex]?.assessmentQuestionOptions
-                      }
-                    />
-                  )}
-              </Container>
-            </Box>
-            <Card p={20} className={classes.buttonNav}>
-              {currentIndex !== 0 ? (
-                <Button
-                  my={5}
-                  onClick={() => {
-                    onQuestionVisit(currentIndex);
-                    setCurrentIndex(currentIndex - 1);
-                  }}
-                  w={100}
-                >
-                  {t("previous")}
-                </Button>
-              ) : (
-                <div></div>
-              )}
-              <button
-                style={{ display: "none" }}
-                ref={submitButtonRef}
-              ></button>
-              <Text my={5}>
-                {currentIndex + 1}/{questions.length}
-              </Text>
+                  )} */}
+                  {questions[currentIndex]?.type ===
+                    QuestionType.SingleChoice &&
+                    questions[currentIndex]?.assessmentQuestionOptions && (
+                      <AssessmentExamRadio
+                        currentIndex={currentIndex}
+                        options={
+                          questions[currentIndex]?.assessmentQuestionOptions
+                        }
+                      />
+                    )}
+                </Container>
+              </Box>
+              <Card p={20} className={classes.buttonNav}>
+                {currentIndex !== 0 ? (
+                  <Button
+                    my={5}
+                    onClick={() => {
+                      onQuestionVisit(currentIndex);
+                      setCurrentIndex(currentIndex - 1);
+                    }}
+                    w={100}
+                  >
+                    {t("previous")}
+                  </Button>
+                ) : (
+                  <div></div>
+                )}
+                <button
+                  style={{ display: "none" }}
+                  ref={submitButtonRef}
+                ></button>
+                <Text my={5}>
+                  {currentIndex + 1}/{questions.length}
+                </Text>
 
-              {currentIndex < questions.length - 1 ? (
-                <Button
-                  my={5}
-                  onClick={() => {
-                    onQuestionVisit(currentIndex);
-                    setCurrentIndex((currentIndex) => currentIndex + 1);
-                  }}
-                  w={100}
-                >
-                  {t("next")}
-                </Button>
-              ) : (
-                <div></div>
-              )}
-            </Card>
-          </Grid.Col>
+                {currentIndex < questions.length - 1 ? (
+                  <Button
+                    my={5}
+                    onClick={() => {
+                      onQuestionVisit(currentIndex);
+                      setCurrentIndex((currentIndex) => currentIndex + 1);
+                    }}
+                    w={100}
+                  >
+                    {t("next")}
+                  </Button>
+                ) : (
+                  <div></div>
+                )}
+              </Card>
+            </Grid.Col>
 
-          {/* question counter section */}
-          <Grid.Col
-            span={matches ? 3 : 3}
-            m={0}
-            className={classes.optionsGridCol}
-          >
-            <Group p={10} className={classes.navigateWrapper}>
-              {form.values.map((x, i) => (
+            {/* question counter section */}
+            <Grid.Col
+              span={matches ? 3 : 3}
+              m={0}
+              className={classes.optionsGridCol}
+            >
+              {/* <Group p={10} className={classes.navigateWrapper}>
+              {form.values?.map((x, i) => (
                 <div
-                  key={i}
+                  key={x.questionId}
                   onClick={() => {
                     setVisited((visited) => [...visited, currentIndex]);
                     setCurrentIndex(i);
@@ -304,10 +306,11 @@ const Exam = ({
                   </Card>
                 </div>
               ))}
-            </Group>
-          </Grid.Col>
-        </Grid>
-      </form>
+            </Group> */}
+            </Grid.Col>
+          </Grid>
+        </form>
+      </FormProvider>
     </>
   );
 };

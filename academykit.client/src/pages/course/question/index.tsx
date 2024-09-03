@@ -75,10 +75,9 @@ const Questions = () => {
   ) => {
     try {
       const response = await httpClient.get<IPaginated<ITag>>(
-        api.tags.list +
-          `?${search}${identity ? `Idenitiy=${identity}` : ""}${
-            trainingType ? `&TrainingType=${trainingType}` : ""
-          }`
+        `${api.tags.list}?${search}${identity ? `Identity=${identity}` : ""}${
+          trainingType ? `&TrainingType=${trainingType}` : ""
+        }`
       );
       setQuestionPoolTags(response.data);
     } catch (error) {

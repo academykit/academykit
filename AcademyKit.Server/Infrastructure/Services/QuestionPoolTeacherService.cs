@@ -164,7 +164,7 @@
                     teacher.UserId
                 );
                 throw new ForbiddenException(
-                    _localizer.GetString("QuestionPoolAuhorCannotRemoved")
+                    _localizer.GetString("QuestionPoolAuthorCannotRemoved")
                 );
             }
         }

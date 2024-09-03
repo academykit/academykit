@@ -197,15 +197,15 @@
                 );
             }
 
-            if (!string.IsNullOrWhiteSpace(criteria.Idenitiy))
+            if (!string.IsNullOrWhiteSpace(criteria.Identity))
             {
                 switch (criteria.TrainingType)
                 {
                     case TrainingTypeEnum.Course:
                         predicate = predicate.And(x =>
                             x.CourseTags.Any(x =>
-                                x.Course.Id.ToString() == criteria.Idenitiy.Trim()
-                                || x.Course.Slug.ToLower() == criteria.Idenitiy.ToLower().Trim()
+                                x.Course.Id.ToString() == criteria.Identity.Trim()
+                                || x.Course.Slug.ToLower() == criteria.Identity.ToLower().Trim()
                             )
                         );
                         break;
@@ -215,9 +215,9 @@
                             .GetAll(predicate: p =>
                                 p.Question.QuestionPoolQuestions.Any(x =>
                                     x.QuestionPool.Slug.ToLower()
-                                        == criteria.Idenitiy.ToLower().Trim()
+                                        == criteria.Identity.ToLower().Trim()
                                     || x.QuestionPool.Id.ToString()
-                                        == criteria.Idenitiy.ToString().Trim()
+                                        == criteria.Identity.ToString().Trim()
                                 )
                             )
                             .ToList();

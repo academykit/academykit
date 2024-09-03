@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { EFileStorageType, MailType } from "@utils/enums";
 import queryStringGenerator from "@utils/queryStringGenerator";
-import axios from "axios";
 import errorType from "./axiosError";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
@@ -83,6 +82,7 @@ export interface ICompanySetting {
   imageUrl: string;
   customConfiguration?: string;
   appVersion: string;
+  isSetupCompleted?: boolean;
 }
 
 export interface IGeneralSettingUpdate {
@@ -91,6 +91,17 @@ export interface IGeneralSettingUpdate {
   companyAddress: string;
   companyContactNumber: string;
   emailSignature: string;
+}
+
+export interface ISetupInitial {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  companyName: string;
+  companyAddress: string;
+  logoUrl: string;
 }
 
 export interface IZoomLicense<T> {
@@ -627,7 +638,7 @@ export const useAddZoomLicense = () => {
   });
 };
 
-//filestorage
+//file storage
 export interface IFileStorage {
   type: EFileStorageType;
   values: IFileStorageValues[];
@@ -655,17 +666,10 @@ export const useGetFileStorageSetting = () => {
     // retry: 0,
     // refetchOnMount: false,
     // refetchOnWindowFocus: false,
-    onError: (err) => {
-      if (axios.isAxiosError(err)) {
-        if (err.response?.status === 403) {
-          return null;
-        }
-      }
-    },
   });
 };
 
-//putfilestorage
+//put file storage
 
 const updateFileStorage = async (data: IFileStorage[]) =>
   await httpClient.put<IFileStorage>(
@@ -871,6 +875,22 @@ export const useDeleteMailNotification = () => {
 
     onError: (err) => {
       return errorType(err);
+    },
+  });
+};
+
+export const useInitialSetup = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: [api.adminUser.initialSetup],
+
+    mutationFn: (data: ISetupInitial) => {
+      return httpClient.post(api.adminUser.initialSetup, data);
+    },
+    onSuccess: () => {
+      queryClient.refetchQueries({
+        queryKey: [api.adminUser.getCompanySettings],
+      });
     },
   });
 };

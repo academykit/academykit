@@ -168,7 +168,7 @@ export interface IAssignmentSubmission {
   id?: string;
 }
 
-const postAssigmentSubmit = ({
+const postAssignmentSubmit = ({
   data,
   lessonId,
 }: {
@@ -181,7 +181,7 @@ export const useSubmitAssignment = ({ lessonId }: { lessonId: string }) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["submitAssignment"],
-    mutationFn: postAssigmentSubmit,
+    mutationFn: postAssignmentSubmit,
 
     onSuccess: () => {
       queryClient.invalidateQueries({

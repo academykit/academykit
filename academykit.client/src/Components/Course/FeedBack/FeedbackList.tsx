@@ -17,7 +17,7 @@ import { FeedbackType, ReadableEnum } from "@utils/enums";
 import TextViewer from "@components/Ui/RichTextViewer";
 import errorType from "@utils/services/axiosError";
 import {
-  IFeedbackQuestions,
+  type IFeedbackQuestions,
   useDeleteFeedbackQuestion,
 } from "@utils/services/feedbackService";
 import { useTranslation } from "react-i18next";
@@ -125,19 +125,19 @@ const FeedbackItem = ({
           value={data.type.toString()}
           onChange={() => {}}
           disabled
-        ></Select>
+        />
         <Box my={20}>
           {(data.type === FeedbackType.MultipleChoice ||
             data.type === FeedbackType.SingleChoice) && (
             <>
               <Text>{t("options")}</Text>
               {data.feedbackQuestionOptions?.map((x) => (
-                <Group my={10} key={x.id} id="hehe">
+                <Group my={10} key={x.id} id={x.id}>
                   <div style={{ width: "100%" }}>
                     <TextViewer
                       content={x.option}
                       styles={{ root: { flexGrow: 1 } }}
-                    ></TextViewer>
+                    />
                   </div>
                 </Group>
               ))}

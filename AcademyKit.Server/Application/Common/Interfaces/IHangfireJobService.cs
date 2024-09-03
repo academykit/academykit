@@ -9,13 +9,13 @@
         /// <summary>
         /// Handle to send mail to new group member
         /// </summary>
-        /// <param name="gropName"> the group name </param>
+        /// <param name="groupName"> the group name </param>
         /// <param name="groupSlug"> the group slug </param>
         /// <param name="userIds"> the list of <see cref="Guid" /> .</param>
         /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
         /// <returns> the task complete </returns>
         Task SendMailNewGroupMember(
-            string gropName,
+            string groupName,
             string groupSlug,
             IList<Guid> userIds,
             PerformContext context = null
@@ -88,9 +88,12 @@
         ///<summary>
         ///Handle to send course enrollment mail
         ///</summary>
-        ///<param name="coursename"> the course name</param>
+        ///<param name="userName"> the user name</param>
+        ///<param name="userEmail"> the user email</param>
+        ///<param name="courseId"> the course id</param>
+        ///<param name="courseName"> the course name</param>
         /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
-        ///<returns>the tasl complete </returns>
+        ///<returns>the task complete </returns>
         Task SendCourseEnrollmentMailAsync(
             string userName,
             string userEmail,
@@ -100,12 +103,12 @@
         );
 
         ///<summary>
-        ///Handle to send cretificate issued mail
+        ///Handle to send certificate issued mail
         ///</summary>
-        ///<param name="coursename"> the course name</param>
+        ///<param name="courseName"> the course name</param>
         /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
         /// <param name="StudentName">the lis of student whose certificate has been issued</param>
-        ///<returns>the tasl complete </returns>
+        ///<returns>the task complete </returns>
         Task SendCertificateIssueMailAsync(
             string courseName,
             IList<CertificateUserIssuedDto> certificateUserIssuedDtos,

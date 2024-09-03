@@ -87,7 +87,7 @@ const PaymentMethod = () => {
     },
     {
       title: t("khalti"),
-      iamge: "https://img.icons8.com/clouds/256/000000/futurama-bender.png",
+      image: "https://img.icons8.com/clouds/256/000000/futurama-bender.png",
       description: "Khalti says THEY are the best",
     },
   ];

@@ -240,6 +240,10 @@ const Classes = () => {
                 <ExternalLinkViewer
                   key={courseLesson.data?.id}
                   url={courseLesson.data?.externalUrl ?? ""}
+                  lesson={courseLesson.data}
+                  onEnded={() =>
+                    onCourseEnded(courseLesson.data?.nextLessonSlug as string)
+                  }
                 />
               </Box>
             )}

@@ -150,7 +150,7 @@
                     .GetAllAsync(predicate: p => p.QuestionPoolId == questionPool.Id)
                     .ConfigureAwait(false);
 
-                var questionsetsubmission = await _unitOfWork
+                var questionSetSubmissions = await _unitOfWork
                     .GetRepository<QuestionSetSubmission>()
                     .GetAllAsync(predicate: p =>
                         p.QuestionSet.QuestionSetQuestions.Any(x =>
@@ -163,8 +163,8 @@
 
                 if (
                     questionPoolQuestions.Count() != 0
-                    && questionsetsubmission.Count() != 0
-                    && questionsetsubmission.Any(x => x.QuestionSetResults.Count != 0)
+                    && questionSetSubmissions.Count() != 0
+                    && questionSetSubmissions.Any(x => x.QuestionSetResults.Count != 0)
                 )
                 {
                     _logger.LogWarning(
@@ -177,14 +177,14 @@
                 }
 
                 var ids = questionPoolQuestions.Select(x => x.Id).ToList();
-                var questionsetquestions = await _unitOfWork
+                var questionSetQuestions = await _unitOfWork
                     .GetRepository<QuestionSetQuestion>()
                     .GetAllAsync(predicate: p => ids.Contains(p.QuestionPoolQuestionId.Value))
                     .ConfigureAwait(false);
 
-                foreach (var questionsetquestion in questionsetquestions)
+                foreach (var questionSetQuestion in questionSetQuestions)
                 {
-                    _unitOfWork.GetRepository<QuestionSetQuestion>().Delete(questionsetquestion);
+                    _unitOfWork.GetRepository<QuestionSetQuestion>().Delete(questionSetQuestion);
                 }
 
                 foreach (var questionPoolQuestion in questionPoolQuestions)
@@ -192,7 +192,7 @@
                     _unitOfWork.GetRepository<QuestionPoolQuestion>().Delete(questionPoolQuestion);
                 }
 
-                foreach (var submission in questionsetsubmission)
+                foreach (var submission in questionSetSubmissions)
                 {
                     _unitOfWork.GetRepository<QuestionSetSubmission>().Delete(submission);
                 }
@@ -259,11 +259,11 @@
         }
 
         /// <summary>
-        /// reorder questions in questionpool
+        /// reorder questions in question pool
         /// </summary>
         /// <param name="currentUserId">current user id</param>
-        /// <param name="identity">id or slug of questionpool</param>
-        /// <param name="ids">list of question id in questionpool</param>
+        /// <param name="identity">id or slug of question pool</param>
+        /// <param name="ids">list of question id in question pool</param>
         /// <returns>task completed</returns>
         /// <exception cref="ForbiddenException"></exception>
         /// <exception cref="EntityNotFoundException"></exception>

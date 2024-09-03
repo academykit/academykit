@@ -34,7 +34,7 @@
         /// <summary>
         /// Handle to delete the external certificate async
         /// </summary>
-        /// <param name="identity"> the ceritifcate id or slug </param>
+        /// <param name="identity"> the certificate id or slug </param>
         /// <param name="currentUserId"> the current user id </param>
         /// <returns> the task complete </returns>
         Task DeleteExternalCertificateAsync(Guid identity, Guid currentUserId);

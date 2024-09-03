@@ -9,7 +9,7 @@ import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import errorType from "@utils/services/axiosError";
 import {
-  IGetSignature,
+  type IGetSignature,
   useAddSignature,
   useDeleteSignature,
   useEditSignature,
@@ -61,7 +61,7 @@ const CreateSignature = ({
         title: t("success"),
         message: t("add_signature_success"),
       });
-      onClose && onClose();
+      onClose?.();
     } catch (error) {
       const err = errorType(error);
       showNotification({
@@ -91,7 +91,7 @@ const CreateSignature = ({
   const handleDelete = async (sigId: string) => {
     try {
       await deleteSignature.mutateAsync({ id: id as string, sigId });
-      onClose && onClose();
+      onClose?.();
       showNotification({
         title: t("success"),
         message: t("delete_signature_success"),
@@ -127,7 +127,7 @@ const CreateSignature = ({
               label={t("name")}
               placeholder={t("enter_name") as string}
               withAsterisk
-              {...form.getInputProps(`fullName`)}
+              {...form.getInputProps("fullName")}
             />
             <TextInput
               w={"100%"}
@@ -135,12 +135,15 @@ const CreateSignature = ({
               label={t("designation")}
               withAsterisk
               placeholder={t("designation_placeholder") as string}
-              {...form.getInputProps(`designation`)}
+              {...form.getInputProps("designation")}
             />
           </Group>
           <Text size={"md"}>
             {t("signature")}{" "}
-            <sup style={{ verticalAlign: "bottom" }} className="global-astrick">
+            <sup
+              style={{ verticalAlign: "bottom" }}
+              className="global-asterisk"
+            >
               {" "}
               *
             </sup>
@@ -148,7 +151,7 @@ const CreateSignature = ({
           <ThumbnailEditor
             formContext={useFormContext}
             label={t("signature") as string}
-            FormField={`fileUrl`}
+            FormField={"fileUrl"}
             currentThumbnail={signatureUrl}
             width="48.5%"
           />

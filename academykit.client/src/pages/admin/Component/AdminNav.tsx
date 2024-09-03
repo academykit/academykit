@@ -130,7 +130,7 @@ const AdminNav = () => {
       group: "reviews",
       icon: <IconFileCertificate size={14} />,
     },
-    // { label: "Payment System", to: "/paymentmethods" },
+    // { label: "Payment System", to: "/paymentMethods" },
     {
       label: t("hangfire"),
       to: "hangfire",

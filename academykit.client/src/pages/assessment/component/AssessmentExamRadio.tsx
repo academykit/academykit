@@ -1,16 +1,10 @@
 import TextViewer from "@components/Ui/RichTextViewer";
 import { Box, Card, Group, Title } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
 import { IAssessmentExam } from "@utils/services/assessmentService";
-import cx from "clsx";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import classes from "../styles/assessmentQuestion.module.css";
-
 type Props = {
-  form: UseFormReturnType<
-    IAssessmentExam[],
-    (values: IAssessmentExam[]) => IAssessmentExam[]
-  >;
   options: [
     {
       optionId: string;
@@ -21,22 +15,26 @@ type Props = {
   currentIndex: number;
 };
 
-const AssessmentExamRadio = ({ form, options, currentIndex }: Props) => {
+const AssessmentExamRadio = ({ currentIndex }: Props) => {
+  const form = useFormContext<{ questions: IAssessmentExam[] }>();
+
   const { t } = useTranslation();
+  const { fields } = useFieldArray({
+    name: `questions.${currentIndex}.assessmentQuestionOptions`,
+    control: form.control,
+  });
   const changeFieldValue = (optionCurrentIndex: number) => {
-    options.map((_option, index) => {
-      if (index !== optionCurrentIndex) {
-        form.setFieldValue(
-          `${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`,
-          false
-        );
-      } else {
-        form.setFieldValue(
-          `${currentIndex}.assessmentQuestionOptions.${optionCurrentIndex}.isCorrect`,
-          true
-        );
-      }
-    });
+    const updatedOptions = fields.map((option, index) => ({
+      ...option,
+      isCorrect: index === optionCurrentIndex,
+    }));
+
+    updatedOptions.forEach((option, index) =>
+      form.setValue(
+        `questions.${currentIndex}.assessmentQuestionOptions[${index}]`,
+        option
+      )
+    );
   };
 
   return (
@@ -46,30 +44,23 @@ const AssessmentExamRadio = ({ form, options, currentIndex }: Props) => {
           {t("options")}
         </Title>
       </Group>
-      {options.map((option, index) => (
+      {fields.map((option, index) => (
         <div
           style={{ cursor: "pointer" }}
           key={option.optionId}
           onClick={() => changeFieldValue(index)}
         >
           <input
-            type={"checkbox"}
-            id={option.optionId}
+            type="checkbox"
+            className={classes.checkbox}
             style={{ display: "none" }}
-            {...form.getInputProps(
-              `${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`
+            {...form.register(
+              `questions.${currentIndex}.assessmentQuestionOptions[${index}].isCorrect` as keyof {
+                questions: IAssessmentExam[];
+              }
             )}
-          ></input>
-          <Card
-            shadow={"md"}
-            my={10}
-            p={10}
-            className={cx({
-              [classes.active]:
-                form.values[currentIndex].assessmentQuestionOptions[index]
-                  .isCorrect,
-            })}
-          >
+          />
+          <Card shadow={"md"} my={10} p={10} className={classes.card}>
             <input type={"checkbox"} style={{ display: "none" }} />
             <TextViewer
               styles={{

@@ -27,7 +27,9 @@
                 .HasColumnType("VARCHAR(250)")
                 .HasMaxLength(250)
                 .IsRequired();
+            builder.Property(x => x.IsDefault).HasColumnName("is_default").HasDefaultValue(false);
             builder.Property(x => x.IsActive).HasColumnName("is_active").HasDefaultValue(false);
+            builder.Property(x => x.IsDefault).HasColumnName("is_default").HasDefaultValue(false);
             builder
                 .Property(x => x.CreatedBy)
                 .HasColumnName("created_by")

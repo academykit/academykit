@@ -226,7 +226,7 @@ interface IGroupType {
 }
 
 //post group attachment
-const addGroupAttachement = ({
+const addGroupAttachment = ({
   groupIdentity,
   file,
 }: {
@@ -250,7 +250,7 @@ export const useAddGroupAttachment = (search: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [api.groups.addAttachment],
-    mutationFn: addGroupAttachement,
+    mutationFn: addGroupAttachment,
 
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -294,7 +294,7 @@ export const useRemoveGroupAttachment = (
   });
 };
 
-//group notmember list
+//group not member list
 export interface INotMember {
   id: string;
   fullName: string;

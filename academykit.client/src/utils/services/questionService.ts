@@ -162,9 +162,9 @@ const editQuestion = ({
     type: Number(data.type),
   });
 };
-export const useEditQuestion = (poolId: string, quesitonId: string) => {
+export const useEditQuestion = (poolId: string, questionId: string) => {
   return useMutation({
-    mutationKey: [api.questions.put(poolId, quesitonId)],
+    mutationKey: [api.questions.put(poolId, questionId)],
     mutationFn: editQuestion,
   });
 };

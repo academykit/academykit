@@ -22,8 +22,10 @@
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
         <value>[base64 mime encoded serialized .NET Framework object]</value>
     </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing"
+  mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework
+  object]</value>
         <comment>This is a comment</comment>
     </data>
                 
@@ -37,7 +39,7 @@
     mimetype set.
     
     The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+    ResXResourceReader how to deserialize the object. This is currently not 
     extensible. For a given mimetype the value must be set accordingly:
     
     Note - application/x-microsoft.net.object.binary.base64 is the format 
@@ -115,10 +117,12 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddressLength200" xml:space="preserve">
     <value>Address length must be less than or equal to 200 characters.</value>
@@ -135,13 +139,13 @@
   <data name="OAuthClientIdRequired" xml:space="preserve">
     <value>OAuth Client Id  is required.</value>
   </data>
-  <data name="AssignementQuestionisRequired" xml:space="preserve">
+  <data name="AssignmentQuestionIsRequired" xml:space="preserve">
     <value>Assignment Question option is required.</value>
   </data>
   <data name="AssignmentRequired" xml:space="preserve">
     <value>Assignment name is required</value>
   </data>
-  <data name="Assignmenttypeid" xml:space="preserve">
+  <data name="AssignmentTypeId" xml:space="preserve">
     <value>Assignment type is required.</value>
   </data>
   <data name="BioLength200" xml:space="preserve">
@@ -157,22 +161,22 @@
     <value>Certificate start date must not be greater than current date.</value>
   </data>
   <data name="CompanyAddressLengthError" xml:space="preserve">
-    <value>Company address length must be less than or equal to 250 characters.</value>
+    <value>Organization address length must be less than or equal to 250 characters.</value>
   </data>
   <data name="CompanyAddressRequired" xml:space="preserve">
-    <value>Company address is required.</value>
+    <value>Organization address is required.</value>
   </data>
   <data name="CompanyContactNumberLengthError" xml:space="preserve">
-    <value>Company contact must be less than or equal to 30 characters.</value>
+    <value>Organization contact must be less than or equal to 30 characters.</value>
   </data>
   <data name="CompanyContactNumberRequired" xml:space="preserve">
-    <value>Company contact number is required.</value>
+    <value>Organization contact number is required.</value>
   </data>
   <data name="CompanyNameLengthError" xml:space="preserve">
-    <value>Company name length must be less than or equal to 250 characters.</value>
+    <value>Organization name length must be less than or equal to 250 characters.</value>
   </data>
   <data name="CompanyNameRequired" xml:space="preserve">
-    <value>Company name is required.</value>
+    <value>Organization name is required.</value>
   </data>
   <data name="ConfirmMailRequired" xml:space="preserve">
     <value>Confirm email is required.</value>
@@ -219,7 +223,7 @@
   <data name="EmailSignatureLengthError" xml:space="preserve">
     <value>Email signature length must be less than or equal to 1000 characters.</value>
   </data>
-  <data name="EnddateMustBeGreater" xml:space="preserve">
+  <data name="EndDateMustBeGreater" xml:space="preserve">
     <value>End date must be greater than Start date.</value>
   </data>
   <data name="EndTimeEmptyError" xml:space="preserve">
@@ -276,7 +280,7 @@
   <data name="InvalidFileType" xml:space="preserve">
     <value>Invalid assignment type.</value>
   </data>
-  <data name="InvalidLessionType" xml:space="preserve">
+  <data name="InvalidLessonType" xml:space="preserve">
     <value>Invalid lesson type.</value>
   </data>
   <data name="InvalidMediaType" xml:space="preserve">
@@ -303,7 +307,7 @@
   <data name="LastNAmeRequired" xml:space="preserve">
     <value>Last name is required.</value>
   </data>
-  <data name="LessionNameRequired" xml:space="preserve">
+  <data name="LessonNameRequired" xml:space="preserve">
     <value>Lesson name is required.</value>
   </data>
   <data name="LessonIdRequired" xml:space="preserve">
@@ -333,7 +337,7 @@
   <data name="MediaTypeRequired" xml:space="preserve">
     <value>Media type is required.</value>
   </data>
-  <data name="MeedingDurationRequired" xml:space="preserve">
+  <data name="MeetingDurationRequired" xml:space="preserve">
     <value>Meeting duration is required.</value>
   </data>
   <data name="MeetingIdDUrationLength" xml:space="preserve">
@@ -366,7 +370,7 @@
   <data name="NewPasswordRequired" xml:space="preserve">
     <value>New password is required</value>
   </data>
-  <data name="OldAndNewPasswordDoesnotMatch" xml:space="preserve">
+  <data name="OldAndNewPasswordDoesNotMatch" xml:space="preserve">
     <value>New password and confirm password does not matched.</value>
   </data>
   <data name="OldEmailRequired" xml:space="preserve">
@@ -432,7 +436,7 @@
   <data name="QuestionMarkingRequired" xml:space="preserve">
     <value>Question marking is required.</value>
   </data>
-  <data name="QuestionpoolIdRequired" xml:space="preserve">
+  <data name="QuestionPoolIdRequired" xml:space="preserve">
     <value>Question pool identity is required.</value>
   </data>
   <data name="QuestionPoolNameRequired" xml:space="preserve">
@@ -495,16 +499,16 @@
   <data name="SenderNameRequired" xml:space="preserve">
     <value>Sender name is required.</value>
   </data>
-  <data name="StartdateEmptyError" xml:space="preserve">
-    <value>Startdate cannot be empty</value>
+  <data name="StartDateEmptyError" xml:space="preserve">
+    <value>Start date cannot be empty</value>
   </data>
   <data name="StartDateFormat" xml:space="preserve">
-    <value>startdate must be in format YYYY-MM-DD</value>
+    <value>Start date must be in format YYYY-MM-DD</value>
   </data>
   <data name="timeSpanIssue" xml:space="preserve">
     <value>Event end date must be greater than or equal to event start date.</value>
   </data>
-  <data name="TitleLenghtIssue" xml:space="preserve">
+  <data name="TitleLengthIssue" xml:space="preserve">
     <value>Title length must be less than or equal to 100.</value>
   </data>
   <data name="TrainingIdRequired" xml:space="preserve">
@@ -550,6 +554,6 @@
     <value>Number Of Question Selection Exceeds.</value>
   </data>
   <data name="AssessmentCannotBeDeleted" xml:space="preserve">
-    <value>Assessment Conatins Submission so Cannot be Deleted</value>
+    <value>Assessment Contains Submission so Cannot be Deleted</value>
   </data>
 </root>

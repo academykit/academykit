@@ -1,3 +1,5 @@
+import { Google, Microsoft } from "@components/Icons";
+import Logo from "@components/Logo";
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
 import { BrandingContext } from "@context/BrandingThemeContext";
 import {
@@ -6,9 +8,9 @@ import {
   Center,
   Container,
   Group,
-  Image,
   Paper,
   PasswordInput,
+  Text,
   Title,
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
@@ -16,11 +18,12 @@ import { showNotification } from "@mantine/notifications";
 import RoutePath from "@utils/routeConstants";
 import { useCompanySetting } from "@utils/services/adminService";
 import { useLogin } from "@utils/services/authService";
-import { IUserProfile } from "@utils/services/types";
-import { AxiosError } from "axios";
+import { api } from "@utils/services/service-api";
+import type { IUserProfile } from "@utils/services/types";
+import type { AxiosError } from "axios";
 import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import useAuth from "../../hooks/useAuth";
 
@@ -50,6 +53,7 @@ const LoginPage = () => {
     login.mutate({ email: values.email, password: values.password });
   };
   const context = useContext(BrandingContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (login.isError) {
@@ -92,7 +96,7 @@ const LoginPage = () => {
       if (!link) {
         link = document.createElement("link");
         link.rel = "icon";
-        document.getElementsByTagName("head")[0].appendChild(info.logo);
+        document.getElementsByTagName("head")[0].appendChild(link);
       }
       link.href = info.logo;
     }
@@ -102,14 +106,17 @@ const LoginPage = () => {
     setHeader();
 
     if (companySettings.isSuccess) {
+      if (!companySettings?.data?.data?.isSetupCompleted) {
+        return navigate("/initial/setup", { replace: true });
+      }
       const branding = JSON.parse(
         companySettings.data.data.customConfiguration ?? "{}"
       );
       localStorage.setItem(
         "app-info",
         JSON.stringify({
-          name: companySettings.data.data.name,
-          logo: companySettings.data.data.imageUrl,
+          name: companySettings.data.data?.name ?? "AcademyKit",
+          logo: companySettings.data.data.imageUrl ?? "/favicon.png",
         })
       );
       localStorage.setItem("branding", branding.accent);
@@ -121,21 +128,15 @@ const LoginPage = () => {
 
   return (
     <Container size={420} my={40}>
-      <Center m={"lg"}>
-        <Link to={"/"}>
-          <Image
-            height={50}
-            width={140}
-            src={companySettings?.data?.data?.imageUrl}
-            alt="logo"
-            fit="contain"
-          ></Image>
-        </Link>
-      </Center>
+      <Logo
+        height={50}
+        width={140}
+        url={companySettings?.data?.data?.imageUrl}
+      />
       <Title
         ta="center"
         style={(theme) => ({
-          fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+          fontFamily: theme.fontFamily,
           fontWeight: 900,
         })}
       >
@@ -177,6 +178,68 @@ const LoginPage = () => {
           </Button>
         </Paper>
       </form>
+      <Center my={18}>
+        <Text size="sm">
+          {t("create_new_agreement")} <Link to={"/"}>{t("terms_service")}</Link>
+          , <Link to={"/"}>{t("privacy_policy")}</Link>, {t("and_our_default")}{" "}
+          <Link to={"/"}>{t("notification_settings")}</Link>.
+        </Text>
+      </Center>
+      <div
+        style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 5 }}
+      >
+        <div
+          style={{
+            flex: "1",
+            height: "1px",
+            width: "100%",
+            background: "black",
+          }}
+        />
+        <Text size="sm" style={{ whiteSpace: "nowrap" }}>
+          {t("or_sign_in_with")}
+        </Text>
+        <div
+          style={{
+            flex: "1",
+            height: "1px",
+            width: "100%",
+            background: "black",
+          }}
+        />
+      </div>
+      <Center style={{ gap: 30, marginTop: 5 }}>
+        <form action={api.auth.googleSignIn} method="get">
+          <button
+            style={{
+              border: "none",
+              margin: "0",
+              padding: "0",
+              background: "transparent",
+              cursor: "pointer",
+            }}
+            type="submit"
+          >
+            {" "}
+            <Google height={28} width={28} />{" "}
+          </button>
+        </form>
+        <form action={api.auth.microsoftSignIn} method="get">
+          <button
+            style={{
+              border: "none",
+              margin: "0",
+              padding: "0",
+              background: "transparent",
+              cursor: "pointer",
+            }}
+            type="submit"
+          >
+            {" "}
+            <Microsoft height={28} width={28} />
+          </button>
+        </form>
+      </Center>
     </Container>
   );
 };

@@ -12,6 +12,7 @@
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <Version>1.0.5-alpha</Version>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
@@ -56,7 +57,7 @@
     <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.11" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageReference Include="PuppeteerSharp" Version="18.0.5" />
-    <PackageReference Include="RestSharp" Version="111.4.0" />
+    <PackageReference Include="RestSharp" Version="112.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.6.2" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.6.2" />
@@ -81,11 +82,11 @@
     <None Remove="Infrastructure\Persistence\FluentConfigurations\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Infrastructure\Persistence\Migrations\" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Remove="Application\Common\Mappings\**" />
     <EmbeddedResource Remove="Application\Common\Mappings\**" />
     <None Remove="Application\Common\Mappings\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Infrastructure\Persistence\Migrations\" />
   </ItemGroup>
 </Project>

@@ -31,7 +31,8 @@ builder.Services.AddJWTConfigurationServices(builder.Configuration);
 builder.Services.AddLocalization();
 builder.Services.AddRequestLocalization(x =>
 {
-    x.DefaultRequestCulture = new RequestCulture("en-US");
+    //x.DefaultRequestCulture = new RequestCulture("en-US");
+    x.DefaultRequestCulture = new RequestCulture("ne-NP");
     x.ApplyCurrentCultureToResponseHeaders = true;
     x.SupportedCultures = new List<CultureInfo> { new("ne-NP"), new("en-US"), new("ja-JP") };
     x.SupportedUICultures = new List<CultureInfo> { new("ne-NP"), new("en-US"), new("ja-JP") };
@@ -56,10 +57,6 @@ builder.Services.Configure<RateLimitSettings>(
     builder.Configuration.GetSection(RateLimitSettings.RateLimit)
 );
 
-// var logger = LogManager.Setup().LoadConfigurationFromFile("nlog.config").GetCurrentClassLogger();
-// //var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
-// builder.Logging.ClearProviders();
-// builder.Host.UseNLog();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

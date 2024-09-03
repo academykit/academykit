@@ -161,7 +161,7 @@ const postFeedbackSubmission = ({
 export const useFeedbackSubmission = ({ lessonId }: { lessonId: string }) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ["submitFeeback"],
+    mutationKey: ["submitFeedback"],
     mutationFn: postFeedbackSubmission,
 
     onSuccess: () => {

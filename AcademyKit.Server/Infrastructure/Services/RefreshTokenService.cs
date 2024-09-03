@@ -89,7 +89,7 @@
                 _logger.LogError(ex, "An error occurred while attempting to update refresh token.");
                 throw ex is ServiceException
                     ? ex
-                    : new ServiceException(_localizer.GetString("UpdateRefershTokenError"));
+                    : new ServiceException(_localizer.GetString("UpdateRefreshTokenError"));
             }
         }
 
@@ -110,7 +110,7 @@
                 _logger.LogError(ex, "An error occurred while attempting to update refresh token.");
                 throw ex is ServiceException
                     ? ex
-                    : new ServiceException(_localizer.GetString("UpdateRefershTokenError"));
+                    : new ServiceException(_localizer.GetString("UpdateRefreshTokenError"));
             }
         }
 
@@ -131,7 +131,7 @@
                 _logger.LogError(ex, "An error occurred while attempting to update refresh token.");
                 throw ex is ServiceException
                     ? ex
-                    : new ServiceException(_localizer.GetString("UpdateRefershTokenError"));
+                    : new ServiceException(_localizer.GetString("UpdateRefreshTokenError"));
             }
         }
     }

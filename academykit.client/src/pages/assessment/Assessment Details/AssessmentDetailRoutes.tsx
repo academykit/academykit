@@ -21,7 +21,10 @@ const AssessmentDetailRoutes = () => {
           <Route path="/edit" element={<EditAssessment />} />
           <Route path="/questions" element={<AssessmentQuestionList />} />
           <Route path="/statistics" element={<ManageAssessmentStudents />} />
-          <Route path="/statistics/:studentId" element={<div>fdsfsd</div>} />
+          <Route
+            path="/statistics/:studentId"
+            element={<div>coming soon</div>}
+          />
           <Route path="/setting" element={<AssessmentSetting />} />
         </Route>
       </Routes>

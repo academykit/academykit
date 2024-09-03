@@ -33,10 +33,10 @@
             try
             {
                 // need to work on region end point
-                var credentails = await GetCredentialAsync().ConfigureAwait(false);
+                var credentials = await GetCredentialAsync().ConfigureAwait(false);
                 var client = new AmazonS3Client(
-                    credentails.AccessKey,
-                    credentails.SecretKey,
+                    credentials.AccessKey,
+                    credentials.SecretKey,
                     Amazon.RegionEndpoint.APSouth1
                 );
                 var fileName = string.Concat(model.File.FileName.Where(c => !char.IsWhiteSpace(c)));
@@ -56,13 +56,13 @@
                     InputStream = model.File.OpenReadStream(),
                     BucketName =
                         model.Type == MediaType.Private
-                            ? credentails.FileBucket
-                            : credentails.VideoBucket
+                            ? credentials.FileBucket
+                            : credentials.VideoBucket
                 };
                 await transferUtility.UploadAsync(request);
                 return model.Type == MediaType.Private
                     ? fileName
-                    : $"{credentails.CloudFront}/{fileName}";
+                    : $"{credentials.CloudFront}/{fileName}";
             }
             catch (Exception ex)
             {
@@ -82,10 +82,10 @@
         {
             try
             {
-                var credentails = await GetCredentialAsync().ConfigureAwait(false);
+                var credentials = await GetCredentialAsync().ConfigureAwait(false);
                 var client = new AmazonS3Client(
-                    credentails.AccessKey,
-                    credentails.SecretKey,
+                    credentials.AccessKey,
+                    credentials.SecretKey,
                     Amazon.RegionEndpoint.APSouth1
                 );
                 var request = new GetPreSignedUrlRequest
@@ -117,10 +117,10 @@
         {
             try
             {
-                var credentails = await GetCredentialAsync().ConfigureAwait(false);
+                var credentials = await GetCredentialAsync().ConfigureAwait(false);
                 var client = new AmazonS3Client(
-                    credentails.AccessKey,
-                    credentails.SecretKey,
+                    credentials.AccessKey,
+                    credentials.SecretKey,
                     Amazon.RegionEndpoint.APSouth1
                 );
                 var transferUtility = new TransferUtility(client);
@@ -128,10 +128,10 @@
                 {
                     Key = dto.Key,
                     FilePath = dto.FilePath,
-                    BucketName = credentails.VideoBucket
+                    BucketName = credentials.VideoBucket
                 };
                 await transferUtility.UploadAsync(request);
-                return $"{credentails.CloudFront}/{dto.Key}";
+                return $"{credentials.CloudFront}/{dto.Key}";
             }
             catch (Exception ex)
             {
@@ -141,7 +141,7 @@
                 );
                 throw ex is ServiceException
                     ? ex
-                    : new ServiceException(_localizer.GetString("RecordingFileinS3BucketSave"));
+                    : new ServiceException(_localizer.GetString("RecordingFileInS3BucketSave"));
             }
         }
 

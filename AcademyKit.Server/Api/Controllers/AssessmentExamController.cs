@@ -40,7 +40,7 @@ namespace AcademyKit.Api.Controllers
         /// get results api.
         /// </summary>
         /// <param name="identity"the question set id or slug></param>
-        /// <returns>the list of <see cref="questio"/>.</returns>
+        /// <returns>the list of <see cref="AssessmentResultResponseModel"/>.</returns>
         [HttpGet("{identity}/GetResults")]
         public async Task<SearchResult<AssessmentResultResponseModel>> GetResults(
             [FromQuery] BaseSearchCriteria searchCriteria,

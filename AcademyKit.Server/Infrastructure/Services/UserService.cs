@@ -19,16 +19,13 @@ using AcademyKit.Infrastructure.Localization;
 using CsvHelper;
 using Hangfire;
 using LinqKit;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MimeKit;
+using GroupMember = AcademyKit.Domain.Entities.GroupMember;
 
 namespace AcademyKit.Infrastructure.Services
 {
@@ -43,6 +40,7 @@ namespace AcademyKit.Infrastructure.Services
         private readonly int _resendChangeEmailTokenExpiry;
         private readonly IGeneralSettingService _generalSettingService;
         private readonly IDepartmentService departmentService;
+        private readonly IPasswordHasher _passwordHasher;
 
         public UserService(
             IUnitOfWork unitOfWork,
@@ -53,7 +51,8 @@ namespace AcademyKit.Infrastructure.Services
             IConfiguration configuration,
             IStringLocalizer<ExceptionLocalizer> localizer,
             IGeneralSettingService generalSettingService,
-            IDepartmentService departmentService
+            IDepartmentService departmentService,
+            IPasswordHasher passwordHasher
         )
             : base(unitOfWork, logger, localizer)
         {
@@ -72,6 +71,7 @@ namespace AcademyKit.Infrastructure.Services
             );
             _generalSettingService = generalSettingService;
             this.departmentService = departmentService;
+            _passwordHasher = passwordHasher;
         }
 
         #region Account Services
@@ -100,7 +100,10 @@ namespace AcademyKit.Infrastructure.Services
                 return authenticationModel;
             }
 
-            var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password);
+            var isUserAuthenticated = _passwordHasher.VerifyPassword(
+                user.HashPassword,
+                model.Password
+            );
             if (!isUserAuthenticated)
             {
                 authenticationModel.IsAuthenticated = false;
@@ -117,66 +120,64 @@ namespace AcademyKit.Infrastructure.Services
                 user.UpdatedOn = currentTimeStamp;
                 if (user.Role == UserRole.Trainee || user.Role == UserRole.Trainer)
                 {
-                    var existUsers = await _unitOfWork
-                        .GetRepository<GroupMember>()
-                        .ExistsAsync(predicate: p =>
-                            p.GroupId == new Guid("7df8d749-6172-482b-b5a1-016fbe478795")
-                            && p.UserId == user.Id
-                        )
-                        .ConfigureAwait(false);
-
-                    if (existUsers)
-                    {
-                        _logger.LogWarning(
-                            "Group with id: {id} already contains users. User Id: {userId}",
-                            new Guid("7df8d749-6172-482b-b5a1-016fbe478795"), // Parameter for {id}
-                            user.Id // Parameter for {userId}
-                        );
-                        throw new ForbiddenException(
-                            _localizer.GetString("GroupContainsUsersCannotAdd")
-                        );
-                    }
-
-                    var groupMember = new GroupMember
-                    {
-                        UserId = user.Id,
-                        GroupId = new Guid("7df8d749-6172-482b-b5a1-016fbe478795"),
-                        IsActive = true,
-                        CreatedBy = new Guid("30fcd978-f256-4733-840f-759181bc5e63"),
-                        CreatedOn = DateTime.Now,
-                    };
-                    await _unitOfWork
-                        .GetRepository<GroupMember>()
-                        .InsertAsync(groupMember)
-                        .ConfigureAwait(false);
+                    await AddUserToDefaultGroup(user).ConfigureAwait(false);
                 }
 
                 _unitOfWork.GetRepository<User>().Update(user);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
 
-            var refreshToken = new RefreshToken
+            return await GenerateAccessAndRefreshToken(authenticationModel, user, currentTimeStamp)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Generates an authentication token for a user using SSO information.
+        /// </summary>
+        /// <param name="model">The SSO user details.</param>
+        /// <returns>A task representing the asynchronous operation, with an <see cref="AuthenticationModel"/> containing the token and user information.</returns>
+        public async Task<AuthenticationModel> GenerateTokenUsingSSOAsync(
+            OAuthUserResponseModel model
+        )
+        {
+            var currentTimeStamp = DateTime.UtcNow;
+            var authenticationModel = new AuthenticationModel();
+
+            var user = await _unitOfWork
+                .GetRepository<User>()
+                .GetFirstOrDefaultAsync(predicate: p => p.Email == model.Email)
+                .ConfigureAwait(false);
+
+            if (user == null)
             {
-                Id = Guid.NewGuid(),
-                Token = await GetUniqueRefreshToken().ConfigureAwait(false),
-                LoginAt = currentTimeStamp,
-                UserId = user.Id,
-                IsActive = true,
-            };
+                user = new User
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email,
+                    MobileNumber = model.MobilePhone,
+                    ImageUrl = model.ProfilePictureUrl,
+                    Status = UserStatus.Active,
+                    Role = UserRole.Trainee,
+                    CreatedBy = Guid.NewGuid(),
+                    CreatedOn = currentTimeStamp,
+                    UpdatedBy = Guid.NewGuid(),
+                    UpdatedOn = currentTimeStamp
+                };
+                await CreateAsync(user).ConfigureAwait(false);
+                await AddUserToDefaultGroup(user).ConfigureAwait(false);
+            }
 
-            //Create Token
-            authenticationModel.IsAuthenticated = true;
-            var jwtSecurityToken = await CreateJwtToken(user);
-            authenticationModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-            authenticationModel.ExpirationDuration = Convert.ToInt32(_jwt.DurationInMinutes);
-            authenticationModel.Email = user.Email;
-            authenticationModel.UserId = user.Id;
-            authenticationModel.Role = user.Role;
-            authenticationModel.RefreshToken = refreshToken.Token;
-            authenticationModel.UserId = user.Id;
+            if (user.Status == UserStatus.InActive)
+            {
+                authenticationModel.IsAuthenticated = false;
+                authenticationModel.Message = _localizer.GetString("AccountNotActive");
+                return authenticationModel;
+            }
 
-            await _refreshTokenService.CreateAsync(refreshToken).ConfigureAwait(false);
-            return authenticationModel;
+            return await GenerateAccessAndRefreshToken(authenticationModel, user, currentTimeStamp)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -310,45 +311,12 @@ namespace AcademyKit.Infrastructure.Services
         }
 
         /// <summary>
-        /// Handle to hash password
-        /// </summary>
-        /// <param name="password">the password</param>
-        /// <param name="salt"></param>
-        /// <param name="needsOnlyHash"></param>
-        /// <returns></returns>
-        public string HashPassword(string password, byte[] salt = null, bool needsOnlyHash = false)
-        {
-            if (salt == null || salt.Length != 16)
-            {
-                // generate a 128-bit salt using a secure PRNG
-                salt = new byte[128 / 8];
-                using var rng = RandomNumberGenerator.Create();
-                rng.GetBytes(salt);
-            }
-
-            var hashed = Convert.ToBase64String(
-                KeyDerivation.Pbkdf2(
-                    password: password,
-                    salt: salt,
-                    prf: KeyDerivationPrf.HMACSHA256,
-                    iterationCount: 10000,
-                    numBytesRequested: 256 / 8
-                )
-            );
-
-            if (needsOnlyHash)
-            {
-                return hashed;
-            }
-            // password will be concatenated with salt using ':'
-            return $"{hashed}:{Convert.ToBase64String(salt)}";
-        }
-
-        /// <summary>
         /// Handle to get trainer
         /// </summary>
         /// <param name="currentUserId"> the current user id </param>
-        /// <param name="criteria"> the instance of <see cr            const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";/></returns>
+        /// <param name="criteria"> the instance of <see cref="TeacherSearchCriteria"/></returns>
+        /// <returns>the list of <see cref="TrainerResponseModel"/></returns>
+        /// <exception cref="ForbiddenException"></exception>
         public async Task<IList<TrainerResponseModel>> GetTrainerAsync(
             Guid currentUserId,
             TeacherSearchCriteria criteria
@@ -498,17 +466,26 @@ namespace AcademyKit.Infrastructure.Services
                     var newUserEmails = new List<UserEmailDto>();
                     if (newUsersList.Count != default)
                     {
+                        Guid? departmentId = null;
                         foreach (var user in newUsersList)
                         {
-                            var existDepartment = await departmentService
-                                .SearchAsync(
-                                    new DepartmentBaseSearchCriteria
-                                    {
-                                        departmentName = user.Department
-                                    },
-                                    false
-                                )
-                                .ConfigureAwait(false);
+                            if (!string.IsNullOrEmpty(user.Department))
+                            {
+                                var existDepartment = await departmentService
+                                    .SearchAsync(
+                                        new DepartmentBaseSearchCriteria
+                                        {
+                                            departmentName = user.Department
+                                        },
+                                        false
+                                    )
+                                    .ConfigureAwait(false);
+                                if (existDepartment.Items.Count > 0)
+                                {
+                                    departmentId = existDepartment.Items[0].Id;
+                                }
+                            }
+
                             var userEntity = new User()
                             {
                                 Id = Guid.NewGuid(),
@@ -522,13 +499,10 @@ namespace AcademyKit.Infrastructure.Services
                                 Role = (UserRole)Enum.Parse(typeof(UserRole), user.Role, true),
                                 CreatedBy = currentUserId,
                                 CreatedOn = DateTime.UtcNow,
-                                DepartmentId =
-                                    existDepartment.Items.Count > 0
-                                        ? existDepartment.Items[0].Id
-                                        : null,
+                                DepartmentId = departmentId,
                             };
                             var password = await GenerateRandomPassword(8).ConfigureAwait(false);
-                            userEntity.HashPassword = HashPassword(password);
+                            userEntity.HashPassword = _passwordHasher.HashPassword(password);
 
                             var userEmailDto = new UserEmailDto
                             {
@@ -569,32 +543,6 @@ namespace AcademyKit.Infrastructure.Services
                     ? ex
                     : new ServiceException(_localizer.GetString("NoUserImported"));
             }
-        }
-
-        /// <summary>
-        /// Handle to verify password
-        /// </summary>
-        /// <param name="hashedPasswordWithSalt">the hashed password</param>
-        /// <param name="password">the password</param>
-        /// <returns></returns>
-        public bool VerifyPassword(string hashedPasswordWithSalt, string password)
-        {
-            // retrieve both salt and password from 'hashedPasswordWithSalt'
-            var passwordAndHash = hashedPasswordWithSalt.Split(':');
-            if (passwordAndHash == null || passwordAndHash.Length != 2)
-            {
-                return false;
-            }
-
-            var salt = Convert.FromBase64String(passwordAndHash[1]);
-            if (salt == null)
-            {
-                return false;
-            }
-            // hash the given password
-            var hashOfPasswordToCheck = HashPassword(password, salt, true);
-            // compare both hashes
-            return string.Compare(passwordAndHash[0], hashOfPasswordToCheck) == 0;
         }
 
         /// <summary>
@@ -709,7 +657,10 @@ namespace AcademyKit.Infrastructure.Services
             var user = await GetAsync(currentUserId, includeProperties: false)
                 .ConfigureAwait(false);
 
-            var currentPasswordMatched = VerifyPassword(user.HashPassword, model.CurrentPassword);
+            var currentPasswordMatched = _passwordHasher.VerifyPassword(
+                user.HashPassword,
+                model.CurrentPassword
+            );
 
             if (!currentPasswordMatched)
             {
@@ -720,7 +671,7 @@ namespace AcademyKit.Infrastructure.Services
                 throw new ForbiddenException(_localizer.GetString("CurrentPasswordNotMatched"));
             }
 
-            user.HashPassword = HashPassword(model.NewPassword);
+            user.HashPassword = _passwordHasher.HashPassword(model.NewPassword);
             user.UpdatedOn = DateTime.UtcNow;
 
             _unitOfWork.GetRepository<User>().Update(user);
@@ -764,7 +715,10 @@ namespace AcademyKit.Infrastructure.Services
                 );
             }
 
-            var isUserAuthenticated = VerifyPassword(user.HashPassword, model.Password);
+            var isUserAuthenticated = _passwordHasher.VerifyPassword(
+                user.HashPassword,
+                model.Password
+            );
             if (!isUserAuthenticated)
             {
                 _logger.LogWarning(
@@ -844,7 +798,7 @@ namespace AcademyKit.Infrastructure.Services
                 }
 
                 var password = await GenerateRandomPassword(8).ConfigureAwait(false);
-                var hashPassword = HashPassword(password);
+                var hashPassword = _passwordHasher.HashPassword(password);
                 user.HashPassword = hashPassword;
                 user.UpdatedBy = currentUserId;
                 user.UpdatedOn = DateTime.UtcNow;
@@ -1299,6 +1253,90 @@ namespace AcademyKit.Infrastructure.Services
         #region Private Methods
 
         /// <summary>
+        /// Adds the specified user to the default group if they are not already a member.
+        /// </summary>
+        /// <param name="user">The user to be added to the default group.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <exception cref="ForbiddenException">
+        /// Thrown when the default group does not exist or the user is already a member of the group.
+        /// </exception>
+        private async Task AddUserToDefaultGroup(User user)
+        {
+            var defaultGroup = await _unitOfWork
+                .GetRepository<Domain.Entities.Group>()
+                .GetFirstOrDefaultAsync(predicate: x => x.IsDefault == true);
+
+            if (defaultGroup is null)
+            {
+                throw new ForbiddenException(_localizer.GetString("GroupContainsUsersCannotAdd"));
+            }
+
+            var existUsers = await _unitOfWork
+                .GetRepository<GroupMember>()
+                .ExistsAsync(predicate: p => p.GroupId == defaultGroup.Id && p.UserId == user.Id)
+                .ConfigureAwait(false);
+
+            if (existUsers)
+            {
+                _logger.LogWarning(
+                    "Group with id: {id} already contains users. User Id: {userId}",
+                    defaultGroup.Id,
+                    user.Id
+                );
+                throw new ForbiddenException(_localizer.GetString("GroupContainsUsersCannotAdd"));
+            }
+
+            var groupMember = new GroupMember
+            {
+                UserId = user.Id,
+                GroupId = defaultGroup.Id,
+                IsActive = true,
+                CreatedBy = user.Id,
+                CreatedOn = DateTime.Now,
+            };
+            await _unitOfWork
+                .GetRepository<GroupMember>()
+                .InsertAsync(groupMember)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Generates an access token and refresh token for the specified user.
+        /// </summary>
+        /// <param name="authenticationModel">The authentication model to be populated with the generated tokens and user information.</param>
+        /// <param name="user">The user for whom the tokens are being generated.</param>
+        /// <param name="currentTimeStamp">The current timestamp used for token creation.</param>
+        /// <returns>A task representing the asynchronous operation, with an updated <see cref="AuthenticationModel"/> containing the generated tokens.</returns>
+        private async Task<AuthenticationModel> GenerateAccessAndRefreshToken(
+            AuthenticationModel authenticationModel,
+            User user,
+            DateTime currentTimeStamp
+        )
+        {
+            var refreshToken = new RefreshToken
+            {
+                Id = Guid.NewGuid(),
+                Token = await GetUniqueRefreshToken().ConfigureAwait(false),
+                LoginAt = currentTimeStamp,
+                UserId = user.Id,
+                IsActive = true,
+            };
+
+            authenticationModel.IsAuthenticated = true;
+            var jwtSecurityToken = await CreateJwtToken(user);
+            authenticationModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+            authenticationModel.ExpirationDuration = Convert.ToInt32(_jwt.DurationInMinutes);
+            authenticationModel.Email = user.Email;
+            authenticationModel.UserId = user.Id;
+            authenticationModel.Role = user.Role;
+            authenticationModel.RefreshToken = refreshToken.Token;
+            authenticationModel.UserId = user.Id;
+
+            await _refreshTokenService.CreateAsync(refreshToken).ConfigureAwait(false);
+            return authenticationModel;
+        }
+
+        /// <summary>
         /// Handle to create jwt token
         /// </summary>
         /// <param name="user"></param>
@@ -1378,21 +1416,6 @@ namespace AcademyKit.Infrastructure.Services
         }
 
         /// <summary>
-        /// Handle to remove refresh token
-        /// </summary>
-        /// <param name="currentUserId"> the current user id </param>
-        /// <returns> the task complete </returns>
-        public async Task RemoveRefreshTokenAsync(Guid currentUserId)
-        {
-            var userToken = await _unitOfWork
-                .GetRepository<RefreshToken>()
-                .GetAllAsync(predicate: p => p.UserId == currentUserId)
-                .ConfigureAwait(false);
-            userToken.ForEach(x => x.IsActive = false);
-            _unitOfWork.GetRepository<RefreshToken>().Update(userToken);
-        }
-
-        /// <summary>
         /// Check duplicate name
         /// </summary>
         /// <param name="entity"></param>
@@ -1434,6 +1457,21 @@ namespace AcademyKit.Infrastructure.Services
             }
         }
         #endregion Private Methods
+
+        /// <summary>
+        /// Handle to remove refresh token
+        /// </summary>
+        /// <param name="currentUserId"> the current user id </param>
+        /// <returns> the task complete </returns>
+        public async Task RemoveRefreshTokenAsync(Guid currentUserId)
+        {
+            var userToken = await _unitOfWork
+                .GetRepository<RefreshToken>()
+                .GetAllAsync(predicate: p => p.UserId == currentUserId)
+                .ConfigureAwait(false);
+            userToken.ForEach(x => x.IsActive = false);
+            _unitOfWork.GetRepository<RefreshToken>().Update(userToken);
+        }
 
         /// <summary>
         /// Handle to fetch users detail
@@ -1843,14 +1881,16 @@ namespace AcademyKit.Infrastructure.Services
 
         public async Task RemoveFromDefaultGroup(Guid userId, Guid CurrentUserId)
         {
-            var existmember = await _unitOfWork
+            var existingMember = await _unitOfWork
                 .GetRepository<GroupMember>()
                 .GetFirstOrDefaultAsync(predicate: p => p.UserId == userId)
                 .ConfigureAwait(false);
-            if (existmember != null)
+
+            if (existingMember != null)
             {
-                _unitOfWork.GetRepository<GroupMember>().Delete(existmember.Id);
+                _unitOfWork.GetRepository<GroupMember>().Delete(existingMember.Id);
             }
+
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }

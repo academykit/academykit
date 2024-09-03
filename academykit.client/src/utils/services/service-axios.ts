@@ -85,7 +85,7 @@ axiosInstance.interceptors.request.use(
     if (token && config.headers) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
-    config.data = filterFalseyValues(config.data);
+    config.data = filterFalsyValues(config.data);
     if (
       config.headers &&
       config.headers["content-type"] === "multipart/form-data"
@@ -190,7 +190,7 @@ axiosInstance.interceptors.response.use(
  * @param obj a record of key value pair
  * @returns a record that does not have empty, null or undefined values
  */
-export function filterFalseyValues(obj: Record<string, any>) {
+export function filterFalsyValues(obj: Record<string, any>) {
   for (const propName in obj) {
     if (["", null, undefined].includes(obj[propName])) {
       delete obj[propName];
@@ -198,7 +198,7 @@ export function filterFalseyValues(obj: Record<string, any>) {
       obj[propName] instanceof Object &&
       Object.keys(obj[propName]).length
     ) {
-      obj[propName] = filterFalseyValues(obj[propName]);
+      obj[propName] = filterFalsyValues(obj[propName]);
     }
   }
   return obj;
