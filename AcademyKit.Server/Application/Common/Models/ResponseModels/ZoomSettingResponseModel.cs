@@ -15,6 +15,8 @@
         public DateTime? UpdatedOn { get; set; }
         public UserModel User { get; set; }
 
+        public ZoomSettingResponseModel() { }
+
         public ZoomSettingResponseModel(ZoomSetting model)
         {
             Id = model.Id;

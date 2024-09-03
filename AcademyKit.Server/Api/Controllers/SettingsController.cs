@@ -158,9 +158,8 @@ public class SettingsController : BaseApiController
     public async Task<ZoomSettingResponseModel> GetZoomSetting()
     {
         IsSuperAdmin(CurrentUser.Role);
-
         var model = await zoomSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
-        return new ZoomSettingResponseModel(model);
+        return model != null ? new ZoomSettingResponseModel(model) : new ZoomSettingResponseModel();
     }
 
     /// <summary>
@@ -214,7 +213,7 @@ public class SettingsController : BaseApiController
     {
         IsSuperAdminOrAdmin(CurrentUser.Role);
         var model = await smtpSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
-        return new SMTPSettingResponseModel(model);
+        return model != null ? new SMTPSettingResponseModel(model) : new SMTPSettingResponseModel();
     }
 
     /// <summary>
