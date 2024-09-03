@@ -291,7 +291,7 @@
                 && (model.Role == UserRole.Trainee || model.Role == UserRole.Trainer)
             )
             {
-                await userService.AddToDefaultGroup(userId, CurrentUser.Id);
+                await userService.AddUserToDefaultGroup(userId, CurrentUser.Id);
             }
             else if (
                 (oldRole == UserRole.Trainee || oldRole == UserRole.Trainer)
