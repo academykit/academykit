@@ -1095,10 +1095,20 @@ recorded cannot be deleted.</value>
   <data name="ConfirmPasswordRequired" xml:space="preserve">
   <value>Confirmation password is required. Please provide the confirmation password.</value>
 </data>
-
   <data name="PasswordAndConfirmPasswordNotMatched" xml:space="preserve">
   <value>The password and confirmation password do not match. Please try again.</value>
 </data>
-
+  <data name="DefaultGroupNotFound" xml:space="preserve">
+  <value>Default group not found.</value>
+</data>
+  <data name="GroupContainsUsersCannotAdd" xml:space="preserve">
+  <value>Group contains users, cannot add new users.</value>
+</data>
+  <data name="UnauthorizedToResendEmail" xml:space="preserve">
+  <value>You are not authorized to resend email.</value>
+</data>
+  <data name="UserAlreadyActive" xml:space="preserve">
+  <value>User is already active.</value>
+</data>
 
 </root>
