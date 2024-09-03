@@ -157,13 +157,13 @@ const Exam = ({
       <Modal
         opened={examSubmission.isSuccess}
         onClose={() => {
-          navigate(location.state + "?invalidate=true" ?? "/");
+          navigate(location.state ?location.state + "?invalidate=true" : "/");
         }}
         title={t("submission_success")}
       >
         <Button
           onClick={() => {
-            navigate(location.state + "?invalidate=true" ?? "/");
+            navigate(location.state?location.state + "?invalidate=true" : "/");
           }}
         >
           {t("close")}
@@ -174,7 +174,7 @@ const Exam = ({
         {/* exam display section */}
         {/* <Grid.Col span={matches ? 9 : 12}> */}
         <Grid.Col
-          span={matches ? 9 : 9}
+          span={9}
           style={{ maxWidth: "100%" }}
           className={classes.questionGridCol}
         >
@@ -261,11 +261,7 @@ const Exam = ({
 
         {/* question counter section */}
         {/* <Grid.Col span={matches ? 3 : 12} m={0}> */}
-        <Grid.Col
-          span={3}
-          m={0}
-          className={classes.optionsGridCol}
-        >
+        <Grid.Col span={3} m={0} className={classes.optionsGridCol}>
           <Group p={10} className={classes.navigateWrapper}>
             {form.values.map((x, i) => (
               <div

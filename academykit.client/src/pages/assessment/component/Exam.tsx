@@ -13,7 +13,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { useMediaQuery, useToggle } from "@mantine/hooks";
+import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { QuestionType, UserRole } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
@@ -29,7 +29,9 @@ import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import classes from "../styles/assessmentExam.module.css";
+import AssessmentExamCheckBox from "./AssessmentExamCheckBox";
 import AssessmentExamRadio from "./AssessmentExamRadio";
+import QuestionIndex from "./QuestionIndex";
 
 const Exam = ({
   data,
@@ -46,7 +48,7 @@ const Exam = ({
   const examSubmission = useSubmitAssessmentExam();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visited, setVisited] = useState<number[]>([]);
-  const matches = useMediaQuery("(min-width: 56.25em)");
+  // const matches = useMediaQuery("(min-width: 56.25em)");
   const [submitClicked, setSubmitClicked] = useState(false);
   const [showConfirmation, setShowConfirmation] = useToggle();
 
@@ -57,13 +59,11 @@ const Exam = ({
       questions: [...questions],
     },
   });
-
   const onQuestionVisit = (index: number) => {
     if (!visited.includes(index)) {
       setVisited((visited) => [...visited, index]);
     }
   };
-
   const handleCloseModal = () => {
     setSubmitClicked(false); // disallow user to multi click the button
     setShowConfirmation();
@@ -176,7 +176,7 @@ const Exam = ({
           <Grid m={20} className={classes.parentGrid}>
             {/* exam display section */}
             <Grid.Col
-              span={matches ? 9 : 9}
+              span={9}
               style={{ maxWidth: "100%" }}
               className={classes.questionGridCol}
             >
@@ -206,17 +206,13 @@ const Exam = ({
                   )}
                 </Box>
                 <Container className={classes.option}>
-                  {/* {questions[currentIndex]?.type ===
+                  {questions[currentIndex]?.type ===
                   QuestionType.MultipleChoice &&
                   questions[currentIndex]?.assessmentQuestionOptions && (
                     <AssessmentExamCheckBox
                       currentIndex={currentIndex}
-                      form={form}
-                      options={
-                        questions[currentIndex]?.assessmentQuestionOptions
-                      }
                     />
-                  )} */}
+                  )}
                   {questions[currentIndex]?.type ===
                     QuestionType.SingleChoice &&
                     questions[currentIndex]?.assessmentQuestionOptions && (
@@ -269,45 +265,7 @@ const Exam = ({
               </Card>
             </Grid.Col>
 
-            {/* question counter section */}
-            <Grid.Col
-              span={matches ? 3 : 3}
-              m={0}
-              className={classes.optionsGridCol}
-            >
-              {/* <Group p={10} className={classes.navigateWrapper}>
-              {form.values?.map((x, i) => (
-                <div
-                  key={x.questionId}
-                  onClick={() => {
-                    setVisited((visited) => [...visited, currentIndex]);
-                    setCurrentIndex(i);
-                  }}
-                  style={{
-                    outline: "none",
-                    border: "none",
-                    backgroundColor: "none",
-                  }}
-                >
-                  <Card
-                    className={cx(classes.navigate, {
-                      [classes.visited]:
-                        visited.includes(i) &&
-                        x.assessmentQuestionOptions.filter((x) => x.isCorrect)
-                          .length <= 0,
-                      [classes.answered]:
-                        x.assessmentQuestionOptions.filter((x) => x.isCorrect)
-                          .length > 0,
-                      [classes.active]: currentIndex === i,
-                    })}
-                    radius={10000}
-                  >
-                    {i + 1}
-                  </Card>
-                </div>
-              ))}
-            </Group> */}
-            </Grid.Col>
+            <QuestionIndex  currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} setVisited={setVisited} visited={visited} />
           </Grid>
         </form>
       </FormProvider>
