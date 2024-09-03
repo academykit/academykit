@@ -86,4 +86,7 @@
     <EmbeddedResource Remove="Application\Common\Mappings\**" />
     <None Remove="Application\Common\Mappings\**" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Infrastructure\Persistence\Migrations\" />
+  </ItemGroup>
 </Project>

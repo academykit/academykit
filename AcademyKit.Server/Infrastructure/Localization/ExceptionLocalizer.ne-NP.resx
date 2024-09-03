@@ -1112,5 +1112,8 @@
   <data name="UserAlreadyActive" xml:space="preserve">
   <value>प्रयोगकर्ता पहिले नै सक्रिय छ।</value>
 </data>
+  <data name="UnauthorizedEmailDomain" xml:space="preserve">
+  <value>अनधिकृत इमेल डोमेन</value>
+</data>
 
 </root>

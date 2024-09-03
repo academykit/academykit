@@ -4,10 +4,15 @@
     using AcademyKit.Api.Common;
     using AcademyKit.Application.Common.Exceptions;
     using AcademyKit.Domain.Enums;
+    using AcademyKit.Infrastructure.Configurations;
     using Asp.Versioning;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Options;
 
+    /// <summary>
+    /// The base API controller providing common functionalities for all controllers.
+    /// </summary>
     [ApiVersion("1.0")]
     [Route("api/[controller]")]
     [ApiController]
@@ -15,103 +20,116 @@
     [Authorize]
     public class BaseApiController : ControllerBase
     {
-        /// <summary>
-        /// The current user.
-        /// </summary>
-        private CurrentUser currentUser;
+        private AppUrls _appUrls;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseApiController"/> class.
+        /// The current user of the application.
+        /// </summary>
+        private CurrentUser _currentUser;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseApiController"/> class with application URLs configuration.
         /// </summary>
         protected BaseApiController() { }
 
+        protected void InitializeAppUrls(IOptions<AppUrls> appUrls)
+        {
+            _appUrls = appUrls.Value;
+        }
+
         /// <summary>
-        /// Gets the current user.
+        /// Gets the currently logged-in user.
         /// </summary>
-        /// <value>
-        /// The current user.
-        /// </value>
         protected CurrentUser CurrentUser
         {
             get
             {
-                if (currentUser == null && User.Identity.IsAuthenticated)
+                if (_currentUser == null && User.Identity.IsAuthenticated)
                 {
-                    currentUser = User.ToLoggedInUser();
+                    _currentUser = User.ToLoggedInUser();
                 }
 
-                return currentUser;
+                return _currentUser;
             }
         }
 
         /// <summary>
-        /// Checks if the user is super admin.
+        /// Gets the application URLs configuration.
         /// </summary>
+        protected AppUrls AppUrls => _appUrls;
+
+        /// <summary>
+        /// Ensures that the user has Super Admin privileges.
+        /// </summary>
+        /// <param name="role">The role of the current user.</param>
+        /// <exception cref="ForbiddenException">Thrown when the user is not a Super Admin.</exception>
         protected static void IsSuperAdmin(UserRole role)
         {
             if (role != UserRole.SuperAdmin)
             {
-                throw new ForbiddenException("Super Admin Access");
+                throw new ForbiddenException("Super Admin Access Required");
             }
         }
 
         /// <summary>
-        /// Checks if the user is super admin or admin.
+        /// Ensures that the user has Super Admin or Admin privileges.
         /// </summary>
+        /// <param name="role">The role of the current user.</param>
+        /// <exception cref="ForbiddenException">Thrown when the user is neither a Super Admin nor an Admin.</exception>
         protected static void IsSuperAdminOrAdmin(UserRole role)
         {
             if (role != UserRole.SuperAdmin && role != UserRole.Admin)
             {
-                throw new ForbiddenException("Super Admin or Admin Access");
+                throw new ForbiddenException("Super Admin or Admin Access Required");
             }
         }
 
         /// <summary>
-        /// Checks if the user is super admin or admin or trainer.
+        /// Ensures that the user has Super Admin, Admin, or Trainer privileges.
         /// </summary>
+        /// <param name="role">The role of the current user.</param>
+        /// <exception cref="ForbiddenException">Thrown when the user is not a Super Admin, Admin, or Trainer.</exception>
         protected static void IsSuperAdminOrAdminOrTrainer(UserRole role)
         {
             if (role != UserRole.SuperAdmin && role != UserRole.Admin && role != UserRole.Trainer)
             {
-                throw new ForbiddenException("Super Admin or Admin or Trainer Access");
+                throw new ForbiddenException("Super Admin, Admin, or Trainer Access Required");
             }
         }
 
         /// <summary>
-        /// Checks if the user is trainer.
+        /// Ensures that the user has Trainer privileges.
         /// </summary>
+        /// <param name="role">The role of the current user.</param>
+        /// <exception cref="ForbiddenException">Thrown when the user is not a Trainer.</exception>
         protected static void IsTrainer(UserRole role)
         {
             if (role != UserRole.Trainer)
             {
-                throw new ForbiddenException("Trainer Access");
+                throw new ForbiddenException("Trainer Access Required");
             }
         }
 
         /// <summary>
-        /// Redirect to page
+        /// Redirects to the specified page in the frontend application.
         /// </summary>
-        /// <param name="url">the url details</param>
-        /// <returns></returns>
+        /// <param name="url">The relative URL of the frontend page.</param>
+        /// <returns>An <see cref="IActionResult"/> that redirects to the frontend page.</returns>
         protected IActionResult RedirectToFrontend(string url)
         {
             return Redirect(url);
         }
 
         /// <summary>
-        /// Redirects to the error page with the specified provider and error details
+        /// Redirects to the error page in the frontend application with the specified error message and details.
         /// </summary>
-        /// <param name="error">The error message</param>
-        /// <param name="details">Additional error details</param>
-        /// <returns>The redirection to the error page</returns>
-        protected IActionResult RedirectToErrorPage(
-            string redirectUrl,
-            string error,
-            string details
-        )
+        /// <param name="errorMessage">The error message to display.</param>
+        /// <param name="errorDetails">Additional details about the error.</param>
+        /// <returns>An <see cref="IActionResult"/> that redirects to the error page.</returns>
+        protected IActionResult RedirectToErrorPage(string errorMessage, string errorDetails)
         {
             return Redirect(
-                $"{redirectUrl}/error?error={UrlEncoder.Default.Encode(error)}&details={UrlEncoder.Default.Encode(details)}"
+                $"{_appUrls.App}/error?error={UrlEncoder.Default.Encode(errorMessage)}&details={UrlEncoder.Default.Encode(errorDetails)}"
             );
         }
     }
