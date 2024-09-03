@@ -75,6 +75,14 @@
                 .GetRepository<CourseTeacher>()
                 .InsertAsync(entity.CourseTeachers)
                 .ConfigureAwait(false);
+            if (entity.TrainingEligibilities?.Count > 0)
+            {
+                await _unitOfWork
+                    .GetRepository<TrainingEligibility>()
+                    .InsertAsync(entity.TrainingEligibilities)
+                    .ConfigureAwait(false);
+            }
+
             await Task.FromResult(0);
         }
 
@@ -201,8 +209,7 @@
                 .Include(x => x.Group)
                 .Include(x => x.CourseTeachers)
                 .Include(x => x.CourseEnrollments)
-                .Include(x => x.TrainingEligibilities)
-                .ThenInclude(x => x.EligibilityCreation);
+                .Include(x => x.TrainingEligibilities);
         }
 
         /// <summary>

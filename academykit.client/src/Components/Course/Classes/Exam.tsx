@@ -261,11 +261,7 @@ const Exam = ({
 
         {/* question counter section */}
         {/* <Grid.Col span={matches ? 3 : 12} m={0}> */}
-        <Grid.Col
-          span={3}
-          m={0}
-          className={classes.optionsGridCol}
-        >
+        <Grid.Col span={3} m={0} className={classes.optionsGridCol}>
           <Group p={10} className={classes.navigateWrapper}>
             {form.values.map((x, i) => (
               <div

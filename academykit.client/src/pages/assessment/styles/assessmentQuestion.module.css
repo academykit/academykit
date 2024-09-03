@@ -8,5 +8,4 @@
 
 .checkbox:checked ~ .card {
   outline: 2px solid var(--mantine-color-answer-active);
-
 }

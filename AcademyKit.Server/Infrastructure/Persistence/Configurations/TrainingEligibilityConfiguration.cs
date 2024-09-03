@@ -27,12 +27,11 @@
                 .HasColumnName("eligibility_id")
                 .HasColumnType("VARCHAR(50)")
                 .HasMaxLength(50)
-                .IsRequired(false);
+                .IsRequired();
             builder
                 .Property(x => x.TrainingEligibilityEnum)
                 .HasColumnName("training_eligibility_enum")
-                .HasColumnType("VARCHAR(270)")
-                .HasMaxLength(270)
+                .HasColumnType("int")
                 .IsRequired();
 
             builder

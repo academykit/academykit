@@ -114,18 +114,13 @@
         public Guid Id { get; set; }
 
         public TrainingEligibilityEnum Eligibility { get; set; }
-        public Guid? EligibilityId { get; set; }
-        public EligibilityCreationResponseModel EligibilityCreation { get; set; }
+        public Guid EligibilityId { get; set; }
 
         public TrainingEligibilityCriteriaResponseModel(TrainingEligibility model)
         {
             Id = model.Id;
             Eligibility = model.TrainingEligibilityEnum;
             EligibilityId = model.EligibilityId;
-            EligibilityCreation =
-                model.EligibilityCreation != null
-                    ? new EligibilityCreationResponseModel(model.EligibilityCreation)
-                    : null;
         }
     }
 }

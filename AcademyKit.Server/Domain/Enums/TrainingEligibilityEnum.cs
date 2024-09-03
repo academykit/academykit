@@ -4,7 +4,6 @@ namespace AcademyKit.Domain.Enums
     {
         Department = 1,
         Training = 2,
-
         Skills = 3,
         Assessment = 4,
     }

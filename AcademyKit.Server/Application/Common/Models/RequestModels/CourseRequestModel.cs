@@ -22,6 +22,6 @@
     public class TrainingEligibilityCriteriaRequestModel
     {
         public TrainingEligibilityEnum Eligibility { get; set; }
-        public Guid? EligibilityId { get; set; }
+        public Guid EligibilityId { get; set; }
     }
 }

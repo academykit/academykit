@@ -38,7 +38,7 @@ const InitialSetup = () => {
       email: yup
         .string()
         .email(t("invalid_email"))
-        .required(t("email_required.")),
+        .required(t("email_required")),
       password: yup
         .string()
         .min(8, t("password_length_required"))
