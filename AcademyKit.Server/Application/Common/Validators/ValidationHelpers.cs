@@ -7,6 +7,8 @@ namespace AcademyKit.Application.Common.Validators;
 /// </summary>
 public static class ValidationHelpers
 {
+    private static readonly TimeSpan RegexTimeout = TimeSpan.FromMilliseconds(500);
+
     /// <summary>
     /// Validates if the provided email is in a correct format.
     /// </summary>
@@ -19,18 +21,18 @@ public static class ValidationHelpers
             + @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\"
             + @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
 
-        return new Regex(emailRegex).IsMatch(email);
+        return new Regex(emailRegex, RegexOptions.None, RegexTimeout).IsMatch(email);
     }
 
     /// <summary>
     /// Validates if the provided mobile number is in correct format.
     /// </summary>
-    /// <param name="mobileNumber">the mobile number to validate</param>
-    /// <returns>True if the mobile number is valid, otherwise false</returns>
+    /// <param name="mobileNumber">The mobile number to validate.</param>
+    /// <returns>True if the mobile number is valid, otherwise false.</returns>
     public static bool ValidMobileNumber(string mobileNumber)
     {
         const string mobilePattern = @"^[+\d]+$";
-        return new Regex(mobilePattern).IsMatch(mobileNumber);
+        return new Regex(mobilePattern, RegexOptions.None, RegexTimeout).IsMatch(mobileNumber);
     }
 
     /// <summary>
@@ -42,10 +44,10 @@ public static class ValidationHelpers
     /// </returns>
     public static bool HasValidPassword(string pw)
     {
-        var lowercase = new Regex("[a-z]+");
-        var uppercase = new Regex("[A-Z]+");
-        var digit = new Regex("(\\d)+");
-        var symbol = new Regex("(\\W)+");
+        var lowercase = new Regex("[a-z]+", RegexOptions.None, RegexTimeout);
+        var uppercase = new Regex("[A-Z]+", RegexOptions.None, RegexTimeout);
+        var digit = new Regex("(\\d)+", RegexOptions.None, RegexTimeout);
+        var symbol = new Regex("(\\W)+", RegexOptions.None, RegexTimeout);
         return lowercase.IsMatch(pw)
             && uppercase.IsMatch(pw)
             && digit.IsMatch(pw)
