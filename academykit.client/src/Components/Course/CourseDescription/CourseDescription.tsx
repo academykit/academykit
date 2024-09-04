@@ -2,17 +2,21 @@ import TextViewer from "@components/Ui/RichTextViewer";
 import UserShortProfile from "@components/UserShortProfile";
 import useAuth from "@hooks/useAuth";
 import {
+  Anchor,
   AspectRatio,
   Badge,
   Box,
   Button,
+  Card,
   Center,
   Container,
   Flex,
   Group,
   Image,
+  List,
   Loader,
   Modal,
+  Text,
   Textarea,
   Title,
 } from "@mantine/core";
@@ -39,6 +43,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 import classes from "../styles/courseDescription.module.css";
 import CourseContent from "./CourseContent/CourseContent";
+import CourseEligibility from "./CourseEligibility";
 
 const CourseDescription = () => {
   const { id } = useParams();
@@ -221,6 +226,49 @@ const CourseDescription = () => {
                 })}
               />
             </AspectRatio>
+            <Card>
+              <Card.Section
+                py={"xs"}
+                px="lg"
+                mt={"sm"}
+                style={{
+                  borderTop: "1px solid var(--mantine-color-pool-border)",
+                }}
+              >
+                <Text size="xs" c="dimmed" mb={10}>
+                  {t("eligibility")}
+                </Text>
+
+                <List>
+                  {course.data.trainingEligibilities.length >= 1 ? (
+                    course.data.trainingEligibilities
+                      .slice(0, 4)
+                      .map((eligibility, index) => (
+                        <CourseEligibility
+                          key={index}
+                          index={index}
+                          eligibility={eligibility?.eligibility}
+                          course={course.data}
+                        />
+                      ))
+                  ) : (
+                    <Text>{t("no_eligibility_criteria")}</Text>
+                  )}
+                </List>
+                {course.data.trainingEligibilities.length > 4 && (
+                  <Anchor
+                    component={Link}
+                    to={
+                      RoutePath.assessment.description(course.data.slug).route
+                    }
+                    size={"md"}
+                    lineClamp={1}
+                  >
+                    <Text truncate>{t("see_more")}</Text>
+                  </Anchor>
+                )}
+              </Card.Section>
+            </Card>
             <Center>
               <Group my={30}>
                 {auth?.auth && Number(auth?.auth?.role) <= UserRole.Admin ? (

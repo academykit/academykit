@@ -75,12 +75,6 @@
                 .HasColumnName("updated_on")
                 .HasColumnType("DATETIME")
                 .IsRequired(false);
-
-            builder
-                .HasOne(x => x.TrainingEligibility)
-                .WithOne(x => x.EligibilityCreation)
-                .HasForeignKey<TrainingEligibility>(x => x.EligibilityId)
-                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
