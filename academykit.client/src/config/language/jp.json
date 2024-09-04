@@ -1180,5 +1180,6 @@
   "user_is_super_admin": "このユーザーはスーパ管理者です。",
   "organization_detail": "組織の詳細",
   "user_detail": "ユーザーの詳細",
-  "back": "戻る"
+  "back": "戻る",
+  "license_management": "ライセンス管理"
 }

@@ -57,7 +57,6 @@ export default function ZoomLicense() {
       hostId: Yup.string().required(t("host_id_required") as string),
       capacity: Yup.number()
         .integer()
-        .nullable(false)
         .min(1, t("capacity_required") as string)
         .typeError(t("capacity_required") as string),
     });

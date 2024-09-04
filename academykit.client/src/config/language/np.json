@@ -1181,5 +1181,6 @@
   "user_is_super_admin": "यह उपयोगकर्ता सुपर व्यवस्थापक होगा।",
   "organization_detail": "संगठन विवरण",
   "user_detail": "उपयोगकर्ता विवरण",
-  "back": "फिर्ता"
+  "back": "फिर्ता",
+  "license_management": "लाइसेंस प्रबंधन"
 }

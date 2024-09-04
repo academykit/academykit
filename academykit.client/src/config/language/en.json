@@ -1239,5 +1239,6 @@
   "user_is_super_admin": "This user will be super admin.",
   "organization_detail": "Organization Detail",
   "user_detail": "User Detail",
-  "back": "Back"
+  "back": "Back",
+  "license_management": "License Management"
 }

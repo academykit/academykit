@@ -138,6 +138,13 @@ const AdminNav = () => {
       target: "_blank",
       group: "hangfire",
     },
+    {
+      label: t("license_management"),
+      to: RoutePath.settings.license(),
+      role: UserRole.SuperAdmin,
+      group: "admin",
+      icon: <IconLicense size={14} />,
+    },
   ];
   return <AdminNavOutlet data={adminNavLinks} />;
 };

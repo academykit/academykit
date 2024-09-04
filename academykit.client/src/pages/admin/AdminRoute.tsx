@@ -12,11 +12,12 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
+import Account from "./account";
 import AdminNav from "./Component/AdminNav";
 import AdminViewCertificate from "./Component/training/adminViewCertificate";
 import CertificateList from "./Component/training/certificateList";
 import MyTrainingInternal from "./Component/training/myTrainingInternal";
-import Account from "./account";
+import LicenseManagement from "./LicenseManagement";
 
 // const AdminCourseList = lazyWithRetry(() => import('./course'));
 const Department = lazyWithRetry(() => import("./department"));
@@ -74,6 +75,7 @@ const AdminRoutesChild = () => {
           <Route path={"/smtp"} element={<SMTP />} />
           <Route path={"/fileStorage"} element={<FileStorage />} />
           <Route path={"/ai-setup"} element={<AIMasterSetup />} />
+          <Route path={"/license-management"} element={<LicenseManagement />} />
         </Route>
         <Route path="/apiKeys" element={<ApiKeys />} />
         <Route path="/updates" element={<Updates />} />
