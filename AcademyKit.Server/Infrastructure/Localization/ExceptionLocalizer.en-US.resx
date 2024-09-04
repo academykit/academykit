@@ -1117,5 +1117,8 @@ recorded cannot be deleted.</value>
   <data name="UserAlreadyActive" xml:space="preserve">
   <value>User is already active.</value>
 </data>
+  <data name="MobileNumberLength15" xml:space="preserve">
+  <value>The mobile number should be 15 digits long.</value>
+</data>
 
 </root>

@@ -89,8 +89,7 @@
     "Xzdz",
     "Zlypo",
     "zmmtg",
-    "नेपाली",
-    "coursecard"
+    "नेपाली"
   ],
   "ignorePaths": [
     "**/**/node_modules/**",

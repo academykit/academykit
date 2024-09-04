@@ -1114,6 +1114,7 @@
 </data>
   <data name="UnauthorizedEmailDomain" xml:space="preserve">
   <value>अनधिकृत इमेल डोमेन</value>
+</data><data name="MobileNumberLength15" xml:space="preserve">
+  <value>मोबाइल नम्बर १५ अंक लामो हुनुपर्छ।</value>
 </data>
-
 </root>

@@ -1113,5 +1113,7 @@
   <data name="UserAlreadyActive" xml:space="preserve">
   <value>ユーザーは既にアクティブです。</value>
 </data>
-
+ <data name="MobileNumberLength15" xml:space="preserve">
+  <value>電話番号は15桁である必要があります。</value>
+</data>
 </root>
