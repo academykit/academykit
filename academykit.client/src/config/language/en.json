@@ -1240,5 +1240,9 @@
   "organization_detail": "Organization Detail",
   "user_detail": "User Detail",
   "back": "Back",
-  "license_management": "License Management"
+  "license_management": "License Management",
+  "enter_new_license_key": "Enter New License Key",
+  "upgrade": "Upgrade",
+  "license_activated_on": "License Activated On",
+  "license_updated_successfully": "License Updated Successfully"
 }

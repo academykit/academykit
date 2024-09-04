@@ -62,3 +62,19 @@ export const useActivateLicense = () => {
     },
   });
 };
+
+export const useUpdateLicense = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: [api.license.update],
+
+    mutationFn: ({ licenseKey }: { licenseKey: string }) => {
+      return httpClient.post<ILicense>(api.license.update, { licenseKey });
+    },
+
+    onSuccess: (data) => {
+      queryClient.refetchQueries({ queryKey: [api.license.list] });
+      localStorage.setItem(LICENSE_KEY, data?.data?.licenseKey);
+    },
+  });
+};

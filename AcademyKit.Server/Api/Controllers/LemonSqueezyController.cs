@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using AcademyKit.Application.Common.Dtos;
 using AcademyKit.Application.Common.Exceptions;
 using AcademyKit.Domain.Entities;
@@ -29,6 +30,19 @@ namespace AcademyKit.Api.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        private async Task<RestResponse> SendLemonSqueezyRequest(string endpoint, string licenseKey, Guid? instanceName = null)
+        {
+            var client = new RestClient(LEMON_SQUEEZY_BASE_URL);
+            var request = new RestRequest(endpoint);
+            request.AddQueryParameter("license_key", licenseKey);
+            if (instanceName != null)
+            {
+                request.AddQueryParameter("instance_name", instanceName.ToString());
+            }
+            request.AddHeader("Accept", "application/json");
+            return await client.PostAsync(request).ConfigureAwait(false);
+        }
+
         /// <summary>
         /// activate license and save the data in database.
         /// </summary>
@@ -47,12 +61,8 @@ namespace AcademyKit.Api.Controllers
 
             try
             {
-                var license = new RestClient(LEMON_SQUEEZY_BASE_URL);
-                var request = new RestRequest("/v1/licenses/activate");
-                request.AddQueryParameter("license_key", model.LicenseKey);
-                request.AddQueryParameter("instance_name", CurrentUser.Id);
-                request.AddHeader("Accept", "application/json");
-                var response = await license.PostAsync(request).ConfigureAwait(false);
+
+                var response = await SendLemonSqueezyRequest("/v1/licenses/activate", model.LicenseKey, CurrentUser.Id);
 
                 if (!response.IsSuccessful)
                 {
@@ -70,13 +80,17 @@ namespace AcademyKit.Api.Controllers
                 var data = new License
                 {
                     Id = new Guid(),
-                    status = Domain.Enums.LicenseStatusType.Active,
-                    licenseKey = model.LicenseKey,
-                    licenseKeyId = licenseResponses.LicenseKey.Id,
+                    Status = Domain.Enums.LicenseStatusType.Active,
+                    LicenseKey = model.LicenseKey,
+                    LicenseKeyId = licenseResponses.LicenseKey.Id,
                     CreatedBy = new Guid(),
-                    customerEmail = licenseResponses.Meta.CustomerEmail,
-                    customerName = licenseResponses.Meta.CustomerName,
+                    CustomerEmail = licenseResponses.Meta.CustomerEmail,
+                    CustomerName = licenseResponses.Meta.CustomerName,
                     CreatedOn = DateTime.UtcNow,
+                    ActivatedOn = licenseResponses.Meta.CreatedAt,
+                    ExpiredOn = licenseResponses.LicenseKey.ExpiresAt,
+                    VariantName = licenseResponses.Meta.VariantName,
+                    VariantId = licenseResponses.Meta.VariantId,
                 };
 
                 // Save to the database
@@ -109,11 +123,8 @@ namespace AcademyKit.Api.Controllers
 
             try
             {
-                var license = new RestClient(LEMON_SQUEEZY_BASE_URL);
-                var request = new RestRequest("/v1/licenses/validate");
-                request.AddQueryParameter("license_key", licenseKey);
-                request.AddHeader("Accept", "application/json");
-                var response = await license.PostAsync(request).ConfigureAwait(false);
+                var response = await SendLemonSqueezyRequest("/v1/licenses/validate", licenseKey);
+
                 if (!response.IsSuccessful)
                 {
                     return StatusCode(
@@ -175,6 +186,93 @@ namespace AcademyKit.Api.Controllers
         }
 
         /// <summary>
+        /// Update the license key.
+        /// </summary>
+        /// <param name="model">The model containing the new license key.</param>
+        /// <returns>The updated license information.</returns>
+        /// <exception cref="ServiceException"></exception>
+        [HttpPut("update")]
+        public async Task<ActionResult> UpdateLicenseKeyAsync([FromBody] UpdateLicenseKeyModel model)
+        {
+            if (string.IsNullOrEmpty(model.LicenseKey))
+            {
+                return BadRequest("License Key is required.");
+            }
+
+            try
+            {
+                // Validate the new license key with LemonSqueezy
+                var response = await SendLemonSqueezyRequest("/v1/licenses/validate", model.LicenseKey);
+
+                if (!response.IsSuccessful)
+                {
+                    return StatusCode(
+                        (int)response.StatusCode,
+                        JsonConvert.DeserializeObject<LemonSqueezyResponseModel>(response.Content)
+                    );
+                }
+
+                var licenseResponse = JsonConvert.DeserializeObject<LemonSqueezyResponseModel>(
+                    response.Content
+                );
+
+                if (!licenseResponse.Valid)
+                {
+                    return BadRequest("Invalid license key.");
+                }
+
+                // Update the license in the database
+                var existingLicense = await _unitOfWork.GetRepository<License>()
+                    .GetFirstOrDefaultAsync(predicate: l => l.LicenseKey == model.LicenseKey);
+
+                if (existingLicense == null)
+                {
+                    // If the license doesn't exist, create a new one
+                    var newLicense = new License
+                    {
+                        Id = Guid.NewGuid(),
+                        Status = Domain.Enums.LicenseStatusType.Active,
+                        LicenseKey = model.LicenseKey,
+                        LicenseKeyId = licenseResponse.LicenseKey.Id,
+                        CreatedBy = CurrentUser.Id,
+                        CustomerEmail = licenseResponse.Meta.CustomerEmail,
+                        CustomerName = licenseResponse.Meta.CustomerName,
+                        CreatedOn = DateTime.UtcNow,
+                    };
+
+                    await _unitOfWork.GetRepository<License>().InsertAsync(newLicense).ConfigureAwait(false);
+                }
+                else
+                {
+                    // Update existing license
+                    existingLicense.LicenseKey = model.LicenseKey;
+                    existingLicense.LicenseKeyId = licenseResponse.LicenseKey.Id;
+                    existingLicense.Status = Domain.Enums.LicenseStatusType.Active;
+                    existingLicense.CustomerEmail = licenseResponse.Meta.CustomerEmail;
+                    existingLicense.CustomerName = licenseResponse.Meta.CustomerName;
+                    existingLicense.UpdatedOn = DateTime.UtcNow;
+                    existingLicense.UpdatedBy = CurrentUser.Id;
+
+                    _unitOfWork.GetRepository<License>().Update(existingLicense);
+                }
+
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+                return Ok(licenseResponse);
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceException(ex.Message, ex);
+            }
+        }
+
+        public class UpdateLicenseKeyModel
+        {
+            [Required]
+            public string LicenseKey { get; set; }
+        }
+
+        /// <summary>
         /// Response From LemonSqueezy
         /// </summary>
         public class LicenseKey
@@ -198,7 +296,7 @@ namespace AcademyKit.Api.Controllers
             public DateTime CreatedAt { get; set; }
 
             [JsonProperty("expires_at")]
-            public DateTime? ExpiresAt { get; set; }
+            public DateTime ExpiresAt { get; set; }
 
             [JsonProperty("test_mode")]
             public bool TestMode { get; set; }
@@ -206,6 +304,9 @@ namespace AcademyKit.Api.Controllers
 
         public class Meta
         {
+            [JsonProperty("created_at")]
+            public DateTime CreatedAt { get; set; }
+
             [JsonProperty("store_id")]
             public int StoreId { get; set; }
 

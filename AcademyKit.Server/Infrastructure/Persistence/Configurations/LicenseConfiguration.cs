@@ -16,29 +16,50 @@ namespace AcademyKit.Infrastructure.Persistence.Configurations
                 .HasMaxLength(50)
                 .IsRequired();
             builder
-                .Property(x => x.licenseKey)
+                .Property(x => x.LicenseKey)
                 .HasColumnName("licenseKey")
                 .HasColumnType("VARCHAR(50)")
                 .HasMaxLength(50)
                 .IsRequired();
-            builder.Property(x => x.status).HasColumnName("status").IsRequired();
+            builder.Property(x => x.Status).HasColumnName("status").IsRequired();
             builder
-                .Property(x => x.licenseKeyId)
+                .Property(x => x.LicenseKeyId)
                 .HasColumnName("licenseKeyId")
                 .HasColumnType("VARCHAR(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
-                .Property(x => x.customerName)
+                .Property(x => x.CustomerName)
                 .HasColumnName("customer_name")
                 .HasColumnType("VARCHAR(100)")
                 .HasMaxLength(100)
                 .IsRequired();
             builder
-                .Property(x => x.customerEmail)
+                .Property(x => x.CustomerEmail)
                 .HasColumnName("customer_email")
                 .HasColumnType("VARCHAR(200)")
                 .HasMaxLength(200)
+                .IsRequired();
+            builder
+                .Property(x => x.ActivatedOn)
+                .HasColumnName("activated_on")
+                .IsRequired()
+                .HasColumnType("DATETIME");
+            builder
+                .Property(x => x.ExpiredOn)
+                .HasColumnName("expired_on")
+                .IsRequired()
+                .HasColumnType("DATETIME");
+            builder
+                .Property(x => x.VariantName)
+                .HasColumnName("variant_name")
+                .HasColumnType("VARCHAR(100)")
+                .HasMaxLength(100)
+                .IsRequired();
+            builder
+                .Property(x => x.VariantId)
+                .HasColumnName("variant_id")
+                .HasColumnType("INT")
                 .IsRequired();
             builder
                 .Property(x => x.CreatedBy)

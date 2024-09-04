@@ -1182,5 +1182,8 @@
   "organization_detail": "संगठन विवरण",
   "user_detail": "उपयोगकर्ता विवरण",
   "back": "फिर्ता",
-  "license_management": "लाइसेंस प्रबंधन"
+  "license_management": "लाइसेंस प्रबंधन",
+  "enter_new_license_key": "नयाँ लाइसेंस कुंजी प्रविष्ट गर्नुहोस्।",
+  "license_activated_on": "लाइसेंस सक्रिय भएको",
+  "license_updated_successfully": "लाइसेंस सफलतापूर्वक अपडेट गरियो"
 }

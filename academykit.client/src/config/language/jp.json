@@ -1181,5 +1181,8 @@
   "organization_detail": "組織の詳細",
   "user_detail": "ユーザーの詳細",
   "back": "戻る",
-  "license_management": "ライセンス管理"
+  "license_management": "ライセンス管理",
+  "enter_new_license_key": "新しいライセンスキーを入力してください",
+  "license_activated_on": "ライセンスが有効化された日",
+  "license_updated_successfully": "ライセンスが正常に更新されました"
 }
