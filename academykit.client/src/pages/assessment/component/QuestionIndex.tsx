@@ -18,15 +18,25 @@ const QuestionIndex = ({
 }) => {
   const form = useFormContext<{ questions: IAssessmentExam[] }>();
   const questions = form.watch("questions");
+
+  const handleSelection = (index: number) => {
+    setVisited((visited) => [...visited, currentIndex]);
+    setCurrentIndex(index);
+  };
+
   return (
     <Grid.Col span={3} m={0} className={classes.optionsGridCol}>
       <Group p={10} className={classes.navigateWrapper}>
         {questions?.map((x, i) => (
           <div
+            role="button"
+            tabIndex={0}
             key={x.questionId}
-            onClick={() => {
-              setVisited((visited) => [...visited, currentIndex]);
-              setCurrentIndex(i);
+            onClick={() => handleSelection(i)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                handleSelection(i);
+              }
             }}
             style={{
               outline: "none",
