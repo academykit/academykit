@@ -94,7 +94,14 @@ const UserRow = ({
             </Suspense>
           )}
         </Modal>
-        <div style={{ display: "flex", textDecoration: "none" }}>
+        <div
+          style={{
+            display: "flex",
+            textDecoration: "none",
+            alignItems: "center",
+            gap: 3,
+          }}
+        >
           <Link
             to={`/userProfile/${item.id}/certificate`}
             style={{ textDecoration: "none" }}
@@ -122,7 +129,14 @@ const UserRow = ({
         {item?.email.toLowerCase()}
       </Table.Td>
 
-      <Table.Td className={classes.phoneContainer}>
+      <Table.Td
+        className={classes.phoneContainer}
+        style={{
+          width: "8.75rem",
+          maxWidth: "8.75rem",
+          overflow: "hidden",
+        }}
+      >
         {item?.mobileNumber}
       </Table.Td>
       <Table.Td>

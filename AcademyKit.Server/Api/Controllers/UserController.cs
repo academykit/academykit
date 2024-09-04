@@ -109,7 +109,7 @@
 
             var currentTimeStamp = DateTime.UtcNow;
             await validator
-                .ValidateAsync(model, options => options.IncludeRuleSets("Add").ThrowOnFailures())
+                .ValidateAsync(model, options => options.ThrowOnFailures())
                 .ConfigureAwait(false);
 
             var entity = new User()

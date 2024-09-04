@@ -1,4 +1,4 @@
-import { Card, Grid, Group } from "@mantine/core";
+import { Button, Card, Grid, Group } from "@mantine/core";
 import { IAssessmentExam } from "@utils/services/assessmentService";
 import cx from "clsx";
 import { Dispatch, SetStateAction } from "react";
@@ -18,21 +18,34 @@ const QuestionIndex = ({
 }) => {
   const form = useFormContext<{ questions: IAssessmentExam[] }>();
   const questions = form.watch("questions");
+
+  const handleSelection = (index: number) => {
+    setVisited((visited) => [...visited, currentIndex]);
+    setCurrentIndex(index);
+  };
+
   return (
     <Grid.Col span={3} m={0} className={classes.optionsGridCol}>
       <Group p={10} className={classes.navigateWrapper}>
         {questions?.map((x, i) => (
-          <div
+          <Button
             key={x.questionId}
-            onClick={() => {
-              setVisited((visited) => [...visited, currentIndex]);
-              setCurrentIndex(i);
-            }}
-            style={{
-              outline: "none",
-              border: "none",
-              backgroundColor: "none",
-            }}
+            onClick={() => handleSelection(i)}
+            variant="subtle"
+            styles={() => ({
+              root: {
+                background: "none",
+                border: "none",
+                padding: 0,
+                margin: 0,
+                color: "inherit",
+                font: "inherit",
+                textAlign: "inherit",
+                cursor: "pointer",
+                outline: "none",
+                boxShadow: "none",
+              },
+            })}
           >
             <Card
               className={cx(classes.navigate, {
@@ -49,7 +62,7 @@ const QuestionIndex = ({
             >
               {i + 1}
             </Card>
-          </div>
+          </Button>
         ))}
       </Group>
     </Grid.Col>

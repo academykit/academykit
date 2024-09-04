@@ -1182,6 +1182,7 @@
   "organization_detail": "組織の詳細",
   "user_detail": "ユーザーの詳細",
   "back": "戻る",
+  "post_mail_success": "メールが正常に追加されました",
   "lesson_name_required": "レッスン名は必須です。",
   "externalUrl": "外部URL",
   "externalUrl_required": "外部URLは必須です。"
