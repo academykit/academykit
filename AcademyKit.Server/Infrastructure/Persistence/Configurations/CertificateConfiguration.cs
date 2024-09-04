@@ -8,13 +8,8 @@
     {
         public void Configure(EntityTypeBuilder<Certificate> builder)
         {
-            builder.HasKey(x => x.Id);
-            builder
-                .Property(x => x.Id)
-                .HasColumnName("id")
-                .HasColumnType("VARCHAR(50)")
-                .HasMaxLength(50)
-                .IsRequired();
+            builder.ConfigureId();
+
             builder
                 .Property(x => x.Name)
                 .HasColumnName("name")

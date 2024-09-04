@@ -20,7 +20,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         key = table
                             .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
@@ -32,13 +32,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: true
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -53,7 +53,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         licenseKey = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -69,13 +69,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -128,7 +128,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         mail_name = table
                             .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
@@ -146,13 +146,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         ),
                         mail_type = table.Column<int>(type: "int", nullable: false),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -186,7 +186,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         name = table
                             .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: false)
@@ -200,13 +200,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -221,7 +221,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         name = table
                             .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: true)
@@ -233,13 +233,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -254,7 +254,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         assessment_question_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -264,7 +264,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         order = table.Column<int>(type: "int", nullable: false),
                         UserId = table
-                            .Column<string>(type: "VARCHAR(50)", nullable: true)
+                            .Column<string>(type: "varchar(36)", nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         is_correct = table.Column<bool>(
                             type: "tinyint(1)",
@@ -272,13 +272,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -293,7 +293,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         assessment_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -315,13 +315,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         ),
                         type = table.Column<int>(type: "int", nullable: false),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -336,7 +336,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         user_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -353,13 +353,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             nullable: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -374,7 +374,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         slug = table
                             .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
@@ -399,13 +399,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -420,7 +420,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         skill_assessment_rule = table.Column<int>(type: "int", nullable: false),
                         percentage = table.Column<decimal>(type: "decimal(20,4)", nullable: false),
@@ -431,13 +431,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -465,7 +465,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         assessment_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -484,13 +484,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -511,7 +511,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         assessment_submission_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -528,13 +528,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -562,7 +562,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         assignment_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -599,7 +599,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         assignment_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -614,13 +614,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         ),
                         order = table.Column<int>(type: "int", nullable: false),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -635,7 +635,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         lesson_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -653,13 +653,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -674,7 +674,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         lesson_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -696,13 +696,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         ),
                         type = table.Column<int>(type: "int", nullable: false),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -717,7 +717,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         assignment_submission_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -753,7 +753,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         lesson_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -803,7 +803,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         name = table
                             .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: false)
@@ -848,7 +848,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         comment_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -883,7 +883,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         course_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -918,7 +918,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         title = table
                             .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
@@ -935,13 +935,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(500)", nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -956,7 +956,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         current_lesson_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
@@ -999,13 +999,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             nullable: true
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1020,7 +1020,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         slug = table
                             .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
@@ -1056,13 +1056,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1077,7 +1077,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         course_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -1087,13 +1087,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         training_eligibility_enum = table.Column<int>(type: "int", nullable: false),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1115,7 +1115,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         tag_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -1124,13 +1124,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1151,7 +1151,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         user_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -1160,13 +1160,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1187,7 +1187,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         slug = table
                             .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
@@ -1201,13 +1201,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1222,7 +1222,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         role = table.Column<int>(type: "int", nullable: false, defaultValue: 4),
                         status = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
@@ -1276,13 +1276,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1303,7 +1303,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         logo_url = table
                             .Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: true)
@@ -1328,13 +1328,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             nullable: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1355,7 +1355,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         slug = table
                             .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
@@ -1374,13 +1374,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1401,7 +1401,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         slug = table
                             .Column<string>(type: "VARCHAR(270)", maxLength: 250, nullable: false)
@@ -1415,13 +1415,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1442,7 +1442,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         name = table
                             .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
@@ -1456,13 +1456,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1483,7 +1483,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         name = table
                             .Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
@@ -1496,13 +1496,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "varchar(5000)", maxLength: 5000, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1523,7 +1523,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         name = table
                             .Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
@@ -1575,13 +1575,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: true
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1602,7 +1602,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         user_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -1623,13 +1623,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1650,7 +1650,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         slug = table
                             .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
@@ -1673,13 +1673,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         ),
                         status = table.Column<int>(type: "int", nullable: false),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1706,7 +1706,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         course_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -1721,13 +1721,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1755,10 +1755,10 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         SkillsId = table
-                            .Column<string>(type: "VARCHAR(50)", nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         UsersId = table
-                            .Column<string>(type: "VARCHAR(50)", nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4")
                     },
                     constraints: table =>
@@ -1788,7 +1788,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         mail_server = table
                             .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: false)
@@ -1811,13 +1811,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         UseSSL = table.Column<bool>(type: "tinyint(1)", nullable: false),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1838,7 +1838,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         slug = table
                             .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
@@ -1852,13 +1852,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1879,10 +1879,10 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         SkillId = table
-                            .Column<string>(type: "VARCHAR(50)", nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         UserId = table
-                            .Column<string>(type: "VARCHAR(50)", nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         Id = table.Column<Guid>(
                             type: "char(36)",
@@ -1929,7 +1929,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         license_email = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -1944,13 +1944,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: true
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -1971,7 +1971,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         sdk_key = table
                             .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
@@ -1997,13 +1997,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -2024,7 +2024,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         role = table.Column<int>(type: "int", nullable: false),
                         skill_id = table
@@ -2046,16 +2046,16 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         TrainingEligibilityId = table
-                            .Column<string>(type: "VARCHAR(50)", nullable: true)
+                            .Column<string>(type: "varchar(36)", nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -2112,10 +2112,10 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         GroupId = table
-                            .Column<string>(type: "VARCHAR(50)", nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         name = table
                             .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: false)
@@ -2128,13 +2128,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -2161,7 +2161,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         user_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -2175,13 +2175,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -2209,7 +2209,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         user_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -2219,13 +2219,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         role = table.Column<int>(type: "int", nullable: false, defaultValue: 2),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -2253,7 +2253,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         option = table
                             .Column<string>(type: "varchar(5000)", maxLength: 5000, nullable: false)
@@ -2268,13 +2268,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -2301,7 +2301,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         question_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -2311,13 +2311,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         order = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -2350,7 +2350,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         question_set_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -2369,13 +2369,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -2402,7 +2402,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         tag_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -2411,13 +2411,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -2452,7 +2452,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         meeting_number = table.Column<long>(type: "bigint", nullable: true),
                         passcode = table
@@ -2464,13 +2464,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         duration = table.Column<int>(type: "int", nullable: false),
                         start_date = table.Column<DateTime>(type: "DATETIME", nullable: true),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -2497,7 +2497,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         question_set_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -2510,13 +2510,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -2555,7 +2555,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         user_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -2572,13 +2572,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             nullable: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -2611,7 +2611,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         slug = table
                             .Column<string>(type: "VARCHAR(270)", maxLength: 270, nullable: false)
@@ -2669,13 +2669,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -2760,7 +2760,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         question_set_submission_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -2777,13 +2777,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -2817,7 +2817,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         lesson_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -2833,13 +2833,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         ),
                         type = table.Column<int>(type: "int", nullable: false),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -2867,7 +2867,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         lesson_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -2889,13 +2889,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -2955,7 +2955,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         course_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -2977,13 +2977,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             defaultValue: false
                         ),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -3017,7 +3017,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         feedback_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -3027,13 +3027,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         order = table.Column<int>(type: "int", nullable: false),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -3060,7 +3060,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     columns: table => new
                     {
                         id = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(36)", nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         lesson_id = table
                             .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
@@ -3079,13 +3079,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                             .Annotation("MySql:CharSet", "utf8mb4"),
                         rating = table.Column<int>(type: "int", nullable: true),
                         created_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        created_on = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                        created_on = table.Column<DateTime>(type: "datetime", nullable: false),
                         updated_by = table
-                            .Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
+                            .Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
-                        updated_on = table.Column<DateTime>(type: "DATETIME", nullable: true)
+                        updated_on = table.Column<DateTime>(type: "datetime", nullable: true)
                     },
                     constraints: table =>
                     {

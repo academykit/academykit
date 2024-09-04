@@ -8,13 +8,8 @@
     {
         public void Configure(EntityTypeBuilder<CommentReply> builder)
         {
-            builder.HasKey(x => x.Id);
-            builder
-                .Property(x => x.Id)
-                .HasColumnName("id")
-                .HasColumnType("VARCHAR(50)")
-                .HasMaxLength(50)
-                .IsRequired();
+            builder.ConfigureId();
+
             builder
                 .Property(x => x.CommentId)
                 .HasColumnName("comment_id")
