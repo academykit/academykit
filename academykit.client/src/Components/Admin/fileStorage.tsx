@@ -59,7 +59,7 @@ const FileStorageUI = ({ data }: { data: IFileStorage[] }) => {
         />
       </Group>
       <Card>
-        {form.values[activeIndex].values.map((x, index) => (
+        {form.values[activeIndex]?.values?.map((x, index) => (
           <TextInput
             required
             key={x.key}
