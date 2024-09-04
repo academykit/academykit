@@ -23,7 +23,6 @@ import {
 import { useForm } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import { IconCheck, IconX } from "@tabler/icons-react";
 import { color } from "@utils/constants";
 import {
   CourseStatus,
@@ -44,6 +43,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 import classes from "../styles/courseDescription.module.css";
 import CourseContent from "./CourseContent/CourseContent";
+import CourseEligibility from "./CourseEligibility";
 
 const CourseDescription = () => {
   const { id } = useParams();
@@ -128,7 +128,7 @@ const CourseDescription = () => {
     toggleRejected(false);
     form.reset();
   };
-  console.log("data is ", course?.data);
+
   return (
     <div>
       <Modal
@@ -244,24 +244,12 @@ const CourseDescription = () => {
                     course.data.trainingEligibilities
                       .slice(0, 4)
                       .map((eligibility, index) => (
-                        <List.Item
+                        <CourseEligibility
                           key={index}
-                          icon={
-                            // show eligibility status icon only if the user is not admin or super-admin
-                            // and it not the owner of the assessment
-                            course.data.isEligible && (
-                              <>
-                                {eligibility.eligibility ? (
-                                  <IconCheck size={18} />
-                                ) : (
-                                  <IconX size={18} />
-                                )}
-                              </>
-                            )
-                          }
-                        >
-                          <Text lineClamp={1}>{`Must`}</Text>
-                        </List.Item>
+                          index={index}
+                          eligibility={eligibility?.eligibility}
+                          course={course.data}
+                        />
                       ))
                   ) : (
                     <Text>{t("no_eligibility_criteria")}</Text>

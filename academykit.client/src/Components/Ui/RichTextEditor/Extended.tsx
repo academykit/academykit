@@ -75,18 +75,22 @@ const TextEditorExtended = ({
     }
   }, [form?.getInputProps(label ?? "description").value, value, editor]);
 
-  // const handleImageUpload = useCallback(
-  //   (file: File): Promise<string> =>
-  //     new Promise((resolve, reject) => {
-  //       const formData = new FormData();
-  //       formData.append('image', file);
-
-  //       uploadFile(file, FileAccess.Public)
-  //         .then((result) => resolve(result.data))
-  //         .catch(() => reject(new Error('Upload failed')));
-  //     }),
-  //   []
-  // );
+  const colors = [
+    "#25262b",
+    "#868e96",
+    "#fa5252",
+    "#e64980",
+    "#be4bdb",
+    "#7950f2",
+    "#4c6ef5",
+    "#228be6",
+    "#15aabf",
+    "#12b886",
+    "#40c057",
+    "#82c91e",
+    "#fab005",
+    "#fd7e14",
+  ];
 
   return (
     <>
@@ -141,24 +145,7 @@ const TextEditorExtended = ({
               <RichTextEditor.AlignRight />
             </RichTextEditor.ControlsGroup>
 
-            <RichTextEditor.ColorPicker
-              colors={[
-                "#25262b",
-                "#868e96",
-                "#fa5252",
-                "#e64980",
-                "#be4bdb",
-                "#7950f2",
-                "#4c6ef5",
-                "#228be6",
-                "#15aabf",
-                "#12b886",
-                "#40c057",
-                "#82c91e",
-                "#fab005",
-                "#fd7e14",
-              ]}
-            />
+            <RichTextEditor.ColorPicker colors={colors} />
             {/* <YoutubeVideoControl></YoutubeVideoControl> */}
           </RichTextEditor.Toolbar>
           <RichTextEditor.Content />
