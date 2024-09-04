@@ -13,7 +13,7 @@ public class AIKeyConfiguration : IEntityTypeConfiguration<AIKey>
         builder
             .Property(x => x.Key)
             .HasColumnName("key")
-            .HasColumnType("VARCHAR(270)")
+            .HasColumnType("varchar(270)")
             .HasMaxLength(270)
             .IsRequired(true);
 

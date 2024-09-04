@@ -10,7 +10,7 @@ public static class EntityTypeBuilderExtensions
         where TEntity : IdentifiableEntity
     {
         builder.HasKey(e => e.Id);
-        builder.Property(e => e.Id).HasColumnName("id").HasColumnType("varchar(36)").IsRequired();
+        builder.Property(e => e.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
     }
 
     public static void ConfigureAuditFields<TEntity>(this EntityTypeBuilder<TEntity> builder)

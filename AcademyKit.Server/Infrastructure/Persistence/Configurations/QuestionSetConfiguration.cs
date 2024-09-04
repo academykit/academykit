@@ -14,7 +14,7 @@
             builder
                 .Property(x => x.Slug)
                 .HasColumnName("slug")
-                .HasColumnType("VARCHAR(520)")
+                .HasColumnType("varchar(520)")
                 .HasMaxLength(520)
                 .IsRequired();
             builder

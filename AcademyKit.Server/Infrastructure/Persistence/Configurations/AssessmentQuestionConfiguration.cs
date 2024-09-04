@@ -13,13 +13,13 @@
             builder
                 .Property(x => x.AssessmentId)
                 .HasColumnName("assessment_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.Name)
                 .HasColumnName("name")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .HasMaxLength(500)
                 .IsRequired(false);
             builder

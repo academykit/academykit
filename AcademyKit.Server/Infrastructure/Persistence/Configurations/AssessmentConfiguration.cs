@@ -13,26 +13,26 @@ public class AssessmentConfiguration : IEntityTypeConfiguration<Assessment>
         builder
             .Property(x => x.Slug)
             .HasColumnName("slug")
-            .HasColumnType("VARCHAR(270)")
+            .HasColumnType("varchar(270)")
             .HasMaxLength(270)
             .IsRequired();
         builder
             .Property(x => x.Title)
             .HasColumnName("title")
-            .HasColumnType("VARCHAR(250)")
+            .HasColumnType("varchar(250)")
             .HasMaxLength(250)
             .IsRequired();
         builder
             .Property(x => x.Description)
             .HasColumnName("description")
-            .HasColumnType("VARCHAR(500)")
+            .HasColumnType("varchar(500)")
             .HasMaxLength(2000)
             .IsRequired(false);
 
         builder
             .Property(x => x.Message)
             .HasColumnName("message")
-            .HasColumnType("VARCHAR(500)")
+            .HasColumnType("varchar(500)")
             .HasMaxLength(500)
             .IsRequired(false);
         builder.Property(x => x.AssessmentStatus).HasColumnName("assessment_status");

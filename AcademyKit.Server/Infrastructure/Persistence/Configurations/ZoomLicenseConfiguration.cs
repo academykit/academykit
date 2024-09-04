@@ -13,13 +13,13 @@
             builder
                 .Property(x => x.LicenseEmail)
                 .HasColumnName("license_email")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.HostId)
                 .HasColumnName("host_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder.Property(x => x.IsActive).HasColumnName("is_active").HasDefaultValue(true);

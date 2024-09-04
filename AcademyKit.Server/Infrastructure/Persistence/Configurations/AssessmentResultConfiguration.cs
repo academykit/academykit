@@ -13,19 +13,19 @@ public class AssessmentResultConfiguration : IEntityTypeConfiguration<Assessment
         builder
             .Property(x => x.UserId)
             .HasColumnName("user_id")
-            .HasColumnType("VARCHAR(50)")
+            .HasColumnType("varchar(50)")
             .HasMaxLength(50)
             .IsRequired();
         builder
             .Property(x => x.AssessmentId)
             .HasColumnName("assessment_id")
-            .HasColumnType("VARCHAR(50)")
+            .HasColumnType("varchar(50)")
             .HasMaxLength(50)
             .IsRequired();
         builder
             .Property(x => x.AssessmentSubmissionId)
             .HasColumnName("assessment_submission_id")
-            .HasColumnType("VARCHAR(50)")
+            .HasColumnType("varchar(50)")
             .HasMaxLength(50)
             .IsRequired();
         builder

@@ -13,31 +13,31 @@ public class AssignmentAttachmentConfiguration : IEntityTypeConfiguration<Assign
         builder
             .Property(x => x.AssignmentId)
             .HasColumnName("assignment_id")
-            .HasColumnType("VARCHAR(50)")
+            .HasColumnType("varchar(50)")
             .HasMaxLength(50)
             .IsRequired();
         builder
             .Property(x => x.Name)
             .HasColumnName("name")
-            .HasColumnType("VARCHAR(250)")
+            .HasColumnType("varchar(250)")
             .HasMaxLength(250)
             .IsRequired();
         builder
             .Property(x => x.FileUrl)
             .HasColumnName("file_url")
-            .HasColumnType("VARCHAR(500)")
+            .HasColumnType("varchar(500)")
             .HasMaxLength(500)
             .IsRequired();
         builder.Property(x => x.Order).HasColumnName("order").HasDefaultValue(0);
         builder
             .Property(x => x.MimeType)
             .HasColumnName("mime_type")
-            .HasColumnType("VARCHAR(50)")
+            .HasColumnType("varchar(50)")
             .IsRequired(false);
         builder
             .Property(x => x.CreatedBy)
             .HasColumnName("created_by")
-            .HasColumnType("VARCHAR(50)")
+            .HasColumnType("varchar(50)")
             .HasMaxLength(50)
             .IsRequired();
         builder
@@ -48,7 +48,7 @@ public class AssignmentAttachmentConfiguration : IEntityTypeConfiguration<Assign
         builder
             .Property(x => x.UpdatedBy)
             .HasColumnName("updated_by")
-            .HasColumnType("VARCHAR(50)")
+            .HasColumnType("varchar(50)")
             .HasMaxLength(50)
             .IsRequired(false);
         builder

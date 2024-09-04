@@ -13,13 +13,13 @@
             builder
                 .Property(x => x.SkillName)
                 .HasColumnName("name")
-                .HasColumnType("VARCHAR(250)")
+                .HasColumnType("varchar(250)")
                 .HasMaxLength(250)
                 .IsRequired(true);
             builder
                 .Property(x => x.Description)
                 .HasColumnName("remarks")
-                .HasColumnType("VARCHAR(250)")
+                .HasColumnType("varchar(250)")
                 .HasMaxLength(250)
                 .IsRequired(false);
             builder.Property(x => x.IsActive).HasColumnName("is_active").HasDefaultValue(true);

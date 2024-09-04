@@ -13,19 +13,19 @@ namespace AcademyKit.Infrastructure.Persistence.Configurations
             builder
                 .Property(x => x.UserId)
                 .HasColumnName("user_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.QuestionSetId)
                 .HasColumnName("question_set_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.QuestionSetSubmissionId)
                 .HasColumnName("question_set_submission_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder

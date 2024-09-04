@@ -14,37 +14,37 @@
             builder
                 .Property(x => x.SkillId)
                 .HasColumnName("skill_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired(false);
             builder
                 .Property(x => x.AssessmentId)
                 .HasColumnName("assessment_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired(false);
             builder
                 .Property(x => x.TrainingId)
                 .HasColumnName("training_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired(false);
             builder
                 .Property(x => x.GroupId)
                 .HasColumnName("group_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired(false);
             builder
                 .Property(x => x.DepartmentId)
                 .HasColumnName("department_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired(false);
             builder
                 .Property(x => x.CompletedAssessmentId)
                 .HasColumnName("completed_assessment_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired(false);
 

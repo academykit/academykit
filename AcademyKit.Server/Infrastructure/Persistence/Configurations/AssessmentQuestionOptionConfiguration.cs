@@ -13,14 +13,14 @@ public class AssessmentQuestionOptionConfiguration : IEntityTypeConfiguration<As
         builder
             .Property(x => x.AssessmentQuestionId)
             .HasColumnName("assessment_question_id")
-            .HasColumnType("VARCHAR(50)")
+            .HasColumnType("varchar(50)")
             .HasMaxLength(50)
             .IsRequired();
 
         builder
             .Property(x => x.Option)
             .HasColumnName("option")
-            .HasColumnType("VARCHAR(5000)")
+            .HasColumnType("varchar(5000)")
             .HasMaxLength(5000)
             .IsRequired();
 

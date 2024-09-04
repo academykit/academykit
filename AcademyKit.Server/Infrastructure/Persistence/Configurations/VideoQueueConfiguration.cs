@@ -12,19 +12,19 @@
             builder
                 .Property(x => x.Id)
                 .HasColumnName("id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.LessonId)
                 .HasColumnName("lesson_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.VideoUrl)
                 .HasColumnName("video_url")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .HasMaxLength(500)
                 .IsRequired();
             builder.Property(x => x.Status).HasColumnName("status").IsRequired();

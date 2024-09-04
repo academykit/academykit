@@ -13,13 +13,13 @@
             builder
                 .Property(x => x.Name)
                 .HasColumnName("name")
-                .HasColumnType("VARCHAR(100)")
+                .HasColumnType("varchar(100)")
                 .HasMaxLength(100)
                 .IsRequired();
             builder
                 .Property(x => x.Slug)
                 .HasColumnName("slug")
-                .HasColumnType("VARCHAR(105)")
+                .HasColumnType("varchar(105)")
                 .HasMaxLength(100)
                 .IsRequired();
             builder.Property(x => x.IsDeleted).HasColumnName("is_deleted").HasDefaultValue(false);

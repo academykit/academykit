@@ -18,11 +18,11 @@
             builder
                 .Property(x => x.ZoomLicenseId)
                 .HasColumnName("zoom_license_id")
-                .HasColumnType("VARCHAR(50)");
+                .HasColumnType("varchar(50)");
             builder
                 .Property(x => x.Passcode)
                 .HasColumnName("passcode")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired(false);
             builder.Property(x => x.Duration).HasColumnName("duration");

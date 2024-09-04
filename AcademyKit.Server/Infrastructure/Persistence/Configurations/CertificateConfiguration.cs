@@ -13,7 +13,7 @@
             builder
                 .Property(x => x.Name)
                 .HasColumnName("name")
-                .HasColumnType("VARCHAR(200)")
+                .HasColumnType("varchar(200)")
                 .HasMaxLength(200)
                 .IsRequired();
             builder
@@ -24,17 +24,17 @@
             builder
                 .Property(x => x.ImageUrl)
                 .HasColumnName("image_url")
-                .HasColumnType("VARCHAR(200)")
+                .HasColumnType("varchar(200)")
                 .IsRequired(false);
             builder
                 .Property(x => x.Location)
                 .HasColumnName("location")
-                .HasColumnType("VARCHAR(100)")
+                .HasColumnType("varchar(100)")
                 .IsRequired(false);
             builder
                 .Property(x => x.Institute)
                 .HasColumnName("institute")
-                .HasColumnType("VARCHAR(100)")
+                .HasColumnType("varchar(100)")
                 .IsRequired(false);
             builder.Property(x => x.Duration).HasColumnName("duration").IsRequired(false);
             builder
@@ -46,7 +46,7 @@
             builder
                 .Property(x => x.CreatedBy)
                 .HasColumnName("created_by")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
@@ -57,7 +57,7 @@
             builder
                 .Property(x => x.UpdatedBy)
                 .HasColumnName("updated_by")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired(false);
             builder

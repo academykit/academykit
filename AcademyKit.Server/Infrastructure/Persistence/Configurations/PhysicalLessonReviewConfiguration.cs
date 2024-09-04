@@ -14,13 +14,13 @@ namespace Infrastructure.Persistence.Configurations
             builder
                 .Property(x => x.LessonId)
                 .HasColumnName("lesson_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.UserId)
                 .HasColumnName("user_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
@@ -31,7 +31,7 @@ namespace Infrastructure.Persistence.Configurations
             builder
                 .Property(x => x.ReviewMessage)
                 .HasColumnName("review_message")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .IsRequired(false);
 
             builder.ConfigureAuditFields();

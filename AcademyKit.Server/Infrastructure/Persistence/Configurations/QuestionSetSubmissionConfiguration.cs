@@ -14,13 +14,13 @@
             builder
                 .Property(x => x.QuestionSetId)
                 .HasColumnName("question_set_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.UserId)
                 .HasColumnName("user_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
@@ -35,7 +35,7 @@
             builder
                 .Property(x => x.SubmissionErrorMessage)
                 .HasColumnName("submission_error_message")
-                .HasColumnType("VARCHAR(250)")
+                .HasColumnType("varchar(250)")
                 .HasMaxLength(250)
                 .IsRequired(false);
 

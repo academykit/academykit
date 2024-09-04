@@ -13,19 +13,19 @@
             builder
                 .Property(x => x.Url)
                 .HasColumnName("url")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .HasMaxLength(500)
                 .IsRequired();
             builder
                 .Property(x => x.MimeType)
                 .HasColumnName("mime_type")
-                .HasColumnType("VARCHAR(200)")
+                .HasColumnType("varchar(200)")
                 .HasMaxLength(200)
                 .IsRequired();
             builder
                 .Property(x => x.Name)
                 .HasColumnName("name")
-                .HasColumnType("VARCHAR(200)")
+                .HasColumnType("varchar(200)")
                 .HasMaxLength(200)
                 .IsRequired();
 

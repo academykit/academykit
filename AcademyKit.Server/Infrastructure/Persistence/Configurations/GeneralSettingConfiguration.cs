@@ -13,38 +13,38 @@
             builder
                 .Property(x => x.LogoUrl)
                 .HasColumnName("logo_url")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .HasMaxLength(500)
                 .IsRequired(false);
             builder
                 .Property(x => x.CompanyName)
                 .HasColumnName("company_name")
-                .HasColumnType("VARCHAR(250)")
+                .HasColumnType("varchar(250)")
                 .HasMaxLength(250)
                 .IsRequired();
             builder
                 .Property(x => x.CompanyAddress)
                 .HasColumnName("company_address")
-                .HasColumnType("VARCHAR(250)")
+                .HasColumnType("varchar(250)")
                 .HasMaxLength(250)
                 .IsRequired(false);
             builder
                 .Property(x => x.CompanyContactNumber)
                 .HasColumnName("company_contact_number")
-                .HasColumnType("VARCHAR(30)")
+                .HasColumnType("varchar(30)")
                 .HasMaxLength(30)
                 .IsRequired(false);
             builder
                 .Property(x => x.EmailSignature)
                 .HasColumnName("email_signature")
-                .HasColumnType("VARCHAR(1000)")
+                .HasColumnType("varchar(1000)")
                 .HasMaxLength(1000)
                 .IsRequired(false);
             builder.Property(x => x.IsSetupCompleted).HasColumnName("is_setup_completed");
             builder
                 .Property(x => x.CustomConfiguration)
                 .HasColumnName("custom_configuration")
-                .HasColumnType("VARCHAR(5000)")
+                .HasColumnType("varchar(5000)")
                 .IsRequired(false);
 
             builder.ConfigureAuditFields();

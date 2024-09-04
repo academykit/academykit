@@ -13,13 +13,13 @@
             builder
                 .Property(x => x.QuestionId)
                 .HasColumnName("question_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.QuestionPoolId)
                 .HasColumnName("question_pool_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
 

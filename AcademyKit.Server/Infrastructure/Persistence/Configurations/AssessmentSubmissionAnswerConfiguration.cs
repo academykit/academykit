@@ -14,14 +14,14 @@ public class AssessmentSubmissionAnswerConfiguration
         builder
             .Property(x => x.AssessmentSubmissionId)
             .HasColumnName("assessment_submission_id")
-            .HasColumnType("VARCHAR(50)")
+            .HasColumnType("varchar(50)")
             .HasMaxLength(50)
             .IsRequired();
 
         builder
             .Property(x => x.AssessmentQuestionId)
             .HasColumnName("assessment_question_id")
-            .HasColumnType("VARCHAR(50)")
+            .HasColumnType("varchar(50)")
             .HasMaxLength(50)
             .IsRequired();
 
@@ -30,7 +30,7 @@ public class AssessmentSubmissionAnswerConfiguration
         builder
             .Property(x => x.SelectedAnswers)
             .HasColumnName("selected_answers")
-            .HasColumnType("VARCHAR(150)")
+            .HasColumnType("varchar(150)")
             .HasMaxLength(150)
             .IsRequired();
 

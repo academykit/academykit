@@ -13,14 +13,14 @@
             builder
                 .Property(x => x.Name)
                 .HasColumnName("mail_name")
-                .HasColumnType("VARCHAR(250)")
+                .HasColumnType("varchar(250)")
                 .HasMaxLength(250)
                 .IsRequired(true);
 
             builder
                 .Property(x => x.Subject)
                 .HasColumnName("mail_subject")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .HasMaxLength(500)
                 .IsRequired(true);
             builder

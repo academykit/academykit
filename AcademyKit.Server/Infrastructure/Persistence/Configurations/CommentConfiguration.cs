@@ -13,20 +13,20 @@
             builder
                 .Property(x => x.CourseId)
                 .HasColumnName("course_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.Content)
                 .HasColumnName("content")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .HasMaxLength(500)
                 .IsRequired();
             builder.Property(x => x.IsDeleted).HasColumnName("is_deleted").HasDefaultValue(false);
             builder
                 .Property(x => x.CreatedBy)
                 .HasColumnName("created_by")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
@@ -37,7 +37,7 @@
             builder
                 .Property(x => x.UpdatedBy)
                 .HasColumnName("updated_by")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired(false);
             builder

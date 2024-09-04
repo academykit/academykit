@@ -13,19 +13,19 @@
             builder
                 .Property(x => x.Slug)
                 .HasColumnName("slug")
-                .HasColumnType("VARCHAR(270)")
+                .HasColumnType("varchar(270)")
                 .HasMaxLength(270)
                 .IsRequired();
             builder
                 .Property(x => x.Name)
                 .HasColumnName("name")
-                .HasColumnType("VARCHAR(250)")
+                .HasColumnType("varchar(250)")
                 .HasMaxLength(250)
                 .IsRequired();
             builder
                 .Property(x => x.Description)
                 .HasColumnName("description")
-                .HasColumnType("VARCHAR(5000)")
+                .HasColumnType("varchar(5000)")
                 .HasMaxLength(5000)
                 .IsRequired(false);
             builder.Property(x => x.Status).HasColumnName("status");
@@ -45,7 +45,7 @@
             builder
                 .Property(x => x.DocumentUrl)
                 .HasColumnName("document_url")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .HasMaxLength(500)
                 .IsRequired(false);
             builder
@@ -55,53 +55,53 @@
             builder
                 .Property(x => x.VideoUrl)
                 .HasColumnName("video_url")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .HasMaxLength(500)
                 .IsRequired(false);
             builder
                 .Property(x => x.ThumbnailUrl)
                 .HasColumnName("thumbnail_url")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .HasMaxLength(500)
                 .IsRequired(false);
             builder
                 .Property(x => x.ExternalUrl)
                 .HasColumnName("external_url")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .HasMaxLength(500)
                 .IsRequired(false);
             builder
                 .Property(x => x.Content)
                 .HasColumnName("content")
-                .HasColumnType("VARCHAR(5000)")
+                .HasColumnType("varchar(5000)")
                 .HasMaxLength(5000)
                 .IsRequired(false);
             builder.Property(x => x.IsDeleted).HasColumnName("is_deleted").HasDefaultValue(false);
             builder
                 .Property(x => x.VideoKey)
                 .HasColumnName("video_key")
-                .HasColumnType("VARCHAR(100)")
+                .HasColumnType("varchar(100)")
                 .HasMaxLength(100)
                 .IsRequired(false);
             builder
                 .Property(x => x.CourseId)
                 .HasColumnName("course_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .IsRequired();
             builder
                 .Property(x => x.SectionId)
                 .HasColumnName("section_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .IsRequired();
             builder
                 .Property(x => x.MeetingId)
                 .HasColumnName("meeting_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .IsRequired(false);
             builder
                 .Property(x => x.QuestionSetId)
                 .HasColumnName("question_set_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .IsRequired(false);
 
             builder.ConfigureAuditFields();

@@ -13,7 +13,7 @@
             builder
                 .Property(x => x.QuestionId)
                 .HasColumnName("question_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder.Property(x => x.Option).HasColumnName("option").HasMaxLength(5000).IsRequired();

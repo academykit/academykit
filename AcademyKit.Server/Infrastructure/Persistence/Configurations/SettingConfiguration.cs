@@ -12,13 +12,13 @@
             builder
                 .Property(x => x.Key)
                 .HasColumnName("key")
-                .HasColumnType("VARCHAR(100)")
+                .HasColumnType("varchar(100)")
                 .HasMaxLength(100)
                 .IsRequired();
             builder
                 .Property(x => x.Value)
                 .HasColumnName("value")
-                .HasColumnType("VARCHAR(200)")
+                .HasColumnType("varchar(200)")
                 .HasMaxLength(200)
                 .IsRequired(false);
         }

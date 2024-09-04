@@ -13,13 +13,13 @@ namespace AcademyKit.Infrastructure.Persistence.Configurations
             builder
                 .Property(x => x.CourseId)
                 .HasColumnName("course_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.LessonId)
                 .HasColumnName("lesson_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder.Property(x => x.IsCompleted).HasColumnName("is_completed").HasDefaultValue(0);
@@ -27,7 +27,7 @@ namespace AcademyKit.Infrastructure.Persistence.Configurations
             builder
                 .Property(x => x.UserId)
                 .HasColumnName("user_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
 

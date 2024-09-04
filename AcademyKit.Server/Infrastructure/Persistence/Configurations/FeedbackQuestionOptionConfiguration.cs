@@ -14,13 +14,13 @@
             builder
                 .Property(x => x.FeedbackId)
                 .HasColumnName("feedback_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.Option)
                 .HasColumnName("option")
-                .HasColumnType("VARCHAR(5000)")
+                .HasColumnType("varchar(5000)")
                 .HasMaxLength(5000)
                 .IsRequired();
             builder.Property(x => x.Order).HasColumnName("order");

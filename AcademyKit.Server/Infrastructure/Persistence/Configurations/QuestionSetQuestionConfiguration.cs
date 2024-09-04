@@ -14,19 +14,19 @@
             builder
                 .Property(x => x.QuestionSetId)
                 .HasColumnName("question_set_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.QuestionId)
                 .HasColumnName("question_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired(false);
             builder
                 .Property(x => x.QuestionPoolQuestionId)
                 .HasColumnName("question_pool_question_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired(false);
 

@@ -14,20 +14,20 @@
             builder
                 .Property(x => x.QuestionSetQuestionId)
                 .HasColumnName("question_set_question_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.QuestionSetSubmissionId)
                 .HasColumnName("question_set_submission_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder.Property(x => x.IsCorrect).HasColumnName("is_correct").HasDefaultValue(false);
             builder
                 .Property(x => x.SelectedAnswers)
                 .HasColumnName("selected_answers")
-                .HasColumnType("VARCHAR(150)")
+                .HasColumnType("varchar(150)")
                 .HasMaxLength(150)
                 .IsRequired();
 

@@ -16,13 +16,13 @@
             builder
                 .Property(x => x.HashPassword)
                 .HasColumnName("hash_password")
-                .HasColumnType("VARCHAR(100)")
+                .HasColumnType("varchar(100)")
                 .HasMaxLength(100)
                 .IsRequired(false);
             builder
                 .Property(x => x.PublicUrls)
                 .HasColumnName("public_urls")
-                .HasColumnType("VARCHAR(2000)")
+                .HasColumnType("varchar(2000)")
                 .HasMaxLength(2000)
                 .IsRequired(false);
             builder
@@ -33,13 +33,13 @@
             builder
                 .Property(x => x.PasswordResetToken)
                 .HasColumnName("password_reset_token")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired(false);
             builder
                 .Property(x => x.PasswordChangeToken)
                 .HasColumnName("password_change_token")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .HasMaxLength(500)
                 .IsRequired(false);
             builder
@@ -50,25 +50,25 @@
             builder
                 .Property(x => x.ImageUrl)
                 .HasColumnName("image_url")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .HasMaxLength(500)
                 .IsRequired(false);
             builder
                 .Property(x => x.FirstName)
                 .HasColumnName("first_name")
-                .HasColumnType("VARCHAR(100)")
+                .HasColumnType("varchar(100)")
                 .HasMaxLength(100)
                 .IsRequired();
             builder
                 .Property(x => x.MiddleName)
                 .HasColumnName("middle_name")
-                .HasColumnType("VARCHAR(100)")
+                .HasColumnType("varchar(100)")
                 .HasMaxLength(100)
                 .IsRequired(false);
             builder
                 .Property(x => x.LastName)
                 .HasColumnName("last_name")
-                .HasColumnType("VARCHAR(100)")
+                .HasColumnType("varchar(100)")
                 .HasMaxLength(100)
                 .IsRequired();
             #endregion
@@ -76,18 +76,18 @@
             builder
                 .Property(x => x.MemberId)
                 .HasColumnName("member_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .IsRequired(false);
             builder
                 .Property(x => x.Profession)
                 .HasColumnName("profession")
-                .HasColumnType("VARCHAR(250)")
+                .HasColumnType("varchar(250)")
                 .HasMaxLength(250)
                 .IsRequired(false);
             builder
                 .Property(x => x.DepartmentId)
                 .HasColumnName("department_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired(false);
             #endregion
@@ -96,7 +96,7 @@
             builder
                 .Property(x => x.Address)
                 .HasColumnName("address")
-                .HasColumnType("VARCHAR(200)")
+                .HasColumnType("varchar(200)")
                 .HasMaxLength(200)
                 .IsRequired(false);
             #endregion
@@ -105,20 +105,20 @@
             builder
                 .Property(x => x.Email)
                 .HasColumnName("email")
-                .HasColumnType("VARCHAR(100)")
+                .HasColumnType("varchar(100)")
                 .HasMaxLength(100)
                 .IsRequired(); // Login email (Office Email)
             builder
                 .Property(x => x.MobileNumber)
                 .HasColumnName("mobile_number")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired(false); // Primary Mobile number
             #endregion
             builder
                 .Property(x => x.Bio)
                 .HasColumnName("bio")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .HasMaxLength(500)
                 .IsRequired(false);
 

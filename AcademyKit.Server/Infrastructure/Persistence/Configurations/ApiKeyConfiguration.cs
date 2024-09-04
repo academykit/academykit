@@ -13,20 +13,20 @@ public class ApiKeyConfiguration : IEntityTypeConfiguration<ApiKey>
         builder
             .Property(x => x.Name)
             .HasColumnName("name")
-            .HasColumnType("VARCHAR(100)")
+            .HasColumnType("varchar(100)")
             .HasMaxLength(100)
             .IsRequired(false);
         builder
             .Property(x => x.Key)
             .HasColumnName("key")
-            .HasColumnType("VARCHAR(64)")
+            .HasColumnType("varchar(64)")
             .HasMaxLength(64)
             .IsRequired(true);
 
         builder
             .Property(x => x.UserId)
             .HasColumnName("user_id")
-            .HasColumnType("VARCHAR(50)")
+            .HasColumnType("varchar(50)")
             .HasMaxLength(50)
             .IsRequired();
 

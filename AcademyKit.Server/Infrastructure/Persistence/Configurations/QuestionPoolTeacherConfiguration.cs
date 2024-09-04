@@ -14,13 +14,13 @@
             builder
                 .Property(x => x.UserId)
                 .HasColumnName("user_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.QuestionPoolId)
                 .HasColumnName("question_pool_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder.Property(x => x.Role).HasColumnName("role").HasDefaultValue(PoolRole.Author);

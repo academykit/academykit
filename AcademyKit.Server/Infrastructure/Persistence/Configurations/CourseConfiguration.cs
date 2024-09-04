@@ -13,25 +13,25 @@
             builder
                 .Property(x => x.Slug)
                 .HasColumnName("slug")
-                .HasColumnType("VARCHAR(270)")
+                .HasColumnType("varchar(270)")
                 .HasMaxLength(270)
                 .IsRequired();
             builder
                 .Property(x => x.Name)
                 .HasColumnName("name")
-                .HasColumnType("VARCHAR(250)")
+                .HasColumnType("varchar(250)")
                 .HasMaxLength(250)
                 .IsRequired();
             builder
                 .Property(x => x.Description)
                 .HasColumnName("description")
-                .HasColumnType("VARCHAR(5000)")
+                .HasColumnType("varchar(5000)")
                 .HasMaxLength(5000)
                 .IsRequired(false);
             builder
                 .Property(x => x.GroupId)
                 .HasColumnName("group_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired(false);
             builder.Property(x => x.Status).HasColumnName("status");
@@ -44,14 +44,14 @@
             builder
                 .Property(x => x.ThumbnailUrl)
                 .HasColumnName("thumbnail_url")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .HasMaxLength(500)
                 .IsRequired(false);
             builder.Property(x => x.Duration).HasColumnName("duration");
             builder
                 .Property(x => x.LevelId)
                 .HasColumnName("level_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .IsRequired();
             builder
                 .Property(x => x.StartDate)

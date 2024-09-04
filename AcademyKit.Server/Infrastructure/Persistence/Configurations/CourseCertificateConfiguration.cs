@@ -13,13 +13,13 @@
             builder
                 .Property(x => x.Title)
                 .HasColumnName("title")
-                .HasColumnType("VARCHAR(100)")
+                .HasColumnType("varchar(100)")
                 .HasMaxLength(100)
                 .IsRequired();
             builder
                 .Property(x => x.CourseId)
                 .HasColumnName("course_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
@@ -35,7 +35,7 @@
             builder
                 .Property(x => x.SampleUrl)
                 .HasColumnName("sample_url")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .IsRequired(false);
 
             builder.ConfigureAuditFields();

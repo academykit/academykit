@@ -13,18 +13,18 @@
             builder
                 .Property(x => x.CourseId)
                 .HasColumnName("course_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.CurrentLessonId)
                 .HasColumnName("current_lesson_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50);
             builder
                 .Property(x => x.UserId)
                 .HasColumnName("user_id")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired();
             builder.Property(x => x.CurrentLessonWatched).HasColumnName("current_lesson_watched");
@@ -37,7 +37,7 @@
             builder
                 .Property(x => x.ActivityReason)
                 .HasColumnName("activity_reason")
-                .HasColumnType("VARCHAR(1000)")
+                .HasColumnType("varchar(1000)")
                 .HasMaxLength(1000)
                 .IsRequired(false);
             builder
@@ -53,7 +53,7 @@
             builder
                 .Property(x => x.DeletedBy)
                 .HasColumnName("deleted_by")
-                .HasColumnType("VARCHAR(50)")
+                .HasColumnType("varchar(50)")
                 .HasMaxLength(50)
                 .IsRequired(false);
             builder
@@ -68,7 +68,7 @@
             builder
                 .Property(x => x.CertificateUrl)
                 .HasColumnName("certificate_url")
-                .HasColumnType("VARCHAR(500)")
+                .HasColumnType("varchar(500)")
                 .HasMaxLength(500)
                 .IsRequired(false);
             builder
