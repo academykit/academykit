@@ -3,6 +3,7 @@ using AcademyKit.Application.Common.Exceptions;
 using AcademyKit.Application.Common.Interfaces;
 using AcademyKit.Application.Common.Models.RequestModels;
 using AcademyKit.Application.Common.Models.ResponseModels;
+using AcademyKit.Domain.Entities;
 using AcademyKit.Infrastructure.Localization;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -163,14 +164,12 @@ public class SettingsController : BaseApiController
     }
 
     /// <summary>
-    /// update zoom settings.
+    /// Create or update zoom settings.
     /// </summary>
-    /// <param name="id"> the zoom setting id.</param>
-    /// <param name="model"> the  instance of <see cref="ZoomSettingRequestModel" /> .</param>
-    /// <returns> the instance of <see cref="ZoomSettingResponseModel" /> .</returns>
-    [HttpPut("zoom/{id}")]
-    public async Task<ZoomSettingResponseModel> UpdateZoomSetting(
-        Guid id,
+    /// <param name="model">The instance of <see cref="ZoomSettingRequestModel"/>.</param>
+    /// <returns>The instance of <see cref="ZoomSettingResponseModel"/>.</returns>
+    [HttpPost("zoom")]
+    public async Task<ZoomSettingResponseModel> CreateUpdateZoomSetting(
         ZoomSettingRequestModel model
     )
     {
@@ -179,28 +178,34 @@ public class SettingsController : BaseApiController
         await zoomSettingValidator
             .ValidateAsync(model, options => options.ThrowOnFailures())
             .ConfigureAwait(false);
-        var existing = await zoomSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
 
-        if (existing == null)
-        {
-            logger.LogWarning("Zoom setting with id : {id} was not found.", id);
-            throw new EntityNotFoundException(localizer.GetString("ZoomSettingNotFound"));
-        }
-
+        var existing = await zoomSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
         var currentTimeStamp = DateTime.UtcNow;
 
-        existing.Id = existing.Id;
-        existing.SdkKey = model.SdkKey;
-        existing.SdkSecret = model.SdkSecret;
-        existing.WebHookSecret = model.WebhookSecret;
-        existing.IsRecordingEnabled = model.IsRecordingEnabled;
-        existing.UpdatedBy = CurrentUser.Id;
-        existing.UpdatedOn = currentTimeStamp;
-        existing.OAuthAccountId = model.OAuthAccountId;
-        existing.OAuthClientId = model.OAuthClientId;
-        existing.OAuthClientSecret = model.OAuthClientSecret;
+        var zoomSetting =
+            existing
+            ?? new ZoomSetting
+            {
+                Id = Guid.NewGuid(),
+                CreatedBy = CurrentUser.Id,
+                CreatedOn = currentTimeStamp
+            };
 
-        var savedEntity = await zoomSettingService.UpdateAsync(existing).ConfigureAwait(false);
+        zoomSetting.SdkKey = model.SdkKey;
+        zoomSetting.SdkSecret = model.SdkSecret;
+        zoomSetting.WebHookSecret = model.WebhookSecret;
+        zoomSetting.IsRecordingEnabled = model.IsRecordingEnabled;
+        zoomSetting.OAuthAccountId = model.OAuthAccountId;
+        zoomSetting.OAuthClientId = model.OAuthClientId;
+        zoomSetting.OAuthClientSecret = model.OAuthClientSecret;
+        zoomSetting.UpdatedBy = CurrentUser.Id;
+        zoomSetting.UpdatedOn = currentTimeStamp;
+
+        var savedEntity =
+            existing == null
+                ? await zoomSettingService.CreateAsync(zoomSetting).ConfigureAwait(false)
+                : await zoomSettingService.UpdateAsync(zoomSetting).ConfigureAwait(false);
+
         return new ZoomSettingResponseModel(savedEntity);
     }
 
@@ -217,14 +222,12 @@ public class SettingsController : BaseApiController
     }
 
     /// <summary>
-    /// update SMTP settings.
+    /// create or update SMTP settings.
     /// </summary>
-    /// <param name="id"> the SMTP setting id.</param>
     /// <param name="model"> the  instance of <see cref="SMTPSettingRequestModel" /> .</param>
     /// <returns> the instance of <see cref="SMTPSettingResponseModel" /> .</returns>
-    [HttpPut("smtp/{id}")]
-    public async Task<SMTPSettingResponseModel> UpdateSMTPSetting(
-        Guid id,
+    [HttpPost("smtp")]
+    public async Task<SMTPSettingResponseModel> CreateUpdateSMTPSetting(
         SMTPSettingRequestModel model
     )
     {
@@ -233,30 +236,35 @@ public class SettingsController : BaseApiController
         await smtpSettingValidator
             .ValidateAsync(model, options => options.ThrowOnFailures())
             .ConfigureAwait(false);
-        var existing = await smtpSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
 
-        if (existing == null)
-        {
-            logger.LogWarning("SMTP setting with id : {id} was not found.", id);
-            throw new EntityNotFoundException(localizer.GetString("SMTPSettingNotFound"));
-        }
-
+        var existing = await smtpSettingService.GetFirstOrDefaultAsync().ConfigureAwait(false);
         var currentTimeStamp = DateTime.UtcNow;
 
-        existing.Id = existing.Id;
-        existing.MailPort = model.MailPort;
-        existing.MailServer = model.MailServer;
-        existing.ReplyTo = model.ReplyTo;
-        existing.SenderName = model.SenderName;
-        existing.SenderEmail = model.SenderEmail;
-        existing.UserName = model.UserName;
-        existing.ReplyTo = model.ReplyTo;
-        existing.Password = model.Password;
-        existing.UseSSL = model.UseSSL;
-        existing.UpdatedBy = CurrentUser.Id;
-        existing.UpdatedOn = currentTimeStamp;
+        var smtpSetting =
+            existing
+            ?? new SMTPSetting
+            {
+                Id = Guid.NewGuid(),
+                CreatedBy = CurrentUser.Id,
+                CreatedOn = currentTimeStamp
+            };
 
-        var savedEntity = await smtpSettingService.UpdateAsync(existing).ConfigureAwait(false);
+        smtpSetting.MailPort = model.MailPort;
+        smtpSetting.MailServer = model.MailServer;
+        smtpSetting.ReplyTo = model.ReplyTo;
+        smtpSetting.SenderName = model.SenderName;
+        smtpSetting.SenderEmail = model.SenderEmail;
+        smtpSetting.UserName = model.UserName;
+        smtpSetting.Password = model.Password;
+        smtpSetting.UseSSL = model.UseSSL;
+        smtpSetting.UpdatedBy = CurrentUser.Id;
+        smtpSetting.UpdatedOn = currentTimeStamp;
+
+        var savedEntity =
+            existing == null
+                ? await smtpSettingService.CreateAsync(smtpSetting).ConfigureAwait(false)
+                : await smtpSettingService.UpdateAsync(smtpSetting).ConfigureAwait(false);
+
         return new SMTPSettingResponseModel(savedEntity);
     }
 
