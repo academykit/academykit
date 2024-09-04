@@ -8,6 +8,7 @@ import {
   Center,
   Container,
   Group,
+  Loader,
   Paper,
   PasswordInput,
   Text,
@@ -128,118 +129,134 @@ const LoginPage = () => {
 
   return (
     <Container size={420} my={40}>
-      <Logo
-        height={50}
-        width={140}
-        url={companySettings?.data?.data?.imageUrl}
-      />
-      <Title
-        ta="center"
-        style={(theme) => ({
-          fontFamily: theme.fontFamily,
-          fontWeight: 900,
-        })}
-      >
-        {t("welcome_back")}!
-      </Title>
-      <form onSubmit={form.onSubmit(onFormSubmit)}>
-        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <CustomTextFieldWithAutoFocus
-            {...form.getInputProps("email")}
-            autoComplete={"username"}
-            label={t("email")}
-            type={"email"}
-            placeholder={t("your_email") as string}
-            name="email"
+      {companySettings.isSuccess &&
+      companySettings?.data?.data?.isSetupCompleted ? (
+        <>
+          <Logo
+            height={50}
+            width={140}
+            url={companySettings?.data?.data?.imageUrl}
           />
-          <PasswordInput
-            {...form.getInputProps("password")}
-            label={t("password")}
-            autoComplete={"password"}
-            placeholder={t("your_password") as string}
-            mt="md"
-            name="password"
-          />
-          <Group justify="flex-end" mt={10}>
-            <Link to={RoutePath.forgotPassword}>
-              <Anchor
-                component="button"
-                ta="end"
-                type="button"
-                c="dimmed"
-                size="xs"
+          <Title
+            ta="center"
+            style={(theme) => ({
+              fontFamily: theme.fontFamily,
+              fontWeight: 900,
+            })}
+          >
+            {t("welcome_back")}!
+          </Title>
+          <form onSubmit={form.onSubmit(onFormSubmit)}>
+            <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+              <CustomTextFieldWithAutoFocus
+                {...form.getInputProps("email")}
+                autoComplete={"username"}
+                label={t("email")}
+                type={"email"}
+                placeholder={t("your_email") as string}
+                name="email"
+              />
+              <PasswordInput
+                {...form.getInputProps("password")}
+                label={t("password")}
+                autoComplete={"password"}
+                placeholder={t("your_password") as string}
+                mt="md"
+                name="password"
+              />
+              <Group justify="flex-end" mt={10}>
+                <Link to={RoutePath.forgotPassword}>
+                  <Anchor
+                    component="button"
+                    ta="end"
+                    type="button"
+                    c="dimmed"
+                    size="xs"
+                  >
+                    {t("forgot_password")}?
+                  </Anchor>
+                </Link>
+              </Group>
+              <Button loading={login.isPending} fullWidth mt="xl" type="submit">
+                {t("sign_in")}
+              </Button>
+            </Paper>
+          </form>
+          <Center my={18}>
+            <Text size="sm">
+              {t("create_new_agreement")}{" "}
+              <Link to={"/"}>{t("terms_service")}</Link>,{" "}
+              <Link to={"/"}>{t("privacy_policy")}</Link>,{" "}
+              {t("and_our_default")}{" "}
+              <Link to={"/"}>{t("notification_settings")}</Link>.
+            </Text>
+          </Center>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              marginTop: 5,
+            }}
+          >
+            <div
+              style={{
+                flex: "1",
+                height: "1px",
+                width: "100%",
+                background: "black",
+              }}
+            />
+            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
+              {t("or_sign_in_with")}
+            </Text>
+            <div
+              style={{
+                flex: "1",
+                height: "1px",
+                width: "100%",
+                background: "black",
+              }}
+            />
+          </div>
+          <Center style={{ gap: 30, marginTop: 5 }}>
+            <form action={api.auth.googleSignIn} method="get">
+              <button
+                style={{
+                  border: "none",
+                  margin: "0",
+                  padding: "0",
+                  background: "transparent",
+                  cursor: "pointer",
+                }}
+                type="submit"
               >
-                {t("forgot_password")}?
-              </Anchor>
-            </Link>
-          </Group>
-          <Button loading={login.isPending} fullWidth mt="xl" type="submit">
-            {t("sign_in")}
-          </Button>
-        </Paper>
-      </form>
-      <Center my={18}>
-        <Text size="sm">
-          {t("create_new_agreement")} <Link to={"/"}>{t("terms_service")}</Link>
-          , <Link to={"/"}>{t("privacy_policy")}</Link>, {t("and_our_default")}{" "}
-          <Link to={"/"}>{t("notification_settings")}</Link>.
-        </Text>
-      </Center>
-      <div
-        style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 5 }}
-      >
-        <div
-          style={{
-            flex: "1",
-            height: "1px",
-            width: "100%",
-            background: "black",
-          }}
-        />
-        <Text size="sm" style={{ whiteSpace: "nowrap" }}>
-          {t("or_sign_in_with")}
-        </Text>
-        <div
-          style={{
-            flex: "1",
-            height: "1px",
-            width: "100%",
-            background: "black",
-          }}
-        />
-      </div>
-      <Center style={{ gap: 30, marginTop: 5 }}>
-        <form action={api.auth.googleSignIn} method="get">
-          <button
-            style={{
-              border: "none",
-              margin: "0",
-              padding: "0",
-              background: "transparent",
-              cursor: "pointer",
-            }}
-            type="submit"
-          >
-            {" "}
-            <Google height={28} width={28} />{" "}
-          </button>
-        </form>
-        <form action={api.auth.microsoftSignIn} method="get">
-          <button
-            style={{
-              border: "none",
-              margin: "0",
-              padding: "0",
-              background: "transparent",
-              cursor: "pointer",
-            }}
-            type="submit"
-          >
-            {" "}
-            <Microsoft height={28} width={28} />
-          </button>
-        </form>
-      </Center>
+                {" "}
+                <Google height={28} width={28} />{" "}
+              </button>
+            </form>
+            <form action={api.auth.microsoftSignIn} method="get">
+              <button
+                style={{
+                  border: "none",
+                  margin: "0",
+                  padding: "0",
+                  background: "transparent",
+                  cursor: "pointer",
+                }}
+                type="submit"
+              >
+                {" "}
+                <Microsoft height={28} width={28} />
+              </button>
+            </form>
+          </Center>
+        </>
+      ) : (
+        <div>
+          <Loader />
+        </div>
+      )}
     </Container>
   );
 };

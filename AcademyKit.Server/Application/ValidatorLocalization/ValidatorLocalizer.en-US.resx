@@ -202,6 +202,9 @@
   <data name="DescriptionLength500" xml:space="preserve">
     <value>Description length must be less than or equal to 5000 characters.</value>
   </data>
+  <data name="ContentLength500" xml:space="preserve">
+    <value>Content length must be less than or equal to 5000 characters.</value>
+  </data>
   <data name="DesignationLength50" xml:space="preserve">
     <value>Designation length should be less than or equal to 50.</value>
   </data>

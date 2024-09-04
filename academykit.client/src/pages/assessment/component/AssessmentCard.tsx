@@ -256,7 +256,7 @@ const AssessmentCard = ({
             navigate(RoutePath.assessment.description(data.slug).route)
           }
         >
-          {t("watch")}
+          {t("view_assessment")}
         </Button>
       </Card>
     </>

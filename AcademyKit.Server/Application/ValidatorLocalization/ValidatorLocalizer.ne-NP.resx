@@ -202,6 +202,9 @@
   <data name="DescriptionLength500" xml:space="preserve">
     <value>वर्णन लम्बाइ 5000 वर्ण भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
+  <data name="ContentLength500" xml:space="preserve">
+    <value>सामग्रीको लम्बाइ ५००० अक्षर वा सोभन्दा कम हुनुपर्छ।</value>
+  </data>
   <data name="DesignationLength50" xml:space="preserve">
     <value>पदनाम लम्बाइ 50 भन्दा कम वा बराबर हुनुपर्छ।</value>
   </data>
