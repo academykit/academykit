@@ -26,25 +26,10 @@ import { Link, Outlet } from "react-router-dom";
 import { AppFooter } from "./AppFooter";
 import { LeftMainLinks } from "./LeftMainLink";
 import classes from "./styles/layout.module.css";
+import { setHeader } from "@utils/setHeader";
 
 const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
   const settings = useGeneralSetting();
-
-  const setHeader = () => {
-    const info =
-      localStorage.getItem("app-info") &&
-      JSON.parse(localStorage.getItem("app-info") ?? "");
-    if (info) {
-      let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
-      document.title = info.name;
-      if (!link) {
-        link = document.createElement("link");
-        link.rel = "icon";
-        document.getElementsByTagName("head")[0].appendChild(link);
-      }
-      link.href = info.logo;
-    }
-  };
 
   useEffect(() => {
     setHeader();
