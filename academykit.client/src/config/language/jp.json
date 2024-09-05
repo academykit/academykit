@@ -1185,5 +1185,6 @@
   "post_mail_success": "メールが正常に追加されました",
   "lesson_name_required": "レッスン名は必須です。",
   "externalUrl": "外部URL",
-  "externalUrl_required": "外部URLは必須です。"
+  "externalUrl_required": "外部URLは必須です。",
+  "mail_deleted": "メールが正常に削除されました。"
 }
