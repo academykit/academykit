@@ -1,3 +1,4 @@
+import Logo from "@components/Logo";
 import UserProfileMenu from "@components/UserProfileMenu";
 import useCustomLayout from "@context/LayoutProvider";
 import useAuth from "@hooks/useAuth";
@@ -15,6 +16,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconInfoSquare } from "@tabler/icons-react";
+import { checkValidUrl } from "@utils/checkValidUrl";
 import { UserRole } from "@utils/enums";
 import { useGeneralSetting } from "@utils/services/adminService";
 import { IUser } from "@utils/services/types";
@@ -115,7 +117,19 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
                 size="sm"
               />
               <Link to="/" style={{ marginTop: "5px" }}>
-                <img height={50} src={settings.data?.data?.logoUrl} alt="" />
+                {checkValidUrl(settings.data?.data?.logoUrl) ? (
+                  <img
+                    height={50}
+                    src={settings.data?.data?.logoUrl}
+                    alt={settings.data?.data?.companyName}
+                  />
+                ) : (
+                  <Logo
+                    url={settings.data?.data?.logoUrl}
+                    height={0}
+                    width={0}
+                  />
+                )}
               </Link>
             </Group>
             {auth?.auth && (
