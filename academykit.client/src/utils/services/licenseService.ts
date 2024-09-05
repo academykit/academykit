@@ -8,6 +8,10 @@ export interface ILicense {
   valid: string;
   licenseKey: string;
   checkoutUrl: string;
+  activatedOn: string;
+  expiredOn: string;
+  variantName: string;
+  variantId: number;
 }
 
 const licenseValidation = (licenseKey: string) =>
@@ -37,14 +41,17 @@ export const useCheckoutLicense = () => {
 
 const getLicense = () => httpClient.get<ILicense[]>(api.license.list);
 
-export const getLicenses = () =>
+export const getLicenses = (forceEnabled?: boolean) =>
   useQuery({
     queryKey: [api.license.list],
     queryFn: () => getLicense(),
     select: (data) => data.data,
-    enabled: !!(
-      localStorage.getItem(TOKEN_STORAGE) && !localStorage.getItem(LICENSE_KEY)
-    ),
+    enabled:
+      forceEnabled ??
+      !!(
+        localStorage.getItem(TOKEN_STORAGE) &&
+        !localStorage.getItem(LICENSE_KEY)
+      ),
   });
 
 export const useActivateLicense = () => {

@@ -1,28 +1,21 @@
 import { Button, Container, Group, Text, TextInput } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import { LICENSE_KEY } from "@utils/constants";
 // import { useLicenseKey, useUpdateLicenseKey } from "@utils/services/licenseService";
 import errorType from "@utils/services/axiosError";
 import {
+  getLicenses,
   useCheckoutLicense,
   useUpdateLicense,
 } from "@utils/services/licenseService";
 import { t } from "i18next";
+import { useEffect } from "react";
 import * as Yup from "yup";
 
 const LicenseManagement = () => {
-  // const formData = useLicenseKey();
-  // const updateLicenseKey = useUpdateLicenseKey();
-  const licenseToken = localStorage.getItem(LICENSE_KEY);
   const { mutateAsync, isPending } = useCheckoutLicense();
+  const { data: licenses } = getLicenses(true);
   const updateLicenseKey = useUpdateLicense();
-
-  // useEffect(() => {
-  //     form.setValues({
-  //         key: formData.data?.key ?? "",
-  //     });
-  // }, [formData.isSuccess]);
 
   const schema = () => {
     return Yup.object().shape({
@@ -32,10 +25,18 @@ const LicenseManagement = () => {
 
   const form = useForm({
     initialValues: {
-      licenseKey: licenseToken ?? "",
+      licenseKey: "",
     },
     validate: yupResolver(schema()),
   });
+
+  useEffect(() => {
+    if (licenses?.length) {
+      form.setValues({
+        licenseKey: licenses[0].licenseKey,
+      });
+    }
+  }, [licenses]);
 
   const handleSubmit = async (values: { licenseKey: string }) => {
     try {
@@ -43,7 +44,7 @@ const LicenseManagement = () => {
         licenseKey: values.licenseKey,
       });
       showNotification({
-        message: t("update_license_key_success"),
+        message: t("license_updated_successfully"),
       });
     } catch (err) {
       const error = errorType(err);
@@ -65,14 +66,26 @@ const LicenseManagement = () => {
     }
   };
 
+  const activeLicense = licenses?.length ? licenses[0] : null;
+
   return (
     <>
       <Text fw={700} size="xl">
         {t("license_management")}
       </Text>
-      <Text size="sm" mb={10}>
-        {t("license_activated_on")}
-      </Text>
+      {activeLicense ? (
+        <>
+          <Text size="sm" mb={10}>
+            {t("license_activated_on")}{" "}
+            {activeLicense.activatedOn.split("T")[0]}
+          </Text>
+          <Text size="sm" mb={10}>
+            {t("license_expires_in")}: {activeLicense.expiredOn.split("T")[0]}
+          </Text>
+        </>
+      ) : (
+        <Text c="red">{t("no_active_license")}</Text>
+      )}
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Container
           size={450}
