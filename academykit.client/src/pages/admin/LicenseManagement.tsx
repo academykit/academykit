@@ -10,7 +10,6 @@ import {
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { IconCalendar, IconClock, IconLicense } from "@tabler/icons-react";
-// import { useLicenseKey, useUpdateLicenseKey } from "@utils/services/licenseService";
 import errorType from "@utils/services/axiosError";
 import {
   getLicenses,
