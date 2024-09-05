@@ -1185,5 +1185,7 @@
   "license_management": "लाइसेंस प्रबंधन",
   "enter_new_license_key": "नयाँ लाइसेंस कुंजी प्रविष्ट गर्नुहोस्।",
   "license_activated_on": "लाइसेंस सक्रिय भएको",
-  "license_updated_successfully": "लाइसेंस सफलतापूर्वक अपडेट गरियो"
+  "license_updated_successfully": "लाइसेंस सफलतापूर्वक अपडेट गरियो।",
+  "license_expires_in": "लाइसेंस किताब हो।",
+  "current_plan": "वर्तमान योजना"
 }

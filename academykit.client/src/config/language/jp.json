@@ -1184,5 +1184,7 @@
   "license_management": "ライセンス管理",
   "enter_new_license_key": "新しいライセンスキーを入力してください",
   "license_activated_on": "ライセンスが有効化された日",
-  "license_updated_successfully": "ライセンスが正常に更新されました"
+  "license_updated_successfully": "ライセンスが正常に更新されました",
+  "license_expires_in": "ライセンスの有効期限",
+  "current_plan": "現在のプラン"
 }

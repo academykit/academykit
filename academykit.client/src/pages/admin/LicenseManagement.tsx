@@ -1,6 +1,15 @@
-import { Button, Container, Group, Text, TextInput } from "@mantine/core";
+import {
+  Badge,
+  Button,
+  Container,
+  Group,
+  Stack,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
+import { IconCalendar, IconClock, IconLicense } from "@tabler/icons-react";
 // import { useLicenseKey, useUpdateLicenseKey } from "@utils/services/licenseService";
 import errorType from "@utils/services/axiosError";
 import {
@@ -74,17 +83,33 @@ const LicenseManagement = () => {
         {t("license_management")}
       </Text>
       {activeLicense ? (
-        <>
-          <Text size="sm" mb={10}>
-            {t("license_activated_on")}{" "}
-            {activeLicense.activatedOn.split("T")[0]}
-          </Text>
-          <Text size="sm" mb={10}>
-            {t("license_expires_in")}: {activeLicense.expiredOn.split("T")[0]}
-          </Text>
-        </>
+        <Stack gap="xs" p={"lg"} mt={30} mb="md">
+          <Group gap="xs">
+            <IconCalendar size={18} />
+            <Text size="sm">
+              {t("license_activated_on")}:{" "}
+              <strong>{activeLicense.activatedOn.split("T")[0]}</strong>
+            </Text>
+          </Group>
+          <Group gap="xs">
+            <IconClock size={18} />
+            <Text size="sm">
+              {t("license_expires_in")}:{" "}
+              <strong>{activeLicense.expiredOn.split("T")[0]}</strong>
+            </Text>
+          </Group>
+          <Group gap="xs">
+            <IconLicense size={18} />
+            <Text size="sm">
+              {t("current_plan")}:{" "}
+              <Badge color="blue">{activeLicense.variantName}</Badge>
+            </Text>
+          </Group>
+        </Stack>
       ) : (
-        <Text c="red">{t("no_active_license")}</Text>
+        <Text c="red" mb="md">
+          {t("no_active_license")}
+        </Text>
       )}
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Container
