@@ -39,7 +39,7 @@ export const useCheckoutLicense = () => {
   });
 };
 
-const getLicense = () => httpClient.get<ILicense[]>(api.license.list);
+const getLicense = () => httpClient.get<ILicense>(api.license.list);
 
 export const getLicenses = (forceEnabled?: boolean) =>
   useQuery({
@@ -76,7 +76,7 @@ export const useUpdateLicense = () => {
     mutationKey: [api.license.update],
 
     mutationFn: ({ licenseKey }: { licenseKey: string }) => {
-      return httpClient.post<ILicense>(api.license.update, { licenseKey });
+      return httpClient.put<ILicense>(api.license.update, { licenseKey });
     },
 
     onSuccess: (data) => {

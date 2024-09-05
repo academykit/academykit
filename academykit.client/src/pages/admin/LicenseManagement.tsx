@@ -40,12 +40,12 @@ const LicenseManagement = () => {
   });
 
   useEffect(() => {
-    if (licenses?.length) {
+    if (licenses?.licenseKey) {
       form.setValues({
-        licenseKey: licenses[0].licenseKey,
+        licenseKey: licenses.licenseKey,
       });
     }
-  }, [licenses]);
+  }, [licenses?.licenseKey]);
 
   const handleSubmit = async (values: { licenseKey: string }) => {
     try {
@@ -75,42 +75,35 @@ const LicenseManagement = () => {
     }
   };
 
-  const activeLicense = licenses?.length ? licenses[0] : null;
-
   return (
     <>
       <Text fw={700} size="xl">
         {t("license_management")}
       </Text>
-      {activeLicense ? (
-        <Stack gap="xs" p={"lg"} mt={30} mb="md">
-          <Group gap="xs">
-            <IconCalendar size={18} />
-            <Text size="sm">
-              {t("license_activated_on")}:{" "}
-              <strong>{activeLicense.activatedOn.split("T")[0]}</strong>
-            </Text>
-          </Group>
-          <Group gap="xs">
-            <IconClock size={18} />
-            <Text size="sm">
-              {t("license_expires_in")}:{" "}
-              <strong>{activeLicense.expiredOn.split("T")[0]}</strong>
-            </Text>
-          </Group>
-          <Group gap="xs">
-            <IconLicense size={18} />
-            <Text size="sm">
-              {t("current_plan")}:{" "}
-              <Badge color="blue">{activeLicense.variantName}</Badge>
-            </Text>
-          </Group>
-        </Stack>
-      ) : (
-        <Text c="red" mb="md">
-          {t("no_active_license")}
-        </Text>
-      )}
+
+      <Stack gap="xs" p={"lg"} mt={30} mb="md">
+        <Group gap="xs">
+          <IconCalendar size={18} />
+          <Text size="sm">
+            {t("license_activated_on")}:{" "}
+            <strong>{licenses?.activatedOn?.split("T")[0]}</strong>
+          </Text>
+        </Group>
+        <Group gap="xs">
+          <IconClock size={18} />
+          <Text size="sm">
+            {t("license_expires_in")}:{" "}
+            <strong>{licenses?.expiredOn?.split("T")[0]}</strong>
+          </Text>
+        </Group>
+        <Group gap="xs">
+          <IconLicense size={18} />
+          <Text size="sm">
+            {t("current_plan")}:{" "}
+            <Badge color="blue">{licenses?.variantName}</Badge>
+          </Text>
+        </Group>
+      </Stack>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Container
           size={450}
@@ -128,7 +121,7 @@ const LicenseManagement = () => {
           />
 
           <Group>
-            <Button type="submit">{t("upgrade")}</Button>
+            <Button type="submit">{t("update")}</Button>
             <Button
               loading={isPending}
               variant="outline"

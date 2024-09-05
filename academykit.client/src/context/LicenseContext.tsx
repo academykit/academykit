@@ -30,8 +30,8 @@ const LicenseProvider: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     if (licenseKeys.isSuccess) {
-      if (licenseKeys.data?.length) {
-        localStorage.setItem(LICENSE_KEY, licenseKeys.data[0]?.licenseKey);
+      if (licenseKeys?.data?.licenseKey) {
+        localStorage.setItem(LICENSE_KEY, licenseKeys.data.licenseKey);
       } else {
         setIsValid(false);
       }

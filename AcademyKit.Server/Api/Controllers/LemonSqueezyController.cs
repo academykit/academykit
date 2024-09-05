@@ -119,11 +119,11 @@ public class LemonSqueezyController : BaseApiController
     /// <returns>The list of licenses.</returns>
     [HttpGet("license")]
     [AllowAnonymous]
-    public IActionResult GetLicenseAsync()
+    public async Task<IActionResult> GetLicenseAsync()
     {
         try
         {
-            var data = _unitOfWork.GetRepository<License>().GetAll();
+            var data = await _unitOfWork.GetRepository<License>().GetFirstOrDefaultAsync().ConfigureAwait(false);
             return Ok(data);
         }
         catch (Exception ex)
@@ -167,6 +167,23 @@ public class LemonSqueezyController : BaseApiController
         try
         {
             var response = await SendLemonSqueezyRequest("/v1/licenses/validate", model.LicenseKey);
+            if (!response.IsSuccessful)
+            {
+                return StatusCode(404, new { message = "Please enter valid key." });
+            }
+            var licenseResponse = JsonConvert.DeserializeObject<LemonSqueezyResponseModel>(
+           response.Content
+       );
+            if (!licenseResponse.Activated)
+            {
+                var activateResponse = await SendLemonSqueezyRequest(
+               "/v1/licenses/activate",
+               model.LicenseKey,
+               CurrentUser.Id
+           );
+                return await ProcessLicenseResponse(activateResponse, model.LicenseKey, true);
+            }
+
             return await ProcessLicenseResponse(response, model.LicenseKey, true);
         }
         catch (Exception ex)
