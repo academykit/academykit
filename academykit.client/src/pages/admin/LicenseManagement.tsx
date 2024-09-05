@@ -121,7 +121,7 @@ const LicenseManagement = () => {
           />
 
           <Group>
-            <Button type="submit">{t("update")}</Button>
+            <Button type="submit">{t("save")}</Button>
             <Button
               loading={isPending}
               variant="outline"

@@ -3,8 +3,10 @@ using AcademyKit.Application.Common.Models.RequestModels;
 using AcademyKit.Application.Common.Models.ResponseModels;
 using AcademyKit.Domain.Entities;
 using AcademyKit.Infrastructure.Common;
+using AcademyKit.Infrastructure.Localization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -19,44 +21,24 @@ public class LemonSqueezyController : BaseApiController
     private readonly string _lemonSqueezyCheckoutKey;
     private readonly string _lemonSqueezyCheckoutUrl;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IStringLocalizer<ExceptionLocalizer> _stringLocalizer;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LemonSqueezyController"/> class.
     /// </summary>
     /// <param name="configuration">The application configuration.</param>
     /// <param name="unitOfWork">The unit of work for database operations.</param>
-    public LemonSqueezyController(IConfiguration configuration, IUnitOfWork unitOfWork)
+    public LemonSqueezyController(
+        IConfiguration configuration,
+        IUnitOfWork unitOfWork,
+        IStringLocalizer<ExceptionLocalizer> stringLocalizer
+    )
     {
         _lemonSqueezyBaseUrl = configuration["LEMON_SQUEEZY:BASE_URL"];
         _lemonSqueezyCheckoutKey = configuration["LEMON_SQUEEZY:CHECKOUT_KEY"];
         _lemonSqueezyCheckoutUrl = configuration["LEMON_SQUEEZY:CHECKOUT_URL"];
         _unitOfWork = unitOfWork;
-    }
-
-    /// <summary>
-    /// Sends a request to the Lemon Squeezy API.
-    /// </summary>
-    /// <param name="endpoint">The API endpoint.</param>
-    /// <param name="licenseKey">The license key.</param>
-    /// <param name="instanceName">The optional instance name.</param>
-    /// <returns>The API response.</returns>
-    private async Task<RestResponse> SendLemonSqueezyRequest(
-        string endpoint,
-        string licenseKey,
-        Guid? instanceName = null
-    )
-    {
-        var client = new RestClient(_lemonSqueezyBaseUrl);
-        var request = new RestRequest(endpoint)
-            .AddQueryParameter("license_key", licenseKey)
-            .AddHeader("Accept", "application/json");
-
-        if (instanceName.HasValue)
-        {
-            request.AddQueryParameter("instance_name", instanceName.ToString());
-        }
-
-        return await client.PostAsync(request);
+        _stringLocalizer = stringLocalizer;
     }
 
     /// <summary>
@@ -123,7 +105,10 @@ public class LemonSqueezyController : BaseApiController
     {
         try
         {
-            var data = await _unitOfWork.GetRepository<License>().GetFirstOrDefaultAsync().ConfigureAwait(false);
+            var data = await _unitOfWork
+                .GetRepository<License>()
+                .GetFirstOrDefaultAsync()
+                .ConfigureAwait(false);
             return Ok(data);
         }
         catch (Exception ex)
@@ -169,18 +154,19 @@ public class LemonSqueezyController : BaseApiController
             var response = await SendLemonSqueezyRequest("/v1/licenses/validate", model.LicenseKey);
             if (!response.IsSuccessful)
             {
-                return StatusCode(404, new { message = "Please enter valid key." });
+                return NotFound(new { message = _stringLocalizer.GetString("InvalidKey").Value });
             }
+
             var licenseResponse = JsonConvert.DeserializeObject<LemonSqueezyResponseModel>(
-           response.Content
-       );
-            if (!licenseResponse.Activated)
+                response.Content
+            );
+            if (licenseResponse.LicenseKey.Status.ToLower() != "active")
             {
                 var activateResponse = await SendLemonSqueezyRequest(
-               "/v1/licenses/activate",
-               model.LicenseKey,
-               CurrentUser.Id
-           );
+                    "/v1/licenses/activate",
+                    model.LicenseKey,
+                    CurrentUser.Id
+                );
                 return await ProcessLicenseResponse(activateResponse, model.LicenseKey, true);
             }
 
@@ -190,6 +176,32 @@ public class LemonSqueezyController : BaseApiController
         {
             return StatusCode(500, new { message = ex.Message });
         }
+    }
+
+    /// <summary>
+    /// Sends a request to the Lemon Squeezy API.
+    /// </summary>
+    /// <param name="endpoint">The API endpoint.</param>
+    /// <param name="licenseKey">The license key.</param>
+    /// <param name="instanceName">The optional instance name.</param>
+    /// <returns>The API response.</returns>
+    private async Task<RestResponse> SendLemonSqueezyRequest(
+        string endpoint,
+        string licenseKey,
+        Guid? instanceName = null
+    )
+    {
+        var client = new RestClient(_lemonSqueezyBaseUrl);
+        var request = new RestRequest(endpoint)
+            .AddQueryParameter("license_key", licenseKey)
+            .AddHeader("Accept", "application/json");
+
+        if (instanceName.HasValue)
+        {
+            request.AddQueryParameter("instance_name", instanceName.ToString());
+        }
+
+        return await client.PostAsync(request);
     }
 
     /// <summary>
@@ -239,27 +251,30 @@ public class LemonSqueezyController : BaseApiController
     {
         var existingLicense = await _unitOfWork
             .GetRepository<License>()
-            .GetFirstOrDefaultAsync(predicate: l => l.LicenseKey == licenseKey);
+            .GetFirstOrDefaultAsync()
+            .ConfigureAwait(false);
+
+        var license =
+            existingLicense != null
+                ? existingLicense
+                : new License
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedBy = CurrentUser.Id,
+                    CreatedOn = DateTime.UtcNow,
+                };
+
+        UpdateLicenseProperties(license, response, licenseKey);
 
         if (existingLicense == null)
         {
-            existingLicense = new License
-            {
-                Id = Guid.NewGuid(),
-                CreatedBy = CurrentUser.Id,
-                CreatedOn = DateTime.UtcNow,
-            };
-            await _unitOfWork.GetRepository<License>().InsertAsync(existingLicense);
+            await _unitOfWork.GetRepository<License>().InsertAsync(license).ConfigureAwait(false);
         }
         else
         {
-            existingLicense.UpdatedOn = DateTime.UtcNow;
-            existingLicense.UpdatedBy = CurrentUser.Id;
+            _unitOfWork.GetRepository<License>().Update(license);
         }
-
-        UpdateLicenseProperties(existingLicense, response, licenseKey);
-        await _unitOfWork.SaveChangesAsync();
-
+        await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         return existingLicense;
     }
 

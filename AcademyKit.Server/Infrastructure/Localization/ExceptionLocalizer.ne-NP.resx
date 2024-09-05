@@ -1115,5 +1115,7 @@
   <data name="UnauthorizedEmailDomain" xml:space="preserve">
   <value>अनधिकृत इमेल डोमेन</value>
 </data>
-
+  <data name="InvalidKey" xml:space="preserve">
+    <value>कृपया मान्य कुञ्जी प्रविष्ट गर्नुहोस्।</value>
+  </data>
 </root>
