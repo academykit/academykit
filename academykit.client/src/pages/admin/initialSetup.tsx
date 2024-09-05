@@ -13,7 +13,6 @@ import {
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import { checkValidUrl } from "@utils/checkValidUrl";
 import RoutePath from "@utils/routeConstants";
 import {
   ISetupInitial,
@@ -97,22 +96,15 @@ const InitialSetup = () => {
   const companySettings = useCompanySetting();
 
   useEffect(() => {
-    setHeader();
-
     if (companySettings.isSuccess) {
       if (companySettings.data?.data?.isSetupCompleted) {
         return navigate("/login");
       }
-      localStorage.setItem(
-        "app-info",
-        JSON.stringify({
-          name: companySettings.data.data?.name ?? "AcademyKit",
-          logo: checkValidUrl(companySettings.data.data.imageUrl)
-            ? companySettings.data.data.imageUrl
-            : "/favicon.png",
-        })
-      );
-      setHeader();
+
+      setHeader({
+        name: companySettings.data.data?.name,
+        logoUrl: companySettings.data.data.imageUrl,
+      });
     }
   }, [companySettings.isSuccess]);
 

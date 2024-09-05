@@ -20,31 +20,25 @@ import { checkValidUrl } from "@utils/checkValidUrl";
 import { UserRole } from "@utils/enums";
 import { useGeneralSetting } from "@utils/services/adminService";
 import { IUser } from "@utils/services/types";
+import { setHeader } from "@utils/setHeader";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Outlet } from "react-router-dom";
 import { AppFooter } from "./AppFooter";
 import { LeftMainLinks } from "./LeftMainLink";
 import classes from "./styles/layout.module.css";
-import { setHeader } from "@utils/setHeader";
 
 const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
-  const settings = useGeneralSetting();
+  const generalSettings = useGeneralSetting();
 
   useEffect(() => {
-    setHeader();
-
-    if (settings.isSuccess) {
-      localStorage.setItem(
-        "app-info",
-        JSON.stringify({
-          name: settings.data.data.companyName,
-          logo: settings.data.data.logoUrl,
-        })
-      );
-      setHeader();
+    if (generalSettings.isSuccess) {
+      setHeader({
+        name: generalSettings.data.data.companyName,
+        logoUrl: generalSettings.data.data.logoUrl,
+      });
     }
-  }, [settings.isSuccess]);
+  }, [generalSettings.isSuccess]);
 
   const auth = useAuth();
 
@@ -102,15 +96,15 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
                 size="sm"
               />
               <Link to="/" style={{ marginTop: "5px" }}>
-                {checkValidUrl(settings.data?.data?.logoUrl) ? (
+                {checkValidUrl(generalSettings.data?.data?.logoUrl) ? (
                   <img
                     height={50}
-                    src={settings.data?.data?.logoUrl}
-                    alt={settings.data?.data?.companyName}
+                    src={generalSettings.data?.data?.logoUrl}
+                    alt={generalSettings.data?.data?.companyName}
                   />
                 ) : (
                   <Logo
-                    url={settings.data?.data?.logoUrl}
+                    url={generalSettings.data?.data?.logoUrl}
                     height={0}
                     width={0}
                   />
@@ -169,7 +163,9 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
         <Outlet />
       </AppShell.Main>
 
-      <AppFooter name={settings.data?.data?.companyName ?? ""}></AppFooter>
+      <AppFooter
+        name={generalSettings.data?.data?.companyName ?? ""}
+      ></AppFooter>
     </AppShell>
   );
 };

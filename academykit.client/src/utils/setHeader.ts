@@ -1,4 +1,12 @@
-export const setHeader = () => {
+import { checkValidUrl } from "./checkValidUrl";
+
+export const setHeader = ({
+  name,
+  logoUrl,
+}: {
+  name: string;
+  logoUrl: string;
+}) => {
   const info =
     localStorage.getItem("app-info") &&
     JSON.parse(localStorage.getItem("app-info") ?? "Academy kit");
@@ -12,4 +20,12 @@ export const setHeader = () => {
     }
     link.href = info.logo;
   }
+
+  localStorage.setItem(
+    "app-info",
+    JSON.stringify({
+      name: name ?? "AcademyKit",
+      logo: checkValidUrl(logoUrl) ? logoUrl : "/favicon.png",
+    })
+  );
 };

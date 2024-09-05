@@ -10,17 +10,16 @@ import {
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import { checkValidUrl } from "@utils/checkValidUrl";
 import RoutePath from "@utils/routeConstants";
 import { useCompanySetting } from "@utils/services/adminService";
 import { useForgotPassword } from "@utils/services/authService";
 import errorType from "@utils/services/axiosError";
+import { setHeader } from "@utils/setHeader";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import useAuth from "../../hooks/useAuth";
-import { setHeader } from "@utils/setHeader";
 
 const ForgotPassword = () => {
   const schema = () => {
@@ -70,22 +69,15 @@ const ForgotPassword = () => {
       navigate(from, { replace: true });
     }
   }, [auth?.auth]);
+
   const companySettings = useCompanySetting();
 
   useEffect(() => {
-    setHeader();
-
     if (companySettings.isSuccess) {
-      localStorage.setItem(
-        "app-info",
-        JSON.stringify({
-          name: companySettings.data.data?.name ?? "AcademyKit",
-          logo: checkValidUrl(companySettings.data.data.imageUrl)
-            ? companySettings.data.data.imageUrl
-            : "/favicon.png",
-        })
-      );
-      setHeader();
+      setHeader({
+        name: companySettings.data.data?.name,
+        logoUrl: companySettings.data.data.imageUrl,
+      });
     }
   }, [companySettings.isSuccess]);
 

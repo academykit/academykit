@@ -16,19 +16,18 @@ import {
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import { checkValidUrl } from "@utils/checkValidUrl";
 import RoutePath from "@utils/routeConstants";
 import { useCompanySetting } from "@utils/services/adminService";
 import { useLogin } from "@utils/services/authService";
 import { api } from "@utils/services/service-api";
 import type { IUserProfile } from "@utils/services/types";
+import { setHeader } from "@utils/setHeader";
 import type { AxiosError } from "axios";
 import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import useAuth from "../../hooks/useAuth";
-import { setHeader } from "@utils/setHeader";
 
 const schema = () => {
   const { t } = useTranslation();
@@ -90,8 +89,6 @@ const LoginPage = () => {
   const companySettings = useCompanySetting();
 
   useEffect(() => {
-    setHeader();
-
     if (companySettings.isSuccess) {
       if (!companySettings?.data?.data?.isSetupCompleted) {
         return navigate("/initial/setup", { replace: true });
@@ -99,19 +96,15 @@ const LoginPage = () => {
       const branding = JSON.parse(
         companySettings.data.data.customConfiguration ?? "{}"
       );
-      localStorage.setItem(
-        "app-info",
-        JSON.stringify({
-          name: companySettings.data.data?.name ?? "AcademyKit",
-          logo: checkValidUrl(companySettings.data.data.imageUrl)
-            ? companySettings.data.data.imageUrl
-            : "/favicon.png",
-        })
-      );
+
+      setHeader({
+        name: companySettings.data.data?.name,
+        logoUrl: companySettings.data.data.imageUrl,
+      });
+
       localStorage.setItem("branding", branding.accent);
       localStorage.setItem("version", companySettings.data.data.appVersion);
       context?.toggleBrandingTheme(branding.accent ?? "#0E99AC"); // set the accent after fetching
-      setHeader();
     }
   }, [companySettings.isSuccess]);
 

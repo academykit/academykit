@@ -13,7 +13,6 @@ import {
 import { useForm } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import { checkValidUrl } from "@utils/checkValidUrl";
 import RoutePath from "@utils/routeConstants";
 import { useCompanySetting } from "@utils/services/adminService";
 import {
@@ -22,11 +21,11 @@ import {
   useResetPasswordToken,
 } from "@utils/services/authService";
 import errorType from "@utils/services/axiosError";
+import { setHeader } from "@utils/setHeader";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import { setHeader } from "@utils/setHeader";
 
 const ConfirmToken = () => {
   const navigate = useNavigate();
@@ -100,7 +99,6 @@ const ConfirmToken = () => {
         color: "red",
       });
     }
-    // setTimeout(() => , 700);
   };
   useEffect(() => {
     if (auth?.loggedIn) {
@@ -108,32 +106,20 @@ const ConfirmToken = () => {
     }
   }, [auth?.auth]);
 
-  const companySettings = useCompanySetting();
+  const settings = useCompanySetting();
 
   useEffect(() => {
-    setHeader();
-
-    if (companySettings.isSuccess) {
-      localStorage.setItem(
-        "app-info",
-        JSON.stringify({
-          name: companySettings.data.data?.name ?? "AcademyKit",
-          logo: checkValidUrl(companySettings.data.data.imageUrl)
-            ? companySettings.data.data.imageUrl
-            : "/favicon.png",
-        })
-      );
-      setHeader();
+    if (settings.isSuccess) {
+      setHeader({
+        name: settings.data.data?.name,
+        logoUrl: settings.data.data.imageUrl,
+      });
     }
-  }, [companySettings.isSuccess]);
+  }, [settings.isSuccess]);
 
   return (
     <Container size={470} my={40} style={{ position: "relative" }}>
-      <Logo
-        height={100}
-        width={100}
-        url={companySettings?.data?.data?.imageUrl}
-      />
+      <Logo height={100} width={100} url={settings?.data?.data?.imageUrl} />
       <Box style={{ position: "absolute", width: "100%" }}>
         <Transition
           mounted={!toggle}
