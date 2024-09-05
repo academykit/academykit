@@ -1188,5 +1188,6 @@
   "externalUrl": "बाहरी युएरएल",
   "externalUrl_required": "बाहरी युएरएल आवश्यक छ।",
   "url_invalid": "युएरएल अवैध छ।",
-  "content_required": "कृपया कोई सामग्री भर्नुहोस्।"
+  "content_required": "कृपया कोई सामग्री भर्नुहोस्।",
+  "mail_deleted": "इमेल सफलतापूर्वक मेटियो।"
 }
