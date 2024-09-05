@@ -141,12 +141,11 @@ const AddContent = ({
             </Tooltip>
           </Grid>
           <Box my={20}>
-            <Text size={"sm"} mb={5}>
-              {t("content")}
-            </Text>
             <TextEditorExtended
               placeholder={t("content") as string}
               {...form.getInputProps("content")}
+              label={t("content")}
+              required
             />
           </Box>
           <Box my={20}>

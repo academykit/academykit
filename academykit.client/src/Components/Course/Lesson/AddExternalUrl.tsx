@@ -25,17 +25,6 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
-const schema = () => {
-  const { t } = useTranslation();
-
-  return Yup.object().shape({
-    name: Yup.string().required(t("feedback_name_required") as string),
-    externalUrl: Yup.string()
-      .url("Invalid URL format.")
-      .required(t("externalUrl") as string),
-  });
-};
-
 const AddExternalUrl = ({
   setAddState,
   item,
@@ -51,15 +40,23 @@ const AddExternalUrl = ({
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   setAddLessonClick: (b: boolean) => void;
 }) => {
+  const [isMandatory, setIsMandatory] = useState<boolean>(
+    item?.isMandatory ?? false
+  );
   const { id: slug } = useParams();
   const lesson = useCreateLesson(slug as string);
   const updateLesson = useUpdateLesson(slug as string);
   const { t } = useTranslation();
 
-  const [isMandatory, setIsMandatory] = useState<boolean>(
-    item?.isMandatory ?? false
-  );
-  console.log("loading", lesson);
+  const schema = () => {
+    return Yup.object().shape({
+      name: Yup.string().required(t("lesson_name_required") as string),
+      externalUrl: Yup.string()
+        .url(t("url_invalid") as string)
+        .required(t("externalUrl_required") as string),
+    });
+  };
+
   const form = useForm({
     initialValues: {
       name: item?.name ?? "",

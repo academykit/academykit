@@ -39,8 +39,8 @@ public class UserValidator : AbstractValidator<UserRequestModel>
             )
             .When(x => !string.IsNullOrWhiteSpace(x.MobileNumber))
             .WithMessage(context => stringLocalizer.GetString("InvalidMobileNumber"))
-            .MaximumLength(50)
-            .WithMessage(context => stringLocalizer.GetString("MobileNumberLength50"));
+            .MaximumLength(15)
+            .WithMessage(context => stringLocalizer.GetString("MobileNumberLength15"));
         RuleFor(x => x.Address)
             .MaximumLength(200)
             .WithMessage(context => stringLocalizer.GetString("AddressLength200"));

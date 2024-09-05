@@ -18,6 +18,7 @@ import {
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
+import { useQueryClient } from "@tanstack/react-query";
 import lazyWithRetry from "@utils/lazyImportWithReload";
 import { useAddUser, useUsers } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
@@ -48,7 +49,7 @@ const UsersList = ({
   const [currentTab, setCurrentTab] = useState<string | null>("user");
   const [csvLoad, setCsvLoad] = useState<boolean>(false);
   const { t } = useTranslation();
-
+  const queryClient = useQueryClient();
   const form = useForm<{ fileUpload: File | null }>({
     initialValues: {
       fileUpload: null,
@@ -64,6 +65,11 @@ const UsersList = ({
       showNotification({
         message: res.data as string,
       });
+      if (res.data) {
+        queryClient.invalidateQueries({
+          queryKey: ["user-list", searchParams],
+        });
+      }
       setOpened(false);
       form.reset();
     } catch (error) {
