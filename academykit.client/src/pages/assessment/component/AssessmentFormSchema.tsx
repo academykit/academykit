@@ -30,7 +30,7 @@ const schema = () => {
     skillsCriteriaRequestModels: Yup.array().of(
       Yup.object().shape({
         rule: Yup.string().required(t("rule_required") as string),
-        skill: Yup.string().required(t("skill_required") as string),
+        skill: Yup.string().nullable(),
         percentage: Yup.number()
           .min(0, t("value_must_be_at_least_0") as string)
           .max(100, t("percentage_must_be_at_most_100") as string)

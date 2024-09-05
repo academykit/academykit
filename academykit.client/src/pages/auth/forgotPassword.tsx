@@ -10,6 +10,7 @@ import {
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
+import { checkValidUrl } from "@utils/checkValidUrl";
 import RoutePath from "@utils/routeConstants";
 import { useCompanySetting } from "@utils/services/adminService";
 import { useForgotPassword } from "@utils/services/authService";
@@ -94,7 +95,9 @@ const ForgotPassword = () => {
         "app-info",
         JSON.stringify({
           name: companySettings.data.data?.name ?? "AcademyKit",
-          logo: companySettings.data.data.imageUrl ?? "/favicon.png",
+          logo: checkValidUrl(companySettings.data.data.imageUrl)
+            ? companySettings.data.data.imageUrl
+            : "/favicon.png",
         })
       );
       setHeader();

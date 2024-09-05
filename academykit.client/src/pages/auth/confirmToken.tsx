@@ -13,6 +13,7 @@ import {
 import { useForm } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
+import { checkValidUrl } from "@utils/checkValidUrl";
 import RoutePath from "@utils/routeConstants";
 import { useCompanySetting } from "@utils/services/adminService";
 import {
@@ -132,7 +133,9 @@ const ConfirmToken = () => {
         "app-info",
         JSON.stringify({
           name: companySettings.data.data?.name ?? "AcademyKit",
-          logo: companySettings.data.data.imageUrl ?? "/favicon.png",
+          logo: checkValidUrl(companySettings.data.data.imageUrl)
+            ? companySettings.data.data.imageUrl
+            : "/favicon.png",
         })
       );
       setHeader();
