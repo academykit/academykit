@@ -1206,5 +1206,7 @@
   "default_role_description": "新しいアカウントのデフォルトのユーザーロール。この設定は既存のユーザーアカウントには影響しません。",
   "default_role": "デフォルトのロール",
   "add_domain": "ドメインを追加する",
-  "select_role": "ロールを選択"
+  "select_role": "ロールを選択",
+  "allowed_domains": "許可されたドメイン",
+  "sign_in_options_saved_successfully": "サインインオプションが正常に保存されました。"
 }

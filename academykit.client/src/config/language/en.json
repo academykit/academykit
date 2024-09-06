@@ -1267,5 +1267,7 @@
   "default_role_description": "The default user role for new accounts. Changing this setting does not affect existing user accounts.",
   "default_role": "Default Role",
   "add_domain": "Add a Domain",
-  "select_role": "Select role"
+  "select_role": "Select role",
+  "allowed_domains": "Allowed Domains",
+  "sign_in_options_saved_successfully": "Sign-in options saved successfully."
 }

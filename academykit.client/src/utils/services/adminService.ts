@@ -956,7 +956,7 @@ export const useSetSignInOptions = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [api.adminUser.signInOptions],
-    mutationFn: (signInOption: ISignInOption[]) =>
+    mutationFn: (signInOption: ISignInOption) =>
       httpClient.post(api.adminUser.signInOptions, signInOption),
     onSuccess: () => {
       queryClient.invalidateQueries({

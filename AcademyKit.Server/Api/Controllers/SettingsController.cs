@@ -338,10 +338,10 @@ public class SettingsController : BaseApiController
     /// <param name="role">the user role</param>
     /// <returns>the saved user role</returns>
     [HttpPost("defaultRole")]
-    public async Task<UserRole> SetDefaultRole([FromBody] UserRole role)
+    public async Task<UserRole> SetDefaultRole([FromBody] UserRoleRequestModel model)
     {
         IsSuperAdminOrAdmin(CurrentUser.Role);
-        var savedEntity = await _settingService.SetDefaultRole(role);
+        var savedEntity = await _settingService.SetDefaultRole(model.Role);
         return savedEntity;
     }
 
@@ -350,9 +350,9 @@ public class SettingsController : BaseApiController
     /// </summary>
     /// <returns>the list of <see cref="SignInOptionDto"/></returns>
     [HttpGet("signInOptions")]
+    [AllowAnonymous]
     public async Task<List<SignInOptionDto>> GetSignInOptions()
     {
-        IsSuperAdminOrAdmin(CurrentUser.Role);
         return await _settingService.GetSignInOptionsAsync().ConfigureAwait(false);
     }
 

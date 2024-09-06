@@ -17,7 +17,7 @@ import { useForm, yupResolver } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { IconMail, IconPlus, IconTrash } from "@tabler/icons-react";
-import { UserRole } from "@utils/enums";
+import { SignInType, UserRole } from "@utils/enums";
 import {
   useGetAllowedDomains,
   useGetDefaultRole,
@@ -37,9 +37,9 @@ const Sso = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [defaultRoleValue, setDefaultRoleValue] = useState("");
   const [signInOptionsState, setSignInOptionsState] = useState({
-    google: false,
-    microsoft: false,
-    email: false,
+    [SignInType.Email]: false,
+    [SignInType.Google]: false,
+    [SignInType.Microsoft]: false,
   });
 
   const allowedDomains = useSetAllowedDomains();
@@ -95,14 +95,12 @@ const Sso = () => {
   useEffect(() => {
     if (signInOptions?.data) {
       const newState = {
-        google: false,
-        microsoft: false,
-        email: false,
+        [SignInType.Email]: false,
+        [SignInType.Google]: false,
+        [SignInType.Microsoft]: false,
       };
       for (const option of signInOptions.data) {
-        if (option.signIn === 1) newState.google = option.isAllowed;
-        if (option.signIn === 2) newState.microsoft = option.isAllowed;
-        if (option.signIn === 3) newState.email = option.isAllowed;
+        newState[option.signIn as SignInType] = option.isAllowed;
       }
       setSignInOptionsState(newState);
     }
@@ -139,25 +137,16 @@ const Sso = () => {
     }
   };
 
-  const handleSignInOptionsSubmit = async (
-    updatedOption: keyof typeof signInOptionsState
-  ) => {
+  const handleSignInOptionsSubmit = async (updatedOption: SignInType) => {
     try {
-      const updatedState = {
-        ...signInOptionsState,
-        [updatedOption]: !signInOptionsState[updatedOption],
-      };
+      const currentOption = signInOptions?.data.find(
+        (option) => option.signIn === updatedOption
+      );
+      const newIsAllowed = !currentOption?.isAllowed;
 
-      const options = [
-        { signIn: 1, isAllowed: updatedState.google },
-        { signIn: 2, isAllowed: updatedState.microsoft },
-        { signIn: 3, isAllowed: updatedState.email },
-      ].filter((option) => option.isAllowed);
-
-      await setSignInOptions.mutateAsync(options);
-      showNotification({
-        title: t("successful"),
-        message: t("sign_in_options_saved_successfully"),
+      await setSignInOptions.mutateAsync({
+        signIn: updatedOption,
+        isAllowed: newIsAllowed,
       });
     } catch (error) {
       const err = errorType(error);
@@ -167,8 +156,6 @@ const Sso = () => {
       });
     }
   };
-
-  console.log(signInOptions?.data);
 
   return (
     <ScrollArea>
@@ -250,13 +237,13 @@ const Sso = () => {
             </Group>
           </Group>
           <Checkbox
-            checked={signInOptionsState.google}
+            checked={signInOptionsState[SignInType.Google]}
             onChange={() => {
               setSignInOptionsState({
                 ...signInOptionsState,
-                google: !signInOptionsState.google,
+                [SignInType.Google]: !signInOptionsState[SignInType.Google],
               });
-              handleSignInOptionsSubmit("google");
+              handleSignInOptionsSubmit(SignInType.Google);
             }}
           />
         </Group>
@@ -287,13 +274,14 @@ const Sso = () => {
             </Group>
           </Group>
           <Checkbox
-            checked={signInOptionsState.microsoft}
+            checked={signInOptionsState[SignInType.Microsoft]}
             onChange={() => {
               setSignInOptionsState({
                 ...signInOptionsState,
-                microsoft: !signInOptionsState.microsoft,
+                [SignInType.Microsoft]:
+                  !signInOptionsState[SignInType.Microsoft],
               });
-              handleSignInOptionsSubmit("microsoft");
+              handleSignInOptionsSubmit(SignInType.Microsoft);
             }}
           />
         </Group>
@@ -324,13 +312,13 @@ const Sso = () => {
             </Group>
           </Group>
           <Checkbox
-            checked={signInOptionsState.email}
+            checked={signInOptionsState[SignInType.Email]}
             onChange={() => {
               setSignInOptionsState({
                 ...signInOptionsState,
-                email: !signInOptionsState.email,
+                [SignInType.Email]: !signInOptionsState[SignInType.Email],
               });
-              handleSignInOptionsSubmit("email");
+              handleSignInOptionsSubmit(SignInType.Email);
             }}
           />
         </Group>
@@ -346,7 +334,7 @@ const Sso = () => {
             {t("allowed_domains")}
           </Text>
           <Text size="sm" c="dimmed">
-            {t("allowed_domains_description")}
+            {t("allow_domains_description")}
           </Text>
         </div>
 
