@@ -348,7 +348,7 @@ public class SettingsController : BaseApiController
     /// <param name="signInOption">the instance of <see cref="SignInOptionDto"/></param>
     /// <returns>the instance of <see cref="SignInOptionDto"/> </returns>
     [HttpPost("signInOptions")]
-    public async Task<SignInOptionDto> SetDefaultRole([FromBody] SignInOptionDto signInOption)
+    public async Task<SignInOptionDto> SetSignInOptions([FromBody] SignInOptionDto signInOption)
     {
         IsSuperAdminOrAdmin(CurrentUser.Role);
         return await _settingService.UpdateSignInOptionAsync(signInOption).ConfigureAwait(false);

@@ -2,8 +2,8 @@
 
 public class SignInOptionDto
 {
-    public SignInType SignIn { get; set; }
-    public bool IsAllowed { get; set; }
+    public required SignInType SignIn { get; set; }
+    public required bool IsAllowed { get; set; }
 }
 
 public enum SignInType
