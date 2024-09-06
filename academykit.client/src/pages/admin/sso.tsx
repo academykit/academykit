@@ -31,8 +31,6 @@ import { t } from "i18next";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 
-const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
-
 const Sso = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [defaultRoleValue, setDefaultRoleValue] = useState("");
@@ -54,21 +52,7 @@ const Sso = () => {
   const schema = () =>
     Yup.object().shape({
       domain: Yup.array()
-        .of(
-          Yup.string().test("domain-validation", "", function (value) {
-            if (!value || value.trim() === "") {
-              return this.createError({
-                message: t("domain_required") as string,
-              });
-            }
-            if (!domainRegex.test(value.trim())) {
-              return this.createError({
-                message: t("invalid_domain_format") as string,
-              });
-            }
-            return true;
-          })
-        )
+        .of(Yup.string().required(t("domain_required") as string))
         .min(1, t("at_least_one_domain_required") as string),
     });
 
@@ -113,7 +97,6 @@ const Sso = () => {
         title: t("successful"),
         message: t("allowed_domains_saved_successfully"),
       });
-      form.reset();
     } catch (error) {
       const err = errorType(error);
       showNotification({
@@ -170,7 +153,7 @@ const Sso = () => {
           {form.values.domain.map((_domain, index) => (
             <Flex mb={10} gap={10} align={"flex-end"} key={index} wrap={"wrap"}>
               <TextInput
-                placeholder={t("License_email") as string}
+                placeholder={t("domain") as string}
                 name={`domain.${index}`}
                 label={index > 0 ? t("additional_domain") : t("domain")}
                 withAsterisk
