@@ -1,5 +1,4 @@
 export function checkValidUrl(url: string) {
-  const pattern =
-    /^(https?:\/\/)?[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+(:\d+)?(\/[\w\-./~%]*)?$/;
+  const pattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
   return pattern.test(url);
 }
