@@ -5,6 +5,8 @@ export const BRANDING_SCHEME_KEY = "branding";
 export const TOKEN_STORAGE = "token";
 export const LICENSE_KEY = "licenseKey";
 export const REFRESH_TOKEN_STORAGE = "refreshToken";
+export const APP_INFO_LOCAL_STORAGE_KEY = "app-info";
+
 // export const PHONE_VALIDATION = /^(?:\+?977)?(?:\+?977-)?[98]\d{9}$/;
 export const PHONE_VALIDATION = /^[0-9+]+$/;
 

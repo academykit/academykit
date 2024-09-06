@@ -1,4 +1,5 @@
 import { checkValidUrl } from "./checkValidUrl";
+import { APP_INFO_LOCAL_STORAGE_KEY } from "./constants";
 
 export const setHeader = ({
   name,
@@ -8,8 +9,10 @@ export const setHeader = ({
   logoUrl: string;
 }) => {
   const info =
-    localStorage.getItem("app-info") &&
-    JSON.parse(localStorage.getItem("app-info") ?? "Academy kit");
+    localStorage.getItem(APP_INFO_LOCAL_STORAGE_KEY) &&
+    JSON.parse(
+      localStorage.getItem(APP_INFO_LOCAL_STORAGE_KEY) ?? "Academy kit"
+    );
   if (info) {
     let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
     document.title = info.name;
@@ -22,7 +25,7 @@ export const setHeader = ({
   }
 
   localStorage.setItem(
-    "app-info",
+    APP_INFO_LOCAL_STORAGE_KEY,
     JSON.stringify({
       name: name ?? "AcademyKit",
       logo: checkValidUrl(logoUrl) ? logoUrl : "/favicon.png",
