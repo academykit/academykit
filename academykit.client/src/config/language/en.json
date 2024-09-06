@@ -1256,5 +1256,16 @@
   "google": "Google",
   "google_allow_description": "Allow members to sign in with Google",
   "email_allow_description": "Allow members to sign in with email",
-  "access": "Access"
+  "access": "Access",
+  "domain_required": "Domain is required.",
+  "invalid_domain_format": "Domain format is invalid.",
+  "at_least_one_domain_required": "At least one domain is required.",
+  "allowed_domains_saved_successfully": "Allowed domains saved successfully.",
+  "domain": "Domain",
+  "additional_domain": "Additional Domain",
+  "allow_domains_description": "Only allow users with email addresses from specific domains to access your organization.",
+  "default_role_description": "The default user role for new accounts. Changing this setting does not affect existing user accounts.",
+  "default_role": "Default Role",
+  "add_domain": "Add a Domain",
+  "select_role": "Select role"
 }

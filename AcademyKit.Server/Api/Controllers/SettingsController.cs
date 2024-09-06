@@ -1,9 +1,11 @@
 ﻿using System.Reflection;
+using System.Text.RegularExpressions;
 using AcademyKit.Application.Common.Dtos;
 using AcademyKit.Application.Common.Exceptions;
 using AcademyKit.Application.Common.Interfaces;
 using AcademyKit.Application.Common.Models.RequestModels;
 using AcademyKit.Application.Common.Models.ResponseModels;
+using AcademyKit.Application.Common.Validators;
 using AcademyKit.Domain.Enums;
 using AcademyKit.Infrastructure.Localization;
 using FluentValidation;
@@ -286,11 +288,13 @@ public class SettingsController : BaseApiController
     /// </summary>
     /// <returns>A string containing the allowed domains, separated by commas.</returns>
     [HttpGet("allowedDomains")]
-    public async Task<string> GetAllowedDomains()
+    public async Task<List<string>> GetAllowedDomains()
     {
         IsSuperAdminOrAdmin(CurrentUser.Role);
         var domains = await _settingService.GetAllowedDomainsAsync();
-        return domains;
+        return string.IsNullOrWhiteSpace(domains)
+            ? new List<string>()
+            : domains.Split(',').Select(x => x.Trim()).ToList();
     }
 
     /// <summary>
@@ -299,11 +303,21 @@ public class SettingsController : BaseApiController
     /// <param name="domains">A string containing the new allowed domains, separated by commas.</param>
     /// <returns>A string containing the updated list of allowed domains.</returns>
     [HttpPost("allowedDomains")]
-    public async Task<string> SetAllowedDomains([FromBody] string domains)
+    public async Task<List<string>> SetAllowedDomains([FromBody] List<string> domains)
     {
         IsSuperAdminOrAdmin(CurrentUser.Role);
+        var invalidDomains = domains
+            .Where(domain => !ValidationHelpers.ValidDomain(domain))
+            .ToList();
+        if (invalidDomains.Any())
+        {
+            throw new ForbiddenException($"Invalid domain(s): {string.Join(", ", invalidDomains)}");
+        }
+
         var savedDomains = await _settingService.SetAllowedDomainsAsync(domains);
-        return savedDomains;
+        return string.IsNullOrWhiteSpace(savedDomains)
+            ? new List<string>()
+            : savedDomains.Split(',').Select(x => x.Trim()).ToList();
     }
 
     /// <summary>

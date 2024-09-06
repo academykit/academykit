@@ -49,11 +49,11 @@ public class SettingService : BaseService, ISettingService
     /// </summary>
     /// <param name="domains">The list of domain strings to be allowed, separated by commas.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the updated list of allowed domains as a single string.</returns>
-    public async Task<string> SetAllowedDomainsAsync(string domains)
+    public async Task<string> SetAllowedDomainsAsync(List<string> domains)
     {
         return await ExecuteWithResultAsync(async () =>
             {
-                var formattedDomains = FormatDomains(domains);
+                var formattedDomains = string.Join(",", domains.Select(x => x.Trim()));
                 var setting = await GetOrCreateSettingAsync(AllowedDomainsKey, formattedDomains)
                     .ConfigureAwait(false);
                 return setting.Value;
@@ -169,10 +169,5 @@ public class SettingService : BaseService, ISettingService
 
         await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         return setting;
-    }
-
-    private static string FormatDomains(string domains)
-    {
-        return string.Join(",", domains.Split(',').Select(domain => domain.Trim()));
     }
 }

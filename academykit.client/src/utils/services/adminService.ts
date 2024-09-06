@@ -113,6 +113,11 @@ export interface IZoomLicense<T> {
   user: T;
 }
 
+export interface ISignInOption {
+  signIn: number;
+  isAllowed: boolean;
+}
+
 const getUsers = (search: string) => {
   return httpClient.get<IPaginated<IUserProfile>>(api.adminUser.users(search));
 };
@@ -890,6 +895,72 @@ export const useInitialSetup = () => {
     onSuccess: () => {
       queryClient.refetchQueries({
         queryKey: [api.adminUser.getCompanySettings],
+      });
+    },
+  });
+};
+
+// Allowed Domains
+export const useGetAllowedDomains = () => {
+  return useQuery({
+    queryKey: [api.adminUser.allowedDomains],
+    queryFn: () => httpClient.get<string[]>(api.adminUser.allowedDomains),
+  });
+};
+
+export const useSetAllowedDomains = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: [api.adminUser.allowedDomains],
+    mutationFn: (domains: string[]) =>
+      httpClient.post(api.adminUser.allowedDomains, domains),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.allowedDomains],
+      });
+    },
+  });
+};
+
+// Default Roles
+export const useGetDefaultRole = () => {
+  return useQuery({
+    queryKey: [api.adminUser.defaultRole],
+    queryFn: () => httpClient.get<number>(api.adminUser.defaultRole),
+  });
+};
+
+export const useSetDefaultRole = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: [api.adminUser.defaultRole],
+    mutationFn: (role: number) =>
+      httpClient.post(api.adminUser.defaultRole, { role }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.defaultRole],
+      });
+    },
+  });
+};
+
+// Sign In Options
+export const useGetSignInOptions = () => {
+  return useQuery({
+    queryKey: [api.adminUser.signInOptions],
+    queryFn: () => httpClient.get<ISignInOption[]>(api.adminUser.signInOptions),
+  });
+};
+
+export const useSetSignInOptions = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: [api.adminUser.signInOptions],
+    mutationFn: (signInOption: ISignInOption[]) =>
+      httpClient.post(api.adminUser.signInOptions, signInOption),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.signInOptions],
       });
     },
   });

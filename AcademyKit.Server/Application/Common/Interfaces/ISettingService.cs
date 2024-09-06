@@ -16,7 +16,7 @@ public interface ISettingService
     /// </summary>
     /// <param name="domains">The list of domain strings to be allowed, separated by commas.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the updated list of allowed domains as a single string.</returns>
-    Task<string> SetAllowedDomainsAsync(string domains);
+    Task<string> SetAllowedDomainsAsync(List<string> domains);
 
     /// <summary>
     /// Retrieves the default user role from the database.

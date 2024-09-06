@@ -1195,5 +1195,16 @@
   "google": "Google",
   "google_allow_description": "メンバーがGoogleでサインインできるようにする",
   "email_allow_description": "メンバーがメールでサインインできるようにする",
-  "access": "アクセス"
+  "access": "アクセス",
+  "domain_required": "ドメインは必須です。",
+  "invalid_domain_format": "ドメインの形式が無効です。",
+  "at_least_one_domain_required": "少なくとも1つのドメインが必要です。",
+  "allowed_domains_saved_successfully": "許可されたドメインが正常に保存されました。",
+  "domain": "ドメイン",
+  "additional_domain": "追加のドメイン",
+  "allow_domains_description": "メンバーが特定のドメインのメールアドレスを持つユーザーのみが組織にアクセスできるようにする",
+  "default_role_description": "新しいアカウントのデフォルトのユーザーロール。この設定は既存のユーザーアカウントには影響しません。",
+  "default_role": "デフォルトのロール",
+  "add_domain": "ドメインを追加する",
+  "select_role": "ロールを選択"
 }
