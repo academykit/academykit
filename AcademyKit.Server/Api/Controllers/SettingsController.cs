@@ -1,8 +1,10 @@
 ﻿using System.Reflection;
+using AcademyKit.Application.Common.Dtos;
 using AcademyKit.Application.Common.Exceptions;
 using AcademyKit.Application.Common.Interfaces;
 using AcademyKit.Application.Common.Models.RequestModels;
 using AcademyKit.Application.Common.Models.ResponseModels;
+using AcademyKit.Domain.Enums;
 using AcademyKit.Infrastructure.Localization;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -82,10 +84,7 @@ public class SettingsController : BaseApiController
             ImageUrl = response?.LogoUrl,
             CustomConfiguration = response?.CustomConfiguration,
             IsSetupCompleted = response?.IsSetupCompleted,
-            AppVersion = Assembly
-                .GetEntryAssembly()
-                ?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                ?.InformationalVersion,
+            AppVersion = GetAppVersion()
         };
     }
 
@@ -102,10 +101,7 @@ public class SettingsController : BaseApiController
     )
     {
         IsSuperAdmin(CurrentUser.Role);
-
-        await generalSettingValidator
-            .ValidateAsync(model, options => options.ThrowOnFailures())
-            .ConfigureAwait(false);
+        await ValidateModelAsync(generalSettingValidator, model).ConfigureAwait(false);
         var existing = await generalSettingService
             .GetAsync(id, CurrentUser.Id)
             .ConfigureAwait(false);
@@ -175,10 +171,7 @@ public class SettingsController : BaseApiController
     )
     {
         IsSuperAdmin(CurrentUser.Role);
-
-        await zoomSettingValidator
-            .ValidateAsync(model, options => options.ThrowOnFailures())
-            .ConfigureAwait(false);
+        await ValidateModelAsync(zoomSettingValidator, model).ConfigureAwait(false);
         var existing = await zoomSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
 
         if (existing == null)
@@ -229,10 +222,7 @@ public class SettingsController : BaseApiController
     )
     {
         IsSuperAdminOrAdmin(CurrentUser.Role);
-
-        await smtpSettingValidator
-            .ValidateAsync(model, options => options.ThrowOnFailures())
-            .ConfigureAwait(false);
+        await ValidateModelAsync(smtpSettingValidator, model).ConfigureAwait(false);
         var existing = await smtpSettingService.GetAsync(id, CurrentUser.Id).ConfigureAwait(false);
 
         if (existing == null)
@@ -264,22 +254,17 @@ public class SettingsController : BaseApiController
     /// get updates information.
     /// </summary>
     /// <returns> the instance of <see cref="CheckUpdatesResponseModel" /> .</returns>
-    [HttpGet("CheckUpdates")]
+    [HttpGet("checkUpdates")]
     public async Task<CheckUpdatesResponseModel> CheckUpdates()
     {
         var registry = configuration.GetValue<string>("Docker:Registry");
         var repo = configuration.GetValue<string>("Docker:Repo");
         var releaseNotesUrl = configuration.GetValue<string>("Docker:ReleaseNotesUrl");
-
         var tags = await Infrastructure.Helpers.HttpClientUtils.GetImageTagsAsync(registry, repo);
-
         var latestRemoteVersion = Infrastructure.Helpers.CommonHelper.FilterLatestSemanticVersion(
             tags
         );
-        var currentVersion = Assembly
-            .GetEntryAssembly()
-            ?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-            ?.InformationalVersion;
+        var currentVersion = GetAppVersion();
 
         return new CheckUpdatesResponseModel
         {
@@ -300,12 +285,12 @@ public class SettingsController : BaseApiController
     /// Retrieves the list of allowed domains.
     /// </summary>
     /// <returns>A string containing the allowed domains, separated by commas.</returns>
-    [HttpGet("allowed-domains")]
-    public async Task<ActionResult<string>> GetAllowedDomains()
+    [HttpGet("allowedDomains")]
+    public async Task<string> GetAllowedDomains()
     {
         IsSuperAdminOrAdmin(CurrentUser.Role);
         var domains = await _settingService.GetAllowedDomainsAsync();
-        return Ok(domains);
+        return domains;
     }
 
     /// <summary>
@@ -313,12 +298,60 @@ public class SettingsController : BaseApiController
     /// </summary>
     /// <param name="domains">A string containing the new allowed domains, separated by commas.</param>
     /// <returns>A string containing the updated list of allowed domains.</returns>
-    [HttpPut("allowed-domains")]
-    public async Task<ActionResult<string>> UpdateAllowedDomains([FromBody] string domains)
+    [HttpPost("allowedDomains")]
+    public async Task<string> SetAllowedDomains([FromBody] string domains)
     {
         IsSuperAdminOrAdmin(CurrentUser.Role);
-        var updatedDomains = await _settingService.UpdateAllowedDomainsAsync(domains);
-        return Ok(updatedDomains);
+        var savedDomains = await _settingService.SetAllowedDomainsAsync(domains);
+        return savedDomains;
+    }
+
+    /// <summary>
+    /// Retrieve the default user role
+    /// </summary>
+    /// <returns>the user role</returns>
+    [HttpGet("defaultRole")]
+    public async Task<UserRole> GetDefaultRole()
+    {
+        IsSuperAdminOrAdmin(CurrentUser.Role);
+        var defaultRole = await _settingService.GetDefaultRole();
+        return defaultRole;
+    }
+
+    /// <summary>
+    /// Create or Update the default user role
+    /// </summary>
+    /// <param name="role">the user role</param>
+    /// <returns>the saved user role</returns>
+    [HttpPost("defaultRole")]
+    public async Task<UserRole> SetDefaultRole([FromBody] UserRole role)
+    {
+        IsSuperAdminOrAdmin(CurrentUser.Role);
+        var savedEntity = await _settingService.SetDefaultRole(role);
+        return savedEntity;
+    }
+
+    /// <summary>
+    /// Retrieves the list of sign in options
+    /// </summary>
+    /// <returns>the list of <see cref="SignInOptionDto"/></returns>
+    [HttpGet("signInOptions")]
+    public async Task<List<SignInOptionDto>> GetSignInOptions()
+    {
+        IsSuperAdminOrAdmin(CurrentUser.Role);
+        return await _settingService.GetSignInOptionsAsync().ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Create or update signInOption api
+    /// </summary>
+    /// <param name="signInOption">the instance of <see cref="SignInOptionDto"/></param>
+    /// <returns>the instance of <see cref="SignInOptionDto"/> </returns>
+    [HttpPost("signInOptions")]
+    public async Task<SignInOptionDto> SetDefaultRole([FromBody] SignInOptionDto signInOption)
+    {
+        IsSuperAdminOrAdmin(CurrentUser.Role);
+        return await _settingService.UpdateSignInOptionAsync(signInOption).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -330,13 +363,37 @@ public class SettingsController : BaseApiController
     [AllowAnonymous]
     public async Task<GeneralSettingResponseModel> InitialSetup(InitialSetupRequestModel model)
     {
-        await _initialSetupValidator
-            .ValidateAsync(model, options => options.ThrowOnFailures())
-            .ConfigureAwait(false);
+        await ValidateModelAsync(_initialSetupValidator, model).ConfigureAwait(false);
         var savedEntity = await generalSettingService
             .InitialSetupAsync(model)
             .ConfigureAwait(false);
 
         return new GeneralSettingResponseModel(savedEntity);
+    }
+
+    /// <summary>
+    /// Validates the model using the provided validator.
+    /// </summary>
+    /// <typeparam name="T">The type of the model to validate.</typeparam>
+    /// <param name="validator"></param>
+    /// <param name="model">The model to validate.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private static async Task ValidateModelAsync<T>(IValidator<T> validator, T model)
+    {
+        await validator
+            .ValidateAsync(model, options => options.ThrowOnFailures())
+            .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Get the app version
+    /// </summary>
+    /// <returns>the app version</returns>
+    private static string GetAppVersion()
+    {
+        return Assembly
+            .GetEntryAssembly()
+            ?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+            ?.InformationalVersion;
     }
 }
