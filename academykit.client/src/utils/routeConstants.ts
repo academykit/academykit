@@ -205,6 +205,9 @@ const RoutePath = {
     skill: function () {
       return `${this.base}/skill`;
     },
+    sso: function () {
+      return `${this.base}/sso`;
+    },
     hangfire: () =>
       `${
         isDevelopment
@@ -230,6 +233,9 @@ const RoutePath = {
   payment: "/settings/paymentMethods",
   level: "/settings/level",
   department: "/settings/department",
+  sso: {
+    base: "/settings/sso",
+  },
   pool: {
     base: "/pools",
     details: function (id?: string) {

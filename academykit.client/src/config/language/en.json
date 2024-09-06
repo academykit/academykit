@@ -1247,5 +1247,14 @@
   "externalUrl_required": "External Url is required.",
   "url_invalid": "Url is invalid.",
   "content_required": "Content is required.",
-  "mail_deleted": "Mail deleted successfully"
+  "mail_deleted": "Mail deleted successfully",
+  "sso": "SSO",
+  "security": "Security",
+  "security_description": "Settings that impact access, security and content of your workplace",
+  "microsoft": "Microsoft",
+  "microsoft_allow_description": "Allow members to sign in with Microsoft",
+  "google": "Google",
+  "google_allow_description": "Allow members to sign in with Google",
+  "email_allow_description": "Allow members to sign in with email",
+  "access": "Access"
 }

@@ -1186,5 +1186,14 @@
   "lesson_name_required": "レッスン名は必須です。",
   "externalUrl": "外部URL",
   "externalUrl_required": "外部URLは必須です。",
-  "mail_deleted": "メールが正常に削除されました。"
+  "mail_deleted": "メールが正常に削除されました。",
+  "sso": "エスエスオー",
+  "security": "セキュリティ",
+  "security_description": "組織のセキュリティを設定できます。",
+  "microsoft": "Microsoft",
+  "microsoft_allow_description": "メンバーがMicrosoftでサインインできるようにする",
+  "google": "Google",
+  "google_allow_description": "メンバーがGoogleでサインインできるようにする",
+  "email_allow_description": "メンバーがメールでサインインできるようにする",
+  "access": "アクセス"
 }
