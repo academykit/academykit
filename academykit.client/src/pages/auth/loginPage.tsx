@@ -202,15 +202,6 @@ const LoginPage = () => {
               </Button>
             </Paper>
           </form>
-          <Center my={18}>
-            <Text size="sm">
-              {t("create_new_agreement")}{" "}
-              <Link to={"/"}>{t("terms_service")}</Link>,{" "}
-              <Link to={"/"}>{t("privacy_policy")}</Link>,{" "}
-              {t("and_our_default")}{" "}
-              <Link to={"/"}>{t("notification_settings")}</Link>.
-            </Text>
-          </Center>
           {allowedSignInMethods.length > 0 && (
             <div
               style={{

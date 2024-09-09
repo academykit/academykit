@@ -52,13 +52,17 @@ const Sso = () => {
   const schema = () =>
     Yup.object().shape({
       domain: Yup.array()
-        .of(Yup.string().required(t("domain_required") as string))
+        .of(
+          Yup.object().shape({
+            domain: Yup.string().required(t("domain_required") as string),
+          })
+        )
         .min(1, t("at_least_one_domain_required") as string),
     });
 
   const form = useForm({
     initialValues: {
-      domain: [""],
+      domain: [{ id: 0, domain: "" }],
     },
     validate: yupResolver(schema()),
   });
@@ -66,7 +70,10 @@ const Sso = () => {
 
   useEffect(() => {
     if (domainList?.data) {
-      form.setFieldValue("domain", domainList.data);
+      form.setFieldValue(
+        "domain",
+        domainList.data.map((domain, index) => ({ id: index, domain: domain }))
+      );
     }
   }, [domainList?.data]);
 
@@ -90,9 +97,13 @@ const Sso = () => {
     }
   }, [signInOptions?.data]);
 
-  const handleSubmit = async (values: { domain: string[] }) => {
+  const handleSubmit = async (values: {
+    domain: { id: number; domain: string }[];
+  }) => {
     try {
-      await allowedDomains.mutateAsync(values.domain);
+      await allowedDomains.mutateAsync(
+        values.domain.map((domain) => domain.domain)
+      );
       showNotification({
         title: t("successful"),
         message: t("allowed_domains_saved_successfully"),
@@ -139,7 +150,7 @@ const Sso = () => {
       });
     }
   };
-
+  console.log(form.errors);
   return (
     <ScrollArea>
       <Drawer
@@ -151,18 +162,27 @@ const Sso = () => {
       >
         <form onSubmit={form.onSubmit(handleSubmit)}>
           {form.values.domain.map((_domain, index) => (
-            <Flex mb={10} gap={10} align={"flex-end"} key={index} wrap={"wrap"}>
+            <Flex
+              mb={10}
+              gap={10}
+              align={"flex-end"}
+              key={_domain.id}
+              wrap={"wrap"}
+            >
               <TextInput
                 placeholder={t("domain") as string}
-                name={`domain.${index}`}
-                label={index > 0 ? t("additional_domain") : t("domain")}
+                name={`domain.${index}.domain`}
+                label={index === 0 && t("domain")}
                 withAsterisk
-                {...form.getInputProps(`domain.${index}`)}
+                {...form.getInputProps(`domain.${index}.domain`)}
               />
               <ActionIcon
                 variant="subtle"
                 onClick={() => {
-                  form.insertListItem("domain", "");
+                  form.insertListItem("domain", {
+                    id: form.values.domain.length,
+                    domain: "",
+                  });
                 }}
               >
                 <IconPlus />
@@ -325,6 +345,7 @@ const Sso = () => {
           w={10}
           type="button"
           variant="outline"
+          maw={200}
           onClick={() => {
             open();
           }}
@@ -344,6 +365,7 @@ const Sso = () => {
         </div>
         <Select
           w={200}
+          maw={200}
           value={defaultRoleValue}
           placeholder={t("select_role")}
           data={Object.entries(UserRole)
