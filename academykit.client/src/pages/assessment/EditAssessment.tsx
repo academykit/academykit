@@ -6,7 +6,9 @@ import {
   Box,
   Button,
   Flex,
+  Group,
   NumberInput,
+  Radio,
   Select,
   SimpleGrid,
   Text,
@@ -31,7 +33,7 @@ import { useGroups } from "@utils/services/groupService";
 import { useSkills } from "@utils/services/skillService";
 import { t } from "i18next";
 import moment from "moment";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   EligibilityCriteriaRequestModels,
@@ -55,6 +57,10 @@ const EditAssessment = () => {
   const getGroups = useGroups(queryStringGenerator({ size: 1000 }));
   const getAssessments = useAssessments(queryStringGenerator({ size: 1000 }));
   const getTrainings = useCourse(queryStringGenerator({ size: 1000 }));
+
+  const [chooseMarkingType, setChooseMarkingType] = useState<
+    "percentagePass" | "skills" | null
+  >(null);
 
   const getDepartmentDropdown = () => {
     return getDepartment.data?.items.map((department) => ({
@@ -109,7 +115,8 @@ const EditAssessment = () => {
       weightage: 1,
       duration: 1,
       description: "",
-      skillsCriteriaRequestModels: [{ rule: "", skill: "", percentage: 0 }],
+      passPercentage: null,
+      skillsCriteriaRequestModels: [],
       eligibilityCreationRequestModels: [],
     },
     validate: yupResolver(schema()),
@@ -149,13 +156,20 @@ const EditAssessment = () => {
         skillsCriteriaRequestModels: skills,
         startDate: moment(assessmentData.data.startDate).toDate(),
         endDate: moment(assessmentData.data.endDate).toDate(),
+        passPercentage: assessmentData.data?.passPercentage,
       });
+
+      if (assessmentData.data?.passPercentage > 0) {
+        setChooseMarkingType("percentagePass");
+      } else if (assessmentData.data?.skillsCriteriaRequestModels.length > 0) {
+        setChooseMarkingType("skills");
+      }
     }
   }, [assessmentData.isSuccess]);
 
   const onSubmit = async (values: typeof form.values) => {
     try {
-      const data = {
+      const baseData = {
         ...values,
         startDate: moment(values.startDate)
           .add(5, "hour")
@@ -166,26 +180,48 @@ const EditAssessment = () => {
           .add(45, "minute")
           .toDate(),
         skillsCriteriaRequestModels: values.skillsCriteriaRequestModels.map(
-          (skill) => {
-            return {
-              skillAssessmentRule: Number(skill.rule),
-              skillId: skill.skill,
-              percentage: skill.percentage,
-            };
-          }
+          (skill) => ({
+            skillAssessmentRule: Number(skill.rule),
+            skillId: skill.skill,
+            percentage: skill.percentage,
+          })
         ),
         eligibilityCreationRequestModels:
-          values.eligibilityCreationRequestModels.map((eligibility) => {
-            return {
-              skillId: eligibility.skill,
-              role: Number(eligibility.role),
-              departmentId: eligibility.departmentId,
-              groupId: eligibility.groupId,
-              assessmentId: eligibility.assessmentId,
-              trainingId: eligibility.trainingId,
-            };
-          }),
+          values.eligibilityCreationRequestModels.map((eligibility) => ({
+            skillId: eligibility.skill,
+            role: Number(eligibility.role),
+            departmentId: eligibility.departmentId,
+            groupId: eligibility.groupId,
+            assessmentId: eligibility.assessmentId,
+            trainingId: eligibility.trainingId,
+          })),
       };
+
+      let data: typeof baseData;
+
+      if (
+        chooseMarkingType === "skills" &&
+        form.values.skillsCriteriaRequestModels.length > 0
+      ) {
+        data = {
+          ...baseData,
+          passPercentage: null,
+        };
+      } else if (
+        chooseMarkingType === "percentagePass" &&
+        form?.values?.passPercentage &&
+        form?.values?.passPercentage > 0
+      ) {
+        data = {
+          ...baseData,
+          skillsCriteriaRequestModels: [],
+        };
+      } else {
+        data = {
+          ...baseData,
+        };
+      }
+
       await updateAssessment.mutateAsync({ id: params.id as string, data });
 
       showNotification({
@@ -403,39 +439,64 @@ const EditAssessment = () => {
               </Accordion.Item>
             </Accordion>
 
-            <Accordion defaultValue="Skill">
-              <Accordion.Item value="Skill">
-                <Accordion.Control>{t("skill_criteria")}</Accordion.Control>
-                <Accordion.Panel>
-                  {form.values.skillsCriteriaRequestModels.map(
-                    (_criteria, index) => (
-                      <Flex gap={10} key={index} align={"flex-end"} mb={10}>
-                        <Select
-                          withAsterisk
-                          allowDeselect={false}
-                          label={t("rule")}
-                          placeholder={t("pick_value") as string}
-                          data={getSkillAssessmentType() ?? []}
-                          {...form.getInputProps(
-                            `skillsCriteriaRequestModels.${index}.rule`
-                          )}
-                        />
+            <Radio.Group
+              name="chooseMarkingType"
+              mt="lg"
+              label={t("choose_grade")}
+              value={chooseMarkingType}
+              onChange={(value) =>
+                setChooseMarkingType(
+                  value as "percentagePass" | "skills" | null
+                )
+              }
+            >
+              <Group mt="xs">
+                <Radio value="percentagePass" label="Percentage" />
+                <Radio value="skills" label={t("Skills")} />
+              </Group>
+            </Radio.Group>
 
-                        <Select
-                          withAsterisk
-                          allowDeselect={false}
-                          label={t("skill")}
-                          placeholder={t("pick_value") as string}
-                          data={getSkillDropdown() ?? []}
-                          {...form.getInputProps(
-                            `skillsCriteriaRequestModels.${index}.skill`
-                          )}
-                        />
+            {chooseMarkingType !== null && chooseMarkingType === "skills" && (
+              <Accordion defaultValue="Skill" mt="lg">
+                <Accordion.Item value="Skill">
+                  <Accordion.Control>{t("skill_criteria")}</Accordion.Control>
+                  <Accordion.Panel>
+                    {form.values.skillsCriteriaRequestModels.length === 0 && (
+                      <Button
+                        onClick={() => {
+                          form.insertListItem("skillsCriteriaRequestModels", {
+                            rule: "",
+                            skill: "",
+                            percentage: 0,
+                          });
+                        }}
+                      >
+                        {t("add_skill_criteria")}
+                      </Button>
+                    )}
 
-                        {form.values.skillsCriteriaRequestModels[index].rule !==
-                          "" && (
+                    {form.values.skillsCriteriaRequestModels.map(
+                      (_criteria, index) => (
+                        <Flex gap={10} key={index} align={"flex-end"} mb={10}>
+                          <Select
+                            label={t("rule")}
+                            placeholder={t("pick_value") as string}
+                            data={getSkillAssessmentType() ?? []}
+                            {...form.getInputProps(
+                              `skillsCriteriaRequestModels.${index}.rule`
+                            )}
+                          />
+
+                          <Select
+                            label={t("skill")}
+                            placeholder={t("pick_value") as string}
+                            data={getSkillDropdown() ?? []}
+                            {...form.getInputProps(
+                              `skillsCriteriaRequestModels.${index}.skill`
+                            )}
+                          />
+
                           <NumberInput
-                            withAsterisk
                             label={t("percentage")}
                             min={0}
                             stepHoldDelay={500}
@@ -447,22 +508,20 @@ const EditAssessment = () => {
                               `skillsCriteriaRequestModels.${index}.percentage`
                             )}
                           />
-                        )}
 
-                        <ActionIcon
-                          variant="subtle"
-                          onClick={() => {
-                            form.insertListItem(
-                              "skillsCriteriaRequestModels",
-                              { rule: "", skill: "", percentage: 0 },
-                              form.values.skillsCriteriaRequestModels.length // add to the end of the list
-                            );
-                          }}
-                        >
-                          <IconPlus />
-                        </ActionIcon>
+                          <ActionIcon
+                            variant="subtle"
+                            onClick={() => {
+                              form.insertListItem(
+                                "skillsCriteriaRequestModels",
+                                { rule: "", skill: "", percentage: 0 },
+                                form.values.skillsCriteriaRequestModels.length // add to the end of the list
+                              );
+                            }}
+                          >
+                            <IconPlus />
+                          </ActionIcon>
 
-                        {form.values.skillsCriteriaRequestModels.length > 1 && (
                           <ActionIcon
                             variant="subtle"
                             c={"red"}
@@ -475,13 +534,27 @@ const EditAssessment = () => {
                           >
                             <IconTrash />
                           </ActionIcon>
-                        )}
-                      </Flex>
-                    )
-                  )}
-                </Accordion.Panel>
-              </Accordion.Item>
-            </Accordion>
+                        </Flex>
+                      )
+                    )}
+                  </Accordion.Panel>
+                </Accordion.Item>
+              </Accordion>
+            )}
+
+            {chooseMarkingType !== null &&
+              chooseMarkingType === "percentagePass" && (
+                <NumberInput
+                  mt="lg"
+                  maw={200}
+                  label={t("pass_percentage")}
+                  min={1}
+                  max={100}
+                  stepHoldDelay={500}
+                  stepHoldInterval={(t) => Math.max(1000 / t ** 2, 25)}
+                  {...form.getInputProps("passPercentage")}
+                />
+              )}
 
             <Button mt={30} type="submit" loading={updateAssessment.isPending}>
               {t("submit")}

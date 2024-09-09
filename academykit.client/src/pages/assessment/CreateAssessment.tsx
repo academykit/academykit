@@ -184,7 +184,7 @@ const CreateAssessment = () => {
             };
           }),
       };
-      cons;
+
       const response = await postAssessment.mutateAsync(data);
 
       form.reset();
