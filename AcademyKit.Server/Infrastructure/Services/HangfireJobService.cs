@@ -41,6 +41,81 @@
             _fileServerService = fileServerService;
         }
 
+        private void ValidateContext(PerformContext context)
+        {
+            if (context == null) throw new ArgumentException(_localizer.GetString("ContextNotFound"));
+        }
+
+        private async Task<IList<User>> GetUsersByRole(params UserRole[] roles)
+        {
+            return await _unitOfWork.GetRepository<User>()
+                .GetAllAsync(predicate: p => roles.Contains(p.Role))
+                .ConfigureAwait(false);
+        }
+
+        private async Task<MailNotification> GetMailNotification(MailType mailType)
+        {
+            return await _unitOfWork.GetRepository<MailNotification>()
+                .GetFirstOrDefaultAsync(predicate: p => p.MailType == mailType)
+                .ConfigureAwait(false);
+        }
+
+        private string ReplacePlaceholders(string template, string userName, string courseName, string companyName)
+        {
+            return template.Replace("{UserName}", userName)
+                           .Replace("{CourseName}", courseName)
+                           .Replace("{EmailSignature}", $"Best regards,<br>{companyName}");
+        }
+
+        private string BuildUserCreatedPasswordEmailHtml(string firstName, string emailAddress, string password, string companyName, string companyNumber)
+        {
+            return $"Dear {firstName},<br><br>" +
+                   $"Your account has been created in the LMS.<br>" +
+                   $"Here are the login details:<br>Email: {emailAddress}<br>Password: {password}<br><br>" +
+                   $"Best regards,<br>{companyName}<br>{companyNumber}";
+        }
+
+        private async Task<GeneralSetting> GetGeneralSettings()
+        {
+            return await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
+        }
+
+        private async Task<Course> GetCourseById(Guid courseId)
+        {
+            return await _unitOfWork.GetRepository<Course>()
+                .GetFirstOrDefaultAsync(predicate: p => p.Id == courseId, include: source => source.Include(x => x.CourseTeachers).ThenInclude(x => x.User))
+                .ConfigureAwait(false);
+        }
+
+        private string BuildUserCreatedPasswordEmailHtml(string firstName, string emailAddress, string password, string companyName, string companyNumber)
+        {
+            return $"Dear {firstName},<br><br>" +
+              $"Your account has been created in the <a href='{_appUrl}'><u style='color:blue;'>LMS</u></a>.<br><br>" +
+              "Here are the login details for your LMS account:<br><br>" +
+              $"Email: {emailAddress}<br>" +
+              $"Password: {password}<br><br>" +
+              $"Please use the above login credentials to access your account.<br><br>" +
+              $"Best regards,<br>{companyName}<br>{companyNumber}";
+
+        }
+
+        private string BuildCourseRejectedEmailHtml(string firstName, string courseName, string reason, string companyName)
+        {
+            return $"Dear {firstName},<br><br>" +
+                   $"We regret to inform you that your training, {courseName} has been rejected for the following reason:<br>{reason}<br><br>" +
+                   "Please make the necessary corrections and resubmit.<br><br>" +
+                   $"Best regards,<br>{companyName}";
+        }
+
+        private string BuildCourseReviewEmailHtml(string firstName, string courseName, string companyName)
+        {
+            return $"Dear {firstName},<br><br>" +
+                   $"Training <a href = '{_appUrl}/settings/courses'>{courseName}</a> is under review. Kindly provide feedback and assessment. " +
+                   "Your input is vital for quality assurance. Thank you.<br><br>" +
+                   $"Best regards,<br>{companyName}";
+        }
+
+
         /// <summary>
         /// Handle to send course review mail
         /// </summary>
@@ -55,36 +130,24 @@
         {
             try
             {
-                if (context == null)
-                {
-                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
-                }
+                ValidateContext(context);
 
-                var users = await _unitOfWork
-                    .GetRepository<User>()
-                    .GetAllAsync(predicate: p =>
-                        p.Role == UserRole.Admin || p.Role == UserRole.SuperAdmin
-                    )
-                    .ConfigureAwait(false);
-                if (users.Count == default)
-                {
-                    return;
-                }
+                var users = await GetUsersByRole(UserRole.Admin, UserRole.SuperAdmin);
+                if (users.Count == default) return;
 
-                var settings = await _unitOfWork
-                    .GetRepository<GeneralSetting>()
-                    .GetFirstOrDefaultAsync();
+                var mailNotification = await GetMailNotification(MailType.TrainingReview);
+                var settings = await GetGeneralSettings();
+
                 foreach (var user in users)
                 {
-                    var html = $"Dear {user.FirstName},<br><br>";
-                    html +=
-                        $"Training "
-                        + @$"<a href = '{_appUrl}/settings/courses'>""{courseName}""</a> is under review. Kindly provide feedback and assessment. Your input is vital for quality assurance. Thank you.<br><br>";
-                    html += $"Best regards, <br> {settings.CompanyName}";
+                    var html = mailNotification is null
+                    ? BuildCourseReviewEmailHtml(user.FirstName, courseName, settings.CompanyName)
+                    : ReplacePlaceholders(mailNotification.Message, user.FirstName, courseName, settings.CompanyName);
+
                     var model = new EmailRequestDto
                     {
                         To = user.Email,
-                        Subject = $"Training Review Status - {courseName}",
+                        Subject = mailNotification?.Subject ?? $"Training Review Status - {courseName}",
                         Message = html
                     };
                     await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
@@ -113,28 +176,13 @@
         {
             try
             {
-                if (context == null)
-                {
-                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
-                }
+                ValidateContext(context);
 
-                var course = await _unitOfWork
-                    .GetRepository<Course>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p => p.Id == courseId,
-                        include: source =>
-                            source.Include(x => x.CourseTeachers).ThenInclude(x => x.User)
-                    )
-                    .ConfigureAwait(false);
+                var course = await GetCourseById(courseId);
+                if (course == default) throw new EntityNotFoundException(_localizer.GetString("CourseNotFound"));
 
-                if (course == default)
-                {
-                    throw new EntityNotFoundException(_localizer.GetString("CourseNotFound"));
-                }
-
-                var settings = await _unitOfWork
-                    .GetRepository<GeneralSetting>()
-                    .GetFirstOrDefaultAsync();
+                var settings = await GetGeneralSettings();
+                var mailNotification = await GetMailNotification(MailType.TrainingRejected);
                 foreach (var teacher in course.CourseTeachers)
                 {
                     if (!string.IsNullOrEmpty(teacher.User?.Email))
@@ -148,11 +196,15 @@
                         html += $"Thank you for your understanding and cooperation.<br><br>";
                         html += $"Best regards,<br> {settings.CompanyName}";
 
+                        var emailHtml = mailNotification is null
+                            ? html
+                            : ReplacePlaceholders(mailNotification.Message, teacher.User.FirstName, course.Name, settings.CompanyName);
+
                         var model = new EmailRequestDto
                         {
                             To = teacher.User.Email,
-                            Subject = "Training Rejection",
-                            Message = html,
+                            Subject = mailNotification?.Subject ?? "Training Rejection",
+                            Message = emailHtml,
                         };
                         await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
                     }
@@ -185,26 +237,20 @@
         {
             try
             {
-                if (context == null)
-                {
-                    throw new ArgumentException("Context not found.");
-                }
+                ValidateContext(context);
 
-                var html = $"Dear {firstName},<br><br>";
-                html +=
-                    $@"Your account has been created in the <a href = '{_appUrl}'><u  style='color:blue;'>LMS</u></a>.<br><br>";
-                html += "Here are the login details for your LMS account:<br><br>";
-                html += $"Email:{emailAddress}<br>";
-                html += $"Password:{password}<br><br>";
-                html += $"Please use the above login credentials to access your account.<br><br>";
-                html += $"Best regards,<br> {companyName}<br>{companyNumber}";
-                var mail = new EmailRequestDto
+                var mailNotification = await GetMailNotification(MailType.UserCreate);
+                var html = mailNotification is null
+                    ? BuildUserCreatedPasswordEmailHtml(firstName, emailAddress, password, companyName, companyNumber)
+                    : ReplacePlaceholders(mailNotification.Message, firstName, emailAddress, password, companyName, companyNumber);
+
+                var model = new EmailRequestDto
                 {
                     To = emailAddress,
-                    Subject = "Account Created",
+                    Subject = mailNotification?.Subject ?? "Account Created",
                     Message = html
                 };
-                await _emailService.SendMailWithHtmlBodyAsync(mail).ConfigureAwait(false);
+                await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
             }
             catch (Exception ex)
             {
@@ -228,27 +274,21 @@
         {
             try
             {
-                if (context == null)
-                {
-                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
-                }
+                ValidateContext(context);
+
+                var mailNotification = await GetMailNotification(MailType.UserCreate);
 
                 foreach (var emailDto in dtos)
                 {
-                    var html = $"Dear {emailDto.FullName},<br><br>";
-                    html +=
-                        $@"Your account has been created in the <a href = '{_appUrl}'><u  style='color:blue;'>LMS</u></a>.<br><br>";
-                    html += "Here are the login details for your LMS account:<br><br>";
-                    html += $"Email:{emailDto.Email}<br>";
-                    html += $"Password:{emailDto.Password}<br><br>";
-                    html +=
-                        $"Please use the above login credentials to access your account.<br><br>";
-                    html += $"Best regards,<br> {emailDto.CompanyName}<br>{emailDto.CompanyNumber}";
+                    var html = mailNotification is null
+                    ? BuildUserCreatedPasswordEmailHtml(emailDto.FullName, emailDto.Email, emailDto.Password, emailDto.CompanyName, emailDto.CompanyNumber)
+                    : ReplacePlaceholders(mailNotification.Message, emailDto.FullName, emailDto.Email, emailDto.Password, emailDto.CompanyName, emailDto.CompanyNumber);
+
                     var model = new EmailRequestDto
                     {
                         To = emailDto.Email,
-                        Message = html,
-                        Subject = "Account Created"
+                        Subject = mailNotification?.Subject ?? "Account Created",
+                        Message = html
                     };
                     await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
                 }
@@ -272,10 +312,7 @@
         {
             await ExecuteAsync(async () =>
             {
-                if (context == null)
-                {
-                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
-                }
+                ValidateContext(context);
 
                 var lesson = await _unitOfWork
                     .GetRepository<Lesson>()
@@ -320,47 +357,41 @@
         {
             try
             {
-                if (context == null)
-                {
-                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
-                }
+                ValidateContext(context);
 
                 var users = await _unitOfWork
                     .GetRepository<User>()
                     .GetAllAsync(predicate: p => userIds.Contains(p.Id))
                     .ConfigureAwait(false);
 
-                if (users.Count == default)
-                {
-                    return;
-                }
+                var mailNotification = await GetMailNotification(MailType.NewGroupMember);
 
-                var settings = await _unitOfWork
-                    .GetRepository<GeneralSetting>()
-                    .GetFirstOrDefaultAsync();
+                if (users.Count == default) return;
+
+                var settings = await GetGeneralSettings();
 
                 foreach (var user in users)
                 {
-                    var fullName = string.IsNullOrEmpty(user.MiddleName)
-                        ? $"{user.FirstName} {user.LastName}"
-                        : $"{user.FirstName} {user.MiddleName} {user.LastName}";
-                    var html = $"Dear {fullName},<br><br>";
+                    var html = $"Dear {user.FirstName},<br><br>";
                     html +=
                         $"You have been added to the {groupName}. Now you can find the Training Materials which has been created for this {groupName}. <br><br>";
                     html += $"Link to the group :";
                     html +=
                         $"<a href = '{_appUrl}/groups/{groupSlug}' ><u  style='color:blue;'> Click here </u> </a>";
                     html += $"<br>Thank You, <br> {settings.CompanyName}";
+                    var emailHtml = mailNotification is null
+                    ? html
+                    : ReplacePlaceholders(mailNotification.Message, user.FirstName, groupName, groupSlug, settings.CompanyName);
 
                     var model = new EmailRequestDto
                     {
                         To = user.Email,
-                        Subject = "New group member",
-                        Message = html,
+                        Subject = mailNotification?.Subject ?? "New group member",
+                        Message = emailHtml,
                     };
+
                     await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
                 }
-            }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
@@ -386,14 +417,9 @@
         {
             try
             {
-                if (context == null)
-                {
-                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
-                }
+                ValidateContext(context);
 
-                var settings = await _unitOfWork
-                    .GetRepository<GeneralSetting>()
-                    .GetFirstOrDefaultAsync();
+                var settings = await GetGeneralSettings()
                 var group = await _unitOfWork
                     .GetRepository<Group>()
                     .GetFirstOrDefaultAsync(
@@ -402,28 +428,37 @@
                             source.Include(x => x.GroupMembers).ThenInclude(x => x.User)
                     )
                     .ConfigureAwait(false);
+
+                var mailNotification = await GetMailNotification(MailType.NewCoursePublished);
+
                 if (group.GroupMembers.Count != default)
                 {
                     foreach (var member in group.GroupMembers)
                     {
+
                         var fullName = string.IsNullOrEmpty(member.User?.MiddleName)
-                            ? $"{member.User?.FirstName} {member.User?.LastName}"
-                            : $"{member.User?.FirstName} {member.User?.MiddleName} {member.User?.LastName}";
+                                ? $"{member.User?.FirstName} {member.User?.LastName}"
+                                : $"{member.User?.FirstName} {member.User?.MiddleName} {member.User?.LastName}";
                         var html = $"Dear {fullName},<br><br>";
                         html +=
                             $"You have new {courseName} training available for the {group.Name} group. Please, go to {group.Name} group or "
                             + @$"<a href ='{_appUrl}/trainings/{courseSlug}'><u  style='color:blue;'>Click Here </u></a> to find the training there. <br>";
                         html += $"<br><br>Thank You, <br> {settings.CompanyName}";
+
+                        var emailHtml = mailNotification is null
+                        ? html
+                        : ReplacePlaceholders(mailNotification.Message, fullName, group.Name, settings.CompanyName);
+
                         var model = new EmailRequestDto
                         {
                             To = member.User?.Email,
-                            Subject = "New training published",
-                            Message = html,
+                            Subject = mailNotification?.Subject ?? "New training published",
+                            Message = emailHtml,
                         };
                         await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
                     }
+
                 }
-            }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
@@ -449,27 +484,14 @@
         {
             try
             {
-                if (context == null)
-                {
-                    throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
-                }
+                ValidateContext(context);
 
-                var course = await _unitOfWork
-                    .GetRepository<Course>()
-                    .GetFirstOrDefaultAsync(
-                        predicate: p => p.Id == courseId,
-                        include: source =>
-                            source.Include(x => x.CourseTeachers).ThenInclude(x => x.User)
-                    )
-                    .ConfigureAwait(false);
-                var settings = await _unitOfWork
-                    .GetRepository<GeneralSetting>()
-                    .GetFirstOrDefaultAsync();
+                var course = await GetCourseById(courseId);
+                if (course.CourseTeachers == null) throw new ArgumentException(_localizer.GetString("TeacherNotFound"));
 
-                if (course.CourseTeachers == null)
-                {
-                    throw new ArgumentException(_localizer.GetString("TeacherNotFound"));
-                }
+                var mailNotification = await GetMailNotification(MailType.TrainingEnrollment);
+
+                var settings = await GetGeneralSettings();
 
                 foreach (var teacher in course.CourseTeachers)
                 {
@@ -481,6 +503,12 @@
                     html +=
                         $"Thank you for your attention to this enrollment. We appreciate your dedication to providing an exceptional learning experience.<br>";
                     html += $"<br><br>Best regards, <br> {settings.CompanyName}";
+
+
+                    var emailHtml = mailNotification is null
+                    ? html
+                    : ReplacePlaceholders(mailNotification.Message, userName, settings.CompanyName);
+
                     var model = new EmailRequestDto
                     {
                         To = teacher.User?.Email,
@@ -488,6 +516,7 @@
                         Message = html,
                     };
                     await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+
                 }
             }
             catch (Exception ex)
@@ -513,17 +542,14 @@
         {
             try
             {
-                if (context == null)
-                {
-                    throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
-                }
+                ValidateContext(context);
 
-                var settings = await _unitOfWork
-                    .GetRepository<GeneralSetting>()
-                    .GetFirstOrDefaultAsync();
+                var settings = await GetGeneralSettings();
 
+                var mailNotification = await GetMailNotification(MailType.CertificateIssued);
                 foreach (var user in certificateUserIssuedDtos)
                 {
+
                     var fullName = user.UserName;
                     var html = $"Dear {fullName},<br><br>";
                     html +=
@@ -532,11 +558,15 @@
                     html += $"we hope you find the training helpful.<br><br>";
                     html += $"Best regards, <br> {settings.CompanyName}";
 
+                    var emailHtml = mailNotification is null
+                    ? html
+                    : ReplacePlaceholders(mailNotification.Message, user.UserName, settings.CompanyName);
+
                     var model = new EmailRequestDto
                     {
                         To = user?.Email,
-                        Subject = "Certificate Issued",
-                        Message = html,
+                        Subject = mailNotification?.Subject ?? "Certificate Issued",
+                        Message = emailHtml,
                     };
                     await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
                 }
@@ -564,14 +594,9 @@
         {
             try
             {
-                if (context == null)
-                {
-                    throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
-                }
+                ValidateContext(context);
 
-                var settings = await _unitOfWork
-                    .GetRepository<GeneralSetting>()
-                    .GetFirstOrDefaultAsync();
+                var settings = await GetGeneralSettings();
                 var course = await _unitOfWork
                     .GetRepository<Course>()
                     .GetFirstOrDefaultAsync(
@@ -580,25 +605,31 @@
                             source.Include(x => x.CourseEnrollments).ThenInclude(x => x.User)
                     )
                     .ConfigureAwait(false);
-                if (course.CourseEnrollments == null)
-                {
-                    throw new ArgumentException("No enrollments");
-                }
+
+                var mailNotification = await GetMailNotification(MailType.LessonAdded);
+
+                if (course.CourseEnrollments == null) throw new ArgumentException("No enrollments");
 
                 foreach (var users in course.CourseEnrollments.AsList())
                 {
+
                     var firstName = users.User.FirstName;
                     var html = $"Dear {firstName},<br><br>";
                     html +=
-                        @$"Your enrolled training entitled  <a href='{_appUrl}/trainings/{courseSlug}' ><u  style='color:blue;'>'{courseName}'</u></a>  has been updated with new content. We encourage you to visit the training page and "
-                        + $"explore the new materials to enhance your learning experience.<br><br>";
+                    @$"Your enrolled training entitled  <a href='{_appUrl}/trainings/{courseSlug}' ><u  style='color:blue;'>'{courseName}'</u></a>  has been updated with new content. We encourage you to visit the training page and "
+                    + $"explore the new materials to enhance your learning experience.<br><br>";
 
                     html += $"<br><br>Thank You, <br> {settings.CompanyName}";
+
+                    var emailHtml = mailNotification is null
+                    ? html
+                    : ReplacePlaceholders(mailNotification.Message, firstName, settings.CompanyName);
+
                     var model = new EmailRequestDto
                     {
                         To = users.User?.Email,
-                        Subject = "New content",
-                        Message = html,
+                        Subject = mailNotification?.Subject ?? "Lesson Added",
+                        Message = emailHtml,
                     };
                     await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
                 }
@@ -628,26 +659,30 @@
         {
             try
             {
-                if (context == null)
-                {
-                    throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
-                }
+                ValidateContext(context);
 
-                var settings = await _unitOfWork
-                    .GetRepository<GeneralSetting>()
-                    .GetFirstOrDefaultAsync()
-                    .ConfigureAwait(false);
-                var html = $"Dear {fullName}<br><br>";
-                html +=
-                    @$"A recent change has been made to the email address associated with your account to {newEmail}<br>.Please check your email for the login credentials. If you encounter any difficulties, please contact your administrator immediately.";
-                html += $"<br><br>Thank You, <br> {settings.CompanyName}";
-                var model = new EmailRequestDto
+                var settings = await GetGeneralSettings();
+
+                var mailNotification = await GetMailNotification(MailType.AccountUpdate);
+
+                if (mailNotification is null)
                 {
-                    To = oldEmail,
-                    Subject = "Notification: Email Address Change",
-                    Message = html,
-                };
-                await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+                    var html = $"Dear {fullName}<br><br>";
+                    html +=
+                        @$"A recent change has been made to the email address associated with your account to {newEmail}<br>.Please check your email for the login credentials. If you encounter any difficulties, please contact your administrator immediately.";
+                    html += $"<br><br>Thank You, <br> {settings.CompanyName}";
+
+                    var emailHtml = mailNotification is null
+                    ? html
+                    : ReplacePlaceholders(mailNotification.Message, fullName, settings.CompanyName);
+                    var model = new EmailRequestDto
+                    {
+                        To = oldEmail,
+                        Subject = mailNotification?.Subject ?? "Notification: Email Address Change",
+                        Message = emailHtml,
+                    };
+                    await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+                }
             }
             catch (Exception ex)
             {
@@ -674,24 +709,26 @@
         {
             try
             {
-                if (context == null)
-                {
-                    throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
-                }
+                ValidateContext(context);
 
-                var settings = await _unitOfWork
-                    .GetRepository<GeneralSetting>()
-                    .GetFirstOrDefaultAsync()
-                    .ConfigureAwait(false);
+                var settings = await GetGeneralSettings();
+
+                var mailNotification = await GetMailNotification(MailType.EmailChange);
+
                 var html = $"Dear {fullName} <br><br>";
                 html +=
                     $"A recent change has been made to the email address associated with your account to {newEmail}.Please check your email to verify the email address.If you did not initiate this change, please contact your administrator immediately to address the issue.";
                 html += $"<br><br>Best regards, <br> {settings.CompanyName}";
+
+                var emailHtml = mailNotification is null
+                ? html
+                : ReplacePlaceholders(mailNotification.Message, fullName, settings.CompanyName);
+
                 var model = new EmailRequestDto
                 {
                     To = oldEmail,
-                    Subject = "Notification: Email Address Change",
-                    Message = html,
+                    Subject = mailNotification?.Subject ?? "Notification: Email Address Change",
+                    Message = emailHtml,
                 };
                 await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
             }
@@ -716,10 +753,7 @@
         {
             try
             {
-                if (context == null)
-                {
-                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
-                }
+                ValidateContext(context);
 
                 var assessment = await _unitOfWork
                     .GetRepository<Assessment>()
@@ -728,26 +762,30 @@
                         include: source => source.Include(x => x.User)
                     )
                     .ConfigureAwait(false);
-                if (assessment.Id != assessmentId)
-                {
-                    return;
-                }
+                if (assessment.Id != assessmentId) return;
 
-                var settings = await _unitOfWork
-                    .GetRepository<GeneralSetting>()
-                    .GetFirstOrDefaultAsync();
+                var settings = await GetGeneralSettings();
+
+                var mailNotification = await GetMailNotification(MailType.AssessmentAccept);
+
 
                 var html = $"Dear {assessment.User.FirstName},<br><br>";
                 html +=
                     $"Assessment "
                     + @$"<a href = '{_appUrl}/settings/courses'>""{assessment.Title}""</a> published successfully. Thank you.<br><br>";
                 html += $"Best regards, <br> {settings.CompanyName}";
+
+                var emailHtml = mailNotification is null
+                ? html
+                : ReplacePlaceholders(mailNotification.Message, assessment.User.FirstName, settings.CompanyName);
+
                 var model = new EmailRequestDto
                 {
                     To = assessment.User.Email,
-                    Subject = $"Assessment Review Status - {assessment.AssessmentStatus}",
-                    Message = html
+                    Subject = mailNotification?.Subject ?? $"Assessment Review Status - {assessment.AssessmentStatus}",
+                    Message = emailHtml
                 };
+
                 await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
             }
             catch (Exception ex)
@@ -771,10 +809,7 @@
         {
             try
             {
-                if (context == null)
-                {
-                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
-                }
+                ValidateContext(context);
 
                 var assessment = await _unitOfWork
                     .GetRepository<Assessment>()
@@ -783,14 +818,12 @@
                         include: source => source.Include(x => x.User)
                     )
                     .ConfigureAwait(false);
-                if (assessment.Id != assessmentId)
-                {
-                    return;
-                }
+                if (assessment.Id != assessmentId) return;
 
-                var settings = await _unitOfWork
-                    .GetRepository<GeneralSetting>()
-                    .GetFirstOrDefaultAsync();
+                var settings = await GetGeneralSettings();
+
+                var mailNotification = await GetMailNotification(MailType.AssessmentReject);
+
                 var html = $"Dear {assessment?.User.FirstName},<br><br>";
                 html +=
                     $"We regret to inform you that your Assessment, {assessment.Title} has been rejected for the following reason:<br><br>";
@@ -799,13 +832,18 @@
                     $"However, we encourage you to make the necessary corrections and adjustments based on the provided feedback. Once you have addressed the identified issues, please resubmit the training program for further review.<br><br>";
                 html += $"Thank you for your understanding and cooperation.<br><br>";
                 html += $"Best regards,<br> {settings.CompanyName}";
+
+                var emailHtml = mailNotification is null
+                ? html
+                : ReplacePlaceholders(mailNotification.Message, assessment.User.FirstName, settings.CompanyName);
                 var model = new EmailRequestDto
                 {
                     To = assessment.User.Email,
-                    Subject = $"Assessment Review Status - {assessment.AssessmentStatus}",
-                    Message = html
+                    Subject = mailNotification?.Subject ?? $"Assessment Review Status - {assessment.AssessmentStatus}",
+                    Message = emailHtml
                 };
                 await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+
             }
             catch (Exception ex)
             {
@@ -829,10 +867,7 @@
         {
             try
             {
-                if (context == null)
-                {
-                    throw new ArgumentException(_localizer.GetString("ContextNotFound"));
-                }
+                ValidateContext(context);
 
                 var assessment = await _unitOfWork
                     .GetRepository<Assessment>()
@@ -847,19 +882,16 @@
                                 .Include(x => x.User)
                     )
                     .ConfigureAwait(false);
-                if (assessment.Id != assessmentId)
-                {
-                    return;
-                }
+                if (assessment.Id != assessmentId) return;
 
                 // all admins and super admin
                 var users = user.Where(x =>
                     x.Role == UserRole.SuperAdmin || x.Role == UserRole.Admin
                 );
 
-                var settings = await _unitOfWork
-                    .GetRepository<GeneralSetting>()
-                    .GetFirstOrDefaultAsync();
+                var settings = await GetGeneralSettings();
+
+                var mailNotification = await GetMailNotification(MailType.AssessmentReview);
 
                 foreach (var assessments in users)
                 {
@@ -872,11 +904,15 @@
                         + @$"<a href = '{_appUrl}/settings/courses'>""{assessment.Title}""</a> is requested for review. Thank you.<br><br>";
                     html += $"Best regards, <br> {settings.CompanyName}";
 
+                    var emailHtml = mailNotification is null
+                    ? html
+                    : ReplacePlaceholders(mailNotification.Message, firstName, settings.CompanyName);
+
                     var model = new EmailRequestDto
                     {
                         To = emails,
-                        Subject = $"Request for Assessment Review - {assessment.AssessmentStatus}",
-                        Message = html
+                        Subject = mailNotification?.Subject ?? $"Request for Assessment Review - {assessment.AssessmentStatus}",
+                        Message = emailHtml
                     };
                     await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
                 }
