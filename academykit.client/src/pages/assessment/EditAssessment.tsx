@@ -18,19 +18,12 @@ import { DatePickerInput } from "@mantine/dates";
 import { createFormContext, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
-import { SkillAssessmentRule } from "@utils/enums";
-import queryStringGenerator from "@utils/queryStringGenerator";
 import RoutePath from "@utils/routeConstants";
-import { useDepartmentSetting } from "@utils/services/adminService";
 import {
-  useAssessments,
   useGetSingleAssessment,
   useUpdateAssessment,
 } from "@utils/services/assessmentService";
 import errorType from "@utils/services/axiosError";
-import { useCourse } from "@utils/services/courseService";
-import { useGroups } from "@utils/services/groupService";
-import { useSkills } from "@utils/services/skillService";
 import { t } from "i18next";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -41,70 +34,29 @@ import {
   SkillsCriteriaRequestModels,
 } from "./CreateAssessment";
 import schema from "./component/AssessmentFormSchema";
+import { useAssessmentUtils } from "@hooks/useAssessmentUtils";
 
 const [FormProvider, useFormContext, useForm] =
   createFormContext<IAssessmentForm>();
 
 const EditAssessment = () => {
   const navigate = useNavigate();
-  const skillData = useSkills(queryStringGenerator({ size: 1000 }));
   const params = useParams();
   const assessmentData = useGetSingleAssessment(params.id as string);
-  const updateAssessment = useUpdateAssessment(params.id as string);
-  const getDepartment = useDepartmentSetting(
-    queryStringGenerator({ size: 1000 })
-  );
-  const getGroups = useGroups(queryStringGenerator({ size: 1000 }));
-  const getAssessments = useAssessments(queryStringGenerator({ size: 1000 }));
-  const getTrainings = useCourse(queryStringGenerator({ size: 1000 }));
-
   const [chooseMarkingType, setChooseMarkingType] = useState<
     "percentagePass" | "skills" | null
   >(null);
 
-  const getDepartmentDropdown = () => {
-    return getDepartment.data?.items.map((department) => ({
-      value: department.id,
-      label: department.name,
-    }));
-  };
+  const updateAssessment = useUpdateAssessment(params.id as string);
 
-  const getGroupDropdown = () => {
-    return getGroups.data?.data.items.map((group) => ({
-      value: group.id,
-      label: group.name,
-    }));
-  };
-
-  const getAssessmentDropdown = () => {
-    return getAssessments.data?.items.map((assessment) => ({
-      value: assessment.id,
-      label: assessment.title,
-    }));
-  };
-
-  const getTrainingDropdown = () => {
-    return getTrainings.data?.items.map((training) => ({
-      value: training.id,
-      label: training.name,
-    }));
-  };
-
-  const getSkillDropdown = () => {
-    return skillData.data?.items.map((skill) => ({
-      value: skill.id,
-      label: skill.skillName,
-    }));
-  };
-
-  const getSkillAssessmentType = () => {
-    return Object.entries(SkillAssessmentRule)
-      .splice(0, Object.entries(SkillAssessmentRule).length / 2)
-      .map(([key, value]) => ({
-        value: key,
-        label: t(value.toString()),
-      }));
-  };
+  const {
+    getSkillDropdown,
+    getDepartmentDropdown,
+    getAssessmentDropdown,
+    getGroupDropdown,
+    getSkillAssessmentType,
+    getTrainingDropdown,
+  } = useAssessmentUtils();
 
   const form = useForm({
     initialValues: {

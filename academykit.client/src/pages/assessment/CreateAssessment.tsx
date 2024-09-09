@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Breadcrumb from "@components/Ui/BreadCrumb";
 import RichTextEditor from "@components/Ui/RichTextEditor/Index";
+import { useAssessmentUtils } from "@hooks/useAssessmentUtils";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Accordion,
@@ -20,18 +21,9 @@ import { DatePickerInput } from "@mantine/dates";
 import { createFormContext, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
-import { SkillAssessmentRule } from "@utils/enums";
-import queryStringGenerator from "@utils/queryStringGenerator";
 import RoutePath from "@utils/routeConstants";
-import { useDepartmentSetting } from "@utils/services/adminService";
-import {
-  useAssessments,
-  usePostAssessment,
-} from "@utils/services/assessmentService";
+import { usePostAssessment } from "@utils/services/assessmentService";
 import errorType from "@utils/services/axiosError";
-import { useCourse } from "@utils/services/courseService";
-import { useGroups } from "@utils/services/groupService";
-import { useSkills } from "@utils/services/skillService";
 import { t } from "i18next";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -71,51 +63,18 @@ const [FormProvider, useFormContext, useForm] =
 const CreateAssessment = () => {
   const navigate = useNavigate();
   const postAssessment = usePostAssessment();
-  const skillData = useSkills(queryStringGenerator({ size: 1000 }));
-  const getDepartment = useDepartmentSetting(
-    queryStringGenerator({ size: 1000 })
-  );
-  const getGroups = useGroups(queryStringGenerator({ size: 1000 }));
-  const getAssessments = useAssessments(queryStringGenerator({ size: 1000 }));
-  const getTrainings = useCourse(queryStringGenerator({ size: 1000 }));
   const [chooseMarkingType, setChooseMarkingType] = useState<
     "percentagePass" | "skills" | null
   >(null);
 
-  const getDepartmentDropdown = () => {
-    return getDepartment.data?.items.map((department) => ({
-      value: department.id,
-      label: department.name,
-    }));
-  };
-
-  const getGroupDropdown = () => {
-    return getGroups.data?.data.items.map((group) => ({
-      value: group.id,
-      label: group.name,
-    }));
-  };
-
-  const getSkillDropdown = () => {
-    return skillData.data?.items.map((skill) => ({
-      value: skill.id,
-      label: skill.skillName,
-    }));
-  };
-
-  const getAssessmentDropdown = () => {
-    return getAssessments.data?.items.map((assessment) => ({
-      value: assessment.id,
-      label: assessment.title,
-    }));
-  };
-
-  const getTrainingDropdown = () => {
-    return getTrainings.data?.items.map((training) => ({
-      value: training.id,
-      label: training.name,
-    }));
-  };
+  const {
+    getSkillDropdown,
+    getDepartmentDropdown,
+    getAssessmentDropdown,
+    getGroupDropdown,
+    getSkillAssessmentType,
+    getTrainingDropdown,
+  } = useAssessmentUtils();
 
   const form = useForm({
     initialValues: {
@@ -141,15 +100,6 @@ const CreateAssessment = () => {
       form.setFieldValue("passPercentage", null);
     }
   }, [chooseMarkingType]);
-
-  const getSkillAssessmentType = () => {
-    return Object.entries(SkillAssessmentRule)
-      .splice(0, Object.entries(SkillAssessmentRule).length / 2)
-      .map(([key, value]) => ({
-        value: key,
-        label: t(value.toString()),
-      }));
-  };
 
   const onSubmit = async (values: typeof form.values) => {
     try {
