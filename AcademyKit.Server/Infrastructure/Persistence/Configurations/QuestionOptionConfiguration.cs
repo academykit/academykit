@@ -1,4 +1,5 @@
 ﻿using AcademyKit.Domain.Entities;
+using AcademyKit.Infrastructure.Persistence.Configurations.Common;
 using AcademyKit.Infrastructure.Persistence.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -17,18 +18,8 @@ public class QuestionOptionConfiguration : IEntityTypeConfiguration<QuestionOpti
             .HasColumnType(MigrationConstants.Varchar50)
             .HasMaxLength(50)
             .IsRequired();
-        builder
-            .Property(x => x.Option)
-            .HasColumnName("option")
-            .HasColumnType(MigrationConstants.Varchar5000)
-            .HasMaxLength(5000)
-            .IsRequired();
-        builder.Property(x => x.Order).HasColumnName("order");
-        builder
-            .Property(x => x.IsCorrect)
-            .HasColumnName("is_correct")
-            .HasDefaultValue(0)
-            .IsRequired();
+        builder.ConfigureCommonOptionProperties();
+        builder.ConfigureCorrectOption();
 
         builder.ConfigureAuditFields();
     }

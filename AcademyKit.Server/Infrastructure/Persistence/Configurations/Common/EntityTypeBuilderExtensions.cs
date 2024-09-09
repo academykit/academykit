@@ -3,7 +3,7 @@ using AcademyKit.Infrastructure.Persistence.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AcademyKit.Infrastructure.Persistence.Configurations;
+namespace AcademyKit.Infrastructure.Persistence.Configurations.Common;
 
 public static class EntityTypeBuilderExtensions
 {

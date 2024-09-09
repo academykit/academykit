@@ -1,5 +1,6 @@
 ﻿using AcademyKit.Domain.Entities;
 using AcademyKit.Domain.Enums;
+using AcademyKit.Infrastructure.Persistence.Configurations.Common;
 using AcademyKit.Infrastructure.Persistence.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
