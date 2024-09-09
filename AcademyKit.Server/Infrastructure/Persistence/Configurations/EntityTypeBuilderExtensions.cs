@@ -1,4 +1,5 @@
 ﻿using AcademyKit.Domain.Common;
+using AcademyKit.Infrastructure.Persistence.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +11,11 @@ public static class EntityTypeBuilderExtensions
         where TEntity : IdentifiableEntity
     {
         builder.HasKey(e => e.Id);
-        builder.Property(e => e.Id).HasColumnName("id").HasColumnType("varchar(50)").IsRequired();
+        builder
+            .Property(e => e.Id)
+            .HasColumnName("id")
+            .HasColumnType(MigrationConstants.Varchar50)
+            .IsRequired();
     }
 
     public static void ConfigureAuditFields<TEntity>(this EntityTypeBuilder<TEntity> builder)
@@ -19,27 +24,27 @@ public static class EntityTypeBuilderExtensions
         builder
             .Property(e => e.CreatedBy)
             .HasColumnName("created_by")
-            .HasColumnType("varchar(50)")
+            .HasColumnType(MigrationConstants.Varchar50)
             .HasMaxLength(50)
             .IsRequired();
 
         builder
             .Property(e => e.CreatedOn)
             .HasColumnName("created_on")
-            .HasColumnType("datetime")
+            .HasColumnType(MigrationConstants.DateTime)
             .IsRequired();
 
         builder
             .Property(e => e.UpdatedBy)
             .HasColumnName("updated_by")
-            .HasColumnType("varchar(50)")
+            .HasColumnType(MigrationConstants.Varchar50)
             .HasMaxLength(50)
             .IsRequired(false);
 
         builder
             .Property(e => e.UpdatedOn)
             .HasColumnName("updated_on")
-            .HasColumnType("datetime")
+            .HasColumnType(MigrationConstants.DateTime)
             .IsRequired(false);
     }
 }

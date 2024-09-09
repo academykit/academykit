@@ -1,4 +1,5 @@
 ﻿using AcademyKit.Domain.Entities;
+using AcademyKit.Infrastructure.Persistence.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,13 +15,13 @@ public class AssignmentQuestionOptionConfiguration
         builder
             .Property(x => x.AssignmentId)
             .HasColumnName("assignment_id")
-            .HasColumnType("varchar(50)")
+            .HasColumnType(MigrationConstants.Varchar50)
             .HasMaxLength(50)
             .IsRequired();
         builder
             .Property(x => x.Option)
             .HasColumnName("option")
-            .HasColumnType("varchar(5000)")
+            .HasColumnType(MigrationConstants.Varchar5000)
             .HasMaxLength(5000)
             .IsRequired();
         builder.Property(x => x.Order).HasColumnName("order");

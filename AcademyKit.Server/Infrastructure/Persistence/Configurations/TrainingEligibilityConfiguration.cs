@@ -1,6 +1,7 @@
 ﻿namespace AcademyKit.Infrastructure.Persistence.Configurations
 {
     using AcademyKit.Domain.Entities;
+    using AcademyKit.Infrastructure.Persistence.Migrations;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,19 +14,19 @@
             builder
                 .Property(x => x.CourseId)
                 .HasColumnName("course_id")
-                .HasColumnType("varchar(50)")
+                .HasColumnType(MigrationConstants.Varchar50)
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.EligibilityId)
                 .HasColumnName("eligibility_id")
-                .HasColumnType("varchar(50)")
+                .HasColumnType(MigrationConstants.Varchar50)
                 .HasMaxLength(50)
                 .IsRequired();
             builder
                 .Property(x => x.TrainingEligibilityEnum)
                 .HasColumnName("training_eligibility_enum")
-                .HasColumnType("int")
+                .HasColumnType(MigrationConstants.Int)
                 .IsRequired();
 
             builder.ConfigureAuditFields();

@@ -1,56 +1,58 @@
-﻿namespace AcademyKit.Infrastructure.Persistence.Configurations
+﻿using AcademyKit.Domain.Entities;
+using AcademyKit.Infrastructure.Persistence.Migrations;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace AcademyKit.Infrastructure.Persistence.Configurations;
+
+public class QuestionSetSubmissionConfiguration : IEntityTypeConfiguration<QuestionSetSubmission>
 {
-    using AcademyKit.Domain.Entities;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-    public class QuestionSetSubmissionConfiguration
-        : IEntityTypeConfiguration<QuestionSetSubmission>
+    public void Configure(EntityTypeBuilder<QuestionSetSubmission> builder)
     {
-        public void Configure(EntityTypeBuilder<QuestionSetSubmission> builder)
-        {
-            builder.ConfigureId();
+        builder.ConfigureId();
 
-            builder
-                .Property(x => x.QuestionSetId)
-                .HasColumnName("question_set_id")
-                .HasColumnType("varchar(50)")
-                .HasMaxLength(50)
-                .IsRequired();
-            builder
-                .Property(x => x.UserId)
-                .HasColumnName("user_id")
-                .HasColumnType("varchar(50)")
-                .HasMaxLength(50)
-                .IsRequired();
-            builder
-                .Property(x => x.StartTime)
-                .HasColumnName("start_time")
-                .HasColumnType("DATETIME");
-            builder.Property(x => x.EndTime).HasColumnName("end_time").HasColumnType("DATETIME");
-            builder
-                .Property(x => x.IsSubmissionError)
-                .HasColumnName("is_submission_error")
-                .HasDefaultValue(false);
-            builder
-                .Property(x => x.SubmissionErrorMessage)
-                .HasColumnName("submission_error_message")
-                .HasColumnType("varchar(250)")
-                .HasMaxLength(250)
-                .IsRequired(false);
+        builder
+            .Property(x => x.QuestionSetId)
+            .HasColumnName("question_set_id")
+            .HasColumnType(MigrationConstants.Varchar50)
+            .HasMaxLength(50)
+            .IsRequired();
+        builder
+            .Property(x => x.UserId)
+            .HasColumnName("user_id")
+            .HasColumnType(MigrationConstants.Varchar50)
+            .HasMaxLength(50)
+            .IsRequired();
+        builder
+            .Property(x => x.StartTime)
+            .HasColumnName("start_time")
+            .HasColumnType(MigrationConstants.DateTime);
+        builder
+            .Property(x => x.EndTime)
+            .HasColumnName("end_time")
+            .HasColumnType(MigrationConstants.DateTime);
+        builder
+            .Property(x => x.IsSubmissionError)
+            .HasColumnName("is_submission_error")
+            .HasDefaultValue(false);
+        builder
+            .Property(x => x.SubmissionErrorMessage)
+            .HasColumnName("submission_error_message")
+            .HasColumnType(MigrationConstants.Varchar250)
+            .HasMaxLength(250)
+            .IsRequired(false);
 
-            builder.ConfigureAuditFields();
+        builder.ConfigureAuditFields();
 
-            builder
-                .HasMany(x => x.QuestionSetResults)
-                .WithOne(x => x.QuestionSetSubmission)
-                .HasForeignKey(x => x.QuestionSetSubmissionId)
-                .OnDelete(DeleteBehavior.NoAction);
-            builder
-                .HasMany(x => x.QuestionSetSubmissionAnswers)
-                .WithOne(x => x.QuestionSetSubmission)
-                .HasForeignKey(x => x.QuestionSetSubmissionId)
-                .OnDelete(DeleteBehavior.NoAction);
-        }
+        builder
+            .HasMany(x => x.QuestionSetResults)
+            .WithOne(x => x.QuestionSetSubmission)
+            .HasForeignKey(x => x.QuestionSetSubmissionId)
+            .OnDelete(DeleteBehavior.NoAction);
+        builder
+            .HasMany(x => x.QuestionSetSubmissionAnswers)
+            .WithOne(x => x.QuestionSetSubmission)
+            .HasForeignKey(x => x.QuestionSetSubmissionId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

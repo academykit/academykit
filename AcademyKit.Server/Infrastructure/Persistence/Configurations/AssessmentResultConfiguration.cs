@@ -1,4 +1,5 @@
 ﻿using AcademyKit.Domain.Entities;
+using AcademyKit.Infrastructure.Persistence.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,29 +14,29 @@ public class AssessmentResultConfiguration : IEntityTypeConfiguration<Assessment
         builder
             .Property(x => x.UserId)
             .HasColumnName("user_id")
-            .HasColumnType("varchar(50)")
+            .HasColumnType(MigrationConstants.Varchar50)
             .HasMaxLength(50)
             .IsRequired();
         builder
             .Property(x => x.AssessmentId)
             .HasColumnName("assessment_id")
-            .HasColumnType("varchar(50)")
+            .HasColumnType(MigrationConstants.Varchar50)
             .HasMaxLength(50)
             .IsRequired();
         builder
             .Property(x => x.AssessmentSubmissionId)
             .HasColumnName("assessment_submission_id")
-            .HasColumnType("varchar(50)")
+            .HasColumnType(MigrationConstants.Varchar50)
             .HasMaxLength(50)
             .IsRequired();
         builder
             .Property(x => x.TotalMark)
             .HasColumnName("total_mark")
-            .HasColumnType("decimal(20,4)");
+            .HasColumnType(MigrationConstants.Decimal20_4);
         builder
             .Property(x => x.NegativeMark)
             .HasColumnName("negative_mark")
-            .HasColumnType("decimal(20,4)");
+            .HasColumnType(MigrationConstants.Decimal20_4);
 
         builder.ConfigureAuditFields();
     }

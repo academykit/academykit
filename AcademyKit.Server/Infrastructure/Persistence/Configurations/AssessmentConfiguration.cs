@@ -1,4 +1,5 @@
 ﻿using AcademyKit.Domain.Entities;
+using AcademyKit.Infrastructure.Persistence.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,26 +14,26 @@ public class AssessmentConfiguration : IEntityTypeConfiguration<Assessment>
         builder
             .Property(x => x.Slug)
             .HasColumnName("slug")
-            .HasColumnType("varchar(270)")
+            .HasColumnType(MigrationConstants.Varchar270)
             .HasMaxLength(270)
             .IsRequired();
         builder
             .Property(x => x.Title)
             .HasColumnName("title")
-            .HasColumnType("varchar(250)")
+            .HasColumnType(MigrationConstants.Varchar250)
             .HasMaxLength(250)
             .IsRequired();
         builder
             .Property(x => x.Description)
             .HasColumnName("description")
-            .HasColumnType("varchar(500)")
+            .HasColumnType(MigrationConstants.Varchar500)
             .HasMaxLength(2000)
             .IsRequired(false);
 
         builder
             .Property(x => x.Message)
             .HasColumnName("message")
-            .HasColumnType("varchar(500)")
+            .HasColumnType(MigrationConstants.Varchar500)
             .HasMaxLength(500)
             .IsRequired(false);
         builder.Property(x => x.AssessmentStatus).HasColumnName("assessment_status");
@@ -43,12 +44,12 @@ public class AssessmentConfiguration : IEntityTypeConfiguration<Assessment>
         builder
             .Property(x => x.StartDate)
             .HasColumnName("start_date")
-            .HasColumnType("DATETIME")
+            .HasColumnType(MigrationConstants.DateTime)
             .IsRequired(true);
         builder
             .Property(x => x.EndDate)
             .HasColumnName("end_date")
-            .HasColumnType("DATETIME")
+            .HasColumnType(MigrationConstants.DateTime)
             .IsRequired(true);
 
         builder.ConfigureAuditFields();

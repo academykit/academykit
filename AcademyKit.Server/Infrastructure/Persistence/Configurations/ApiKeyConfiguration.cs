@@ -1,4 +1,5 @@
 ﻿using AcademyKit.Domain.Entities;
+using AcademyKit.Infrastructure.Persistence.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,20 +14,20 @@ public class ApiKeyConfiguration : IEntityTypeConfiguration<ApiKey>
         builder
             .Property(x => x.Name)
             .HasColumnName("name")
-            .HasColumnType("varchar(100)")
+            .HasColumnType(MigrationConstants.Varchar100)
             .HasMaxLength(100)
             .IsRequired(false);
         builder
             .Property(x => x.Key)
             .HasColumnName("key")
-            .HasColumnType("varchar(64)")
+            .HasColumnType(MigrationConstants.Varchar64)
             .HasMaxLength(64)
             .IsRequired(true);
 
         builder
             .Property(x => x.UserId)
             .HasColumnName("user_id")
-            .HasColumnType("varchar(50)")
+            .HasColumnType(MigrationConstants.Varchar50)
             .HasMaxLength(50)
             .IsRequired();
 

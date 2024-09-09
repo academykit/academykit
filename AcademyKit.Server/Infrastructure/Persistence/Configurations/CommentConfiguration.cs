@@ -1,55 +1,42 @@
-﻿namespace AcademyKit.Infrastructure.Persistence.Configurations
+﻿using AcademyKit.Domain.Entities;
+using AcademyKit.Infrastructure.Persistence.Migrations;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace AcademyKit.Infrastructure.Persistence.Configurations;
+
+public class CommentConfiguration : IEntityTypeConfiguration<Comment>
 {
-    using AcademyKit.Domain.Entities;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-    public class CommentConfiguration : IEntityTypeConfiguration<Comment>
+    public void Configure(EntityTypeBuilder<Comment> builder)
     {
-        public void Configure(EntityTypeBuilder<Comment> builder)
-        {
-            builder.ConfigureId();
+        builder.ConfigureId();
 
-            builder
-                .Property(x => x.CourseId)
-                .HasColumnName("course_id")
-                .HasColumnType("varchar(50)")
-                .HasMaxLength(50)
-                .IsRequired();
-            builder
-                .Property(x => x.Content)
-                .HasColumnName("content")
-                .HasColumnType("varchar(500)")
-                .HasMaxLength(500)
-                .IsRequired();
-            builder.Property(x => x.IsDeleted).HasColumnName("is_deleted").HasDefaultValue(false);
-            builder
-                .Property(x => x.CreatedBy)
-                .HasColumnName("created_by")
-                .HasColumnType("varchar(50)")
-                .HasMaxLength(50)
-                .IsRequired();
-            builder
-                .Property(x => x.CreatedOn)
-                .HasColumnName("created_on")
-                .IsRequired()
-                .HasColumnType("DATETIME");
-            builder
-                .Property(x => x.UpdatedBy)
-                .HasColumnName("updated_by")
-                .HasColumnType("varchar(50)")
-                .HasMaxLength(50)
-                .IsRequired(false);
-            builder
-                .Property(x => x.UpdatedOn)
-                .HasColumnName("updated_on")
-                .HasColumnType("DATETIME")
-                .IsRequired(false);
-            builder
-                .HasMany(x => x.CommentReplies)
-                .WithOne(x => x.Comment)
-                .HasForeignKey(x => x.CommentId)
-                .OnDelete(DeleteBehavior.NoAction);
-        }
+        builder
+            .Property(x => x.CourseId)
+            .HasColumnName("course_id")
+            .HasColumnType(MigrationConstants.Varchar50)
+            .HasMaxLength(50)
+            .IsRequired();
+        builder
+            .Property(x => x.Content)
+            .HasColumnName("content")
+            .HasColumnType(MigrationConstants.Varchar500)
+            .HasMaxLength(500)
+            .IsRequired();
+        builder.Property(x => x.IsDeleted).HasColumnName("is_deleted").HasDefaultValue(false);
+        builder
+            .Property(x => x.CreatedBy)
+            .HasColumnName("created_by")
+            .HasColumnType(MigrationConstants.Varchar50)
+            .HasMaxLength(50)
+            .IsRequired();
+
+        builder.ConfigureAuditFields();
+
+        builder
+            .HasMany(x => x.CommentReplies)
+            .WithOne(x => x.Comment)
+            .HasForeignKey(x => x.CommentId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

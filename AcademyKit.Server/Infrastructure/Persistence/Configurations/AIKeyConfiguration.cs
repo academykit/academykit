@@ -1,4 +1,5 @@
 ﻿using AcademyKit.Domain.Entities;
+using AcademyKit.Infrastructure.Persistence.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,7 +14,7 @@ public class AIKeyConfiguration : IEntityTypeConfiguration<AIKey>
         builder
             .Property(x => x.Key)
             .HasColumnName("key")
-            .HasColumnType("varchar(270)")
+            .HasColumnType(MigrationConstants.Varchar270)
             .HasMaxLength(270)
             .IsRequired(true);
 

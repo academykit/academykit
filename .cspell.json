@@ -89,7 +89,8 @@
     "Xzdz",
     "Zlypo",
     "zmmtg",
-    "नेपाली"
+    "नेपाली",
+    "Scaffolder"
   ],
   "ignorePaths": [
     "**/**/node_modules/**",

@@ -1,40 +1,37 @@
 ﻿using AcademyKit.Domain.Entities;
 using AcademyKit.Infrastructure.Persistence.Configurations;
+using AcademyKit.Infrastructure.Persistence.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Persistence.Configurations
+namespace Infrastructure.Persistence.Configurations;
+
+public class PhysicalLessonReviewConfiguration : IEntityTypeConfiguration<PhysicalLessonReview>
 {
-    public class PhysicalLessonReviewConfiguration : IEntityTypeConfiguration<PhysicalLessonReview>
+    public void Configure(EntityTypeBuilder<PhysicalLessonReview> builder)
     {
-        public void Configure(EntityTypeBuilder<PhysicalLessonReview> builder)
-        {
-            builder.ConfigureId();
+        builder.ConfigureId();
 
-            builder
-                .Property(x => x.LessonId)
-                .HasColumnName("lesson_id")
-                .HasColumnType("varchar(50)")
-                .HasMaxLength(50)
-                .IsRequired();
-            builder
-                .Property(x => x.UserId)
-                .HasColumnName("user_id")
-                .HasColumnType("varchar(50)")
-                .HasMaxLength(50)
-                .IsRequired();
-            builder
-                .Property(x => x.HasAttended)
-                .HasColumnName("hasAttended")
-                .HasDefaultValue(false);
-            builder.Property(x => x.IsReviewed).HasColumnName("is_reviewed").HasDefaultValue(false);
-            builder
-                .Property(x => x.ReviewMessage)
-                .HasColumnName("review_message")
-                .HasColumnType("varchar(500)")
-                .IsRequired(false);
+        builder
+            .Property(x => x.LessonId)
+            .HasColumnName("lesson_id")
+            .HasColumnType(MigrationConstants.Varchar50)
+            .HasMaxLength(50)
+            .IsRequired();
+        builder
+            .Property(x => x.UserId)
+            .HasColumnName("user_id")
+            .HasColumnType(MigrationConstants.Varchar50)
+            .HasMaxLength(50)
+            .IsRequired();
+        builder.Property(x => x.HasAttended).HasColumnName("hasAttended").HasDefaultValue(false);
+        builder.Property(x => x.IsReviewed).HasColumnName("is_reviewed").HasDefaultValue(false);
+        builder
+            .Property(x => x.ReviewMessage)
+            .HasColumnName("review_message")
+            .HasColumnType(MigrationConstants.Varchar500)
+            .IsRequired(false);
 
-            builder.ConfigureAuditFields();
-        }
+        builder.ConfigureAuditFields();
     }
 }

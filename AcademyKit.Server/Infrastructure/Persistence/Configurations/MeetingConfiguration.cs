@@ -1,6 +1,7 @@
 ﻿namespace AcademyKit.Infrastructure.Persistence.Configurations
 {
     using AcademyKit.Domain.Entities;
+    using AcademyKit.Infrastructure.Persistence.Migrations;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,16 +14,16 @@
             builder
                 .Property(x => x.StartDate)
                 .HasColumnName("start_date")
-                .HasColumnType("DATETIME")
+                .HasColumnType(MigrationConstants.DateTime)
                 .IsRequired(false);
             builder
                 .Property(x => x.ZoomLicenseId)
                 .HasColumnName("zoom_license_id")
-                .HasColumnType("varchar(50)");
+                .HasColumnType(MigrationConstants.Varchar50);
             builder
                 .Property(x => x.Passcode)
                 .HasColumnName("passcode")
-                .HasColumnType("varchar(50)")
+                .HasColumnType(MigrationConstants.Varchar50)
                 .HasMaxLength(50)
                 .IsRequired(false);
             builder.Property(x => x.Duration).HasColumnName("duration");

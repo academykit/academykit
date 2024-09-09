@@ -1,4 +1,5 @@
 ﻿using AcademyKit.Domain.Entities;
+using AcademyKit.Infrastructure.Persistence.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,17 +14,23 @@ public class AssessmentSubmissionConfiguration : IEntityTypeConfiguration<Assess
         builder
             .Property(x => x.AssessmentId)
             .HasColumnName("assessment_id")
-            .HasColumnType("varchar(50)")
+            .HasColumnType(MigrationConstants.Varchar50)
             .HasMaxLength(50)
             .IsRequired();
         builder
             .Property(x => x.UserId)
             .HasColumnName("user_id")
-            .HasColumnType("varchar(50)")
+            .HasColumnType(MigrationConstants.Varchar50)
             .HasMaxLength(50)
             .IsRequired();
-        builder.Property(x => x.StartTime).HasColumnName("start_time").HasColumnType("DATETIME");
-        builder.Property(x => x.EndTime).HasColumnName("end_time").HasColumnType("DATETIME");
+        builder
+            .Property(x => x.StartTime)
+            .HasColumnName("start_time")
+            .HasColumnType(MigrationConstants.DateTime);
+        builder
+            .Property(x => x.EndTime)
+            .HasColumnName("end_time")
+            .HasColumnType(MigrationConstants.DateTime);
         builder
             .Property(x => x.IsSubmissionError)
             .HasColumnName("is_submission_error")
@@ -31,7 +38,7 @@ public class AssessmentSubmissionConfiguration : IEntityTypeConfiguration<Assess
         builder
             .Property(x => x.SubmissionErrorMessage)
             .HasColumnName("submission_error_message")
-            .HasColumnType("varchar(250)")
+            .HasColumnType(MigrationConstants.Varchar250)
             .HasMaxLength(250)
             .IsRequired(false);
 

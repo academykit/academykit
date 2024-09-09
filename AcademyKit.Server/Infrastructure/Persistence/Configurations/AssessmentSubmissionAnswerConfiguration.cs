@@ -1,4 +1,5 @@
 ﻿using AcademyKit.Domain.Entities;
+using AcademyKit.Infrastructure.Persistence.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,14 +15,14 @@ public class AssessmentSubmissionAnswerConfiguration
         builder
             .Property(x => x.AssessmentSubmissionId)
             .HasColumnName("assessment_submission_id")
-            .HasColumnType("varchar(50)")
+            .HasColumnType(MigrationConstants.Varchar50)
             .HasMaxLength(50)
             .IsRequired();
 
         builder
             .Property(x => x.AssessmentQuestionId)
             .HasColumnName("assessment_question_id")
-            .HasColumnType("varchar(50)")
+            .HasColumnType(MigrationConstants.Varchar50)
             .HasMaxLength(50)
             .IsRequired();
 
@@ -30,7 +31,7 @@ public class AssessmentSubmissionAnswerConfiguration
         builder
             .Property(x => x.SelectedAnswers)
             .HasColumnName("selected_answers")
-            .HasColumnType("varchar(150)")
+            .HasColumnType(MigrationConstants.Varchar150)
             .HasMaxLength(150)
             .IsRequired();
 

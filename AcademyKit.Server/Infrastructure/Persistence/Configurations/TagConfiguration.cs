@@ -1,6 +1,7 @@
 ﻿namespace AcademyKit.Infrastructure.Persistence.Configurations
 {
     using AcademyKit.Domain.Entities;
+    using AcademyKit.Infrastructure.Persistence.Migrations;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,13 +14,13 @@
             builder
                 .Property(x => x.Slug)
                 .HasColumnName("slug")
-                .HasColumnType("varchar(270)")
+                .HasColumnType(MigrationConstants.Varchar270)
                 .HasMaxLength(270)
                 .IsRequired();
             builder
                 .Property(x => x.Name)
                 .HasColumnName("name")
-                .HasColumnType("varchar(250)")
+                .HasColumnType(MigrationConstants.Varchar250)
                 .HasMaxLength(250)
                 .IsRequired();
             builder.Property(x => x.IsActive).HasColumnName("is_active").HasDefaultValue(false);
