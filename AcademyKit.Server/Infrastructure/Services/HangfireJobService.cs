@@ -60,14 +60,14 @@
                 .ConfigureAwait(false);
         }
 
-        private string ReplacePlaceholders(string template, string userName, string courseName, string companyName)
+        private static string ReplacePlaceholders(string template, string userName, string courseName, string companyName)
         {
             return template.Replace("{UserName}", userName)
                            .Replace("{CourseName}", courseName)
                            .Replace("{EmailSignature}", $"Best regards,<br>{companyName}");
         }
 
-        private string BuildUserCreatedPasswordEmailHtml(string firstName, string emailAddress, string password, string companyName, string companyNumber)
+        private static string BuildUserCreatedPasswordEmailHtml(string firstName, string emailAddress, string password, string companyName, string companyNumber)
         {
             return $"Dear {firstName},<br><br>" +
                    $"Your account has been created in the LMS.<br>" +
@@ -87,7 +87,7 @@
                 .ConfigureAwait(false);
         }
 
-        private string BuildUserCreatedPasswordEmailHtml(string firstName, string emailAddress, string password, string companyName, string companyNumber)
+        private static string BuildUserCreatedPasswordEmailHtml(string firstName, string emailAddress, string password, string companyName, string companyNumber)
         {
             return $"Dear {firstName},<br><br>" +
               $"Your account has been created in the <a href='{_appUrl}'><u style='color:blue;'>LMS</u></a>.<br><br>" +
@@ -99,7 +99,7 @@
 
         }
 
-        private string BuildCourseRejectedEmailHtml(string firstName, string courseName, string reason, string companyName)
+        private static string BuildCourseRejectedEmailHtml(string firstName, string courseName, string reason, string companyName)
         {
             return $"Dear {firstName},<br><br>" +
                    $"We regret to inform you that your training, {courseName} has been rejected for the following reason:<br>{reason}<br><br>" +
@@ -664,25 +664,21 @@
                 var settings = await GetGeneralSettings();
 
                 var mailNotification = await GetMailNotification(MailType.AccountUpdate);
+                var html = $"Dear {fullName}<br><br>";
+                html +=
+                    @$"A recent change has been made to the email address associated with your account to {newEmail}<br>.Please check your email for the login credentials. If you encounter any difficulties, please contact your administrator immediately.";
+                html += $"<br><br>Thank You, <br> {settings.CompanyName}";
 
-                if (mailNotification is null)
+                var emailHtml = mailNotification is null
+                ? html
+                : ReplacePlaceholders(mailNotification.Message, fullName, settings.CompanyName);
+                var model = new EmailRequestDto
                 {
-                    var html = $"Dear {fullName}<br><br>";
-                    html +=
-                        @$"A recent change has been made to the email address associated with your account to {newEmail}<br>.Please check your email for the login credentials. If you encounter any difficulties, please contact your administrator immediately.";
-                    html += $"<br><br>Thank You, <br> {settings.CompanyName}";
-
-                    var emailHtml = mailNotification is null
-                    ? html
-                    : ReplacePlaceholders(mailNotification.Message, fullName, settings.CompanyName);
-                    var model = new EmailRequestDto
-                    {
-                        To = oldEmail,
-                        Subject = mailNotification?.Subject ?? "Notification: Email Address Change",
-                        Message = emailHtml,
-                    };
-                    await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
-                }
+                    To = oldEmail,
+                    Subject = mailNotification?.Subject ?? "Notification: Email Address Change",
+                    Message = emailHtml,
+                };
+                await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
             }
             catch (Exception ex)
             {
