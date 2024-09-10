@@ -118,7 +118,6 @@ public class SettingsController : BaseApiController
 
         var logoUrlKey = existing.LogoUrl;
 
-        existing.Id = existing.Id;
         existing.LogoUrl = model.LogoUrl;
         existing.CompanyName = model.CompanyName;
         existing.CompanyAddress = model.CompanyAddress;
