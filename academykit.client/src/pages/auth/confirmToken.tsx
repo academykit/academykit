@@ -21,6 +21,7 @@ import {
   useResetPasswordToken,
 } from "@utils/services/authService";
 import errorType from "@utils/services/axiosError";
+import { setHeader } from "@utils/setHeader";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
@@ -98,7 +99,6 @@ const ConfirmToken = () => {
         color: "red",
       });
     }
-    // setTimeout(() => , 700);
   };
   useEffect(() => {
     if (auth?.loggedIn) {
@@ -106,46 +106,20 @@ const ConfirmToken = () => {
     }
   }, [auth?.auth]);
 
-  const companySettings = useCompanySetting();
-
-  const setHeader = () => {
-    const info =
-      localStorage.getItem("app-info") &&
-      JSON.parse(localStorage.getItem("app-info") ?? "");
-    if (info) {
-      let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
-      document.title = info.name;
-      if (!link) {
-        link = document.createElement("link");
-        link.rel = "icon";
-        document.getElementsByTagName("head")[0].appendChild(link);
-      }
-      link.href = info.logo;
-    }
-  };
+  const settings = useCompanySetting();
 
   useEffect(() => {
-    setHeader();
-
-    if (companySettings.isSuccess) {
-      localStorage.setItem(
-        "app-info",
-        JSON.stringify({
-          name: companySettings.data.data?.name ?? "AcademyKit",
-          logo: companySettings.data.data.imageUrl ?? "/favicon.png",
-        })
-      );
-      setHeader();
+    if (settings.isSuccess) {
+      setHeader({
+        name: settings.data.data?.name,
+        logoUrl: settings.data.data.imageUrl,
+      });
     }
-  }, [companySettings.isSuccess]);
+  }, [settings.isSuccess]);
 
   return (
     <Container size={470} my={40} style={{ position: "relative" }}>
-      <Logo
-        height={100}
-        width={100}
-        url={companySettings?.data?.data?.imageUrl}
-      />
+      <Logo height={100} width={100} url={settings?.data?.data?.imageUrl} />
       <Box style={{ position: "absolute", width: "100%" }}>
         <Transition
           mounted={!toggle}

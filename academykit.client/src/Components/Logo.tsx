@@ -1,4 +1,5 @@
 import { Center, Image } from "@mantine/core";
+import { checkValidUrl } from "@utils/checkValidUrl";
 import { Link } from "react-router-dom";
 import CompanyLogo from "./Icons/Company";
 
@@ -14,7 +15,7 @@ const Logo = ({
   return (
     <Center>
       <Link to={"/"}>
-        {url ? (
+        {checkValidUrl(url ?? "") ? (
           <Image
             height={height}
             width={width}

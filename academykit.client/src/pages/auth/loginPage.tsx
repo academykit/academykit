@@ -21,6 +21,7 @@ import { useCompanySetting } from "@utils/services/adminService";
 import { useLogin } from "@utils/services/authService";
 import { api } from "@utils/services/service-api";
 import type { IUserProfile } from "@utils/services/types";
+import { setHeader } from "@utils/setHeader";
 import type { AxiosError } from "axios";
 import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -87,25 +88,7 @@ const LoginPage = () => {
   }, [login.isError, login.isSuccess]);
   const companySettings = useCompanySetting();
 
-  const setHeader = () => {
-    const info =
-      localStorage.getItem("app-info") &&
-      JSON.parse(localStorage.getItem("app-info") ?? "");
-    if (info) {
-      let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
-      document.title = info.name;
-      if (!link) {
-        link = document.createElement("link");
-        link.rel = "icon";
-        document.getElementsByTagName("head")[0].appendChild(link);
-      }
-      link.href = info.logo;
-    }
-  };
-
   useEffect(() => {
-    setHeader();
-
     if (companySettings.isSuccess) {
       if (!companySettings?.data?.data?.isSetupCompleted) {
         return navigate("/initial/setup", { replace: true });
@@ -113,17 +96,15 @@ const LoginPage = () => {
       const branding = JSON.parse(
         companySettings.data.data.customConfiguration ?? "{}"
       );
-      localStorage.setItem(
-        "app-info",
-        JSON.stringify({
-          name: companySettings.data.data?.name ?? "AcademyKit",
-          logo: companySettings.data.data.imageUrl ?? "/favicon.png",
-        })
-      );
+
+      setHeader({
+        name: companySettings.data.data?.name,
+        logoUrl: companySettings.data.data.imageUrl,
+      });
+
       localStorage.setItem("branding", branding.accent);
       localStorage.setItem("version", companySettings.data.data.appVersion);
       context?.toggleBrandingTheme(branding.accent ?? "#0E99AC"); // set the accent after fetching
-      setHeader();
     }
   }, [companySettings.isSuccess]);
 

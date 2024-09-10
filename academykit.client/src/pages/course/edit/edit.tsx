@@ -5,6 +5,7 @@ import TextViewer from "@components/Ui/RichTextViewer";
 import ThumbnailEditor from "@components/Ui/ThumbnailEditor";
 import useAuth from "@hooks/useAuth";
 import useCustomForm from "@hooks/useCustomForm";
+import { useDropdownUtils } from "@hooks/useDropdownUtils";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Accordion,
@@ -26,24 +27,21 @@ import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { TrainingEligibilityEnum } from "@utils/enums";
 import queryStringGenerator from "@utils/queryStringGenerator";
 import RoutePath from "@utils/routeConstants";
-import { useDepartmentSetting } from "@utils/services/adminService";
-import { useAssessments } from "@utils/services/assessmentService";
 import errorType from "@utils/services/axiosError";
 import {
-  useCourse,
   useCourseDescription,
   useUpdateCourse,
 } from "@utils/services/courseService";
 import { useAddGroup, useGroups } from "@utils/services/groupService";
 import { useLevels } from "@utils/services/levelService";
-import { useSkills } from "@utils/services/skillService";
 import { ITag, useAddTag, useTags } from "@utils/services/tagService";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import * as Yup from "yup";
+
 import TagMultiSelectCreatable from "../component/TagMultiSelectCreatable";
+import { schema } from "../create";
 
 interface FormValues {
   thumbnail: string;
@@ -62,34 +60,6 @@ interface FormValues {
   }[];
 }
 
-const schema = () => {
-  const { t } = useTranslation();
-  return Yup.object().shape({
-    title: Yup.string()
-      .required(t("course_title_required") as string)
-      .max(250, t("course_title_must_be_less_than_100") as string),
-    level: Yup.string().required(t("level_required") as string),
-    groups: Yup.string().required(t("group_required") as string),
-    startDate: Yup.string()
-      .required(t("start_date_required") as string)
-      .typeError(t("start_date_required") as string),
-    isUnlimitedEndDate: Yup.boolean(),
-    endDate: Yup.string().when("isUnlimitedEndDate", {
-      is: false,
-      then: (schema) =>
-        schema
-          .required(t("end_date_required") as string)
-          .typeError(t("end_date_required") as string),
-      otherwise: (schema) => schema.nullable(),
-    }),
-    trainingEligibilities: Yup.array().of(
-      Yup.object().shape({
-        eligibilityId: Yup.string().required(t("field_required") as string),
-      })
-    ),
-  });
-};
-
 export const [FormProvider, useFormContext, useForm] =
   createFormContext<FormValues>();
 const EditCourse = () => {
@@ -97,12 +67,14 @@ const EditCourse = () => {
   const [viewMode, setViewMode] = useState(true);
   const cForm = useCustomForm();
   const { t } = useTranslation();
-  const getDepartments = useDepartmentSetting(
-    queryStringGenerator({ size: 1000 })
-  );
-  const skillData = useSkills(queryStringGenerator({ size: 1000 }));
-  const getAssessments = useAssessments(queryStringGenerator({ size: 1000 }));
-  const getTrainings = useCourse(queryStringGenerator({ size: 1000 }));
+
+  const {
+    getDepartmentDropdown,
+    getTrainingDropdown,
+    getSkillDropdown,
+    getAssessmentDropdown,
+  } = useDropdownUtils();
+
   const { scrollIntoView: scrollToTop, targetRef: refBasic } =
     useScrollIntoView<HTMLDivElement>({
       offset: 60,
@@ -154,34 +126,6 @@ const EditCourse = () => {
     isSuccess: courseIsSuccess,
     refetch,
   } = useCourseDescription(slug.id as string);
-
-  const getDepartmentDropdown = () => {
-    return getDepartments.data?.items.map((x) => ({
-      value: x.id,
-      label: x.name,
-    }));
-  };
-
-  const getSkillDropdown = () => {
-    return skillData.data?.items.map((skill) => ({
-      value: skill.id,
-      label: skill.skillName,
-    }));
-  };
-
-  const getAssessmentDropdown = () => {
-    return getAssessments.data?.items.map((assessment) => ({
-      value: assessment.id,
-      label: assessment.title,
-    }));
-  };
-
-  const getTrainingDropdown = () => {
-    return getTrainings.data?.items.map((training) => ({
-      value: training.id,
-      label: training.name,
-    }));
-  };
 
   const getEligibilityType = () => {
     return Object.entries(TrainingEligibilityEnum)

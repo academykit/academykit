@@ -465,6 +465,17 @@ const AssessmentDescription = () => {
                 </List>
               </ScrollArea.Autosize>
             </Paper>
+
+            <Paper p="md" mt={15}>
+              <Text>{t("pass_percentage")}</Text>
+              <Text>
+                {" "}
+                {assessmentDetail.data &&
+                assessmentDetail?.data?.passPercentage > 0
+                  ? assessmentDetail?.data?.passPercentage
+                  : t("no_percentage_criteria")}
+              </Text>
+            </Paper>
           </Grid.Col>
         </Grid>
       </Container>
