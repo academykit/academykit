@@ -8,6 +8,7 @@ import { usePostAssessment } from "@utils/services/assessmentService";
 import errorType from "@utils/services/axiosError";
 import { t } from "i18next";
 import moment from "moment";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AssessmentForm from "./AssessmentForm";
 import schema from "./component/AssessmentFormSchema";
@@ -46,6 +47,10 @@ const CreateAssessment = () => {
   const navigate = useNavigate();
   const postAssessment = usePostAssessment();
 
+  const [chooseMarkingType, setChooseMarkingType] = useState<
+    "percentagePass" | "skills" | null
+  >(null);
+
   const form = useForm({
     initialValues: {
       title: "",
@@ -62,6 +67,14 @@ const CreateAssessment = () => {
     validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
+
+  useEffect(() => {
+    if (chooseMarkingType === "percentagePass") {
+      form.setFieldValue("skillsCriteriaRequestModels", []);
+    } else if (chooseMarkingType === "skills") {
+      form.setFieldValue("passPercentage", null);
+    }
+  }, [chooseMarkingType]);
 
   const onSubmit = async (values: typeof form.values) => {
     try {
@@ -123,7 +136,12 @@ const CreateAssessment = () => {
       <Box mt={10}>
         <FormProvider form={form}>
           <form onSubmit={form.onSubmit(onSubmit)}>
-            <AssessmentForm form={form} useFormContext={useFormContext} />
+            <AssessmentForm
+              form={form}
+              useFormContext={useFormContext}
+              chooseMarkingType={chooseMarkingType}
+              setChooseMarkingType={setChooseMarkingType}
+            />
             <Button mt={30} type="submit" loading={postAssessment.isPending}>
               {t("submit")}
             </Button>

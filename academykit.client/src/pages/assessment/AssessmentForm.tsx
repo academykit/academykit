@@ -18,13 +18,17 @@ import { DatePickerInput } from "@mantine/dates";
 import { UseFormReturnType } from "@mantine/form";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { t } from "i18next";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 import { IAssessmentForm } from "./CreateAssessment";
+
+type MarketingType = "percentagePass" | "skills" | null;
 
 function AssessmentForm({
   form,
   useFormContext,
+  chooseMarkingType,
+  setChooseMarkingType,
 }: {
   readonly form: UseFormReturnType<
     IAssessmentForm,
@@ -34,11 +38,9 @@ function AssessmentForm({
     IAssessmentForm,
     (values: IAssessmentForm) => IAssessmentForm
   >;
+  readonly chooseMarkingType: MarketingType;
+  readonly setChooseMarkingType: Dispatch<SetStateAction<MarketingType>>;
 }) {
-  const [chooseMarkingType, setChooseMarkingType] = useState<
-    "percentagePass" | "skills" | null
-  >(null);
-
   const {
     getSkillDropdown,
     getDepartmentDropdown,
@@ -47,14 +49,6 @@ function AssessmentForm({
     getSkillAssessmentType,
     getTrainingDropdown,
   } = useAssessmentUtils();
-
-  useEffect(() => {
-    if (chooseMarkingType === "percentagePass") {
-      form.setFieldValue("skillsCriteriaRequestModels", []);
-    } else if (chooseMarkingType === "skills") {
-      form.setFieldValue("passPercentage", null);
-    }
-  }, [chooseMarkingType]);
 
   return (
     <>

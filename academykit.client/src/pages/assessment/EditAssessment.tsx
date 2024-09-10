@@ -33,8 +33,6 @@ const EditAssessment = () => {
 
   const updateAssessment = useUpdateAssessment(params.id as string);
 
-  console.log(useFormContext);
-
   const form = useForm({
     initialValues: {
       title: "",
@@ -172,7 +170,12 @@ const EditAssessment = () => {
     <Box mt={10}>
       <FormProvider form={form}>
         <form onSubmit={form.onSubmit(onSubmit)}>
-          <AssessmentForm form={form} useFormContext={useFormContext} />
+          <AssessmentForm
+            form={form}
+            useFormContext={useFormContext}
+            chooseMarkingType={chooseMarkingType}
+            setChooseMarkingType={setChooseMarkingType}
+          />
           <Button mt={30} type="submit" loading={updateAssessment.isPending}>
             {t("submit")}
           </Button>
