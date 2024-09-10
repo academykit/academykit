@@ -6,7 +6,6 @@ using AcademyKit.Domain.Entities;
 using AcademyKit.Domain.Enums;
 using AcademyKit.Infrastructure.Common;
 using AcademyKit.Infrastructure.Localization;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Hangfire;
 using Hangfire.Server;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +20,20 @@ public class HangfireJobService : BaseService, IHangfireJobService
     private readonly IEmailService _emailService;
     private readonly IVideoService _videoService;
     private readonly IFileServerService _fileServerService;
+
+    private readonly string _userName = "{userName}";
+    private readonly string _app = "{appUrl}";
+    private readonly string _courseName = "{courseName}";
+    private readonly string _courseSlug = "{courseSlug}";
+    private readonly string _emailSignature = "{emailSignature}";
+    private readonly string _companyName = "{companyName}";
+    private readonly string _companyNumber = "{companyNumber}";
+    private readonly string _password = "{password}";
+    private readonly string _email = "{email}";
+    private readonly string _message = "{message}";
+    private readonly string _groupName = "{groupName}";
+    private readonly string _groupSlug = "{groupSlug}";
+    private readonly string _newEmail = "{newEmail}";
 
     public HangfireJobService(
         IConfiguration configuration,
@@ -99,10 +112,10 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 {
                     model.Subject = template.Subject;
                     model.Message = template
-                        .Message.Replace("{firstName}", user.FirstName)
-                        .Replace("{appUrl}", _appUrl)
-                        .Replace("{courseName}", courseName)
-                        .Replace("{emailSignature}", $"Best regards, <br> {setting.CompanyName}");
+                        .Message.Replace(_userName, user.FirstName)
+                        .Replace(_app, _appUrl)
+                        .Replace(_courseName, courseName)
+                        .Replace(_emailSignature, $"Best regards, <br> {setting.CompanyName}");
                 }
 
                 await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
@@ -186,13 +199,10 @@ public class HangfireJobService : BaseService, IHangfireJobService
                     {
                         model.Subject = template.Subject;
                         model.Message = template
-                            .Message.Replace("{userName}", teacher?.User.FirstName)
-                            .Replace("{courseName}", course.Name)
-                            .Replace("{message}", message)
-                            .Replace(
-                                "{emailSignature}",
-                                $"Best regards, <br> {setting.CompanyName}"
-                            );
+                            .Message.Replace(_userName, teacher?.User.FirstName)
+                            .Replace(_courseName, course.Name)
+                            .Replace(_message, message)
+                            .Replace(_emailSignature, $"Best regards, <br> {setting.CompanyName}");
                     }
                     await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
                 }
@@ -256,12 +266,12 @@ public class HangfireJobService : BaseService, IHangfireJobService
             {
                 mail.Subject = template.Subject;
                 mail.Message = template
-                    .Message.Replace("{firstName}", firstName)
-                    .Replace("{appUrl}", _appUrl)
-                    .Replace("{emailAddress}", emailAddress)
-                    .Replace("{password}", password)
-                    .Replace("{companyName}", companyName)
-                    .Replace("{companyNumber}", companyNumber);
+                    .Message.Replace(_userName, firstName)
+                    .Replace(_app, _appUrl)
+                    .Replace(_email, emailAddress)
+                    .Replace(_password, password)
+                    .Replace(_companyName, companyName)
+                    .Replace(_companyNumber, companyNumber);
             }
 
             await _emailService.SendMailWithHtmlBodyAsync(mail).ConfigureAwait(false);
@@ -321,12 +331,12 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 {
                     model.Subject = template.Subject;
                     model.Message = template
-                        .Message.Replace("{firstName}", emailDto.FullName)
-                        .Replace("{appUrl}", _appUrl)
-                        .Replace("{emailAddress}", emailDto.Email)
-                        .Replace("{password}", emailDto.Password)
-                        .Replace("{companyName}", emailDto.CompanyName)
-                        .Replace("{companyNumber}", emailDto.CompanyNumber);
+                        .Message.Replace(_userName, emailDto.FullName)
+                        .Replace(_app, _appUrl)
+                        .Replace(_email, emailDto.Email)
+                        .Replace(_password, emailDto.Password)
+                        .Replace(_companyName, emailDto.CompanyName)
+                        .Replace(_companyNumber, emailDto.CompanyNumber);
                 }
 
                 await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
@@ -444,11 +454,11 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 {
                     model.Subject = template.Subject;
                     model.Message = template
-                        .Message.Replace("{fullName}", fullName)
-                        .Replace("{groupName}", groupName)
-                        .Replace("{appUrl}", _appUrl)
-                        .Replace("{groupSlug}", groupSlug)
-                        .Replace("{emailSignature}", $"<br>Thank You, <br> {setting.CompanyName}");
+                        .Message.Replace(_userName, fullName)
+                        .Replace(_groupName, groupName)
+                        .Replace(_app, _appUrl)
+                        .Replace(_groupSlug, groupSlug)
+                        .Replace(_emailSignature, $"<br>Thank You, <br> {setting.CompanyName}");
                 }
 
                 await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
@@ -488,7 +498,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 .GetRepository<GeneralSetting>()
                 .GetFirstOrDefaultAsync();
             var group = await _unitOfWork
-                .GetRepository<Group>()
+                .GetRepository<Domain.Entities.Group>()
                 .GetFirstOrDefaultAsync(
                     predicate: x => x.Id == groupId,
                     include: source => source.Include(x => x.GroupMembers).ThenInclude(x => x.User)
@@ -504,7 +514,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
                     var html = $"Dear {fullName},<br><br>";
                     html +=
                         $"You have new {courseName} training available for the {group.Name} group. Please, go to {group.Name} group or "
-                        + @$"<a href ='{_appUrl}/trainings/{courseSlug}'><u  style='color:blue;'>Click Here </u></a> to find the training there. <br>";
+                        + @$"<a href ='{_appUrl}/trainings/{courseSlug}'><u style='color:blue;'>Click Here </u></a> to find the training there. <br>";
                     html += $"<br><br>Thank You, <br> {settings.CompanyName}";
                     var model = new EmailRequestDto
                     {
@@ -591,11 +601,11 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 {
                     model.Subject = template.Subject;
                     model.Message = template
-                        .Message.Replace("{firstName}", teacher.User.FirstName)
-                        .Replace("{courseName}", courseName)
-                        .Replace("{userName}", userName)
-                        .Replace("{userEmail}", userEmail)
-                        .Replace("{emailSignature}", $"Best regards, <br> {setting.CompanyName}");
+                        .Message.Replace(_userName, teacher.User.FirstName)
+                        .Replace(_courseName, courseName)
+                        .Replace(_userName, userName)
+                        .Replace(_email, userEmail)
+                        .Replace(_emailSignature, $"Best regards, <br> {setting.CompanyName}");
                 }
 
                 await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
@@ -662,9 +672,9 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 {
                     model.Subject = template.Subject;
                     model.Message = template
-                        .Message.Replace("{userName}", user.UserName)
-                        .Replace("{courseName}", courseName)
-                        .Replace("{emailSignature}", $"Best regards, <br> {setting.CompanyName}");
+                        .Message.Replace(_userName, user.UserName)
+                        .Replace(_courseName, courseName)
+                        .Replace(_emailSignature, $"Best regards, <br> {setting.CompanyName}");
                 }
 
                 await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
@@ -746,14 +756,11 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 {
                     model.Subject = template.Subject;
                     model.Message = template
-                        .Message.Replace("{firstName}", firstName)
-                        .Replace("{appUrl}", _appUrl)
-                        .Replace("{courseSlug}", courseSlug)
-                        .Replace("{courseName}", courseName)
-                        .Replace(
-                            "{emailSignature}",
-                            $"<br><br>Thank You, <br> {setting.CompanyName}"
-                        );
+                        .Message.Replace(_userName, firstName)
+                        .Replace(_app, _appUrl)
+                        .Replace(_courseSlug, courseSlug)
+                        .Replace(_courseName, courseName)
+                        .Replace(_emailSignature, $"<br><br>Thank You, <br> {setting.CompanyName}");
                 }
 
                 await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
@@ -789,46 +796,51 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
             }
 
-            var setting = await _unitOfWork
-                .GetRepository<GeneralSetting>()
-                .GetFirstOrDefaultAsync()
-                .ConfigureAwait(false);
-
-            var template = await _unitOfWork
-                .GetRepository<MailNotification>()
-                .GetFirstOrDefaultAsync(predicate: p =>
-                    p.MailType == MailType.ChangedEmail && p.IsActive
-                )
-                .ConfigureAwait(false);
-
-            var model = new EmailRequestDto { To = oldEmail, };
-            if (template == null)
-            {
-                var html =
-                    $"Dear {fullName}<br><br>"
-                    + $"A recent change has been made to the email address associated with your account to {newEmail}<br>."
-                    + $"Please check your email for the login credentials. If you encounter any difficulties, "
-                    + $"please contact your administrator immediately."
-                    + $"<br><br>Thank You, <br> {setting.CompanyName}";
-
-                model.Subject = "Notification: Email Address Change";
-                model.Message = html;
-            }
-            else
-            {
-                model.Subject = template.Subject;
-                model.Message = template
-                    .Message.Replace("{fullName}", fullName)
-                    .Replace("{newEmail}", newEmail)
-                    .Replace("{emailSignature}", $"<br><br>Thank You, <br> {setting.CompanyName}");
-            }
-            await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+            await SendChangeEmailAsync(fullName, newEmail, oldEmail).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex.Message, ex);
             throw ex is ServiceException ? ex : new ServiceException(ex.Message);
         }
+    }
+
+    private async Task SendChangeEmailAsync(string fullName, string newEmail, string oldEmail)
+    {
+        var setting = await _unitOfWork
+            .GetRepository<GeneralSetting>()
+            .GetFirstOrDefaultAsync()
+            .ConfigureAwait(false);
+
+        var template = await _unitOfWork
+            .GetRepository<MailNotification>()
+            .GetFirstOrDefaultAsync(predicate: p =>
+                p.MailType == MailType.ChangedEmail && p.IsActive
+            )
+            .ConfigureAwait(false);
+
+        var model = new EmailRequestDto { To = oldEmail, };
+        if (template == null)
+        {
+            var html =
+                $"Dear {fullName}<br><br>"
+                + $"A recent change has been made to the email address associated with your account to {newEmail}<br>."
+                + $"Please check your email for the login credentials. If you encounter any difficulties, "
+                + $"please contact your administrator immediately."
+                + $"<br><br>Thank You, <br> {setting.CompanyName}";
+
+            model.Subject = "Notification: Email Address Change";
+            model.Message = html;
+        }
+        else
+        {
+            model.Subject = template.Subject;
+            model.Message = template
+                .Message.Replace(_userName, fullName)
+                .Replace(_newEmail, newEmail)
+                .Replace(_emailSignature, $"<br><br>Thank You, <br> {setting.CompanyName}");
+        }
+        await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
     }
 
     /// <summary>
@@ -854,40 +866,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
             }
 
-            var setting = await _unitOfWork
-                .GetRepository<GeneralSetting>()
-                .GetFirstOrDefaultAsync()
-                .ConfigureAwait(false);
-
-            var template = await _unitOfWork
-                .GetRepository<MailNotification>()
-                .GetFirstOrDefaultAsync(predicate: p =>
-                    p.MailType == MailType.ChangedEmail && p.IsActive
-                )
-                .ConfigureAwait(false);
-
-            var model = new EmailRequestDto { To = oldEmail, };
-            if (template == null)
-            {
-                var html =
-                    $"Dear {fullName}<br><br>"
-                    + $"A recent change has been made to the email address associated with your account to {newEmail}<br>."
-                    + $"Please check your email for the login credentials. If you encounter any difficulties, "
-                    + $"please contact your administrator immediately."
-                    + $"<br><br>Thank You, <br> {setting.CompanyName}";
-
-                model.Subject = "Notification: Email Address Change";
-                model.Message = html;
-            }
-            else
-            {
-                model.Subject = template.Subject;
-                model.Message = template
-                    .Message.Replace("{fullName}", fullName)
-                    .Replace("{newEmail}", newEmail)
-                    .Replace("{emailSignature}", $"<br><br>Thank You, <br> {setting.CompanyName}");
-            }
-            await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+            await SendChangeEmailAsync(fullName, newEmail, oldEmail).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
