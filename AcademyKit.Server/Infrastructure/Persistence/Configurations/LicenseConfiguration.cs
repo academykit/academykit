@@ -38,6 +38,31 @@ public class LicenseConfiguration : IEntityTypeConfiguration<License>
             .HasMaxLength(200)
             .IsRequired();
 
+        builder
+            .Property(x => x.ActivatedOn)
+            .HasColumnName("activation_on")
+            .HasColumnType(MigrationConstants.DateTime)
+            .IsRequired();
+
+        builder
+            .Property(x => x.ExpiredOn)
+            .HasColumnName("expired_on")
+            .HasColumnType(MigrationConstants.DateTime)
+            .IsRequired();
+
+        builder
+            .Property(x => x.VariantName)
+            .HasColumnName("variant_name")
+            .HasColumnType(MigrationConstants.Varchar200)
+            .HasMaxLength(200)
+            .IsRequired();
+
+        builder
+            .Property(x => x.VariantId)
+            .HasColumnName("variant_id")
+            .HasColumnType(MigrationConstants.Int)
+            .IsRequired();
+
         builder.ConfigureAuditFields();
     }
 }

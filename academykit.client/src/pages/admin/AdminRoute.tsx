@@ -12,7 +12,6 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import Account from "./account";
 import AdminNav from "./Component/AdminNav";
 import AdminViewCertificate from "./Component/training/adminViewCertificate";
 import CertificateList from "./Component/training/certificateList";
