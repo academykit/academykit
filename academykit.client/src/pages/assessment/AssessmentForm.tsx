@@ -1,5 +1,5 @@
 import RichTextEditor from "@components/Ui/RichTextEditor/Index";
-import { useAssessmentUtils } from "@hooks/useAssessmentUtils";
+import { useDropdownUtils } from "@hooks/useDropdownUtils";
 import {
   Accordion,
   ActionIcon,
@@ -48,7 +48,7 @@ function AssessmentForm({
     getGroupDropdown,
     getSkillAssessmentType,
     getTrainingDropdown,
-  } = useAssessmentUtils();
+  } = useDropdownUtils();
 
   return (
     <>

@@ -7,7 +7,7 @@ import { useGroups } from "@utils/services/groupService";
 import { useSkills } from "@utils/services/skillService";
 import { t } from "i18next";
 
-export function useAssessmentUtils() {
+export function useDropdownUtils() {
   const skillData = useSkills(queryStringGenerator({ size: 1000 }));
   const getDepartment = useDepartmentSetting(
     queryStringGenerator({ size: 1000 })
