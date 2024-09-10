@@ -17,6 +17,7 @@ namespace AcademyKit.Application.Common.Models.ResponseModels
         public int Duration { get; set; }
         public int Weightage { get; set; }
         public int NoOfQuestion { get; set; }
+        public int? PassPercentage { get; set; }
         public AssessmentStatus AssessmentStatus { get; set; }
 
         public bool IsEligible { get; set; }
@@ -44,6 +45,7 @@ namespace AcademyKit.Application.Common.Models.ResponseModels
             EndDate = model.EndDate;
             Duration = model.Duration * 60;
             Weightage = model.Weightage;
+            PassPercentage = model.PassPercentage;
             NoOfQuestion = existingQuestion;
             AssessmentStatus = model.AssessmentStatus;
             SkillsCriteriaRequestModels = new List<SkillsCriteriaResponseModel>();

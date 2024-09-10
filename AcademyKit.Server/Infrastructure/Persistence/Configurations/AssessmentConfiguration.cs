@@ -41,6 +41,10 @@ namespace AcademyKit.Infrastructure.Persistence.Configurations
                 .HasMaxLength(500)
                 .IsRequired(false);
             builder.Property(x => x.AssessmentStatus).HasColumnName("assessment_status");
+            builder
+                .Property(x => x.PassPercentage)
+                .HasColumnName("pass_percentage")
+                .IsRequired(false);
 
             builder.Property(x => x.Retakes).HasColumnName("retake").HasDefaultValue(0);
             builder.Property(x => x.Duration).HasColumnName("duration").HasDefaultValue(0);

@@ -163,6 +163,10 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnType("VARCHAR(500)")
                         .HasColumnName("message");
 
+                    b.Property<int?>("PassPercentage")
+                        .HasColumnType("int")
+                        .HasColumnName("pass_percentage");
+
                     b.Property<int>("Retakes")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")

@@ -50,6 +50,7 @@
             {
                 searchCriteria.CurrentUserId = CurrentUser.Id;
             }
+
             searchCriteria.SortBy = "CreatedOn";
             searchCriteria.SortType = SortType.Descending;
 
@@ -168,6 +169,7 @@
                 AssessmentStatus = AssessmentStatus.Draft,
                 SkillsCriteria = new List<SkillsCriteria>(),
                 EligibilityCreations = new List<EligibilityCreation>(),
+                PassPercentage = model.PassPercentage
             };
 
             foreach (var item in model.SkillsCriteriaRequestModels)
@@ -187,6 +189,7 @@
                     }
                 );
             }
+
             foreach (var item in model.EligibilityCreationRequestModels)
             {
                 if (
@@ -217,6 +220,7 @@
                     );
                 }
             }
+
             var response = await assessmentService.CreateAsync(entity).ConfigureAwait(false);
             return new AssessmentResponseModel(response);
         }
