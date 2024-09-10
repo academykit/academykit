@@ -6,6 +6,7 @@ import RichTextEditor from "@components/Ui/RichTextEditor/Index";
 import ThumbnailEditor from "@components/Ui/ThumbnailEditor";
 import useAuth from "@hooks/useAuth";
 import useCustomForm from "@hooks/useCustomForm";
+import { useDropdownUtils } from "@hooks/useDropdownUtils";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   Accordion,
@@ -27,18 +28,14 @@ import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { TrainingEligibilityEnum } from "@utils/enums";
 import queryStringGenerator from "@utils/queryStringGenerator";
 import RoutePath from "@utils/routeConstants";
-import { useDepartmentSetting } from "@utils/services/adminService";
 import { useAIMaster, useTrainingSuggestion } from "@utils/services/aiService";
-import { useAssessments } from "@utils/services/assessmentService";
 import errorType from "@utils/services/axiosError";
 import {
   IBaseTrainingEligibility,
-  useCourse,
   useCreateCourse,
 } from "@utils/services/courseService";
 import { useAddGroup, useGroups } from "@utils/services/groupService";
 import { useLevels } from "@utils/services/levelService";
-import { useSkills } from "@utils/services/skillService";
 import { ITag, useAddTag, useTags } from "@utils/services/tagService";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -60,32 +57,31 @@ interface FormValues {
   isUnlimitedEndDate: boolean;
   trainingEligibilities: IBaseTrainingEligibility[];
 }
-const schema = () => {
+
+export const schema = () => {
   const { t } = useTranslation();
   return Yup.object().shape({
     title: Yup.string()
       .trim()
-      .required(t("course_title_required") as string)
-      .max(100, t("course_title_must_be_less_than_100") as string),
-    level: Yup.string().required(t("level_required") as string),
-    groups: Yup.string()
-      .nullable()
-      .required(t("group_required") as string),
+      .required(t("course_title_required"))
+      .max(100, t("course_title_must_be_less_than_100")),
+    level: Yup.string().required(t("level_required")),
+    groups: Yup.string().nullable().required(t("group_required")),
     startDate: Yup.string()
-      .required(t("start_date_required") as string)
-      .typeError(t("start_date_required") as string),
+      .required(t("start_date_required"))
+      .typeError(t("start_date_required")),
     isUnlimitedEndDate: Yup.boolean(),
     endDate: Yup.string().when("isUnlimitedEndDate", {
       is: false,
       then: (schema) =>
         schema
-          .required(t("end_date_required") as string)
-          .typeError(t("end_date_required") as string),
+          .required(t("end_date_required"))
+          .typeError(t("end_date_required")),
       otherwise: (schema) => schema.nullable(),
     }),
     trainingEligibilities: Yup.array().of(
       Yup.object().shape({
-        eligibilityId: Yup.string().required(t("field_required") as string),
+        eligibilityId: Yup.string().required(t("field_required")),
       })
     ),
   });
@@ -98,12 +94,12 @@ const CreateCoursePage = () => {
   const aiSuggestion = useTrainingSuggestion();
   const aiStatus = useAIMaster();
   const cForm = useCustomForm();
-  const getDepartments = useDepartmentSetting(
-    queryStringGenerator({ size: 1000 })
-  );
-  const skillData = useSkills(queryStringGenerator({ size: 1000 }));
-  const getAssessments = useAssessments(queryStringGenerator({ size: 1000 }));
-  const getTrainings = useCourse(queryStringGenerator({ size: 1000 }));
+  const {
+    getSkillDropdown,
+    getAssessmentDropdown,
+    getDepartmentDropdown,
+    getTrainingDropdown,
+  } = useDropdownUtils();
   const [searchParamGroup] = useState("");
   const { t } = useTranslation();
   const groupAdd = useAddGroup();
@@ -126,10 +122,7 @@ const CreateCoursePage = () => {
     if (groups.isSuccess && groups?.data && groupSlug) {
       form.setFieldValue(
         "groups",
-        (
-          groups.data &&
-          groups.data.data.items.find((x) => x.slug === groupSlug)
-        )?.id ?? ""
+        groups?.data?.data?.items?.find((x) => x.slug === groupSlug)?.id ?? ""
       );
     }
   }, [groups.isSuccess]);
@@ -151,34 +144,6 @@ const CreateCoursePage = () => {
     validate: yupResolver(schema()),
   });
   useFormErrorHooks(form);
-
-  const getDepartmentDropdown = () => {
-    return getDepartments.data?.items.map((x) => ({
-      value: x.id,
-      label: x.name,
-    }));
-  };
-
-  const getSkillDropdown = () => {
-    return skillData.data?.items.map((skill) => ({
-      value: skill.id,
-      label: skill.skillName,
-    }));
-  };
-
-  const getAssessmentDropdown = () => {
-    return getAssessments.data?.items.map((assessment) => ({
-      value: assessment.id,
-      label: assessment.title,
-    }));
-  };
-
-  const getTrainingDropdown = () => {
-    return getTrainings.data?.items.map((training) => ({
-      value: training.id,
-      label: training.name,
-    }));
-  };
 
   const getEligibilityType = () => {
     return Object.entries(TrainingEligibilityEnum)
@@ -206,17 +171,12 @@ const CreateCoursePage = () => {
   const [tagsLists, setTagsLists] = useState<ITag[]>([]);
   useEffect(() => {
     if (tags.isSuccess && tags.isFetched) {
-      // setTagsList(tags.data.items.map((x) => ({ label: x.name, value: x.id })));
       setTagsLists(tags.data.items.map((x) => x));
     }
   }, [tags.isSuccess]);
 
   useEffect(() => {
     if (isSuccess) {
-      // setTagsList([
-      //   ...tagsList,
-      //   { label: addTagData.data.name, value: addTagData.data.id },
-      // ]);
       setTagsLists([...tagsLists, addTagData.data]);
       form.setFieldValue("tags", [...form.values.tags, addTagData?.data?.id]);
     }
@@ -299,7 +259,7 @@ const CreateCoursePage = () => {
           <Box mt={20}>
             <ThumbnailEditor
               formContext={useFormContext}
-              label={t("thumbnail") as string}
+              label={t("thumbnail")}
             />
 
             {aiStatus.data?.isActive &&
@@ -320,7 +280,7 @@ const CreateCoursePage = () => {
 
             <Group mt={10} grow ref={refBasic}>
               <CustomTextFieldWithAutoFocus
-                placeholder={t("title_course") as string}
+                placeholder={t("title_course")}
                 label={t("title")}
                 name="Title"
                 withAsterisk
@@ -346,7 +306,7 @@ const CreateCoursePage = () => {
                 <Select
                   withAsterisk
                   size="lg"
-                  placeholder={t("level_placeholder") as string}
+                  placeholder={t("level_placeholder")}
                   label={t("level")}
                   {...form.getInputProps("level")}
                   data={
@@ -354,7 +314,7 @@ const CreateCoursePage = () => {
                       ? label.data.map((x) => ({ value: x.id, label: x.name }))
                       : [
                           {
-                            label: t("no_level") as string,
+                            label: t("no_level"),
                             value: "null",
                             disabled: true,
                           },
@@ -395,7 +355,7 @@ const CreateCoursePage = () => {
                 withAsterisk
                 minDate={new Date()}
                 label={t("start_date")}
-                placeholder={t("pick_date") as string}
+                placeholder={t("pick_date")}
                 size="lg"
                 {...form.getInputProps("startDate")}
               />
@@ -405,7 +365,7 @@ const CreateCoursePage = () => {
                 withAsterisk={!form.values.isUnlimitedEndDate}
                 disabled={form.values.isUnlimitedEndDate}
                 label={t("end_date")}
-                placeholder={t("pick_date") as string}
+                placeholder={t("pick_date")}
                 size="lg"
                 {...form.getInputProps("endDate")}
               />
@@ -422,7 +382,7 @@ const CreateCoursePage = () => {
             <Box mt={20}>
               <Text>{t("description")}</Text>
               <RichTextEditor
-                placeholder={t("course_description") as string}
+                placeholder={t("course_description")}
                 formContext={useFormContext}
               />
             </Box>
@@ -449,11 +409,11 @@ const CreateCoursePage = () => {
 
                   {form.values.trainingEligibilities.map(
                     (_eligibility, index) => (
-                      <Flex gap={10} key={index} align={"flex-end"} mb={10}>
+                      <Flex gap={10} key={index + 1} align={"flex-end"} mb={10}>
                         <Select
                           allowDeselect={false}
                           label={t("eligibility_type")}
-                          placeholder={t("pick_value") as string}
+                          placeholder={t("pick_value")}
                           data={getEligibilityType() ?? []}
                           {...form.getInputProps(
                             `trainingEligibilities.${index}.eligibility`
@@ -465,7 +425,7 @@ const CreateCoursePage = () => {
                             withAsterisk
                             allowDeselect={false}
                             label={t("department")}
-                            placeholder={t("pick_value") as string}
+                            placeholder={t("pick_value")}
                             data={getDepartmentDropdown() ?? []}
                             {...form.getInputProps(
                               `trainingEligibilities.${index}.eligibilityId`
@@ -479,7 +439,7 @@ const CreateCoursePage = () => {
                             withAsterisk
                             allowDeselect={false}
                             label={t("training")}
-                            placeholder={t("pick_value") as string}
+                            placeholder={t("pick_value")}
                             data={getTrainingDropdown() ?? []}
                             {...form.getInputProps(
                               `trainingEligibilities.${index}.eligibilityId`
@@ -493,7 +453,7 @@ const CreateCoursePage = () => {
                             withAsterisk
                             allowDeselect={false}
                             label={t("skills")}
-                            placeholder={t("pick_value") as string}
+                            placeholder={t("pick_value")}
                             data={getSkillDropdown() ?? []}
                             {...form.getInputProps(
                               `trainingEligibilities.${index}.eligibilityId`
@@ -507,7 +467,7 @@ const CreateCoursePage = () => {
                             withAsterisk
                             allowDeselect={false}
                             label={t("assessment")}
-                            placeholder={t("pick_value") as string}
+                            placeholder={t("pick_value")}
                             data={getAssessmentDropdown() ?? []}
                             {...form.getInputProps(
                               `trainingEligibilities.${index}.eligibilityId`

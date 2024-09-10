@@ -14,6 +14,7 @@ import RoutePath from "@utils/routeConstants";
 import { useCompanySetting } from "@utils/services/adminService";
 import { useForgotPassword } from "@utils/services/authService";
 import errorType from "@utils/services/axiosError";
+import { setHeader } from "@utils/setHeader";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -68,36 +69,15 @@ const ForgotPassword = () => {
       navigate(from, { replace: true });
     }
   }, [auth?.auth]);
+
   const companySettings = useCompanySetting();
 
-  const setHeader = () => {
-    const info =
-      localStorage.getItem("app-info") &&
-      JSON.parse(localStorage.getItem("app-info") ?? "");
-    if (info) {
-      let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
-      document.title = info.name;
-      if (!link) {
-        link = document.createElement("link");
-        link.rel = "icon";
-        document.getElementsByTagName("head")[0].appendChild(link);
-      }
-      link.href = info.logo;
-    }
-  };
-
   useEffect(() => {
-    setHeader();
-
     if (companySettings.isSuccess) {
-      localStorage.setItem(
-        "app-info",
-        JSON.stringify({
-          name: companySettings.data.data?.name ?? "AcademyKit",
-          logo: companySettings.data.data.imageUrl ?? "/favicon.png",
-        })
-      );
-      setHeader();
+      setHeader({
+        name: companySettings.data.data?.name,
+        logoUrl: companySettings.data.data.imageUrl,
+      });
     }
   }, [companySettings.isSuccess]);
 

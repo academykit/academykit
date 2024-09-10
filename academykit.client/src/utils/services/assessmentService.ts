@@ -103,6 +103,7 @@ export interface IAssessmentResponse extends IBaseAssessment {
   skillsCriteriaRequestModels: IResponseSkillCriteria[];
   eligibilityCreationRequestModels: IResponseEligibilityCreation[];
   isEligible: boolean;
+  passPercentage: number;
 }
 
 type IPostAssessment = Omit<

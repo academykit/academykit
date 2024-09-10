@@ -422,10 +422,10 @@ export const useZoomSetting = () => {
   });
 };
 
-export const useUpdateZoomSetting = (id: string | undefined) => {
+export const useCreateUpdateZoomSetting = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ["update" + api.adminUser.getZoomSettings],
+    mutationKey: ["createUpdate" + api.adminUser.getZoomSettings],
 
     mutationFn: (data: {
       oAuthAccountId: string;
@@ -435,8 +435,8 @@ export const useUpdateZoomSetting = (id: string | undefined) => {
       sdkSecret: string;
       isRecordingEnabled: boolean;
     }) => {
-      return httpClient.put<IZoomSetting>(
-        api.adminUser.updateZoomSettings(id),
+      return httpClient.post<IZoomSetting>(
+        api.adminUser.createUpdateZoomSettings(),
         data
       );
     },
@@ -462,21 +462,21 @@ export const useSMTPSetting = () => {
   });
 };
 
-export const useUpdateSMTPSetting = (id: string | undefined) => {
+export const useCreateUpdateSMTPSetting = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ["update" + api.adminUser.getSMTPSettings],
+    mutationKey: ["createUpdate" + api.adminUser.getSMTPSettings],
 
     mutationFn: (data: ISMTPSettingUpdate) => {
-      return httpClient.put<ISMTPSetting>(
-        api.adminUser.updateSMTPSettings(id),
+      return httpClient.post<ISMTPSetting>(
+        api.adminUser.createUpdateSMTPSettings(),
         data
       );
     },
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.adminUser.getZoomSettings],
+        queryKey: [api.adminUser.getSMTPSettings],
       });
     },
   });

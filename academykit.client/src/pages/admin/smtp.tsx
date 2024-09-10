@@ -3,8 +3,8 @@ import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import {
   ISMTPSettingUpdate,
+  useCreateUpdateSMTPSetting,
   useSMTPSetting,
-  useUpdateSMTPSetting,
 } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
 import { useEffect } from "react";
@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 
 const SMTP = () => {
   const smtp = useSMTPSetting();
-  const updateSMTP = useUpdateSMTPSetting(smtp.data?.data.id);
+  const createUpdateSMTP = useCreateUpdateSMTPSetting();
   const { t } = useTranslation();
 
   const form = useForm<ISMTPSettingUpdate>({
@@ -52,7 +52,7 @@ const SMTP = () => {
     <form
       onSubmit={form.onSubmit(async (values) => {
         try {
-          await updateSMTP.mutateAsync(values);
+          await createUpdateSMTP.mutateAsync(values);
           showNotification({
             message: t("update_success"),
           });
