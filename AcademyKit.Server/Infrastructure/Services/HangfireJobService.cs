@@ -805,6 +805,13 @@ public class HangfireJobService : BaseService, IHangfireJobService
         }
     }
 
+    /// <summary>
+    /// Hand to send the change email
+    /// </summary>
+    /// <param name="fullName">the user full name</param>
+    /// <param name="newEmail">the new changed email</param>
+    /// <param name="oldEmail">the old email</param>
+    /// <returns>the task completes</returns>
     private async Task SendChangeEmailAsync(string fullName, string newEmail, string oldEmail)
     {
         var setting = await _unitOfWork
