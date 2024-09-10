@@ -1,9 +1,7 @@
-namespace AcademyKit.Application.Common.Models.RequestModels
-{
-    using AcademyKit.Domain.Enums;
+﻿using AcademyKit.Domain.Enums;
 
-    public class UserRoleRequestModel
-    {
-        public UserRole Role { get; set; }
-    }
+namespace AcademyKit.Application.Common.Models.RequestModels;
+public class UserRoleRequestModel
+{
+    public required UserRole Role { get; set; }
 }
