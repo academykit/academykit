@@ -17,7 +17,6 @@ import AdminViewCertificate from "./Component/training/adminViewCertificate";
 import CertificateList from "./Component/training/certificateList";
 import MyTrainingInternal from "./Component/training/myTrainingInternal";
 import Account from "./account";
-
 // const AdminCourseList = lazyWithRetry(() => import('./course'));
 const Department = lazyWithRetry(() => import("./department"));
 const Skills = lazyWithRetry(() => import("./Skills"));
@@ -33,6 +32,7 @@ const MailNotification = lazyWithRetry(() => import("./MailNotification"));
 const AIMasterSetup = lazyWithRetry(() => import("./AIMasterSetup"));
 const Updates = lazyWithRetry(() => import("./updates"));
 const ApiKeys = lazyWithRetry(() => import("./apiKeys"));
+const Sso = lazyWithRetry(() => import("./sso"));
 
 const AdminRoute = () => {
   return (
@@ -74,6 +74,7 @@ const AdminRoutesChild = () => {
           <Route path={"/smtp"} element={<SMTP />} />
           <Route path={"/fileStorage"} element={<FileStorage />} />
           <Route path={"/ai-setup"} element={<AIMasterSetup />} />
+          <Route path={"/sso"} element={<Sso />} />
         </Route>
         <Route path="/apiKeys" element={<ApiKeys />} />
         <Route path="/updates" element={<Updates />} />
