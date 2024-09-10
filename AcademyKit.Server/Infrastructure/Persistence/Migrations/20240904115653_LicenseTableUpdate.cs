@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
+namespace AcademyKit.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
     public partial class LicenseTableUpdate : Migration
@@ -14,7 +13,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
             migrationBuilder.AddColumn<DateTime>(
                 name: "activated_on",
                 table: "Licenses",
-                type: "DATETIME",
+                type: MigrationConstants.DateTime,
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
             );
@@ -22,7 +21,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
             migrationBuilder.AddColumn<DateTime>(
                 name: "expired_on",
                 table: "Licenses",
-                type: "DATETIME",
+                type: MigrationConstants.DateTime,
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
             );
@@ -30,7 +29,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
             migrationBuilder.AddColumn<int>(
                 name: "variant_id",
                 table: "Licenses",
-                type: "INT",
+                type: MigrationConstants.Int,
                 nullable: false,
                 defaultValue: 0
             );
@@ -39,12 +38,12 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 .AddColumn<string>(
                     name: "variant_name",
                     table: "Licenses",
-                    type: "VARCHAR(100)",
+                    type: MigrationConstants.Varchar100,
                     maxLength: 100,
                     nullable: false,
                     defaultValue: ""
                 )
-                .Annotation("MySql:CharSet", "utf8mb4");
+                .Annotation(MigrationConstants.MySqlCharSet, MigrationConstants.Utf8mb4);
         }
 
         /// <inheritdoc />

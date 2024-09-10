@@ -1,3 +1,4 @@
+import SignInButton from "@components/Admin/SSO/SignInButton";
 import { Google, Microsoft } from "@components/Icons";
 import Logo from "@components/Logo";
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
@@ -16,11 +17,16 @@ import {
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
+import { SignInType } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
-import { useCompanySetting } from "@utils/services/adminService";
+import {
+  useCompanySetting,
+  useGetSignInOptions,
+} from "@utils/services/adminService";
 import { useLogin } from "@utils/services/authService";
 import { api } from "@utils/services/service-api";
 import type { IUserProfile } from "@utils/services/types";
+import { setHeader } from "@utils/setHeader";
 import type { AxiosError } from "axios";
 import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -39,6 +45,24 @@ const schema = () => {
 };
 
 const LoginPage = () => {
+  const login = useLogin();
+  const { t } = useTranslation();
+  const auth = useAuth();
+  const { data: signInOptions } = useGetSignInOptions();
+  const onFormSubmit = (values: { email: string; password: string }) => {
+    login.mutate({ email: values.email, password: values.password });
+  };
+  const context = useContext(BrandingContext);
+  const navigate = useNavigate();
+
+  const signInMethods = {
+    [SignInType.Google]: { component: Google, action: api.auth.googleSignIn },
+    [SignInType.Microsoft]: {
+      component: Microsoft,
+      action: api.auth.microsoftSignIn,
+    },
+  };
+
   const form = useForm({
     initialValues: {
       email: "",
@@ -46,15 +70,6 @@ const LoginPage = () => {
     },
     validate: yupResolver(schema()),
   });
-
-  const login = useLogin();
-  const { t } = useTranslation();
-  const auth = useAuth();
-  const onFormSubmit = (values: { email: string; password: string }) => {
-    login.mutate({ email: values.email, password: values.password });
-  };
-  const context = useContext(BrandingContext);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (login.isError) {
@@ -87,25 +102,7 @@ const LoginPage = () => {
   }, [login.isError, login.isSuccess]);
   const companySettings = useCompanySetting();
 
-  const setHeader = () => {
-    const info =
-      localStorage.getItem("app-info") &&
-      JSON.parse(localStorage.getItem("app-info") ?? "");
-    if (info) {
-      let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
-      document.title = info.name;
-      if (!link) {
-        link = document.createElement("link");
-        link.rel = "icon";
-        document.getElementsByTagName("head")[0].appendChild(link);
-      }
-      link.href = info.logo;
-    }
-  };
-
   useEffect(() => {
-    setHeader();
-
     if (companySettings.isSuccess) {
       if (!companySettings?.data?.data?.isSetupCompleted) {
         return navigate("/initial/setup", { replace: true });
@@ -113,19 +110,24 @@ const LoginPage = () => {
       const branding = JSON.parse(
         companySettings.data.data.customConfiguration ?? "{}"
       );
-      localStorage.setItem(
-        "app-info",
-        JSON.stringify({
-          name: companySettings.data.data?.name ?? "AcademyKit",
-          logo: companySettings.data.data.imageUrl ?? "/favicon.png",
-        })
-      );
+
+      setHeader({
+        name: companySettings.data.data?.name,
+        logoUrl: companySettings.data.data.imageUrl,
+      });
+
       localStorage.setItem("branding", branding.accent);
       localStorage.setItem("version", companySettings.data.data.appVersion);
       context?.toggleBrandingTheme(branding.accent ?? "#0E99AC"); // set the accent after fetching
-      setHeader();
     }
   }, [companySettings.isSuccess]);
+
+  const allowedSignInMethods =
+    signInOptions?.data
+      ?.filter((option) => option.isAllowed && option.signIn in signInMethods)
+      .map(
+        (option) => signInMethods[option.signIn as keyof typeof signInMethods]
+      ) || [];
 
   return (
     <Container size={420} my={40}>
@@ -182,74 +184,40 @@ const LoginPage = () => {
               </Button>
             </Paper>
           </form>
-          <Center my={18}>
-            <Text size="sm">
-              {t("create_new_agreement")}{" "}
-              <Link to={"/"}>{t("terms_service")}</Link>,{" "}
-              <Link to={"/"}>{t("privacy_policy")}</Link>,{" "}
-              {t("and_our_default")}{" "}
-              <Link to={"/"}>{t("notification_settings")}</Link>.
-            </Text>
-          </Center>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              marginTop: 5,
-            }}
-          >
+          {allowedSignInMethods.length > 0 && (
             <div
               style={{
-                flex: "1",
-                height: "1px",
-                width: "100%",
-                background: "black",
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                marginTop: 5,
               }}
-            />
-            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
-              {t("or_sign_in_with")}
-            </Text>
-            <div
-              style={{
-                flex: "1",
-                height: "1px",
-                width: "100%",
-                background: "black",
-              }}
-            />
-          </div>
+            >
+              <div
+                style={{
+                  flex: "1",
+                  height: "1px",
+                  width: "100%",
+                  background: "black",
+                }}
+              />
+              <Text size="sm" style={{ whiteSpace: "nowrap" }}>
+                {t("or_sign_in_with")}
+              </Text>
+              <div
+                style={{
+                  flex: "1",
+                  height: "1px",
+                  width: "100%",
+                  background: "black",
+                }}
+              />
+            </div>
+          )}
           <Center style={{ gap: 30, marginTop: 5 }}>
-            <form action={api.auth.googleSignIn} method="get">
-              <button
-                style={{
-                  border: "none",
-                  margin: "0",
-                  padding: "0",
-                  background: "transparent",
-                  cursor: "pointer",
-                }}
-                type="submit"
-              >
-                {" "}
-                <Google height={28} width={28} />{" "}
-              </button>
-            </form>
-            <form action={api.auth.microsoftSignIn} method="get">
-              <button
-                style={{
-                  border: "none",
-                  margin: "0",
-                  padding: "0",
-                  background: "transparent",
-                  cursor: "pointer",
-                }}
-                type="submit"
-              >
-                {" "}
-                <Microsoft height={28} width={28} />
-              </button>
-            </form>
+            {allowedSignInMethods.map(({ component: Icon, action }) => (
+              <SignInButton key={action} action={action} Icon={Icon} />
+            ))}
           </Center>
         </>
       ) : (

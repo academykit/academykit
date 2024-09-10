@@ -112,6 +112,12 @@ const AdminNav = () => {
       group: "admin",
       icon: <IconMailCode size={14} />,
     },
+    {
+      label: t("sso"),
+      to: RoutePath.settings.sso(),
+      role: UserRole.SuperAdmin,
+      group: "admin",
+    },
     // {
     //   label: t('log'),
     //   to: RoutePath.settings.log(),

@@ -28,10 +28,8 @@ export const api = {
     getSMTPSettings: "api/admin/settings/smtp",
     updateGeneralSettings: (id: string | undefined) =>
       `api/admin/settings/${id}`,
-    updateZoomSettings: (id: string | undefined) =>
-      `api/admin/settings/zoom/${id}`,
-    updateSMTPSettings: (id: string | undefined) =>
-      `api/admin/settings/smtp/${id}`,
+    createUpdateZoomSettings: () => "api/admin/settings/zoom",
+    createUpdateSMTPSettings: () => "api/admin/settings/smtp",
     updateUserStatus: (userId: string, enabled: boolean) =>
       `/api/User/${userId}/status?enabled=${enabled}`,
     updateZoomLicenseStatus: (userId: string, enabled: boolean) =>
@@ -57,6 +55,9 @@ export const api = {
     updateMailNotification: (id: string) => `/api/mailNotification/${id}`,
     testEmail: (id: string) => `/api/mailNotification/${id}/checkSendEmail`,
     initialSetup: "/api/initialSetup",
+    allowedDomains: "/api/admin/settings/allowedDomains",
+    defaultRole: "/api/admin/settings/defaultRole",
+    signInOptions: "/api/admin/settings/signInOptions",
   },
   groups: {
     list: "/api/Group",

@@ -113,6 +113,11 @@ export interface IZoomLicense<T> {
   user: T;
 }
 
+export interface ISignInOption {
+  signIn: number;
+  isAllowed: boolean;
+}
+
 const getUsers = (search: string) => {
   return httpClient.get<IPaginated<IUserProfile>>(api.adminUser.users(search));
 };
@@ -417,10 +422,10 @@ export const useZoomSetting = () => {
   });
 };
 
-export const useUpdateZoomSetting = (id: string | undefined) => {
+export const useCreateUpdateZoomSetting = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ["update" + api.adminUser.getZoomSettings],
+    mutationKey: ["createUpdate" + api.adminUser.getZoomSettings],
 
     mutationFn: (data: {
       oAuthAccountId: string;
@@ -430,8 +435,8 @@ export const useUpdateZoomSetting = (id: string | undefined) => {
       sdkSecret: string;
       isRecordingEnabled: boolean;
     }) => {
-      return httpClient.put<IZoomSetting>(
-        api.adminUser.updateZoomSettings(id),
+      return httpClient.post<IZoomSetting>(
+        api.adminUser.createUpdateZoomSettings(),
         data
       );
     },
@@ -457,21 +462,21 @@ export const useSMTPSetting = () => {
   });
 };
 
-export const useUpdateSMTPSetting = (id: string | undefined) => {
+export const useCreateUpdateSMTPSetting = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ["update" + api.adminUser.getSMTPSettings],
+    mutationKey: ["createUpdate" + api.adminUser.getSMTPSettings],
 
     mutationFn: (data: ISMTPSettingUpdate) => {
-      return httpClient.put<ISMTPSetting>(
-        api.adminUser.updateSMTPSettings(id),
+      return httpClient.post<ISMTPSetting>(
+        api.adminUser.createUpdateSMTPSettings(),
         data
       );
     },
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [api.adminUser.getZoomSettings],
+        queryKey: [api.adminUser.getSMTPSettings],
       });
     },
   });
@@ -890,6 +895,72 @@ export const useInitialSetup = () => {
     onSuccess: () => {
       queryClient.refetchQueries({
         queryKey: [api.adminUser.getCompanySettings],
+      });
+    },
+  });
+};
+
+// Allowed Domains
+export const useGetAllowedDomains = () => {
+  return useQuery({
+    queryKey: [api.adminUser.allowedDomains],
+    queryFn: () => httpClient.get<string[]>(api.adminUser.allowedDomains),
+  });
+};
+
+export const useSetAllowedDomains = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: [api.adminUser.allowedDomains],
+    mutationFn: (domains: string[]) =>
+      httpClient.post(api.adminUser.allowedDomains, domains),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.allowedDomains],
+      });
+    },
+  });
+};
+
+// Default Roles
+export const useGetDefaultRole = () => {
+  return useQuery({
+    queryKey: [api.adminUser.defaultRole],
+    queryFn: () => httpClient.get<number>(api.adminUser.defaultRole),
+  });
+};
+
+export const useSetDefaultRole = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: [api.adminUser.defaultRole],
+    mutationFn: (role: number) =>
+      httpClient.post(api.adminUser.defaultRole, { role }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.defaultRole],
+      });
+    },
+  });
+};
+
+// Sign In Options
+export const useGetSignInOptions = () => {
+  return useQuery({
+    queryKey: [api.adminUser.signInOptions],
+    queryFn: () => httpClient.get<ISignInOption[]>(api.adminUser.signInOptions),
+  });
+};
+
+export const useSetSignInOptions = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: [api.adminUser.signInOptions],
+    mutationFn: (signInOption: ISignInOption) =>
+      httpClient.post(api.adminUser.signInOptions, signInOption),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [api.adminUser.signInOptions],
       });
     },
   });
