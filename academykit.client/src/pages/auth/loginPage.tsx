@@ -1,3 +1,4 @@
+import SignInButton from "@components/Admin/SSO/SignInButton";
 import { Google, Microsoft } from "@components/Icons";
 import Logo from "@components/Logo";
 import CustomTextFieldWithAutoFocus from "@components/Ui/CustomTextFieldWithAutoFocus";
@@ -215,20 +216,7 @@ const LoginPage = () => {
           )}
           <Center style={{ gap: 30, marginTop: 5 }}>
             {allowedSignInMethods.map(({ component: Icon, action }) => (
-              <form key={action} action={action} method="get">
-                <button
-                  style={{
-                    border: "none",
-                    margin: 0,
-                    padding: 0,
-                    background: "transparent",
-                    cursor: "pointer",
-                  }}
-                  type="submit"
-                >
-                  <Icon height={28} width={28} />
-                </button>
-              </form>
+              <SignInButton key={action} action={action} Icon={Icon} />
             ))}
           </Center>
         </>

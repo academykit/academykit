@@ -1,9 +1,9 @@
+import SignInOption from "@components/Admin/SSO/SignInOption";
 import { Google, Microsoft } from "@components/Icons";
 import useFormErrorHooks from "@hooks/useFormErrorHooks";
 import {
   ActionIcon,
   Button,
-  Checkbox,
   Drawer,
   Flex,
   Group,
@@ -150,7 +150,15 @@ const Sso = () => {
       });
     }
   };
-  console.log(form.errors);
+
+  const handleSignInOptionToggle = (signInType: SignInType) => {
+    setSignInOptionsState((prevState) => ({
+      ...prevState,
+      [signInType]: !prevState[signInType],
+    }));
+    handleSignInOptionsSubmit(signInType);
+  };
+
   return (
     <ScrollArea>
       <Drawer
@@ -215,117 +223,32 @@ const Sso = () => {
         {t("sign_in")}
       </Title>
 
-      <Group grow w="50%" mb="md">
-        <Group
-          justify="space-between"
-          style={{
-            border: "1px solid #ddd",
-            padding: "10px",
-            borderRadius: "4px",
-          }}
-        >
-          <Group>
-            <Google height={28} width={28} />
-            <Group
-              style={{
-                flexDirection: "column",
-                gap: 0,
-                alignItems: "flex-start",
-              }}
-            >
-              <Text fw={600}>{t("google")}</Text>
-              <Text size="xs" c="dimmed">
-                {t("google_allow_description")}
-              </Text>
-            </Group>
-          </Group>
-          <Checkbox
-            checked={signInOptionsState[SignInType.Google]}
-            onChange={() => {
-              setSignInOptionsState({
-                ...signInOptionsState,
-                [SignInType.Google]: !signInOptionsState[SignInType.Google],
-              });
-              handleSignInOptionsSubmit(SignInType.Google);
-            }}
-          />
-        </Group>
-      </Group>
+      <SignInOption
+        icon={<Google height={28} width={28} />}
+        title={t("google")}
+        description={t("google_allow_description")}
+        signInType={SignInType.Google}
+        checked={signInOptionsState[SignInType.Google]}
+        onToggle={handleSignInOptionToggle}
+      />
 
-      <Group grow w="50%" mb="md">
-        <Group
-          justify="space-between"
-          style={{
-            border: "1px solid #ddd",
-            padding: "10px",
-            borderRadius: "4px",
-          }}
-        >
-          <Group>
-            <Microsoft height={28} width={28} />
-            <Group
-              style={{
-                flexDirection: "column",
-                gap: 0,
-                alignItems: "flex-start",
-              }}
-            >
-              <Text fw={600}>{t("microsoft")}</Text>
-              <Text size="xs" c="dimmed">
-                {t("microsoft_allow_description")}
-              </Text>
-            </Group>
-          </Group>
-          <Checkbox
-            checked={signInOptionsState[SignInType.Microsoft]}
-            onChange={() => {
-              setSignInOptionsState({
-                ...signInOptionsState,
-                [SignInType.Microsoft]:
-                  !signInOptionsState[SignInType.Microsoft],
-              });
-              handleSignInOptionsSubmit(SignInType.Microsoft);
-            }}
-          />
-        </Group>
-      </Group>
+      <SignInOption
+        icon={<Microsoft height={28} width={28} />}
+        title={t("microsoft")}
+        description={t("microsoft_allow_description")}
+        signInType={SignInType.Microsoft}
+        checked={signInOptionsState[SignInType.Microsoft]}
+        onToggle={handleSignInOptionToggle}
+      />
 
-      <Group w="50%" grow mb="md">
-        <Group
-          justify="space-between"
-          style={{
-            border: "1px solid #ddd",
-            padding: "10px",
-            borderRadius: "4px",
-          }}
-        >
-          <Group>
-            <IconMail size={24} />
-            <Group
-              style={{
-                flexDirection: "column",
-                gap: 0,
-                alignItems: "flex-start",
-              }}
-            >
-              <Text fw={600}>{t("email")}</Text>
-              <Text size="xs" c="dimmed">
-                {t("email_allow_description")}
-              </Text>
-            </Group>
-          </Group>
-          <Checkbox
-            checked={signInOptionsState[SignInType.Email]}
-            onChange={() => {
-              setSignInOptionsState({
-                ...signInOptionsState,
-                [SignInType.Email]: !signInOptionsState[SignInType.Email],
-              });
-              handleSignInOptionsSubmit(SignInType.Email);
-            }}
-          />
-        </Group>
-      </Group>
+      <SignInOption
+        icon={<IconMail size={24} />}
+        title={t("email")}
+        description={t("email_allow_description")}
+        signInType={SignInType.Email}
+        checked={signInOptionsState[SignInType.Email]}
+        onToggle={handleSignInOptionToggle}
+      />
 
       <Title order={2} mt="xl" mb="md">
         {t("access")}
