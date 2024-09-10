@@ -53,4 +53,15 @@ public static class ValidationHelpers
             && digit.IsMatch(pw)
             && symbol.IsMatch(pw);
     }
+
+    /// <summary>
+    /// Validates if the provided domain is in a correct format.
+    /// </summary>
+    /// <param name="domain">The domain to validate.</param>
+    /// <returns>True if the domain is valid, otherwise false.</returns>
+    public static bool ValidDomain(string domain)
+    {
+        const string domainRegex = @"^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.[A-Za-z]{2,})+$";
+        return new Regex(domainRegex, RegexOptions.None, RegexTimeout).IsMatch(domain);
+    }
 }

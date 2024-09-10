@@ -55,6 +55,9 @@ export const api = {
     updateMailNotification: (id: string) => `/api/mailNotification/${id}`,
     testEmail: (id: string) => `/api/mailNotification/${id}/checkSendEmail`,
     initialSetup: "/api/initialSetup",
+    allowedDomains: "/api/admin/settings/allowedDomains",
+    defaultRole: "/api/admin/settings/defaultRole",
+    signInOptions: "/api/admin/settings/signInOptions",
   },
   groups: {
     list: "/api/Group",
