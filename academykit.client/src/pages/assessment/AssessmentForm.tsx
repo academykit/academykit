@@ -24,8 +24,13 @@ import { IAssessmentForm } from "./CreateAssessment";
 
 function AssessmentForm({
   form,
+  useFormContext,
 }: {
-  form: UseFormReturnType<
+  readonly form: UseFormReturnType<
+    IAssessmentForm,
+    (values: IAssessmentForm) => IAssessmentForm
+  >;
+  readonly useFormContext: () => UseFormReturnType<
     IAssessmentForm,
     (values: IAssessmentForm) => IAssessmentForm
   >;
@@ -62,20 +67,20 @@ function AssessmentForm({
           autoFocus
           withAsterisk
           label={t("title")}
-          placeholder={t("title_placeholder") as string}
+          placeholder={t("title_placeholder")}
           {...form.getInputProps("title")}
         />
         <DatePickerInput
           withAsterisk
           label={t("start_date")}
-          placeholder={t("start_date") as string}
+          placeholder={t("start_date")}
           minDate={new Date()}
           {...form.getInputProps("startDate")}
         />
         <DatePickerInput
           withAsterisk
           label={t("end_date")}
-          placeholder={t("end_date") as string}
+          placeholder={t("end_date")}
           minDate={form.values.startDate ?? new Date()}
           {...form.getInputProps("endDate")}
         />
@@ -110,7 +115,10 @@ function AssessmentForm({
 
       <Box my={20}>
         <Text>{t("description")}</Text>
-        <RichTextEditor placeholder={t("assessment_description") as string} />
+        <RichTextEditor
+          placeholder={t("assessment_description")}
+          formContext={useFormContext}
+        />
       </Box>
 
       <Accordion defaultValue="Eligibility">
@@ -144,12 +152,12 @@ function AssessmentForm({
                   mb={10}
                   gap={10}
                   align={"flex-end"}
-                  key={index}
+                  key={index + 1}
                   wrap={"wrap"}
                 >
                   <Select
                     label={t("skill")}
-                    placeholder={t("pick_value") as string}
+                    placeholder={t("pick_value")}
                     data={getSkillDropdown() ?? []}
                     {...form.getInputProps(
                       `eligibilityCreationRequestModels.${index}.skill`
@@ -157,7 +165,7 @@ function AssessmentForm({
                   />
                   <Select
                     label={t("role")}
-                    placeholder={t("pick_value") as string}
+                    placeholder={t("pick_value")}
                     data={[
                       {
                         value: "3",
@@ -174,7 +182,7 @@ function AssessmentForm({
                   />
                   <Select
                     label={t("department")}
-                    placeholder={t("pick_value") as string}
+                    placeholder={t("pick_value")}
                     data={getDepartmentDropdown() ?? []}
                     {...form.getInputProps(
                       `eligibilityCreationRequestModels.${index}.departmentId`
@@ -182,7 +190,7 @@ function AssessmentForm({
                   />
                   <Select
                     label={t("group")}
-                    placeholder={t("pick_value") as string}
+                    placeholder={t("pick_value")}
                     data={getGroupDropdown() ?? []}
                     {...form.getInputProps(
                       `eligibilityCreationRequestModels.${index}.groupId`
@@ -190,7 +198,7 @@ function AssessmentForm({
                   />
                   <Select
                     label={t("assessment")}
-                    placeholder={t("pick_value") as string}
+                    placeholder={t("pick_value")}
                     data={getAssessmentDropdown() ?? []}
                     {...form.getInputProps(
                       `eligibilityCreationRequestModels.${index}.assessmentId`
@@ -198,7 +206,7 @@ function AssessmentForm({
                   />
                   <Select
                     label={t("training")}
-                    placeholder={t("pick_value") as string}
+                    placeholder={t("pick_value")}
                     data={getTrainingDropdown() ?? []}
                     {...form.getInputProps(
                       `eligibilityCreationRequestModels.${index}.trainingId`
@@ -280,10 +288,10 @@ function AssessmentForm({
 
               {form.values.skillsCriteriaRequestModels.map(
                 (_criteria, index) => (
-                  <Flex gap={10} key={index} align={"flex-end"} mb={10}>
+                  <Flex gap={10} key={index + 1} align={"flex-end"} mb={10}>
                     <Select
                       label={t("rule")}
-                      placeholder={t("pick_value") as string}
+                      placeholder={t("pick_value")}
                       data={getSkillAssessmentType() ?? []}
                       {...form.getInputProps(
                         `skillsCriteriaRequestModels.${index}.rule`
@@ -292,7 +300,7 @@ function AssessmentForm({
 
                     <Select
                       label={t("skill")}
-                      placeholder={t("pick_value") as string}
+                      placeholder={t("pick_value")}
                       data={getSkillDropdown() ?? []}
                       {...form.getInputProps(
                         `skillsCriteriaRequestModels.${index}.skill`
@@ -304,7 +312,7 @@ function AssessmentForm({
                       min={0}
                       stepHoldDelay={500}
                       stepHoldInterval={(t) => Math.max(1000 / t ** 2, 25)}
-                      placeholder={t("percentage_placeholder") as string}
+                      placeholder={t("percentage_placeholder")}
                       {...form.getInputProps(
                         `skillsCriteriaRequestModels.${index}.percentage`
                       )}

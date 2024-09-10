@@ -39,7 +39,8 @@ export interface IAssessmentForm {
   passPercentage: number | null;
 }
 
-const [FormProvider, , useForm] = createFormContext<IAssessmentForm>();
+const [FormProvider, useFormContext, useForm] =
+  createFormContext<IAssessmentForm>();
 
 const CreateAssessment = () => {
   const navigate = useNavigate();
@@ -122,7 +123,7 @@ const CreateAssessment = () => {
       <Box mt={10}>
         <FormProvider form={form}>
           <form onSubmit={form.onSubmit(onSubmit)}>
-            <AssessmentForm form={form} />
+            <AssessmentForm form={form} useFormContext={useFormContext} />
             <Button mt={30} type="submit" loading={postAssessment.isPending}>
               {t("submit")}
             </Button>
