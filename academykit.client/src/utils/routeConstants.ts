@@ -223,6 +223,9 @@ const RoutePath = {
     mail: function () {
       return `${this.base}/mail-notification`;
     },
+    license: function () {
+      return `${this.base}/license-management`;
+    },
   },
   profile: "/settings/account",
   general: "/settings/general",

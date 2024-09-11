@@ -13,29 +13,54 @@ public class LicenseConfiguration : IEntityTypeConfiguration<License>
         builder.ConfigureId();
 
         builder
-            .Property(x => x.licenseKey)
+            .Property(x => x.LicenseKey)
             .HasColumnName("licenseKey")
             .HasColumnType(MigrationConstants.Varchar50)
             .HasMaxLength(50)
             .IsRequired();
-        builder.Property(x => x.status).HasColumnName("status").IsRequired();
+        builder.Property(x => x.Status).HasColumnName("status").IsRequired();
         builder
-            .Property(x => x.licenseKeyId)
+            .Property(x => x.LicenseKeyId)
             .HasColumnName("licenseKeyId")
             .HasColumnType(MigrationConstants.Varchar50)
             .HasMaxLength(50)
             .IsRequired();
         builder
-            .Property(x => x.customerName)
+            .Property(x => x.CustomerName)
             .HasColumnName("customer_name")
             .HasColumnType(MigrationConstants.Varchar100)
             .HasMaxLength(100)
             .IsRequired();
         builder
-            .Property(x => x.customerEmail)
+            .Property(x => x.CustomerEmail)
             .HasColumnName("customer_email")
             .HasColumnType(MigrationConstants.Varchar200)
             .HasMaxLength(200)
+            .IsRequired();
+
+        builder
+            .Property(x => x.ActivatedOn)
+            .HasColumnName("activation_on")
+            .HasColumnType(MigrationConstants.DateTime)
+            .IsRequired();
+
+        builder
+            .Property(x => x.ExpiredOn)
+            .HasColumnName("expired_on")
+            .HasColumnType(MigrationConstants.DateTime)
+            .IsRequired();
+
+        builder
+            .Property(x => x.VariantName)
+            .HasColumnName("variant_name")
+            .HasColumnType(MigrationConstants.Varchar200)
+            .HasMaxLength(200)
+            .IsRequired();
+
+        builder
+            .Property(x => x.VariantId)
+            .HasColumnName("variant_id")
+            .HasColumnType(MigrationConstants.Int)
             .IsRequired();
 
         builder.ConfigureAuditFields();

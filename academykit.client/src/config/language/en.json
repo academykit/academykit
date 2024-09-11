@@ -1273,5 +1273,12 @@
   "add_domain": "Add a Domain",
   "select_role": "Select role",
   "allowed_domains": "Allowed Domains",
-  "sign_in_options_saved_successfully": "Sign-in options saved successfully."
+  "sign_in_options_saved_successfully": "Sign-in options saved successfully.",
+  "license_management": "License Management",
+  "enter_new_license_key": "Enter New License Key",
+  "upgrade": "Upgrade",
+  "license_activated_on": "License Activated on",
+  "license_expires_in": "License Expires in",
+  "license_updated_successfully": "License Updated Successfully",
+  "current_plan": "Current Plan"
 }

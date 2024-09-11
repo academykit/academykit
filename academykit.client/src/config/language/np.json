@@ -1215,5 +1215,11 @@
   "add_domain": "डोमेन थप्नुहोस्",
   "select_role": "भूमिका चयन गर्नुहोस्",
   "allowed_domains": "अनुमत डोमेन",
-  "sign_in_options_saved_successfully": "साइन इन विकल्प सफलतापूर्वक सहेजियो।"
+  "sign_in_options_saved_successfully": "साइन इन विकल्प सफलतापूर्वक सहेजियो।",
+  "license_management": "लाइसेंस प्रबंधन",
+  "enter_new_license_key": "नयाँ लाइसेंस कुंजी प्रविष्ट गर्नुहोस्।",
+  "license_activated_on": "लाइसेंस सक्रिय भएको",
+  "license_updated_successfully": "लाइसेंस सफलतापूर्वक अपडेट गरियो।",
+  "license_expires_in": "लाइसेंस किताब हो।",
+  "current_plan": "वर्तमान योजना"
 }
