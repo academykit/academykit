@@ -58,7 +58,6 @@ const ResultTable = ({
   const studentResult = useGetStudentResult(assessmentId, userId);
 
   const hasObtainedFullMark =
-    studentResult?.data &&
     studentResult?.data?.assessmentSetResultDetails?.some(
       (result) => result?.obtainedMarks === result?.totalMarks
     );
