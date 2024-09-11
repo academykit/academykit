@@ -4,6 +4,7 @@ using AcademyKit.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240910110130_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2207,10 +2210,6 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("ActivatedOn")
-                        .HasColumnType("DateTime")
-                        .HasColumnName("activation_on");
-
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -2221,38 +2220,6 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
-                    b.Property<string>("CustomerEmail")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)")
-                        .HasColumnName("customer_email");
-
-                    b.Property<string>("CustomerName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("customer_name");
-
-                    b.Property<DateTime>("ExpiredOn")
-                        .HasColumnType("DateTime")
-                        .HasColumnName("expired_on");
-
-                    b.Property<string>("LicenseKey")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("licenseKey");
-
-                    b.Property<string>("LicenseKeyId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("licenseKeyId");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int")
-                        .HasColumnName("status");
-
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
@@ -2262,15 +2229,33 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
-                    b.Property<int>("VariantId")
-                        .HasColumnType("int")
-                        .HasColumnName("variant_id");
-
-                    b.Property<string>("VariantName")
+                    b.Property<string>("customerEmail")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)")
-                        .HasColumnName("variant_name");
+                        .HasColumnName("customer_email");
+
+                    b.Property<string>("customerName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("customer_name");
+
+                    b.Property<string>("licenseKey")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("licenseKey");
+
+                    b.Property<string>("licenseKeyId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("licenseKeyId");
+
+                    b.Property<int>("status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
 
                     b.HasKey("Id");
 

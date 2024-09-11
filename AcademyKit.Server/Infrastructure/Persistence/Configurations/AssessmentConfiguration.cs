@@ -42,6 +42,7 @@ public class AssessmentConfiguration : IEntityTypeConfiguration<Assessment>
         builder.Property(x => x.Retakes).HasColumnName("retake").HasDefaultValue(0);
         builder.Property(x => x.Duration).HasColumnName("duration").HasDefaultValue(0);
         builder.Property(x => x.Weightage).HasColumnName("weightage").HasDefaultValue(0);
+        builder.Property(x => x.PassPercentage).HasColumnName("pass_percentage").IsRequired(false);
         builder
             .Property(x => x.StartDate)
             .HasColumnName("start_date")

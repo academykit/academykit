@@ -15,6 +15,7 @@ namespace AcademyKit.Domain.Entities
         public int Duration { get; set; }
         public int Weightage { get; set; }
         public string Message { get; set; }
+        public int? PassPercentage { get; set; }
         public IList<EligibilityCreation> EligibilityCreationsCompleted { get; set; }
         public IList<SkillsCriteria> SkillsCriteria { get; set; }
         public IList<AssessmentQuestion> AssessmentQuestions { get; set; }

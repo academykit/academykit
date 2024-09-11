@@ -222,6 +222,7 @@ namespace AcademyKit.Infrastructure.Services
                 existingAssessment.Weightage = model.Weightage;
                 existingAssessment.UpdatedBy = currentUserId;
                 existingAssessment.UpdatedOn = currentTimeStamp;
+                existingAssessment.PassPercentage = model.PassPercentage;
 
                 if (existingAssessment.SkillsCriteria.Count > 0)
                 {
