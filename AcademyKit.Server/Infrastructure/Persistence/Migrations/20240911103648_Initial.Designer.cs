@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240910092705_Initial")]
+    [Migration("20240911103648_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -162,6 +162,10 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)")
                         .HasColumnName("message");
+
+                    b.Property<int?>("PassPercentage")
+                        .HasColumnType("int")
+                        .HasColumnName("pass_percentage");
 
                     b.Property<int>("Retakes")
                         .ValueGeneratedOnAdd()

@@ -404,6 +404,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         message = table
                             .Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                             .Annotation("MySql:CharSet", "utf8mb4"),
+                        pass_percentage = table.Column<int>(type: "int", nullable: true),
                         created_by = table
                             .Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                             .Annotation("MySql:CharSet", "utf8mb4"),
