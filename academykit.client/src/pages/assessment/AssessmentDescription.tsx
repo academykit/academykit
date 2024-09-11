@@ -121,7 +121,7 @@ const AssessmentDescription = () => {
 
   const hasAttempted =
     assessmentDetail?.data &&
-    assessmentDetail.data?.remainingAttempt <= assessmentDetail.data?.retakes;
+    assessmentDetail?.data?.remainingAttempt <= assessmentDetail?.data?.retakes;
 
   // always visible to admin and super-admin
   // but, if the user is trainer, the assessment made by them is only editable
