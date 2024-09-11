@@ -1117,4 +1117,7 @@
 </data><data name="MobileNumberLength15" xml:space="preserve">
   <value>मोबाइल नम्बर १५ अंक लामो हुनुपर्छ।</value>
 </data>
+  <data name="InvalidKey" xml:space="preserve">
+    <value>कृपया मान्य कुञ्जी प्रविष्ट गर्नुहोस्।</value>
+  </data>
 </root>

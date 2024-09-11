@@ -1116,4 +1116,7 @@
  <data name="MobileNumberLength15" xml:space="preserve">
   <value>電話番号は15桁である必要があります。</value>
 </data>
+  <data name="InvalidKey" xml:space="preserve">
+    <value>有効なキーを入力してください。</value>
+  </data>
 </root>

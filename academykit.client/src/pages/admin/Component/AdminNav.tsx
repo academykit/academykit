@@ -112,6 +112,12 @@ const AdminNav = () => {
       group: "admin",
       icon: <IconMailCode size={14} />,
     },
+    {
+      label: t("sso"),
+      to: RoutePath.settings.sso(),
+      role: UserRole.SuperAdmin,
+      group: "admin",
+    },
     // {
     //   label: t('log'),
     //   to: RoutePath.settings.log(),
@@ -137,6 +143,13 @@ const AdminNav = () => {
       role: UserRole.SuperAdmin,
       target: "_blank",
       group: "hangfire",
+    },
+    {
+      label: t("license_management"),
+      to: RoutePath.settings.license(),
+      role: UserRole.SuperAdmin,
+      group: "admin",
+      icon: <IconLicense size={14} />,
     },
   ];
   return <AdminNavOutlet data={adminNavLinks} />;

@@ -204,7 +204,7 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
         {
           label: "admin",
           href:
-            Number(auth?.auth?.role) == UserRole.Admin // admin has no access to general settings
+            Number(auth?.auth?.role) === UserRole.Admin // admin has no access to general settings
               ? "/settings/zoomLicense"
               : "/settings/general",
           role: UserRole.Admin,
@@ -231,6 +231,11 @@ export function LeftMainLinks({ onClose }: LeftMainLinksProps) {
         {
           label: "updates",
           href: "/settings/updates",
+          role: UserRole.SuperAdmin,
+        },
+        {
+          label: "sso",
+          href: "/settings/sso",
           role: UserRole.SuperAdmin,
         },
       ],

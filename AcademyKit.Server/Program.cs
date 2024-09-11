@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using AcademyKit.Domain.Entities;
 using AcademyKit.Infrastructure.Configurations;
+using AcademyKit.Infrastructure.Persistence;
 using AcademyKit.Infrastructure.RateLimiting;
 using Asp.Versioning;
 using Hangfire;
@@ -57,6 +58,8 @@ builder.Services.Configure<RateLimitSettings>(
     builder.Configuration.GetSection(RateLimitSettings.RateLimit)
 );
 
+builder.Services.AddHostedService<ApplicationDbInitializer>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -109,7 +112,6 @@ app.MapControllers();
 app.MapFallbackToFile("index.html");
 
 // app.UseHttpLogging();
-app.MigrateDatabase();
 
 // download the chrome browser earlier
 var browserFetcher = new BrowserFetcher();
