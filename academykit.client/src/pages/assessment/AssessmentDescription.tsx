@@ -31,6 +31,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { DATE_FORMAT } from "@utils/constants";
+import { displayTime } from "@utils/displayTime";
 import { AssessmentStatus, SkillAssessmentRule, UserRole } from "@utils/enums";
 import RoutePath from "@utils/routeConstants";
 import {
@@ -118,6 +119,10 @@ const AssessmentDescription = () => {
     },
   });
 
+  const hasAttempted =
+    assessmentDetail?.data &&
+    assessmentDetail.data?.remainingAttempt <= assessmentDetail.data?.retakes;
+
   // always visible to admin and super-admin
   // but, if the user is trainer, the assessment made by them is only editable
   const getEditAndPreviewPermission = () => {
@@ -152,6 +157,16 @@ const AssessmentDescription = () => {
 
   const getEligibilityStatus = () => {
     if (assessmentDetail.data?.isEligible === true) {
+      return true;
+    }
+    return false;
+  };
+
+  const hasExcededEndDate = () => {
+    const endDate = moment(assessmentDetail.data?.endDate);
+    const currentDate = moment(new Date());
+
+    if (currentDate.isAfter(endDate) && assessmentDetail.data?.hasCompleted) {
       return true;
     }
     return false;
@@ -348,7 +363,9 @@ const AssessmentDescription = () => {
             </Button>
           )}
 
-          {assessmentDetail.data?.hasCompleted && (
+          {(hasAttempted ||
+            assessmentDetail.data?.hasCompleted ||
+            hasExcededEndDate()) && (
             <Button radius={"xl"} onClick={() => toggleResultModal()}>
               {t("view_result")}
             </Button>
@@ -373,7 +390,7 @@ const AssessmentDescription = () => {
                 <AssessmentStat
                   icon={<IconClockHour10 />}
                   label="time_duration"
-                  value={(assessmentDetail.data.duration / 60).toString() ?? ""} // show in minutes
+                  value={displayTime(assessmentDetail.data.duration / 60)}
                 />
               )}
               <AssessmentStat
