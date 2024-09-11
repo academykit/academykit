@@ -11,7 +11,7 @@ import {
 import { useForm, yupResolver } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import {
-  useUpdateZoomSetting,
+  useCreateUpdateZoomSetting,
   useZoomSetting,
 } from "@utils/services/adminService";
 import errorType from "@utils/services/axiosError";
@@ -66,7 +66,7 @@ const ReadonlyData = ({ t, form }: { t: TFunction; form: any }) => {
 
 const ZoomSettings = () => {
   const zoom = useZoomSetting();
-  const updateZoom = useUpdateZoomSetting(zoom.data?.data.id);
+  const createUpdateZoom = useCreateUpdateZoomSetting();
   const [isChecked, setIsChecked] = useState<boolean | undefined>();
   const [edit, setEdit] = useState(true);
   const { t } = useTranslation();
@@ -119,7 +119,7 @@ const ZoomSettings = () => {
       <form
         onSubmit={form.onSubmit(async (values) => {
           try {
-            await updateZoom.mutateAsync(values);
+            await createUpdateZoom.mutateAsync(values);
             showNotification({
               message: t("change_zoom_settings_success"),
             });

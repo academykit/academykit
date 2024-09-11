@@ -26,8 +26,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<int>("AiModel")
@@ -37,11 +36,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsActive")
@@ -53,16 +52,16 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(270)
-                        .HasColumnType("VARCHAR(270)")
+                        .HasColumnType("varchar(270)")
                         .HasColumnName("key");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -74,44 +73,43 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(64)
-                        .HasColumnType("VARCHAR(64)")
+                        .HasColumnType("varchar(64)")
                         .HasColumnName("key");
 
                     b.Property<string>("Name")
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("name");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -125,8 +123,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<int>("AssessmentStatus")
@@ -136,16 +133,16 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("Description")
                         .HasMaxLength(2000)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("description");
 
                     b.Property<int>("Duration")
@@ -155,12 +152,12 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnName("duration");
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("end_date");
 
                     b.Property<string>("Message")
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("message");
 
                     b.Property<int?>("PassPercentage")
@@ -176,26 +173,26 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(270)
-                        .HasColumnType("VARCHAR(270)")
+                        .HasColumnType("varchar(270)")
                         .HasColumnName("slug");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("start_date");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("title");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<int>("Weightage")
@@ -215,24 +212,23 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("AssessmentQuestionId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("assessment_question_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsCorrect")
@@ -244,7 +240,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("Option")
                         .IsRequired()
                         .HasMaxLength(5000)
-                        .HasColumnType("VARCHAR(5000)")
+                        .HasColumnType("varchar(5000)")
                         .HasColumnName("option");
 
                     b.Property<int>("Order")
@@ -253,15 +249,15 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("VARCHAR(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -276,24 +272,23 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("AssessmentId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("assessment_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("Description")
@@ -314,7 +309,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("name");
 
                     b.Property<int>("Order")
@@ -329,11 +324,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -349,30 +344,29 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("AssessmentId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("assessment_id");
 
                     b.Property<string>("AssessmentSubmissionId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("assessment_submission_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<decimal>("NegativeMark")
@@ -385,17 +379,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -413,28 +407,27 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("AssessmentId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("assessment_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<DateTime>("EndTime")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("end_time");
 
                     b.Property<bool>("IsSubmissionError")
@@ -444,27 +437,27 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnName("is_submission_error");
 
                     b.Property<DateTime>("StartTime")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("start_time");
 
                     b.Property<string>("SubmissionErrorMessage")
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("submission_error_message");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -480,30 +473,29 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("AssessmentQuestionId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("assessment_question_id");
 
                     b.Property<string>("AssessmentSubmissionId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("assessment_submission_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsCorrect")
@@ -515,16 +507,16 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("SelectedAnswers")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("VARCHAR(150)")
+                        .HasColumnType("varchar(150)")
                         .HasColumnName("selected_answers");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -542,28 +534,27 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("Description")
                         .HasMaxLength(5000)
-                        .HasColumnType("VARCHAR(5000)")
+                        .HasColumnType("varchar(5000)")
                         .HasColumnName("description");
 
                     b.Property<string>("Hints")
                         .HasMaxLength(5000)
-                        .HasColumnType("VARCHAR(5000)")
+                        .HasColumnType("varchar(5000)")
                         .HasColumnName("hints");
 
                     b.Property<bool>("IsActive")
@@ -575,12 +566,12 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("LessonId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("lesson_id");
 
                     b.Property<string>("Name")
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("name");
 
                     b.Property<int>("Order")
@@ -595,11 +586,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -615,40 +606,39 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("AssignmentId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("assignment_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("FileUrl")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("file_url");
 
                     b.Property<string>("MimeType")
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("mime_type");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("name");
 
                     b.Property<int>("Order")
@@ -659,11 +649,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -679,24 +669,23 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("AssignmentId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("assignment_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsCorrect")
@@ -708,7 +697,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("Option")
                         .IsRequired()
                         .HasMaxLength(5000)
-                        .HasColumnType("VARCHAR(5000)")
+                        .HasColumnType("varchar(5000)")
                         .HasColumnName("option");
 
                     b.Property<int>("Order")
@@ -717,11 +706,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -737,18 +726,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsDeleted")
@@ -760,7 +748,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("LessonId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("lesson_id");
 
                     b.Property<decimal>("Mark")
@@ -774,17 +762,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -800,29 +788,28 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("Answer")
                         .HasMaxLength(5000)
-                        .HasColumnType("VARCHAR(5000)")
+                        .HasColumnType("varchar(5000)")
                         .HasColumnName("answer");
 
                     b.Property<string>("AssignmentId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("assignment_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsCorrect")
@@ -834,27 +821,27 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("LessonId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("lesson_id");
 
                     b.Property<string>("SelectedOption")
                         .HasMaxLength(300)
-                        .HasColumnType("VARCHAR(300)")
+                        .HasColumnType("varchar(300)")
                         .HasColumnName("selected_option");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -872,49 +859,48 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("AssignmentSubmissionId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("assignment_submission_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("FileUrl")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("file_url");
 
                     b.Property<string>("MimeType")
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("mime_type");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("name");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -930,18 +916,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<int?>("Duration")
@@ -949,35 +934,35 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnName("duration");
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("end_date");
 
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("VARCHAR(200)")
+                        .HasColumnType("varchar(200)")
                         .HasColumnName("image_url");
 
                     b.Property<string>("Institute")
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("institute");
 
                     b.Property<string>("Location")
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("location");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
+                        .HasColumnType("varchar(200)")
                         .HasColumnName("name");
 
                     b.Property<decimal>("OptionalCost")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("DECIMAL(10,2)")
+                        .HasColumnType("decimal(10,2)")
                         .HasDefaultValue(0m)
                         .HasColumnName("optional_cost");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("start_date");
 
                     b.Property<int>("Status")
@@ -986,11 +971,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -1004,30 +989,29 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("content");
 
                     b.Property<string>("CourseId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("course_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsDeleted")
@@ -1038,11 +1022,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -1058,30 +1042,29 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CommentId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("comment_id");
 
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("content");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsDeleted")
@@ -1092,11 +1075,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -1112,23 +1095,22 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("Description")
                         .HasMaxLength(5000)
-                        .HasColumnType("VARCHAR(5000)")
+                        .HasColumnType("varchar(5000)")
                         .HasColumnName("description");
 
                     b.Property<int>("Duration")
@@ -1136,12 +1118,12 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnName("duration");
 
                     b.Property<DateTime?>("EndDate")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("end_date");
 
                     b.Property<string>("GroupId")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("group_id");
 
                     b.Property<bool>("IsUnlimitedEndDate")
@@ -1162,23 +1144,23 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("LevelId")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("level_id");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("name");
 
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(270)
-                        .HasColumnType("VARCHAR(270)")
+                        .HasColumnType("varchar(270)")
                         .HasColumnName("slug");
 
                     b.Property<DateTime?>("StartDate")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("start_date");
 
                     b.Property<int>("Status")
@@ -1187,16 +1169,16 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("ThumbnailUrl")
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("thumbnail_url");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -1214,51 +1196,50 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CourseId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("course_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<DateTime>("EventEndDate")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("event_end_date");
 
                     b.Property<DateTime>("EventStartDate")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("event_start_date");
 
                     b.Property<string>("SampleUrl")
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("sample_url");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("title");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -1275,43 +1256,42 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("ActivityReason")
                         .HasMaxLength(1000)
-                        .HasColumnType("VARCHAR(1000)")
+                        .HasColumnType("varchar(1000)")
                         .HasColumnName("activity_reason");
 
                     b.Property<DateTime?>("CertificateIssuedDate")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("certificate_issued_date");
 
                     b.Property<string>("CertificateUrl")
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("certificate_url");
 
                     b.Property<string>("CourseId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("course_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("CurrentLessonId")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("current_lesson_id");
 
                     b.Property<int>("CurrentLessonWatched")
@@ -1320,15 +1300,15 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("DeletedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("deleted_by");
 
                     b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("deleted_on");
 
                     b.Property<DateTime>("EnrollmentDate")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("enrollment_date");
 
                     b.Property<int>("EnrollmentMemberStatus")
@@ -1353,17 +1333,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -1381,39 +1361,38 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CourseId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("course_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("TagId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("tag_id");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -1431,39 +1410,38 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CourseId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("course_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -1479,18 +1457,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsActive")
@@ -1502,22 +1479,22 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("name");
 
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(270)
-                        .HasColumnType("VARCHAR(270)")
+                        .HasColumnType("varchar(270)")
                         .HasColumnName("slug");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -1531,38 +1508,37 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("AssessmentId")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("assessment_id");
 
                     b.Property<string>("CompletedAssessmentId")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("completed_assessment_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("DepartmentId")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("department_id");
 
                     b.Property<string>("GroupId")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("group_id");
 
                     b.Property<int>("Role")
@@ -1571,24 +1547,24 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("SkillId")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("skill_id");
 
                     b.Property<string>("TrainingEligibilityId")
-                        .HasColumnType("VARCHAR(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("TrainingId")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("training_id");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -1614,18 +1590,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsActive")
@@ -1637,12 +1612,12 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("LessonId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("lesson_id");
 
                     b.Property<string>("Name")
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("name");
 
                     b.Property<int>("Order")
@@ -1657,11 +1632,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -1677,30 +1652,29 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("FeedbackId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("feedback_id");
 
                     b.Property<string>("Option")
                         .IsRequired()
                         .HasMaxLength(5000)
-                        .HasColumnType("VARCHAR(5000)")
+                        .HasColumnType("varchar(5000)")
                         .HasColumnName("option");
 
                     b.Property<int>("Order")
@@ -1709,11 +1683,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -1729,35 +1703,34 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("Answer")
                         .HasMaxLength(5000)
-                        .HasColumnType("VARCHAR(5000)")
+                        .HasColumnType("varchar(5000)")
                         .HasColumnName("answer");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("FeedbackId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("feedback_id");
 
                     b.Property<string>("LessonId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("lesson_id");
 
                     b.Property<int?>("Rating")
@@ -1766,22 +1739,22 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("SelectedOption")
                         .HasMaxLength(300)
-                        .HasColumnType("VARCHAR(300)")
+                        .HasColumnType("varchar(300)")
                         .HasColumnName("selected_option");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -1799,43 +1772,42 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CompanyAddress")
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("company_address");
 
                     b.Property<string>("CompanyContactNumber")
                         .HasMaxLength(30)
-                        .HasColumnType("VARCHAR(30)")
+                        .HasColumnType("varchar(30)")
                         .HasColumnName("company_contact_number");
 
                     b.Property<string>("CompanyName")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("company_name");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("CustomConfiguration")
-                        .HasColumnType("VARCHAR(5000)")
+                        .HasColumnType("varchar(5000)")
                         .HasColumnName("custom_configuration");
 
                     b.Property<string>("EmailSignature")
                         .HasMaxLength(1000)
-                        .HasColumnType("VARCHAR(1000)")
+                        .HasColumnType("varchar(1000)")
                         .HasColumnName("email_signature");
 
                     b.Property<bool>("IsSetupCompleted")
@@ -1844,16 +1816,16 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("LogoUrl")
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("logo_url");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -1867,18 +1839,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsActive")
@@ -1896,22 +1867,22 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("name");
 
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(270)
-                        .HasColumnType("VARCHAR(270)")
+                        .HasColumnType("varchar(270)")
                         .HasColumnName("slug");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -1925,34 +1896,33 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("GroupId")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("MimeType")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
+                        .HasColumnType("varchar(200)")
                         .HasColumnName("mime_type");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
+                        .HasColumnType("varchar(200)")
                         .HasColumnName("name");
 
                     b.Property<double>("Size")
@@ -1960,17 +1930,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("Url")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("url");
 
                     b.HasKey("Id");
@@ -1986,24 +1956,23 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("GroupId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("group_id");
 
                     b.Property<bool>("IsActive")
@@ -2014,17 +1983,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -2040,38 +2009,37 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("Content")
                         .HasMaxLength(5000)
-                        .HasColumnType("VARCHAR(5000)")
+                        .HasColumnType("varchar(5000)")
                         .HasColumnName("content");
 
                     b.Property<string>("CourseId")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("course_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("Description")
                         .HasMaxLength(5000)
-                        .HasColumnType("VARCHAR(5000)")
+                        .HasColumnType("varchar(5000)")
                         .HasColumnName("description");
 
                     b.Property<string>("DocumentUrl")
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("document_url");
 
                     b.Property<int>("Duration")
@@ -2079,12 +2047,12 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnName("duration");
 
                     b.Property<DateTime?>("EndDate")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("end_date");
 
                     b.Property<string>("ExternalUrl")
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("external_url");
 
                     b.Property<bool>("IsDeleted")
@@ -2100,13 +2068,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnName("is_mandatory");
 
                     b.Property<string>("MeetingId")
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("meeting_id");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("name");
 
                     b.Property<int>("Order")
@@ -2114,22 +2082,22 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnName("order");
 
                     b.Property<string>("QuestionSetId")
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("question_set_id");
 
                     b.Property<string>("SectionId")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("section_id");
 
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(270)
-                        .HasColumnType("VARCHAR(270)")
+                        .HasColumnType("varchar(270)")
                         .HasColumnName("slug");
 
                     b.Property<DateTime?>("StartDate")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("start_date");
 
                     b.Property<int>("Status")
@@ -2138,7 +2106,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("ThumbnailUrl")
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("thumbnail_url");
 
                     b.Property<int>("Type")
@@ -2147,21 +2115,21 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("VideoKey")
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("video_key");
 
                     b.Property<string>("VideoUrl")
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("video_url");
 
                     b.HasKey("Id");
@@ -2185,18 +2153,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsActive")
@@ -2208,22 +2175,22 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("name");
 
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(270)")
+                        .HasColumnType("varchar(270)")
                         .HasColumnName("slug");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -2237,56 +2204,73 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
+
+                    b.Property<DateTime>("ActivatedOn")
+                        .HasColumnType("DateTime")
+                        .HasColumnName("activation_on");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
+
+                    b.Property<string>("CustomerEmail")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("customer_email");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("customer_name");
+
+                    b.Property<DateTime>("ExpiredOn")
+                        .HasColumnType("DateTime")
+                        .HasColumnName("expired_on");
+
+                    b.Property<string>("LicenseKey")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("licenseKey");
+
+                    b.Property<string>("LicenseKeyId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("licenseKeyId");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
-                    b.Property<string>("customerEmail")
+                    b.Property<int>("VariantId")
+                        .HasColumnType("int")
+                        .HasColumnName("variant_id");
+
+                    b.Property<string>("VariantName")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
-                        .HasColumnName("customer_email");
-
-                    b.Property<string>("customerName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("customer_name");
-
-                    b.Property<string>("licenseKey")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("licenseKey");
-
-                    b.Property<string>("licenseKeyId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("licenseKeyId");
-
-                    b.Property<int>("status")
-                        .HasColumnType("int")
-                        .HasColumnName("status");
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("variant_name");
 
                     b.HasKey("Id");
 
@@ -2302,26 +2286,26 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Exception")
-                        .HasColumnType("VARCHAR(5000)");
+                        .HasColumnType("varchar(5000)");
 
                     b.Property<string>("Level")
                         .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)");
+                        .HasColumnType("varchar(200)");
 
                     b.Property<DateTime>("Logged")
-                        .HasColumnType("DATETIME");
+                        .HasColumnType("DateTime");
 
                     b.Property<string>("Logger")
-                        .HasColumnType("VARCHAR(400)");
+                        .HasColumnType("varchar(400)");
 
                     b.Property<string>("MachineName")
-                        .HasColumnType("VARCHAR(200)");
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Message")
-                        .HasColumnType("VARCHAR(4000)");
+                        .HasColumnType("varchar(4000)");
 
                     b.Property<string>("Properties")
-                        .HasColumnType("VARCHAR(1000)");
+                        .HasColumnType("varchar(1000)");
 
                     b.HasKey("Id");
 
@@ -2332,18 +2316,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsActive")
@@ -2358,28 +2341,28 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("Text")
                         .HasColumnName("mail_message");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("mail_name");
 
                     b.Property<string>("Subject")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("mail_subject");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -2391,18 +2374,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<int>("Duration")
@@ -2415,25 +2397,25 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Passcode")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("passcode");
 
                     b.Property<DateTime?>("StartDate")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("start_date");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("ZoomLicenseId")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("zoom_license_id");
 
                     b.HasKey("Id");
@@ -2450,11 +2432,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<TimeSpan?>("Duration")
@@ -2462,31 +2444,31 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnName("duration");
 
                     b.Property<DateTime>("JoinTime")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("join_time");
 
                     b.Property<DateTime?>("LeftTime")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("left_time");
 
                     b.Property<string>("MeetingId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("meeting_id");
 
                     b.Property<DateTime>("StartTime")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("start_time");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -2502,18 +2484,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("HasAttended")
@@ -2531,26 +2512,26 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("LessonId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("lesson_id");
 
                     b.Property<string>("ReviewMessage")
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("review_message");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -2566,18 +2547,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("Description")
@@ -2604,11 +2584,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -2622,18 +2602,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsCorrect")
@@ -2655,16 +2634,16 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("QuestionId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("question_id");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -2680,18 +2659,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsDeleted")
@@ -2703,22 +2681,22 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("name");
 
                     b.Property<string>("Slug")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(105)")
+                        .HasMaxLength(105)
+                        .HasColumnType("varchar(105)")
                         .HasColumnName("slug");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -2732,18 +2710,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<int>("Order")
@@ -2755,22 +2732,22 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("QuestionId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("question_id");
 
                     b.Property<string>("QuestionPoolId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("question_pool_id");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -2788,24 +2765,23 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("QuestionPoolId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("question_pool_id");
 
                     b.Property<int>("Role")
@@ -2816,17 +2792,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -2842,8 +2818,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<int>("AllowedRetake")
@@ -2855,11 +2830,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("Description")
@@ -2872,7 +2847,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnName("duration");
 
                     b.Property<DateTime?>("EndTime")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("end_time");
 
                     b.Property<bool>("IsDeleted")
@@ -2920,11 +2895,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(520)
-                        .HasColumnType("VARCHAR(520)")
+                        .HasColumnType("varchar(520)")
                         .HasColumnName("slug");
 
                     b.Property<DateTime?>("StartTime")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("start_time");
 
                     b.Property<string>("ThumbnailUrl")
@@ -2934,11 +2909,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -2952,18 +2927,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<int>("Order")
@@ -2972,27 +2946,27 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("QuestionId")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("question_id");
 
                     b.Property<string>("QuestionPoolQuestionId")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("question_pool_question_id");
 
                     b.Property<string>("QuestionSetId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("question_set_id");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -3012,18 +2986,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<decimal>("NegativeMark")
@@ -3033,13 +3006,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("QuestionSetId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("question_set_id");
 
                     b.Property<string>("QuestionSetSubmissionId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("question_set_submission_id");
 
                     b.Property<decimal>("TotalMark")
@@ -3048,17 +3021,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -3076,22 +3049,21 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<DateTime>("EndTime")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("end_time");
 
                     b.Property<bool>("IsSubmissionError")
@@ -3103,31 +3075,31 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("QuestionSetId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("question_set_id");
 
                     b.Property<DateTime>("StartTime")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("start_time");
 
                     b.Property<string>("SubmissionErrorMessage")
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("submission_error_message");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -3143,18 +3115,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsCorrect")
@@ -3166,28 +3137,28 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("QuestionSetQuestionId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("question_set_question_id");
 
                     b.Property<string>("QuestionSetSubmissionId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("question_set_submission_id");
 
                     b.Property<string>("SelectedAnswers")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("VARCHAR(150)")
+                        .HasColumnType("varchar(150)")
                         .HasColumnName("selected_answers");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -3205,39 +3176,38 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("QuestionId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("question_id");
 
                     b.Property<string>("TagId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("tag_id");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -3255,23 +3225,22 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("DeviceId")
                         .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
+                        .HasColumnType("varchar(200)")
                         .HasColumnName("device_id");
 
                     b.Property<bool>("IsActive")
@@ -3282,7 +3251,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Location")
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("location");
 
                     b.Property<DateTime>("LoginAt")
@@ -3291,22 +3260,22 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Token")
                         .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
+                        .HasColumnType("varchar(200)")
                         .HasColumnName("token");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -3320,18 +3289,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<int>("MailPort")
@@ -3341,40 +3309,40 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("MailServer")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
+                        .HasColumnType("varchar(200)")
                         .HasColumnName("mail_server");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("password");
 
                     b.Property<string>("ReplyTo")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
+                        .HasColumnType("varchar(200)")
                         .HasColumnName("reply_to");
 
                     b.Property<string>("SenderEmail")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
+                        .HasColumnType("varchar(200)")
                         .HasColumnName("sender_email");
 
                     b.Property<string>("SenderName")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
+                        .HasColumnType("varchar(200)")
                         .HasColumnName("sender_name");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<bool>("UseSSL")
@@ -3383,7 +3351,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("user_name");
 
                     b.HasKey("Id");
@@ -3397,28 +3365,27 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CourseId")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("course_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("description");
 
                     b.Property<int>("Duration")
@@ -3434,7 +3401,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("name");
 
                     b.Property<int>("Order")
@@ -3444,7 +3411,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(270)
-                        .HasColumnType("VARCHAR(270)")
+                        .HasColumnType("varchar(270)")
                         .HasColumnName("slug");
 
                     b.Property<int>("Status")
@@ -3453,11 +3420,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -3473,12 +3440,12 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Key")
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("key");
 
                     b.Property<string>("Value")
                         .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
+                        .HasColumnType("varchar(200)")
                         .HasColumnName("value");
 
                     b.HasKey("Key");
@@ -3490,51 +3457,50 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CourseId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("course_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("Designation")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("designation");
 
                     b.Property<string>("FileUrl")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
+                        .HasColumnType("varchar(200)")
                         .HasColumnName("file_url");
 
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("full_name");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -3550,23 +3516,22 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("Description")
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("remarks");
 
                     b.Property<bool>("IsActive")
@@ -3578,16 +3543,16 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("SkillName")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("name");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -3599,23 +3564,22 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("AssessmentId")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("assessment_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<decimal>("Percentage")
@@ -3628,16 +3592,16 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("SkillId")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("skill_id");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -3653,18 +3617,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsActive")
@@ -3676,22 +3639,22 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("name");
 
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(270)
-                        .HasColumnType("VARCHAR(270)")
+                        .HasColumnType("varchar(270)")
                         .HasColumnName("slug");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -3705,30 +3668,29 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CourseId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("course_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("EligibilityId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("eligibility_id");
 
                     b.Property<int>("TrainingEligibilityEnum")
@@ -3737,11 +3699,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -3755,99 +3717,98 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("Address")
                         .HasMaxLength(200)
-                        .HasColumnType("VARCHAR(200)")
+                        .HasColumnType("varchar(200)")
                         .HasColumnName("address");
 
                     b.Property<string>("Bio")
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("bio");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("DepartmentId")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("department_id");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("email");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("first_name");
 
                     b.Property<string>("HashPassword")
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("hash_password");
 
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("image_url");
 
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("last_name");
 
                     b.Property<string>("MemberId")
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("member_id");
 
                     b.Property<string>("MiddleName")
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("middle_name");
 
                     b.Property<string>("MobileNumber")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("mobile_number");
 
                     b.Property<string>("PasswordChangeToken")
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("password_change_token");
 
                     b.Property<string>("PasswordResetToken")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("password_reset_token");
 
                     b.Property<DateTime?>("PasswordResetTokenExpiry")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("password_reset_token_expiry");
 
                     b.Property<string>("Profession")
                         .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasColumnType("varchar(250)")
                         .HasColumnName("profession");
 
                     b.Property<string>("PublicUrls")
                         .HasMaxLength(2000)
-                        .HasColumnType("VARCHAR(2000)")
+                        .HasColumnType("varchar(2000)")
                         .HasColumnName("public_urls");
 
                     b.Property<int>("Role")
@@ -3864,11 +3825,11 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -3881,10 +3842,10 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("AcademyKit.Domain.Entities.UserSkills", b =>
                 {
                     b.Property<string>("SkillId")
-                        .HasColumnType("VARCHAR(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("VARCHAR(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
@@ -3913,17 +3874,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("LessonId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("lesson_id");
 
                     b.Property<int>("Status")
@@ -3931,13 +3892,13 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                         .HasColumnName("status");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("VideoUrl")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("video_url");
 
                     b.HasKey("Id");
@@ -3951,24 +3912,23 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CourseId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("course_id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsCompleted")
@@ -3986,22 +3946,22 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("LessonId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("lesson_id");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -4019,8 +3979,7 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<int>("Capacity")
@@ -4030,17 +3989,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<string>("HostId")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("host_id");
 
                     b.Property<bool>("IsActive")
@@ -4052,16 +4011,16 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("LicenseEmail")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("license_email");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.HasKey("Id");
@@ -4075,18 +4034,17 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("id");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("created_by");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("created_on");
 
                     b.Property<bool>("IsRecordingEnabled")
@@ -4098,45 +4056,45 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
                     b.Property<string>("OAuthAccountId")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("oauth_account_id");
 
                     b.Property<string>("OAuthClientId")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("oauth_client_id");
 
                     b.Property<string>("OAuthClientSecret")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("oauth_client_secret");
 
                     b.Property<string>("SdkKey")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("sdk_key");
 
                     b.Property<string>("SdkSecret")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("sdk_secret");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("updated_by");
 
                     b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("DATETIME")
+                        .HasColumnType("DateTime")
                         .HasColumnName("updated_on");
 
                     b.Property<string>("WebHookSecret")
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("webhook_secret");
 
                     b.HasKey("Id");
@@ -4149,10 +4107,10 @@ namespace AcademyKit.Server.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("SkillsUser", b =>
                 {
                     b.Property<string>("SkillsId")
-                        .HasColumnType("VARCHAR(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("UsersId")
-                        .HasColumnType("VARCHAR(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("SkillsId", "UsersId");
 

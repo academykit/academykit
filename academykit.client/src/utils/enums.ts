@@ -166,3 +166,9 @@ export enum AiModelEnum {
   Tts_1 = 13,
   Tts_1_hd = 14,
 }
+
+export enum SignInType {
+  Email = 1,
+  Google = 2,
+  Microsoft = 3,
+}
