@@ -1,3 +1,4 @@
+import Logo from "@components/Logo";
 import UserProfileMenu from "@components/UserProfileMenu";
 import useCustomLayout from "@context/LayoutProvider";
 import useAuth from "@hooks/useAuth";
@@ -15,9 +16,11 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconInfoSquare } from "@tabler/icons-react";
+import { checkValidUrl } from "@utils/checkValidUrl";
 import { UserRole } from "@utils/enums";
 import { useGeneralSetting } from "@utils/services/adminService";
 import { IUser } from "@utils/services/types";
+import { setHeader } from "@utils/setHeader";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Outlet } from "react-router-dom";
@@ -26,38 +29,16 @@ import { LeftMainLinks } from "./LeftMainLink";
 import classes from "./styles/layout.module.css";
 
 const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
-  const settings = useGeneralSetting();
-
-  const setHeader = () => {
-    const info =
-      localStorage.getItem("app-info") &&
-      JSON.parse(localStorage.getItem("app-info") ?? "");
-    if (info) {
-      let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
-      document.title = info.name;
-      if (!link) {
-        link = document.createElement("link");
-        link.rel = "icon";
-        document.getElementsByTagName("head")[0].appendChild(link);
-      }
-      link.href = info.logo;
-    }
-  };
+  const generalSettings = useGeneralSetting();
 
   useEffect(() => {
-    setHeader();
-
-    if (settings.isSuccess) {
-      localStorage.setItem(
-        "app-info",
-        JSON.stringify({
-          name: settings.data.data.companyName,
-          logo: settings.data.data.logoUrl,
-        })
-      );
-      setHeader();
+    if (generalSettings.isSuccess) {
+      setHeader({
+        name: generalSettings.data.data.companyName,
+        logoUrl: generalSettings.data.data.logoUrl,
+      });
     }
-  }, [settings.isSuccess]);
+  }, [generalSettings.isSuccess]);
 
   const auth = useAuth();
 
@@ -115,7 +96,19 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
                 size="sm"
               />
               <Link to="/" style={{ marginTop: "5px" }}>
-                <img height={50} src={settings.data?.data?.logoUrl} alt="" />
+                {checkValidUrl(generalSettings.data?.data?.logoUrl) ? (
+                  <img
+                    height={50}
+                    src={generalSettings.data?.data?.logoUrl}
+                    alt={generalSettings.data?.data?.companyName}
+                  />
+                ) : (
+                  <Logo
+                    url={generalSettings.data?.data?.logoUrl}
+                    height={0}
+                    width={0}
+                  />
+                )}
               </Link>
             </Group>
             {auth?.auth && (
@@ -170,7 +163,9 @@ const Layout = ({ showNavBar = true }: { showNavBar?: boolean }) => {
         <Outlet />
       </AppShell.Main>
 
-      <AppFooter name={settings.data?.data?.companyName ?? ""}></AppFooter>
+      <AppFooter
+        name={generalSettings.data?.data?.companyName ?? ""}
+      ></AppFooter>
     </AppShell>
   );
 };
