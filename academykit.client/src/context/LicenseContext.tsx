@@ -6,7 +6,8 @@ import {
   getLicenses,
   useValidateLicense,
 } from "@utils/services/licenseService";
-import { FC, createContext, useEffect, useState } from "react";
+import type { FC, PropsWithChildren } from "react";
+import { createContext, useEffect, useState } from "react";
 
 interface ILicenseContext {
   isValid: boolean;
@@ -15,7 +16,7 @@ interface ILicenseContext {
 
 export const LicenseContext = createContext<ILicenseContext | null>(null);
 
-const LicenseProvider: FC<React.PropsWithChildren> = ({ children }) => {
+const LicenseProvider: FC<PropsWithChildren> = ({ children }) => {
   const [isValid, setIsValid] = useState<boolean>(true);
   const auth = useAuth();
   const setValid = (value: boolean) => {
@@ -29,8 +30,8 @@ const LicenseProvider: FC<React.PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     if (licenseKeys.isSuccess) {
-      if (licenseKeys.data?.length) {
-        localStorage.setItem(LICENSE_KEY, licenseKeys.data[0]?.licenseKey);
+      if (licenseKeys?.data?.licenseKey) {
+        localStorage.setItem(LICENSE_KEY, licenseKeys.data.licenseKey);
       } else {
         setIsValid(false);
       }

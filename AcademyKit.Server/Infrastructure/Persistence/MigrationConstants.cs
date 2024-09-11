@@ -6,6 +6,7 @@
         public const string Utf8mb4 = "utf8mb4";
         public const string MySqlCharSet = "MySql:CharSet";
         public const string Text = "Text";
+        public const string LongText = "LongText";
         public const string Varchar30 = "varchar(30)";
         public const string Varchar50 = "varchar(50)";
         public const string Varchar64 = "varchar(64)";

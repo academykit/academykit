@@ -327,6 +327,7 @@ export const api = {
     activate: "/api/LemonSqueezy/activate",
     list: "/api/LemonSqueezy/license",
     checkout: "/api/LemonSqueezy/checkout",
+    update: "/api/LemonSqueezy/update",
   },
   apiKey: {
     list: "/api/ApiKey",
