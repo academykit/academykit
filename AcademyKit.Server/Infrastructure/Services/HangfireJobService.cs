@@ -21,8 +21,22 @@ public class HangfireJobService : BaseService, IHangfireJobService
     private readonly IEmailService _emailService;
     private readonly IVideoService _videoService;
     private readonly IFileServerService _fileServerService;
-
     private readonly Dictionary<string, string> _placeholders;
+
+    private const string EMAIL_PLACEHOLDER = "email";
+    private const string USER_NAME_PLACEHOLDER = "userName";
+    private const string APP_PLACEHOLDER = "app";
+    private const string EMAIL_SIGNATURE_PLACEHOLDER = "emailSignature";
+    private const string COURSE_NAME_PLACEHOLDER = "courseName";
+    private const string COURSE_SLUG_PLACEHOLDER = "courseSlug";
+    private const string COMPANY_NAME_PLACEHOLDER = "companyName";
+    private const string COMPANY_NUMBER_PLACEHOLDER = "companyNumber";
+    private const string PASSWORD_PLACEHOLDER = "password";
+    private const string MESSAGE_PLACEHOLDER = "message";
+    private const string GROUP_NAME_PLACEHOLDER = "groupName";
+    private const string GROUP_SLUG_PLACEHOLDER = "groupSlug";
+    private const string NEW_EMAIL_PLACEHOLDER = "newEmail";
+    private const string ASSESSMENT_TITLE_PLACEHOLDER = "assessmentTitle";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HangfireJobService"/> class.
@@ -45,19 +59,19 @@ public class HangfireJobService : BaseService, IHangfireJobService
 
         _placeholders = new Dictionary<string, string>
         {
-            { "userName", "{userName}" },
-            { "app", "{appUrl}" },
-            { "courseName", "{courseName}" },
-            { "courseSlug", "{courseSlug}" },
-            { "emailSignature", "{emailSignature}" },
-            { "companyName", "{companyName}" },
-            { "companyNumber", "{companyNumber}" },
-            { "password", "{password}" },
-            { "email", "{email}" },
-            { "message", "{message}" },
-            { "groupName", "{groupName}" },
-            { "groupSlug", "{groupSlug}" },
-            { "newEmail", "{newEmail}" }
+            { USER_NAME_PLACEHOLDER, "{userName}" },
+            { APP_PLACEHOLDER, "{appUrl}" },
+            { COURSE_NAME_PLACEHOLDER, "{courseName}" },
+            { COURSE_SLUG_PLACEHOLDER, "{courseSlug}" },
+            { EMAIL_SIGNATURE_PLACEHOLDER, "{emailSignature}" },
+            { COMPANY_NAME_PLACEHOLDER, "{companyName}" },
+            { COMPANY_NUMBER_PLACEHOLDER, "{companyNumber}" },
+            { PASSWORD_PLACEHOLDER, "{password}" },
+            { EMAIL_PLACEHOLDER, "{email}" },
+            { MESSAGE_PLACEHOLDER, "{message}" },
+            { GROUP_NAME_PLACEHOLDER, "{groupName}" },
+            { GROUP_SLUG_PLACEHOLDER, "{groupSlug}" },
+            { NEW_EMAIL_PLACEHOLDER, "{newEmail}" }
         };
     }
 
@@ -102,7 +116,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
                         + $"Best regards,<br>{companyName}",
                     user.Email,
                     user.FirstName,
-                    new Dictionary<string, string> { { "courseName", courseName } },
+                    new Dictionary<string, string> { { COURSE_NAME_PLACEHOLDER, courseName } },
                     MailType.TrainingReview
                 );
             }
@@ -161,8 +175,8 @@ public class HangfireJobService : BaseService, IHangfireJobService
                         teacher.User.FirstName,
                         new Dictionary<string, string>
                         {
-                            { "courseName", course.Name },
-                            { "message", message }
+                            { COMPANY_NAME_PLACEHOLDER, course.Name },
+                            { MESSAGE_PLACEHOLDER, message }
                         },
                         MailType.TrainingReject
                     );
@@ -211,10 +225,10 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 firstName,
                 new Dictionary<string, string>
                 {
-                    { "email", emailAddress },
-                    { "password", password },
-                    { "companyName", companyName },
-                    { "companyNumber", companyNumber }
+                    { EMAIL_PLACEHOLDER, emailAddress },
+                    { PASSWORD_PLACEHOLDER, password },
+                    { COMPANY_NAME_PLACEHOLDER, companyName },
+                    { COMPANY_NUMBER_PLACEHOLDER, companyNumber }
                 },
                 MailType.UserCreate
             );
@@ -255,10 +269,10 @@ public class HangfireJobService : BaseService, IHangfireJobService
                     emailDto.FullName,
                     new Dictionary<string, string>
                     {
-                        { "email", emailDto.Email },
-                        { "password", emailDto.Password },
-                        { "companyName", emailDto.CompanyName },
-                        { "companyNumber", emailDto.CompanyNumber }
+                        { EMAIL_PLACEHOLDER, emailDto.Email },
+                        { PASSWORD_PLACEHOLDER, emailDto.Password },
+                        { COMPANY_NAME_PLACEHOLDER, emailDto.CompanyName },
+                        { COMPANY_NUMBER_PLACEHOLDER, emailDto.CompanyNumber }
                     },
                     MailType.UserCreate
                 );
@@ -298,10 +312,6 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 return;
             }
 
-            var setting = await _unitOfWork
-                .GetRepository<GeneralSetting>()
-                .GetFirstOrDefaultAsync();
-
             foreach (var user in users)
             {
                 var fullName = string.IsNullOrEmpty(user.MiddleName)
@@ -319,8 +329,8 @@ public class HangfireJobService : BaseService, IHangfireJobService
                     fullName,
                     new Dictionary<string, string>
                     {
-                        { "groupName", groupName },
-                        { "groupSlug", groupSlug }
+                        { GROUP_NAME_PLACEHOLDER, groupName },
+                        { GROUP_SLUG_PLACEHOLDER, groupSlug }
                     },
                     MailType.GroupMemberAdd
                 );
@@ -350,9 +360,6 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 throw new ArgumentException(_localizer.GetString("ContextNotFound"));
             }
 
-            var settings = await _unitOfWork
-                .GetRepository<GeneralSetting>()
-                .GetFirstOrDefaultAsync();
             var group = await _unitOfWork
                 .GetRepository<Domain.Entities.Group>()
                 .GetFirstOrDefaultAsync(
@@ -381,8 +388,8 @@ public class HangfireJobService : BaseService, IHangfireJobService
                         fullName,
                         new Dictionary<string, string>
                         {
-                            { "courseName", courseName },
-                            { "courseSlug", courseSlug }
+                            { COURSE_NAME_PLACEHOLDER, courseName },
+                            { COURSE_SLUG_PLACEHOLDER, courseSlug }
                         },
                         MailType.None
                     );
@@ -429,7 +436,10 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 throw new ArgumentException(_localizer.GetString("TeacherNotFound"));
             }
 
-            foreach (var teacher in course.CourseTeachers)
+            var teachers = course
+                .CourseTeachers.Select(teacher => teacher.User)
+                .Where(user => user != null);
+            foreach (var teacher in teachers)
             {
                 await SendEmailAsync(
                     getSubject: _ => "New Training Enrollment",
@@ -439,13 +449,13 @@ public class HangfireJobService : BaseService, IHangfireJobService
                         + $"<ul><li>Training: {courseName}</li><li>Enrolled User: {userName}</li><li>User Email: {userEmail}</li></ul>"
                         + $"Thank you for your attention to this enrollment. We appreciate your dedication to providing an exceptional learning experience.<br><br>"
                         + $"Best regards,<br>{company}",
-                    teacher.User?.Email,
-                    teacher.User?.FirstName,
+                    teacher.Email,
+                    teacher.FirstName,
                     new Dictionary<string, string>
                     {
-                        { "courseName", courseName },
-                        { "userName", userName },
-                        { "email", userEmail }
+                        { COURSE_NAME_PLACEHOLDER, courseName },
+                        { USER_NAME_PLACEHOLDER, userName },
+                        { EMAIL_PLACEHOLDER, userEmail }
                     },
                     MailType.TrainingEnrollment
                 );
@@ -486,7 +496,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
                         + $"Best regards,<br>{company}",
                     user?.Email,
                     user?.UserName,
-                    new Dictionary<string, string> { { "courseName", courseName } },
+                    new Dictionary<string, string> { { COURSE_NAME_PLACEHOLDER, courseName } },
                     MailType.CertificateIssue
                 );
             }
@@ -527,7 +537,10 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 throw new ArgumentException("No enrollments");
             }
 
-            foreach (var enrollment in course.CourseEnrollments)
+            var enrolledUsers = course
+                .CourseEnrollments.Select(enrollment => enrollment.User)
+                .Where(user => user != null && !string.IsNullOrEmpty(user.Email));
+            foreach (var user in enrolledUsers)
             {
                 await SendEmailAsync(
                     getSubject: _ => "New Content Added",
@@ -538,12 +551,12 @@ public class HangfireJobService : BaseService, IHangfireJobService
                         + $"We encourage you to visit the training page and "
                         + $"explore the new materials to enhance your learning experience.<br><br>"
                         + $"Thank You,<br>{company}",
-                    enrollment.User?.Email,
-                    enrollment.User?.FirstName,
+                    user.Email,
+                    user.FirstName,
                     new Dictionary<string, string>
                     {
-                        { "courseName", courseName },
-                        { "courseSlug", courseSlug }
+                        { COURSE_NAME_PLACEHOLDER, courseName },
+                        { COURSE_SLUG_PLACEHOLDER, courseSlug }
                     },
                     MailType.AddLesson
                 );
@@ -583,7 +596,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
                     + $"Thank You,<br>{company}",
                 oldEmail,
                 fullName,
-                new Dictionary<string, string> { { "newEmail", newEmail } },
+                new Dictionary<string, string> { { NEW_EMAIL_PLACEHOLDER, newEmail } },
                 MailType.ChangedEmail
             );
         });
@@ -628,7 +641,10 @@ public class HangfireJobService : BaseService, IHangfireJobService
                     + $"Best regards,<br>{company}",
                 assessment.User.Email,
                 assessment.User.FirstName,
-                new Dictionary<string, string> { { "assessmentTitle", assessment.Title } },
+                new Dictionary<string, string>
+                {
+                    { ASSESSMENT_TITLE_PLACEHOLDER, assessment.Title }
+                },
                 MailType.None
             );
         });
@@ -679,8 +695,8 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 assessment.User.FirstName,
                 new Dictionary<string, string>
                 {
-                    { "assessmentTitle", assessment.Title },
-                    { "message", assessment.Message }
+                    { ASSESSMENT_TITLE_PLACEHOLDER, assessment.Title },
+                    { MESSAGE_PLACEHOLDER, assessment.Message }
                 },
                 MailType.None
             );
@@ -730,7 +746,10 @@ public class HangfireJobService : BaseService, IHangfireJobService
                         + $"Best regards,<br>{company}",
                     admin.Email,
                     admin.FirstName,
-                    new Dictionary<string, string> { { "assessmentTitle", assessment.Title } },
+                    new Dictionary<string, string>
+                    {
+                        { ASSESSMENT_TITLE_PLACEHOLDER, assessment.Title }
+                    },
                     MailType.None
                 );
             }
@@ -782,9 +801,9 @@ public class HangfireJobService : BaseService, IHangfireJobService
 
             var placeholders = new Dictionary<string, string>(_placeholders)
             {
-                { "userName", recipientName },
-                { "app", _appUrl },
-                { "emailSignature", $"Best regards, <br> {setting.CompanyName}" }
+                { USER_NAME_PLACEHOLDER, recipientName },
+                { APP_PLACEHOLDER, _appUrl },
+                { EMAIL_SIGNATURE_PLACEHOLDER, $"Best regards, <br> {setting.CompanyName}" }
             };
 
             if (additionalPlaceholders != null)
