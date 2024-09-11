@@ -5,10 +5,14 @@ namespace AcademyKit.Domain.Entities
 
     public class License : AuditableEntity
     {
-        public string licenseKey { get; set; }
-        public LicenseStatusType status { get; set; }
-        public int licenseKeyId { get; set; }
-        public string customerName { get; set; }
-        public string customerEmail { get; set; }
+        public string LicenseKey { get; set; }
+        public LicenseStatusType Status { get; set; }
+        public int LicenseKeyId { get; set; }
+        public string CustomerName { get; set; }
+        public string CustomerEmail { get; set; }
+        public DateTime ActivatedOn { get; set; }
+        public DateTime ExpiredOn { get; set; }
+        public string VariantName { get; set; }
+        public int VariantId { get; set; }
     }
 }
