@@ -162,7 +162,7 @@ const AssessmentDescription = () => {
     return false;
   };
 
-  const hasExcededEndDate = () => {
+  const hasExceededEndDate = () => {
     const endDate = moment(assessmentDetail.data?.endDate);
     const currentDate = moment(new Date());
 
@@ -365,7 +365,7 @@ const AssessmentDescription = () => {
 
           {(hasAttempted ||
             assessmentDetail.data?.hasCompleted ||
-            hasExcededEndDate()) && (
+            hasExceededEndDate()) && (
             <Button radius={"xl"} onClick={() => toggleResultModal()}>
               {t("view_result")}
             </Button>
