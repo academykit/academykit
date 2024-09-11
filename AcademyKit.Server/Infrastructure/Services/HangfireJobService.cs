@@ -485,7 +485,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
                         + $"We hope you find the training helpful.<br><br>"
                         + $"Best regards,<br>{company}",
                     user?.Email,
-                    user.UserName,
+                    user?.UserName,
                     new Dictionary<string, string> { { "courseName", courseName } },
                     MailType.CertificateIssue
                 );
