@@ -1,5 +1,4 @@
-﻿using System.Text;
-using AcademyKit.Application.Common.Dtos;
+﻿using AcademyKit.Application.Common.Dtos;
 using AcademyKit.Application.Common.Exceptions;
 using AcademyKit.Application.Common.Interfaces;
 using AcademyKit.Domain.Entities;
@@ -10,10 +9,12 @@ using Hangfire;
 using Hangfire.Server;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using static Dapper.SqlMapper;
 
 namespace AcademyKit.Infrastructure.Services;
 
+/// <summary>
+/// Service for handling Hangfire background jobs related to the Academy Kit application.
+/// </summary>
 public class HangfireJobService : BaseService, IHangfireJobService
 {
     private readonly string _appUrl;
@@ -21,20 +22,11 @@ public class HangfireJobService : BaseService, IHangfireJobService
     private readonly IVideoService _videoService;
     private readonly IFileServerService _fileServerService;
 
-    private readonly string _userName = "{userName}";
-    private readonly string _app = "{appUrl}";
-    private readonly string _courseName = "{courseName}";
-    private readonly string _courseSlug = "{courseSlug}";
-    private readonly string _emailSignature = "{emailSignature}";
-    private readonly string _companyName = "{companyName}";
-    private readonly string _companyNumber = "{companyNumber}";
-    private readonly string _password = "{password}";
-    private readonly string _email = "{email}";
-    private readonly string _message = "{message}";
-    private readonly string _groupName = "{groupName}";
-    private readonly string _groupSlug = "{groupSlug}";
-    private readonly string _newEmail = "{newEmail}";
+    private readonly Dictionary<string, string> _placeholders;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HangfireJobService"/> class.
+    /// </summary>
     public HangfireJobService(
         IConfiguration configuration,
         IUnitOfWork unitOfWork,
@@ -50,18 +42,37 @@ public class HangfireJobService : BaseService, IHangfireJobService
         _appUrl = configuration.GetSection("AppUrls:App").Value;
         _videoService = videoService;
         _fileServerService = fileServerService;
+
+        _placeholders = new Dictionary<string, string>
+        {
+            { "userName", "{userName}" },
+            { "app", "{appUrl}" },
+            { "courseName", "{courseName}" },
+            { "courseSlug", "{courseSlug}" },
+            { "emailSignature", "{emailSignature}" },
+            { "companyName", "{companyName}" },
+            { "companyNumber", "{companyNumber}" },
+            { "password", "{password}" },
+            { "email", "{email}" },
+            { "message", "{message}" },
+            { "groupName", "{groupName}" },
+            { "groupSlug", "{groupSlug}" },
+            { "newEmail", "{newEmail}" }
+        };
     }
 
+    #region Email Hangfire Services
+
+    #region Public Methods
     /// <summary>
-    /// Handle to send course review mail
+    /// Sends a course review email to administrators and super administrators.
     /// </summary>
-    /// <param name="courseName"> the course name </param>
-    /// <param name="context"> the instance of <see cref="PerformContext"/> </param>
-    /// <returns> the task complete </returns>
+    /// <param name="courseName">The name of the course being reviewed.</param>
+    /// <param name="context">The Hangfire performance context.</param>
     [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
     public async Task SendCourseReviewMailAsync(string courseName, PerformContext context = null)
     {
-        try
+        await ExecuteAsync(async () =>
         {
             if (context == null)
             {
@@ -80,61 +91,30 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 return;
             }
 
-            var setting = await _unitOfWork
-                .GetRepository<GeneralSetting>()
-                .GetFirstOrDefaultAsync()
-                .ConfigureAwait(false);
-
-            var template = await _unitOfWork
-                .GetRepository<MailNotification>()
-                .GetFirstOrDefaultAsync(predicate: p =>
-                    p.MailType == MailType.TrainingReview && p.IsActive
-                )
-                .ConfigureAwait(false);
-
-            var commonHtml =
-                $"Training "
-                + @$"<a href = '{_appUrl}/settings/courses'>""{courseName}""</a> is under review. Kindly provide feedback and assessment. Your input is vital for quality assurance. Thank you.<br><br>";
             foreach (var user in users)
             {
-                var model = new EmailRequestDto { To = user.Email };
-
-                if (template == null)
-                {
-                    var html = $"Dear {user.FirstName},<br><br>";
-                    html += commonHtml;
-                    html += $"Best regards, <br> {setting.CompanyName}";
-
-                    model.Subject = $"Training Review Status - {courseName}";
-                    model.Message = html;
-                }
-                else
-                {
-                    model.Subject = template.Subject;
-                    model.Message = template
-                        .Message.Replace(_userName, user.FirstName)
-                        .Replace(_app, _appUrl)
-                        .Replace(_courseName, courseName)
-                        .Replace(_emailSignature, $"Best regards, <br> {setting.CompanyName}");
-                }
-
-                await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+                await SendEmailAsync(
+                    getSubject: _ => $"Training Review Status - {courseName}",
+                    getMessage: (name, companyName) =>
+                        $"Dear {name},<br><br>"
+                        + $"Training <a href='{_appUrl}/settings/courses'>'{courseName}'</a> is under review. "
+                        + "Kindly provide feedback and assessment. Your input is vital for quality assurance. Thank you.<br><br>"
+                        + $"Best regards,<br>{companyName}",
+                    user.Email,
+                    user.FirstName,
+                    new Dictionary<string, string> { { "courseName", courseName } },
+                    MailType.TrainingReview
+                );
             }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message, ex);
-            throw ex is ServiceException ? ex : new ServiceException(ex.Message);
-        }
+        });
     }
 
     /// <summary>
-    /// Handle to send course rejected mail
+    /// Sends a course rejection email to course teachers.
     /// </summary>
-    /// <param name="courseId"> the course id </param>
-    /// <param name="message"> the message </param>
-    /// <param name="context"> the instance of <see cref="PerformContext" /> .</param>
-    /// <returns> the task complete </returns>
+    /// <param name="courseId">The ID of the rejected course.</param>
+    /// <param name="message">The rejection message.</param>
+    /// <param name="context">The Hangfire performance context.</param>
     [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
     public async Task CourseRejectedMailAsync(
         Guid courseId,
@@ -142,7 +122,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
         PerformContext context = null
     )
     {
-        try
+        await ExecuteAsync(async () =>
         {
             if (context == null)
             {
@@ -163,66 +143,43 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 throw new EntityNotFoundException(_localizer.GetString("CourseNotFound"));
             }
 
-            var template = await _unitOfWork
-                .GetRepository<MailNotification>()
-                .GetFirstOrDefaultAsync(predicate: p =>
-                    p.MailType == MailType.TrainingReject && p.IsActive
-                )
-                .ConfigureAwait(false);
-
-            var setting = await _unitOfWork
-                .GetRepository<GeneralSetting>()
-                .GetFirstOrDefaultAsync();
-
-            var commonHtml =
-                $"We regret to inform you that your training, {course.Name} has been rejected for the following reason:<br><br>"
-                + $"{message}<br><br>"
-                + $"However, we encourage you to make the necessary corrections and adjustments based on the provided feedback. "
-                + $"Once you have addressed the identified issues, please resubmit the training program for further review.<br><br>"
-                + $"Thank you for your understanding and cooperation.<br><br>"
-                + $"Best regards,<br> {setting.CompanyName}";
-
             foreach (var teacher in course.CourseTeachers)
             {
                 if (!string.IsNullOrEmpty(teacher.User?.Email))
                 {
-                    var model = new EmailRequestDto { To = teacher.User.Email, };
-                    if (template == null)
-                    {
-                        var html = $"Dear {teacher?.User.FirstName},<br><br>";
-                        html += commonHtml;
-
-                        model.Subject = $"Training Rejection - {course.Name}";
-                        model.Message = html;
-                    }
-                    else
-                    {
-                        model.Subject = template.Subject;
-                        model.Message = template
-                            .Message.Replace(_userName, teacher?.User.FirstName)
-                            .Replace(_courseName, course.Name)
-                            .Replace(_message, message)
-                            .Replace(_emailSignature, $"Best regards, <br> {setting.CompanyName}");
-                    }
-                    await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+                    await SendEmailAsync(
+                        getSubject: _ => $"Training Rejection - {course.Name}",
+                        getMessage: (name, companyName) =>
+                            $"Dear {name},<br><br>"
+                            + $"We regret to inform you that your training, {course.Name} has been rejected for the following reason:<br><br>"
+                            + $"{message}<br><br>"
+                            + "However, we encourage you to make the necessary corrections and adjustments based on the provided feedback. "
+                            + "Once you have addressed the identified issues, please resubmit the training program for further review.<br><br>"
+                            + $"Thank you for your understanding and cooperation.<br><br>"
+                            + $"Best regards,<br>{companyName}",
+                        teacher.User.Email,
+                        teacher.User.FirstName,
+                        new Dictionary<string, string>
+                        {
+                            { "courseName", course.Name },
+                            { "message", message }
+                        },
+                        MailType.TrainingReject
+                    );
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message, ex);
-            throw ex is ServiceException ? ex : new ServiceException(ex.Message);
-        }
+        });
     }
 
     /// <summary>
-    /// Email for account created and password
+    /// Sends an email to a newly created user with their account details.
     /// </summary>
-    /// <param name="emailAddress">the email address of the receiver</param>
-    /// <param name="firstName">the first name of the receiver</param>
-    /// <param name="password">the login password of the receiver</param>
-    /// <param name="companyName"> the company name </param>
-    /// <returns></returns>
+    /// <param name="emailAddress">The user's email address.</param>
+    /// <param name="firstName">The user's first name.</param>
+    /// <param name="password">The user's initial password.</param>
+    /// <param name="companyName">The company name.</param>
+    /// <param name="companyNumber">The company number.</param>
+    /// <param name="context">The Hangfire performance context.</param>
     [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
     public async Task SendUserCreatedPasswordEmail(
         string emailAddress,
@@ -233,131 +190,47 @@ public class HangfireJobService : BaseService, IHangfireJobService
         PerformContext context = null
     )
     {
-        try
+        await ExecuteAsync(async () =>
         {
             if (context == null)
             {
                 throw new ArgumentException("Context not found.");
             }
 
-            var template = await _unitOfWork
-                .GetRepository<MailNotification>()
-                .GetFirstOrDefaultAsync(predicate: p =>
-                    p.MailType == MailType.UserCreate && p.IsActive
-                )
-                .ConfigureAwait(false);
-
-            var html =
-                $"Dear {firstName},<br><br>"
-                + $"Your account has been created in the <a href = '{_appUrl}'><u  style='color:blue;'>LMS</u></a>.<br><br>"
-                + $"Here are the login details for your LMS account:<br><br>"
-                + $"Email:{emailAddress}<br>"
-                + $"Password:{password}<br><br>"
-                + $"Please use the above login credentials to access your account.<br><br>"
-                + $"Best regards,<br> {companyName}<br>{companyNumber}";
-
-            var mail = new EmailRequestDto { To = emailAddress, };
-            if (template == null)
-            {
-                mail.Subject = "Account Created";
-                mail.Message = html;
-            }
-            else
-            {
-                mail.Subject = template.Subject;
-                mail.Message = template
-                    .Message.Replace(_userName, firstName)
-                    .Replace(_app, _appUrl)
-                    .Replace(_email, emailAddress)
-                    .Replace(_password, password)
-                    .Replace(_companyName, companyName)
-                    .Replace(_companyNumber, companyNumber);
-            }
-
-            await _emailService.SendMailWithHtmlBodyAsync(mail).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(
-                ex,
-                "An error occurred while attempting to send change email address mail."
+            await SendEmailAsync(
+                getSubject: _ => "Account Created",
+                getMessage: (name, company) =>
+                    $"Dear {name},<br><br>"
+                    + $"Your account has been created in the <a href='{_appUrl}'><u style='color:blue;'>LMS</u></a>.<br><br>"
+                    + $"Here are the login details for your LMS account:<br><br>"
+                    + $"Email: {emailAddress}<br>"
+                    + $"Password: {password}<br><br>"
+                    + $"Please use the above login credentials to access your account.<br><br>"
+                    + $"Best regards,<br>{company}<br>{companyNumber}",
+                emailAddress,
+                firstName,
+                new Dictionary<string, string>
+                {
+                    { "email", emailAddress },
+                    { "password", password },
+                    { "companyName", companyName },
+                    { "companyNumber", companyNumber }
+                },
+                MailType.UserCreate
             );
-        }
+        });
     }
 
     /// <summary>
-    /// Handle to send email to imported user async
+    /// Sends emails to imported users with their account details.
     /// </summary>
-    /// <param name="dtos"> the list of <see cref="UserEmailDto" /> .</param>
-    /// <returns> the task complete </returns>
+    /// <param name="dtos">A list of user email DTOs containing user information.</param>
+    /// <param name="context">The Hangfire performance context.</param>
     [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
     public async Task SendEmailImportedUserAsync(
         IList<UserEmailDto> dtos,
         PerformContext context = null
     )
-    {
-        try
-        {
-            if (context == null)
-            {
-                throw new ArgumentException(_localizer.GetString("ContextNotFound"));
-            }
-
-            var template = await _unitOfWork
-                .GetRepository<MailNotification>()
-                .GetFirstOrDefaultAsync(predicate: p =>
-                    p.MailType == MailType.UserCreate && p.IsActive
-                )
-                .ConfigureAwait(false);
-
-            foreach (var emailDto in dtos)
-            {
-                var model = new EmailRequestDto { To = emailDto.Email, };
-                if (template == null)
-                {
-                    var html =
-                        $"Dear {emailDto.FullName},<br><br>"
-                        + $"Your account has been created in the <a href = '{_appUrl}'><u  style='color:blue;'>LMS</u></a>.<br><br>"
-                        + $"Here are the login details for your LMS account:<br><br>"
-                        + $"Email:{emailDto.Email}<br>"
-                        + $"Password:{emailDto.Password}<br><br>"
-                        + $"Please use the above login credentials to access your account.<br><br>"
-                        + $"Best regards,<br> {emailDto.CompanyName}<br>{emailDto.CompanyNumber}";
-
-                    model.Subject = "Account Created";
-                    model.Message = html;
-                }
-                else
-                {
-                    model.Subject = template.Subject;
-                    model.Message = template
-                        .Message.Replace(_userName, emailDto.FullName)
-                        .Replace(_app, _appUrl)
-                        .Replace(_email, emailDto.Email)
-                        .Replace(_password, emailDto.Password)
-                        .Replace(_companyName, emailDto.CompanyName)
-                        .Replace(_companyNumber, emailDto.CompanyNumber);
-                }
-
-                await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message, ex);
-            throw ex is ServiceException ? ex : new ServiceException(ex.Message);
-        }
-    }
-
-    /// <summary>
-    /// Handle to update information of lesson video
-    /// </summary>
-    /// <param name="lessonId"> the lesson id </param>
-    /// <param name="videoUrl"> the video url </param>
-    /// <param name="context"> the instance of <see cref="PerformContext"/></param>
-    /// <returns> the task complete </returns>
-    [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-    public async Task LessonVideoUploadedAsync(Guid lessonId, PerformContext context = null)
     {
         await ExecuteAsync(async () =>
         {
@@ -366,37 +239,40 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 throw new ArgumentException(_localizer.GetString("ContextNotFound"));
             }
 
-            var lesson = await _unitOfWork
-                .GetRepository<Lesson>()
-                .GetFirstOrDefaultAsync(predicate: p => p.Id == lessonId)
-                .ConfigureAwait(false);
-            if (lesson.Type != LessonType.Video || lesson.Type != LessonType.RecordedVideo)
+            foreach (var emailDto in dtos)
             {
-                if (string.IsNullOrEmpty(lesson.VideoUrl))
-                {
-                    throw new ArgumentException(_localizer.GetString("FileNotFound"));
-                }
-
-                var videoPath = await _fileServerService
-                    .GetFileLocalPathAsync(lesson.VideoUrl)
-                    .ConfigureAwait(true);
-                var duration = await _videoService.GetVideoDuration(videoPath).ConfigureAwait(true);
-                lesson.Duration = duration;
-                _unitOfWork.GetRepository<Lesson>().Update(lesson);
-                _videoService.DeleteTempFile(videoPath);
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                await SendEmailAsync(
+                    getSubject: _ => "Account Created",
+                    getMessage: (name, company) =>
+                        $"Dear {name},<br><br>"
+                        + $"Your account has been created in the <a href='{_appUrl}'><u style='color:blue;'>LMS</u></a>.<br><br>"
+                        + $"Here are the login details for your LMS account:<br><br>"
+                        + $"Email: {emailDto.Email}<br>"
+                        + $"Password: {emailDto.Password}<br><br>"
+                        + $"Please use the above login credentials to access your account.<br><br>"
+                        + $"Best regards,<br>{emailDto.CompanyName}<br>{emailDto.CompanyNumber}",
+                    emailDto.Email,
+                    emailDto.FullName,
+                    new Dictionary<string, string>
+                    {
+                        { "email", emailDto.Email },
+                        { "password", emailDto.Password },
+                        { "companyName", emailDto.CompanyName },
+                        { "companyNumber", emailDto.CompanyNumber }
+                    },
+                    MailType.UserCreate
+                );
             }
         });
     }
 
     /// <summary>
-    /// Handle to send mail to new group member
+    /// Sends an email to new group members.
     /// </summary>
-    /// <param name="groupName"> the group name </param>
-    /// <param name="groupSlug"> the group slug </param>
-    /// <param name="userIds"> the list of <see cref="Guid" /> .</param>
-    /// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
-    /// <returns> the task complete </returns>
+    /// <param name="groupName">The name of the group.</param>
+    /// <param name="groupSlug">The slug of the group.</param>
+    /// <param name="userIds">A list of user IDs for the new group members.</param>
+    /// <param name="context">The Hangfire performance context.</param>
     [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
     public async Task SendMailNewGroupMember(
         string groupName,
@@ -405,7 +281,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
         PerformContext context = null
     )
     {
-        try
+        await ExecuteAsync(async () =>
         {
             if (context == null)
             {
@@ -421,64 +297,44 @@ public class HangfireJobService : BaseService, IHangfireJobService
             {
                 return;
             }
-            var template = await _unitOfWork
-                .GetRepository<MailNotification>()
-                .GetFirstOrDefaultAsync(predicate: p =>
-                    p.MailType == MailType.GroupMemberAdd && p.IsActive
-                )
-                .ConfigureAwait(false);
 
             var setting = await _unitOfWork
                 .GetRepository<GeneralSetting>()
                 .GetFirstOrDefaultAsync();
-            var commonHtml =
-                $"You have been added to the {groupName}. Now you can find the Training Materials which has been created for this              group. <br><br>"
-                + $"Link to the group : <a href = '{_appUrl}/groups/{groupSlug}' ><u  style='color:blue;'> Click here </u> </a>"
-                + $"<br>Thank You, <br> {setting.CompanyName}";
+
             foreach (var user in users)
             {
                 var fullName = string.IsNullOrEmpty(user.MiddleName)
                     ? $"{user.FirstName} {user.LastName}"
                     : $"{user.FirstName} {user.MiddleName} {user.LastName}";
 
-                var model = new EmailRequestDto { To = user.Email, };
-                if (template == null)
-                {
-                    var html = $"Dear {fullName},<br><br>";
-                    html += commonHtml;
-
-                    model.Subject = "New Group Member";
-                    model.Message = html;
-                }
-                else
-                {
-                    model.Subject = template.Subject;
-                    model.Message = template
-                        .Message.Replace(_userName, fullName)
-                        .Replace(_groupName, groupName)
-                        .Replace(_app, _appUrl)
-                        .Replace(_groupSlug, groupSlug)
-                        .Replace(_emailSignature, $"<br>Thank You, <br> {setting.CompanyName}");
-                }
-
-                await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+                await SendEmailAsync(
+                    getSubject: _ => "New Group Member",
+                    getMessage: (name, company) =>
+                        $"Dear {name},<br><br>"
+                        + $"You have been added to the {groupName}. Now you can find the Training Materials which has been created for this group.<br><br>"
+                        + $"Link to the group: <a href='{_appUrl}/groups/{groupSlug}'><u style='color:blue;'>Click here</u></a><br><br>"
+                        + $"Thank You,<br>{company}",
+                    user.Email,
+                    fullName,
+                    new Dictionary<string, string>
+                    {
+                        { "groupName", groupName },
+                        { "groupSlug", groupSlug }
+                    },
+                    MailType.GroupMemberAdd
+                );
             }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message, ex);
-            throw ex is ServiceException ? ex : new ServiceException(ex.Message);
-        }
+        });
     }
 
     /// <summary>
-    /// Handle to send group course published mail
+    /// Sends an email to group members when a new course is published.
     /// </summary>
-    /// <param name="groupId"> the group id</param>
-    /// <param name="courseName"> the course name </param>
-    /// <param name="courseSlug"> the course slug </param>
-    /// <param name="context"> the instance of <see cref="PerformContext"/></param>
-    /// <returns> the task complete </returns>
+    /// <param name="groupId">The ID of the group.</param>
+    /// <param name="courseName">The name of the course.</param>
+    /// <param name="courseSlug">The slug of the course.</param>
+    /// <param name="context">The Hangfire performance context.</param>
     [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
     public async Task GroupCoursePublishedMailAsync(
         Guid groupId,
@@ -487,7 +343,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
         PerformContext context = null
     )
     {
-        try
+        await ExecuteAsync(async () =>
         {
             if (context == null)
             {
@@ -504,6 +360,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
                     include: source => source.Include(x => x.GroupMembers).ThenInclude(x => x.User)
                 )
                 .ConfigureAwait(false);
+
             if (group.GroupMembers.Count != default)
             {
                 foreach (var member in group.GroupMembers)
@@ -511,35 +368,37 @@ public class HangfireJobService : BaseService, IHangfireJobService
                     var fullName = string.IsNullOrEmpty(member.User?.MiddleName)
                         ? $"{member.User?.FirstName} {member.User?.LastName}"
                         : $"{member.User?.FirstName} {member.User?.MiddleName} {member.User?.LastName}";
-                    var html = $"Dear {fullName},<br><br>";
-                    html +=
-                        $"You have new {courseName} training available for the {group.Name} group. Please, go to {group.Name} group or "
-                        + @$"<a href ='{_appUrl}/trainings/{courseSlug}'><u style='color:blue;'>Click Here </u></a> to find the training there. <br>";
-                    html += $"<br><br>Thank You, <br> {settings.CompanyName}";
-                    var model = new EmailRequestDto
-                    {
-                        To = member.User?.Email,
-                        Subject = "New training published",
-                        Message = html,
-                    };
-                    await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+
+                    await SendEmailAsync(
+                        getSubject: _ => "New training published",
+                        getMessage: (name, company) =>
+                            $"Dear {name},<br><br>"
+                            + $"You have new {courseName} training available for the {group.Name} group. "
+                            + $"Please, go to {group.Name} group or "
+                            + $"<a href='{_appUrl}/trainings/{courseSlug}'><u style='color:blue;'>Click Here</u></a> to find the training there.<br><br>"
+                            + $"Thank You,<br>{company}",
+                        member.User?.Email,
+                        fullName,
+                        new Dictionary<string, string>
+                        {
+                            { "courseName", courseName },
+                            { "courseSlug", courseSlug }
+                        },
+                        MailType.None
+                    );
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message, ex);
-            throw ex is ServiceException ? ex : new ServiceException(ex.Message);
-        }
+        });
     }
 
-    ///<summary>
-    ///Handle to send course enrollment mail
-    ///</summary>
-    ///<param name="courseName"> the course name</param>
-    ///<param name="UserId">the list of <see cref="Guid" /></param>
-    ////// <param name="context"> the instance of <see cref="PerformContext" /> . </param>
-    ///<returns>the task complete </returns>
+    /// <summary>
+    /// Sends an email to course teachers when a new user enrolls in their course.
+    /// </summary>
+    /// <param name="userName">The name of the enrolled user.</param>
+    /// <param name="userEmail">The email of the enrolled user.</param>
+    /// <param name="courseId">The ID of the course.</param>
+    /// <param name="courseName">The name of the course.</param>
+    /// <param name="context">The Hangfire performance context.</param>
     [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
     public async Task SendCourseEnrollmentMailAsync(
         string userName,
@@ -549,7 +408,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
         PerformContext context = null
     )
     {
-        try
+        await ExecuteAsync(async () =>
         {
             if (context == null)
             {
@@ -570,61 +429,36 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 throw new ArgumentException(_localizer.GetString("TeacherNotFound"));
             }
 
-            var setting = await _unitOfWork
-                .GetRepository<GeneralSetting>()
-                .GetFirstOrDefaultAsync();
-
-            var template = await _unitOfWork
-                .GetRepository<MailNotification>()
-                .GetFirstOrDefaultAsync(predicate: p =>
-                    p.MailType == MailType.TrainingEnrollment && p.IsActive
-                )
-                .ConfigureAwait(false);
-
-            var commonHtml =
-                $"A new user has enrolled in your {courseName} course. Here are the details:"
-                + $"<ul><li>Training: {courseName}</li><li>Enrolled User: {userName}</li> <li>User Email:{userEmail}</li></ul>"
-                + $"Thank you for your attention to this enrollment. We appreciate your dedication to providing an exceptional learning experience.<br><br>"
-                + $"Best regards, <br> {setting.CompanyName}";
             foreach (var teacher in course.CourseTeachers)
             {
-                var model = new EmailRequestDto { To = teacher.User?.Email, };
-                if (template == null)
-                {
-                    var html = $"Dear {teacher.User.FirstName},<br><br>";
-                    html += commonHtml;
-
-                    model.Subject = "New Training Enrollment";
-                    model.Message = html;
-                }
-                else
-                {
-                    model.Subject = template.Subject;
-                    model.Message = template
-                        .Message.Replace(_userName, teacher.User.FirstName)
-                        .Replace(_courseName, courseName)
-                        .Replace(_userName, userName)
-                        .Replace(_email, userEmail)
-                        .Replace(_emailSignature, $"Best regards, <br> {setting.CompanyName}");
-                }
-
-                await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+                await SendEmailAsync(
+                    getSubject: _ => "New Training Enrollment",
+                    getMessage: (name, company) =>
+                        $"Dear {name},<br><br>"
+                        + $"A new user has enrolled in your {courseName} course. Here are the details:"
+                        + $"<ul><li>Training: {courseName}</li><li>Enrolled User: {userName}</li><li>User Email: {userEmail}</li></ul>"
+                        + $"Thank you for your attention to this enrollment. We appreciate your dedication to providing an exceptional learning experience.<br><br>"
+                        + $"Best regards,<br>{company}",
+                    teacher.User?.Email,
+                    teacher.User?.FirstName,
+                    new Dictionary<string, string>
+                    {
+                        { "courseName", courseName },
+                        { "userName", userName },
+                        { "email", userEmail }
+                    },
+                    MailType.TrainingEnrollment
+                );
             }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message, ex);
-            throw ex is ServiceException ? ex : new ServiceException(ex.Message);
-        }
+        });
     }
 
     /// <summary>
-    /// Handle to send user certificate issue mail
+    /// Sends an email to users when their certificates are issued.
     /// </summary>
-    /// <param name="userId"></param>
-    /// <param name="courseName"></param>
-    /// <param name="context"></param>
-    /// <returns></returns>
+    /// <param name="courseName">The name of the course.</param>
+    /// <param name="certificateUserIssuedDtos">A list of DTOs containing user information for certificate issuance.</param>
+    /// <param name="context">The Hangfire performance context.</param>
     [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
     public async Task SendCertificateIssueMailAsync(
         string courseName,
@@ -632,68 +466,39 @@ public class HangfireJobService : BaseService, IHangfireJobService
         PerformContext context = null
     )
     {
-        try
+        await ExecuteAsync(async () =>
         {
             if (context == null)
             {
                 throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
             }
 
-            var setting = await _unitOfWork
-                .GetRepository<GeneralSetting>()
-                .GetFirstOrDefaultAsync();
-
-            var template = await _unitOfWork
-                .GetRepository<MailNotification>()
-                .GetFirstOrDefaultAsync(predicate: p =>
-                    p.MailType == MailType.CertificateIssue && p.IsActive
-                )
-                .ConfigureAwait(false);
-
-            var commonHtml =
-                $"We are happy to inform you that your Certificate of Achievement for {courseName} has been issued "
-                + $"and is now available in your profile on the application."
-                + $"Please log in to your account and navigate to your profile to view and download your certificate.<br><br>"
-                + $"we hope you find the training helpful.<br><br>"
-                + $"Best regards, <br> {setting.CompanyName}";
-
             foreach (var user in certificateUserIssuedDtos)
             {
-                var model = new EmailRequestDto { To = user?.Email, };
-                if (template == null)
-                {
-                    var html = $"Dear {user.UserName},<br><br>";
-                    html += commonHtml;
-
-                    model.Subject = "Certificate Issued";
-                    model.Message = html;
-                }
-                else
-                {
-                    model.Subject = template.Subject;
-                    model.Message = template
-                        .Message.Replace(_userName, user.UserName)
-                        .Replace(_courseName, courseName)
-                        .Replace(_emailSignature, $"Best regards, <br> {setting.CompanyName}");
-                }
-
-                await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+                await SendEmailAsync(
+                    getSubject: _ => "Certificate Issued",
+                    getMessage: (name, company) =>
+                        $"Dear {name},<br><br>"
+                        + $"We are happy to inform you that your Certificate of Achievement for {courseName} has been issued "
+                        + $"and is now available in your profile on the application. "
+                        + $"Please log in to your account and navigate to your profile to view and download your certificate.<br><br>"
+                        + $"We hope you find the training helpful.<br><br>"
+                        + $"Best regards,<br>{company}",
+                    user?.Email,
+                    user.UserName,
+                    new Dictionary<string, string> { { "courseName", courseName } },
+                    MailType.CertificateIssue
+                );
             }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message, ex);
-            throw ex is ServiceException ? ex : new ServiceException(ex.Message);
-        }
+        });
     }
 
     /// <summary>
-    /// handle to send lesson edit email
+    /// Sends an email to enrolled users when new content is added to a course.
     /// </summary>
-    /// <param name="courseName"></param>
-    /// <param name="courseSlug"></param>
-    /// <param name="context"></param>
-    /// <returns></returns>
+    /// <param name="courseName">The name of the course.</param>
+    /// <param name="courseSlug">The slug of the course.</param>
+    /// <param name="context">The Hangfire performance context.</param>
     [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
     public async Task SendLessonAddedMailAsync(
         string courseName,
@@ -701,7 +506,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
         PerformContext context = null
     )
     {
-        try
+        await ExecuteAsync(async () =>
         {
             if (context == null)
             {
@@ -716,185 +521,86 @@ public class HangfireJobService : BaseService, IHangfireJobService
                         source.Include(x => x.CourseEnrollments).ThenInclude(x => x.User)
                 )
                 .ConfigureAwait(false);
+
             if (course.CourseEnrollments == null)
             {
                 throw new ArgumentException("No enrollments");
             }
 
-            var setting = await _unitOfWork
-                .GetRepository<GeneralSetting>()
-                .GetFirstOrDefaultAsync();
-
-            var template = await _unitOfWork
-                .GetRepository<MailNotification>()
-                .GetFirstOrDefaultAsync(predicate: p =>
-                    p.MailType == MailType.AddLesson && p.IsActive
-                )
-                .ConfigureAwait(false);
-
-            var commonHtml =
-                $"Your enrolled training entitled  <a href='{_appUrl}/trainings/{courseSlug}'>"
-                + $"<u style='color:blue;'>'{courseName}'</u></a>  has been updated with new content. "
-                + $"We encourage you to visit the training page and "
-                + $"explore the new materials to enhance your learning experience.<br><br>"
-                + $"<br><br>Thank You, <br> {setting.CompanyName}";
-
-            foreach (var users in course.CourseEnrollments.AsList())
+            foreach (var enrollment in course.CourseEnrollments)
             {
-                var firstName = users.User.FirstName;
-                var model = new EmailRequestDto { To = users.User?.Email, };
-
-                if (template == null)
-                {
-                    var html = $"Dear {firstName},<br><br>";
-                    html += commonHtml;
-
-                    model.Subject = "New Content";
-                    model.Message = html;
-                }
-                else
-                {
-                    model.Subject = template.Subject;
-                    model.Message = template
-                        .Message.Replace(_userName, firstName)
-                        .Replace(_app, _appUrl)
-                        .Replace(_courseSlug, courseSlug)
-                        .Replace(_courseName, courseName)
-                        .Replace(_emailSignature, $"<br><br>Thank You, <br> {setting.CompanyName}");
-                }
-
-                await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+                await SendEmailAsync(
+                    getSubject: _ => "New Content Added",
+                    getMessage: (name, company) =>
+                        $"Dear {name},<br><br>"
+                        + $"Your enrolled training entitled <a href='{_appUrl}/trainings/{courseSlug}'>"
+                        + $"<u style='color:blue;'>{courseName}</u></a> has been updated with new content. "
+                        + $"We encourage you to visit the training page and "
+                        + $"explore the new materials to enhance your learning experience.<br><br>"
+                        + $"Thank You,<br>{company}",
+                    enrollment.User?.Email,
+                    enrollment.User?.FirstName,
+                    new Dictionary<string, string>
+                    {
+                        { "courseName", courseName },
+                        { "courseSlug", courseSlug }
+                    },
+                    MailType.AddLesson
+                );
             }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message, ex);
-            throw ex is ServiceException ? ex : new ServiceException(ex.Message);
-        }
+        });
     }
 
     /// <summary>
-    /// handel to send email update mail
+    /// Sends an email to a user when their account email is updated.
     /// </summary>
-    /// <param name="fullName">Users full name</param>
-    /// <param name="newEmail">Users new email</param>
-    /// <param name="oldEmail">Users old email</param>
-    /// <param name="context"></param>
-    /// <returns></returns>
-    [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-    public async Task AccountUpdatedMailAsync(
-        string fullName,
-        string newEmail,
-        string oldEmail,
-        PerformContext context = null
-    )
-    {
-        try
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
-            }
-
-            await SendChangeEmailAsync(fullName, newEmail, oldEmail).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message, ex);
-            throw ex is ServiceException ? ex : new ServiceException(ex.Message);
-        }
-    }
-
-    /// <summary>
-    /// Hand to send the change email
-    /// </summary>
-    /// <param name="fullName">the user full name</param>
-    /// <param name="newEmail">the new changed email</param>
-    /// <param name="oldEmail">the old email</param>
-    /// <returns>the task completes</returns>
-    private async Task SendChangeEmailAsync(string fullName, string newEmail, string oldEmail)
-    {
-        var setting = await _unitOfWork
-            .GetRepository<GeneralSetting>()
-            .GetFirstOrDefaultAsync()
-            .ConfigureAwait(false);
-
-        var template = await _unitOfWork
-            .GetRepository<MailNotification>()
-            .GetFirstOrDefaultAsync(predicate: p =>
-                p.MailType == MailType.ChangedEmail && p.IsActive
-            )
-            .ConfigureAwait(false);
-
-        var model = new EmailRequestDto { To = oldEmail, };
-        if (template == null)
-        {
-            var html =
-                $"Dear {fullName}<br><br>"
-                + $"A recent change has been made to the email address associated with your account to {newEmail}<br>."
-                + $"Please check your email for the login credentials. If you encounter any difficulties, "
-                + $"please contact your administrator immediately."
-                + $"<br><br>Thank You, <br> {setting.CompanyName}";
-
-            model.Subject = "Notification: Email Address Change";
-            model.Message = html;
-        }
-        else
-        {
-            model.Subject = template.Subject;
-            model.Message = template
-                .Message.Replace(_userName, fullName)
-                .Replace(_newEmail, newEmail)
-                .Replace(_emailSignature, $"<br><br>Thank You, <br> {setting.CompanyName}");
-        }
-        await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
-    }
-
-    /// <summary>
-    /// Used to send email send mail
-    /// </summary>
-    /// <param name="newEmail">user's new email id</param>
-    /// <param name="oldEmail">user's old email </param>
-    /// <param name="fullName">users full name</param>
-    /// <param name="context"></param>
-    /// <returns></returns>
+    /// <param name="fullName">The full name of the user.</param>
+    /// <param name="newEmail">The new email address.</param>
+    /// <param name="oldEmail">The old email address.</param>
+    /// <param name="context">The Hangfire performance context.</param>
     [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
     public async Task SendEmailChangedMailAsync(
+        string fullName,
         string newEmail,
         string oldEmail,
-        string fullName,
         PerformContext context = null
     )
     {
-        try
+        await ExecuteAsync(async () =>
         {
             if (context == null)
             {
                 throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
             }
 
-            await SendChangeEmailAsync(fullName, newEmail, oldEmail).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message, ex);
-            throw ex is ServiceException ? ex : new ServiceException(ex.Message);
-        }
+            await SendEmailAsync(
+                getSubject: _ => "Notification: Email Address Change",
+                getMessage: (name, company) =>
+                    $"Dear {name},<br><br>"
+                    + $"A recent change has been made to the email address associated with your account to {newEmail}.<br>"
+                    + $"Please check your email for the login credentials. If you encounter any difficulties, "
+                    + $"please contact your administrator immediately.<br><br>"
+                    + $"Thank You,<br>{company}",
+                oldEmail,
+                fullName,
+                new Dictionary<string, string> { { "newEmail", newEmail } },
+                MailType.ChangedEmail
+            );
+        });
     }
 
     /// <summary>
-    /// Handle to send course review mail
+    /// Sends an email to administrators when an assessment is accepted.
     /// </summary>
-    /// <param name="assessmentId"> the course name </param>
-    /// <param name="context"> the instance of <see cref="PerformContext"/> </param>
-    /// <returns> the task complete </returns>
+    /// <param name="assessmentId">The ID of the accepted assessment.</param>
+    /// <param name="context">The Hangfire performance context.</param>
     [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
     public async Task SendAssessmentAcceptMailAsync(
         Guid assessmentId,
         PerformContext context = null
     )
     {
-        try
+        await ExecuteAsync(async () =>
         {
             if (context == null)
             {
@@ -908,48 +614,38 @@ public class HangfireJobService : BaseService, IHangfireJobService
                     include: source => source.Include(x => x.User)
                 )
                 .ConfigureAwait(false);
+
             if (assessment.Id != assessmentId)
             {
                 return;
             }
 
-            var settings = await _unitOfWork
-                .GetRepository<GeneralSetting>()
-                .GetFirstOrDefaultAsync();
-
-            var html = $"Dear {assessment.User.FirstName},<br><br>";
-            html +=
-                $"Assessment "
-                + @$"<a href = '{_appUrl}/settings/courses'>""{assessment.Title}""</a> published successfully. Thank you.<br><br>";
-            html += $"Best regards, <br> {settings.CompanyName}";
-            var model = new EmailRequestDto
-            {
-                To = assessment.User.Email,
-                Subject = $"Assessment Review Status - {assessment.AssessmentStatus}",
-                Message = html
-            };
-            await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message, ex);
-            throw ex is ServiceException ? ex : new ServiceException(ex.Message);
-        }
+            await SendEmailAsync(
+                getSubject: _ => $"Assessment Review Status - {assessment.AssessmentStatus}",
+                getMessage: (name, company) =>
+                    $"Dear {name},<br><br>"
+                    + $"Assessment <a href='{_appUrl}/settings/courses'>{assessment.Title}</a> published successfully. Thank you.<br><br>"
+                    + $"Best regards,<br>{company}",
+                assessment.User.Email,
+                assessment.User.FirstName,
+                new Dictionary<string, string> { { "assessmentTitle", assessment.Title } },
+                MailType.None
+            );
+        });
     }
 
     /// <summary>
-    /// Handle to send course review mail
+    /// Sends an email to administrators when an assessment is rejected.
     /// </summary>
-    /// <param name="assessmentId"> the course name </param>
-    /// <param name="context"> the instance of <see cref="PerformContext"/> </param>
-    /// <returns> the task complete </returns>
+    /// <param name="assessmentId">The ID of the rejected assessment.</param>
+    /// <param name="context">The Hangfire performance context.</param>
     [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
     public async Task SendAssessmentRejectMailAsync(
         Guid assessmentId,
         PerformContext context = null
     )
     {
-        try
+        await ExecuteAsync(async () =>
         {
             if (context == null)
             {
@@ -963,43 +659,40 @@ public class HangfireJobService : BaseService, IHangfireJobService
                     include: source => source.Include(x => x.User)
                 )
                 .ConfigureAwait(false);
+
             if (assessment.Id != assessmentId)
             {
                 return;
             }
 
-            var settings = await _unitOfWork
-                .GetRepository<GeneralSetting>()
-                .GetFirstOrDefaultAsync();
-            var html = $"Dear {assessment?.User.FirstName},<br><br>";
-            html +=
-                $"We regret to inform you that your Assessment, {assessment.Title} has been rejected for the following reason:<br><br>";
-            html += $"{assessment.Message}<br><br>";
-            html +=
-                $"However, we encourage you to make the necessary corrections and adjustments based on the provided feedback. Once you have addressed the identified issues, please resubmit the training program for further review.<br><br>";
-            html += $"Thank you for your understanding and cooperation.<br><br>";
-            html += $"Best regards,<br> {settings.CompanyName}";
-            var model = new EmailRequestDto
-            {
-                To = assessment.User.Email,
-                Subject = $"Assessment Review Status - {assessment.AssessmentStatus}",
-                Message = html
-            };
-            await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message, ex);
-            throw ex is ServiceException ? ex : new ServiceException(ex.Message);
-        }
+            await SendEmailAsync(
+                getSubject: _ => $"Assessment Review Status - {assessment.AssessmentStatus}",
+                getMessage: (name, company) =>
+                    $"Dear {name},<br><br>"
+                    + $"We regret to inform you that your Assessment, {assessment.Title} has been rejected for the following reason:<br><br>"
+                    + $"{assessment.Message}<br><br>"
+                    + $"However, we encourage you to make the necessary corrections and adjustments based on the provided feedback. "
+                    + $"Once you have addressed the identified issues, please resubmit the assessment for further review.<br><br>"
+                    + $"Thank you for your understanding and cooperation.<br><br>"
+                    + $"Best regards,<br>{company}",
+                assessment.User.Email,
+                assessment.User.FirstName,
+                new Dictionary<string, string>
+                {
+                    { "assessmentTitle", assessment.Title },
+                    { "message", assessment.Message }
+                },
+                MailType.None
+            );
+        });
     }
 
     /// <summary>
-    /// Handle to send course review mail
+    /// Sends an email to administrators when an assessment is submitted for review.
     /// </summary>
-    /// <param name="assessmentId"> the course name </param>
-    /// <param name="context"> the instance of <see cref="PerformContext"/> </param>
-    /// <returns> the task complete </returns>
+    /// <param name="assessmentId">The ID of the assessment submitted for review.</param>
+    /// <param name="user">The list of users to notify.</param>
+    /// <param name="context">The Hangfire performance context.</param>
     [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
     public async Task SendAssessmentReviewMailAsync(
         Guid assessmentId,
@@ -1007,7 +700,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
         PerformContext context = null
     )
     {
-        try
+        await ExecuteAsync(async () =>
         {
             if (context == null)
             {
@@ -1016,52 +709,140 @@ public class HangfireJobService : BaseService, IHangfireJobService
 
             var assessment = await _unitOfWork
                 .GetRepository<Assessment>()
-                .GetFirstOrDefaultAsync(
-                    predicate: p => p.Id == assessmentId,
-                    include: source =>
-                        source
-                            .Where(x =>
-                                x.User.Role == UserRole.SuperAdmin || x.User.Role == UserRole.Admin
-                            )
-                            .Include(x => x.User)
-                )
+                .GetFirstOrDefaultAsync(predicate: p => p.Id == assessmentId)
                 .ConfigureAwait(false);
+
             if (assessment.Id != assessmentId)
             {
                 return;
             }
 
-            // all admins and super admin
-            var users = user.Where(x => x.Role == UserRole.SuperAdmin || x.Role == UserRole.Admin);
+            var admins = user.Where(x => x.Role == UserRole.SuperAdmin || x.Role == UserRole.Admin);
 
-            var settings = await _unitOfWork
-                .GetRepository<GeneralSetting>()
-                .GetFirstOrDefaultAsync();
-
-            foreach (var assessments in users)
+            foreach (var admin in admins)
             {
-                var firstName = assessments.FirstName;
-                var emails = assessments.Email;
+                await SendEmailAsync(
+                    getSubject: _ =>
+                        $"Request for Assessment Review - {assessment.AssessmentStatus}",
+                    getMessage: (name, company) =>
+                        $"Dear {name},<br><br>"
+                        + $"Assessment <a href='{_appUrl}/settings/courses'>{assessment.Title}</a> is requested for review. Thank you.<br><br>"
+                        + $"Best regards,<br>{company}",
+                    admin.Email,
+                    admin.FirstName,
+                    new Dictionary<string, string> { { "assessmentTitle", assessment.Title } },
+                    MailType.None
+                );
+            }
+        });
+    }
 
-                var html = $"Dear {firstName},<br><br>";
-                html +=
-                    $"Assessment "
-                    + @$"<a href = '{_appUrl}/settings/courses'>""{assessment.Title}""</a> is requested for review. Thank you.<br><br>";
-                html += $"Best regards, <br> {settings.CompanyName}";
+    #endregion Public Methods
 
-                var model = new EmailRequestDto
+    #region  Private Methods
+    /// <summary>
+    /// Sends an email using a template or custom message.
+    /// </summary>
+    /// <param name="getSubject">Function to get the email subject.</param>
+    /// <param name="getMessage">Function to get the email message.</param>
+    /// <param name="recipientEmail">The recipient's email address.</param>
+    /// <param name="recipientName">The recipient's name.</param>
+    /// <param name="additionalPlaceholders">Additional placeholders for the email template.</param>
+    /// <param name="mailType">The type of mail being sent.</param>
+    private async Task SendEmailAsync(
+        Func<string, string> getSubject,
+        Func<string, string, string> getMessage,
+        string recipientEmail,
+        string recipientName,
+        Dictionary<string, string> additionalPlaceholders = null,
+        MailType mailType = MailType.None
+    )
+    {
+        var model = new EmailRequestDto { To = recipientEmail };
+        var setting = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
+
+        MailNotification template = null;
+        if (mailType != MailType.None)
+        {
+            template = await _unitOfWork
+                .GetRepository<MailNotification>()
+                .GetFirstOrDefaultAsync(predicate: p => p.MailType == mailType && p.IsActive)
+                .ConfigureAwait(false);
+        }
+
+        if (template == null)
+        {
+            model.Subject = getSubject(recipientName);
+            model.Message = getMessage(recipientName, setting.CompanyName);
+        }
+        else
+        {
+            model.Subject = template.Subject;
+            model.Message = template.Message;
+
+            var placeholders = new Dictionary<string, string>(_placeholders)
+            {
+                { "userName", recipientName },
+                { "app", _appUrl },
+                { "emailSignature", $"Best regards, <br> {setting.CompanyName}" }
+            };
+
+            if (additionalPlaceholders != null)
+            {
+                foreach (var placeholder in additionalPlaceholders)
                 {
-                    To = emails,
-                    Subject = $"Request for Assessment Review - {assessment.AssessmentStatus}",
-                    Message = html
-                };
-                await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+                    placeholders[placeholder.Key] = placeholder.Value;
+                }
+            }
+
+            foreach (var placeholder in placeholders)
+            {
+                model.Message = model.Message.Replace(placeholder.Key, placeholder.Value);
             }
         }
-        catch (Exception ex)
+
+        await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
+    }
+    #endregion Private Methods
+
+    #endregion Email Hangfire Services
+
+    /// <summary>
+    /// Updates the information of a lesson video, including its duration.
+    /// </summary>
+    /// <param name="lessonId">The ID of the lesson.</param>
+    /// <param name="context">The Hangfire performance context.</param>
+    [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
+    public async Task LessonVideoUploadedAsync(Guid lessonId, PerformContext context = null)
+    {
+        await ExecuteAsync(async () =>
         {
-            _logger.LogError(ex.Message, ex);
-            throw ex is ServiceException ? ex : new ServiceException(ex.Message);
-        }
+            if (context == null)
+            {
+                throw new ArgumentException(_localizer.GetString("ContextNotFound"));
+            }
+
+            var lesson = await _unitOfWork
+                .GetRepository<Lesson>()
+                .GetFirstOrDefaultAsync(predicate: p => p.Id == lessonId)
+                .ConfigureAwait(false);
+
+            if (lesson.Type != LessonType.Video && lesson.Type != LessonType.RecordedVideo)
+            {
+                if (string.IsNullOrEmpty(lesson.VideoUrl))
+                {
+                    throw new ArgumentException(_localizer.GetString("FileNotFound"));
+                }
+
+                var videoPath = await _fileServerService
+                    .GetFileLocalPathAsync(lesson.VideoUrl)
+                    .ConfigureAwait(true);
+                var duration = await _videoService.GetVideoDuration(videoPath).ConfigureAwait(true);
+                lesson.Duration = duration;
+                _unitOfWork.GetRepository<Lesson>().Update(lesson);
+                _videoService.DeleteTempFile(videoPath);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
+        });
     }
 }
