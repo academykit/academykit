@@ -172,6 +172,15 @@ const AssessmentDescription = () => {
     return false;
   };
 
+  const canViewResult = () => {
+    return (
+      getTakeAssessmentPermission() &&
+      (hasAttempted ||
+        assessmentDetail.data?.hasCompleted ||
+        hasExceededEndDate())
+    );
+  };
+
   const checkAssessmentAvailability = () => {
     const startDate = moment(assessmentDetail.data?.startDate);
     const endDate = moment(assessmentDetail.data?.endDate);
@@ -363,9 +372,7 @@ const AssessmentDescription = () => {
             </Button>
           )}
 
-          {(hasAttempted ||
-            assessmentDetail.data?.hasCompleted ||
-            hasExceededEndDate()) && (
+          {canViewResult() && (
             <Button radius={"xl"} onClick={() => toggleResultModal()}>
               {t("view_result")}
             </Button>
