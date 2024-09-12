@@ -209,7 +209,12 @@ const Exam = ({
                   {questions[currentIndex]?.type ===
                     QuestionType.MultipleChoice &&
                     questions[currentIndex]?.assessmentQuestionOptions && (
-                      <AssessmentExamCheckBox currentIndex={currentIndex} />
+                      <AssessmentExamCheckBox
+                        currentIndex={currentIndex}
+                        options={
+                          questions[currentIndex]?.assessmentQuestionOptions
+                        }
+                      />
                     )}
                   {questions[currentIndex]?.type ===
                     QuestionType.SingleChoice &&
