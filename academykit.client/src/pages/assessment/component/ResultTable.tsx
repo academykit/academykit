@@ -79,21 +79,19 @@ const ResultTable = ({
         </Table.Thead>
 
         <Table.Tbody>
-          {studentResult.data &&
-            studentResult.data.assessmentSetResultDetails &&
-            studentResult.data.assessmentSetResultDetails.map((result) => {
-              return (
-                <Row
-                  key={result.questionSetSubmissionId}
-                  assessmentId={assessmentId}
-                  obtainedMark={result.obtainedMarks}
-                  completedDuration={result.completeDuration}
-                  submissionDate={result.submissionDate.toString()}
-                  questionSetSubmissionId={result.questionSetSubmissionId}
-                  hasObtainedFullMark={hasObtainedFullMark ?? false}
-                />
-              );
-            })}
+          {studentResult?.data?.assessmentSetResultDetails?.map((result) => {
+            return (
+              <Row
+                key={result.questionSetSubmissionId}
+                assessmentId={assessmentId}
+                obtainedMark={result.obtainedMarks}
+                completedDuration={result.completeDuration}
+                submissionDate={result.submissionDate.toString()}
+                questionSetSubmissionId={result.questionSetSubmissionId}
+                hasObtainedFullMark={hasObtainedFullMark ?? false}
+              />
+            );
+          })}
         </Table.Tbody>
       </Table>
     </>
