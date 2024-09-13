@@ -1,42 +1,38 @@
 import TextViewer from "@components/Ui/RichTextViewer";
 import { Box, Card, Group, Title } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
 import {
   ILessonStartQuestion,
   ILessonStartQuestionOption,
 } from "@utils/services/examService";
-import cx from "clsx";
+import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import classes from "../style/class.module.css";
 
 type Props = {
-  form: UseFormReturnType<
-    ILessonStartQuestion<ILessonStartQuestionOption>[],
-    (
-      values: ILessonStartQuestion<ILessonStartQuestionOption>[]
-    ) => ILessonStartQuestion<any>[]
-  >;
   options: ILessonStartQuestionOption[];
   currentIndex: number;
 };
 
-const ExamRadio = ({ form, options, currentIndex }: Props) => {
+const ExamRadio = ({ options, currentIndex }: Props) => {
   const { t } = useTranslation();
+  const form = useFormContext<{
+    questions: ILessonStartQuestion<ILessonStartQuestionOption>[];
+  }>();
+
   const changeFieldValue = (optionCurrentIndex: number) => {
-    options.map((_option, index) => {
-      if (index !== optionCurrentIndex) {
-        form.setFieldValue(
-          `${currentIndex}.questionOptions.${index}.isCorrect`,
-          false
-        );
-      } else {
-        form.setFieldValue(
-          `${currentIndex}.questionOptions.${optionCurrentIndex}.isCorrect`,
-          true
-        );
-      }
-    });
+    const updatedOptions = options.map((option, index) => ({
+      ...option,
+      isCorrect: index === optionCurrentIndex,
+    }));
+
+    updatedOptions.forEach((option, index) =>
+      form.setValue(
+        `questions.${currentIndex}.questionOptions[${index}]`,
+        option
+      )
+    );
   };
+
   return (
     <Box mt={10} px={20} className={classes.option}>
       <Group>
@@ -51,22 +47,16 @@ const ExamRadio = ({ form, options, currentIndex }: Props) => {
           onClick={() => changeFieldValue(index)}
         >
           <input
-            type={"checkbox"}
-            id={option.id}
+            type="checkbox"
+            className={classes.checkbox}
             style={{ display: "none" }}
-            {...form.getInputProps(
-              `${currentIndex}.questionOptions.${index}.isCorrect`
+            {...form.register(
+              `questions.${currentIndex}.questionOptions.${index}.isCorrect` as keyof {
+                questions: ILessonStartQuestion<ILessonStartQuestionOption[]>;
+              }
             )}
-          ></input>
-          <Card
-            shadow={"md"}
-            my={10}
-            p={10}
-            className={cx({
-              [classes.active]:
-                form.values[currentIndex].questionOptions[index].isCorrect,
-            })}
-          >
+          />
+          <Card shadow={"md"} my={10} p={10} className={classes.card}>
             <input type={"checkbox"} style={{ display: "none" }} />
             <TextViewer
               styles={{

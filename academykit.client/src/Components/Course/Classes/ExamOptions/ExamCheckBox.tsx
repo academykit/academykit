@@ -1,26 +1,20 @@
 import TextViewer from "@components/Ui/RichTextViewer";
 import { Box, Card, Group, Title } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
 import {
   ILessonStartQuestion,
   ILessonStartQuestionOption,
 } from "@utils/services/examService";
-import cx from "clsx";
+import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import classes from "../style/class.module.css";
 
 type Props = {
-  form: UseFormReturnType<
-    ILessonStartQuestion<ILessonStartQuestionOption>[],
-    (
-      values: ILessonStartQuestion<ILessonStartQuestionOption>[]
-    ) => ILessonStartQuestion<any>[]
-  >;
   options: ILessonStartQuestionOption[];
   currentIndex: number;
 };
 
-const ExamCheckBox = ({ form, options, currentIndex }: Props) => {
+const ExamCheckBox = ({ options, currentIndex }: Props) => {
+  const form = useFormContext<{ questions: ILessonStartQuestionOption[] }>();
   const { t } = useTranslation();
 
   return (
@@ -31,24 +25,22 @@ const ExamCheckBox = ({ form, options, currentIndex }: Props) => {
         </Title>
       </Group>
       {options.map((option, index) => (
-        <label key={option.id} htmlFor={option.id}>
+        <label
+          htmlFor={`questions.${currentIndex}.questionOptions.${option.id}`}
+          key={option.id}
+        >
           <input
+            className={classes.checkbox}
             type={"checkbox"}
-            id={option.id}
+            id={`questions.${currentIndex}.questionOptions.${option.id}`}
             style={{ display: "none" }}
-            {...form.getInputProps(
-              `${currentIndex}.questionOptions.${index}.isCorrect`
+            {...form.register(
+              `questions.${currentIndex}.questionOptions.${index}.isCorrect` as keyof {
+                questions: ILessonStartQuestion<ILessonStartQuestionOption[]>;
+              }
             )}
           ></input>
-          <Card
-            shadow={"md"}
-            my={10}
-            p={10}
-            className={cx({
-              [classes.active]:
-                form.values[currentIndex].questionOptions[index].isCorrect,
-            })}
-          >
+          <Card shadow={"md"} my={10} p={10} className={classes.card}>
             <TextViewer
               styles={{
                 root: {

@@ -2,19 +2,13 @@ import TextViewer from "@components/Ui/RichTextViewer";
 import { Box, Card, Group, Title } from "@mantine/core";
 import { IAssessmentExam } from "@utils/services/assessmentService";
 import { t } from "i18next";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import classes from "../styles/assessmentQuestion.module.css";
+import { OptionProps } from "./AssessmentExamRadio";
 
-type Props = {
-  currentIndex: number;
-};
-
-const AssessmentExamCheckBox = ({ currentIndex }: Props) => {
+const AssessmentExamCheckBox = ({ currentIndex, options }: OptionProps) => {
   const form = useFormContext<{ questions: IAssessmentExam[] }>();
-  const { fields } = useFieldArray({
-    name: `questions.${currentIndex}.assessmentQuestionOptions`,
-    control: form.control,
-  });
+
   return (
     <Box mt={10} px={20} className={classes.option}>
       <Group>
@@ -22,7 +16,7 @@ const AssessmentExamCheckBox = ({ currentIndex }: Props) => {
           {t("options")} ({t("multiple_choice")})
         </Title>
       </Group>
-      {fields.map((option, index) => (
+      {options.map((option, index) => (
         <label
           htmlFor={`questions.${currentIndex}.assessmentQuestionOptions.${index}.isCorrect`}
           key={option.optionId}
