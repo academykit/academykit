@@ -16,7 +16,6 @@ import {
 import { useToggle } from "@mantine/hooks";
 import QuestionIndex from "@pages/assessment/component/QuestionIndex";
 import { CourseUserStatus, QuestionType, UserRole } from "@utils/enums";
-import { IAssessmentExam } from "@utils/services/assessmentService";
 import {
   ILessonExamStart,
   ILessonExamSubmit,
@@ -32,6 +31,7 @@ import ExamCounter from "./ExamCounter";
 import ExamCheckBox from "./ExamOptions/ExamCheckBox";
 import ExamRadio from "./ExamOptions/ExamRadio";
 import classes from "./style/exam.module.css";
+import { IAssessmentExam } from "@utils/services/assessmentService";
 
 const Exam = ({
   data,
@@ -277,8 +277,10 @@ const Exam = ({
             setVisited={setVisited}
             visited={visited}
             form={
-              form as unknown as UseFormReturn<{
-                questions: IAssessmentExam[] | ILessonStartQuestionOption[];
+              form as UseFormReturn<{
+                questions:
+                  | IAssessmentExam[]
+                  | ILessonStartQuestion<ILessonStartQuestionOption>[];
               }>
             }
           />

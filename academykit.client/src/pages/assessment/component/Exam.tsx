@@ -24,7 +24,6 @@ import {
   useSubmitAssessmentExam,
 } from "@utils/services/assessmentService";
 import errorType from "@utils/services/axiosError";
-import { ILessonStartQuestionOption } from "@utils/services/examService";
 import { t } from "i18next";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, UseFormReturn, useForm } from "react-hook-form";
@@ -33,6 +32,10 @@ import classes from "../styles/assessmentExam.module.css";
 import AssessmentExamCheckBox from "./AssessmentExamCheckBox";
 import AssessmentExamRadio from "./AssessmentExamRadio";
 import QuestionIndex from "./QuestionIndex";
+import {
+  ILessonStartQuestion,
+  ILessonStartQuestionOption,
+} from "@utils/services/examService";
 
 const Exam = ({
   data,
@@ -275,7 +278,9 @@ const Exam = ({
               visited={visited}
               form={
                 form as UseFormReturn<{
-                  questions: IAssessmentExam[] | ILessonStartQuestionOption[];
+                  questions:
+                    | IAssessmentExam[]
+                    | ILessonStartQuestion<ILessonStartQuestionOption>[];
                 }>
               }
             />

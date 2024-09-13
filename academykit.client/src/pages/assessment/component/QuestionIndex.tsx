@@ -1,6 +1,9 @@
 import { Button, Card, Grid, Group } from "@mantine/core";
 import { IAssessmentExam } from "@utils/services/assessmentService";
-import { ILessonStartQuestionOption } from "@utils/services/examService";
+import {
+  ILessonStartQuestion,
+  ILessonStartQuestionOption,
+} from "@utils/services/examService";
 import cx from "clsx";
 import { Dispatch, SetStateAction } from "react";
 import { UseFormReturn } from "react-hook-form";
@@ -18,7 +21,9 @@ const QuestionIndex = ({
   currentIndex: number;
   visited: number[];
   form: UseFormReturn<{
-    questions: ILessonStartQuestionOption[] | IAssessmentExam[];
+    questions:
+      | IAssessmentExam[]
+      | ILessonStartQuestion<ILessonStartQuestionOption>[];
   }>;
 }) => {
   const questions = form.watch("questions");
@@ -73,8 +78,13 @@ const QuestionIndex = ({
               ) : (
                 <Card
                   className={cx(classes.navigate, {
-                    [classes.visited]: visited.includes(i),
-                    [classes.answered]: x.isCorrect,
+                    [classes.visited]:
+                      visited.includes(i) &&
+                      x.questionOptions.filter((opt) => opt.isCorrect).length <=
+                        0,
+                    [classes.answered]:
+                      x.questionOptions.filter((opt) => opt.isCorrect).length >
+                      0,
                     [classes.active]: currentIndex === i,
                   })}
                   radius={10000}
