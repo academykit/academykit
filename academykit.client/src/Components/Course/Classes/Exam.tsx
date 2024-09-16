@@ -16,6 +16,7 @@ import {
 import { useToggle } from "@mantine/hooks";
 import QuestionIndex from "@pages/assessment/component/QuestionIndex";
 import { CourseUserStatus, QuestionType, UserRole } from "@utils/enums";
+import { IAssessmentExam } from "@utils/services/assessmentService";
 import {
   ILessonExamStart,
   ILessonExamSubmit,
@@ -31,7 +32,6 @@ import ExamCounter from "./ExamCounter";
 import ExamCheckBox from "./ExamOptions/ExamCheckBox";
 import ExamRadio from "./ExamOptions/ExamRadio";
 import classes from "./style/exam.module.css";
-import { IAssessmentExam } from "@utils/services/assessmentService";
 
 const Exam = ({
   data,
@@ -76,7 +76,7 @@ const Exam = ({
           !isAuthorOrTeacher ? (
           <ExamCounter
             duration={data.duration}
-            onSubmit={() => submitButtonRef.current?.click()}
+            onSubmit={() => (submitButtonRef.current?.click(), navigate(-1))}
             isLoading={examSubmission.isPending}
             onClick={() => setShowConfirmation()}
           />

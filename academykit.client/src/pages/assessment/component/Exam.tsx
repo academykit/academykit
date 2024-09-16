@@ -24,6 +24,10 @@ import {
   useSubmitAssessmentExam,
 } from "@utils/services/assessmentService";
 import errorType from "@utils/services/axiosError";
+import {
+  ILessonStartQuestion,
+  ILessonStartQuestionOption,
+} from "@utils/services/examService";
 import { t } from "i18next";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, UseFormReturn, useForm } from "react-hook-form";
@@ -32,10 +36,6 @@ import classes from "../styles/assessmentExam.module.css";
 import AssessmentExamCheckBox from "./AssessmentExamCheckBox";
 import AssessmentExamRadio from "./AssessmentExamRadio";
 import QuestionIndex from "./QuestionIndex";
-import {
-  ILessonStartQuestion,
-  ILessonStartQuestionOption,
-} from "@utils/services/examService";
 
 const Exam = ({
   data,
@@ -45,6 +45,7 @@ const Exam = ({
   assessmentId: string;
 }) => {
   const params = useParams();
+  console.log(params.id, "id");
   const submitButtonRef = useRef<HTMLButtonElement | null>(null);
   const customLayout = useCustomLayout();
   const navigate = useNavigate();
@@ -79,7 +80,10 @@ const Exam = ({
         auth?.auth && Number(auth?.auth?.role) >= UserRole.Trainer ? (
           <ExamCounter
             duration={data.duration}
-            onSubmit={() => submitButtonRef.current?.click()}
+            onSubmit={() => (
+              submitButtonRef.current?.click(),
+              navigate(`/assessment/${params.id}`)
+            )}
             isLoading={examSubmission.isPending}
             onClick={() => setShowConfirmation()}
           />
