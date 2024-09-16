@@ -12,9 +12,11 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
+
 import { useToggle } from "@mantine/hooks";
+import QuestionIndex from "@pages/assessment/component/QuestionIndex";
 import { CourseUserStatus, QuestionType, UserRole } from "@utils/enums";
+import { IAssessmentExam } from "@utils/services/assessmentService";
 import {
   ILessonExamStart,
   ILessonExamSubmit,
@@ -22,8 +24,8 @@ import {
   ILessonStartQuestionOption,
   useSubmitExam,
 } from "@utils/services/examService";
-import cx from "clsx";
 import { useEffect, useRef, useState } from "react";
+import { FormProvider, UseFormReturn, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import ExamCounter from "./ExamCounter";
@@ -48,7 +50,9 @@ const Exam = ({
   const navigate = useNavigate();
 
   const form = useForm({
-    initialValues: questions,
+    defaultValues: {
+      questions: [...questions],
+    },
   });
 
   const submitButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -72,7 +76,10 @@ const Exam = ({
           !isAuthorOrTeacher ? (
           <ExamCounter
             duration={data.duration}
-            onSubmit={() => submitButtonRef.current?.click()}
+            onSubmit={() => {
+              submitButtonRef.current?.click();
+              navigate(-1);
+            }}
             isLoading={examSubmission.isPending}
             onClick={() => setShowConfirmation()}
           />
@@ -95,9 +102,10 @@ const Exam = ({
     }
   };
 
-  const onSubmitHandler = async (
-    values: ILessonStartQuestion<ILessonStartQuestionOption>[]
-  ) => {
+  const onSubmitHandler = async (d: {
+    questions: ILessonStartQuestion<ILessonStartQuestionOption>[];
+  }) => {
+    const values = d.questions;
     const finalData: ILessonExamSubmit[] = [];
     values.forEach((x) => {
       const answers = x.questionOptions
@@ -122,180 +130,166 @@ const Exam = ({
   };
 
   return (
-    <form onSubmit={form.onSubmit(onSubmitHandler)}>
-      {/* confirmation pop-up Modal */}
-      <Modal
-        title={t("submit_exam_confirmation")}
-        opened={showConfirmation}
-        onClose={handleCloseModal}
-      >
-        <Group>
-          <Button
-            disabled={submitClicked}
-            onClick={() => {
-              setSubmitClicked(true);
-              submitButtonRef && submitButtonRef.current?.click();
-            }}
-          >
-            {t("submit")}
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => {
-              setSubmitClicked(false);
+    <FormProvider {...form}>
+      <form onSubmit={form.handleSubmit(onSubmitHandler)}>
+        {/* confirmation pop-up Modal */}
+        <Modal
+          title={t("submit_exam_confirmation")}
+          opened={showConfirmation}
+          onClose={handleCloseModal}
+        >
+          <Group>
+            <Button
+              disabled={submitClicked}
+              onClick={() => {
+                setSubmitClicked(true);
+                submitButtonRef && submitButtonRef.current?.click();
+              }}
+            >
+              {t("submit")}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSubmitClicked(false);
 
-              setShowConfirmation();
-            }}
-          >
-            {t("cancel")}
-          </Button>
-        </Group>
-      </Modal>
+                setShowConfirmation();
+              }}
+            >
+              {t("cancel")}
+            </Button>
+          </Group>
+        </Modal>
 
-      {/* Notice pop-up Modal */}
-      <Modal
-        opened={examSubmission.isSuccess}
-        onClose={() => {
-          navigate(location.state ? location.state + "?invalidate=true" : "/");
-        }}
-        title={t("submission_success")}
-      >
-        <Button
-          onClick={() => {
+        {/* Notice pop-up Modal */}
+        <Modal
+          opened={examSubmission.isSuccess}
+          onClose={() => {
             navigate(
               location.state ? location.state + "?invalidate=true" : "/"
             );
           }}
+          title={t("submission_success")}
         >
-          {t("close")}
-        </Button>
-      </Modal>
-
-      <Grid m={20} className={classes.parentGrid}>
-        {/* exam display section */}
-        {/* <Grid.Col span={matches ? 9 : 12}> */}
-        <Grid.Col
-          span={9}
-          style={{ maxWidth: "100%" }}
-          className={classes.questionGridCol}
-        >
-          <Box
-            style={{
-              flexDirection: "column",
-              overflow: "auto",
+          <Button
+            onClick={() => {
+              navigate(
+                location.state ? location.state + "?invalidate=true" : "/"
+              );
             }}
           >
+            {t("close")}
+          </Button>
+        </Modal>
+
+        <Grid m={20} className={classes.parentGrid}>
+          {/* exam display section */}
+          {/* <Grid.Col span={matches ? 9 : 12}> */}
+          <Grid.Col
+            span={9}
+            style={{ maxWidth: "100%" }}
+            className={classes.questionGridCol}
+          >
             <Box
-              p={10}
-              pb={20}
               style={{
                 flexDirection: "column",
-                width: "100%",
-                justifyContent: "start",
-                alignContent: "start",
+                overflow: "auto",
               }}
             >
-              <Title mb={20}>{questions[currentIndex]?.name}</Title>
-              {questions[currentIndex]?.description && (
-                <TextViewer
-                  key={currentIndex}
-                  content={questions[currentIndex]?.description}
-                  styles={{ wordBreak: "break-all" }}
-                />
-              )}
-            </Box>
-            <Container className={classes.option}>
-              {questions[currentIndex]?.type === QuestionType.MultipleChoice &&
-                questions[currentIndex]?.questionOptions && (
-                  <ExamCheckBox
-                    currentIndex={currentIndex}
-                    form={form}
-                    options={questions[currentIndex]?.questionOptions}
-                  />
-                )}
-              {questions[currentIndex]?.type === QuestionType.SingleChoice &&
-                questions[currentIndex]?.questionOptions && (
-                  <ExamRadio
-                    currentIndex={currentIndex}
-                    form={form}
-                    options={questions[currentIndex]?.questionOptions}
-                  />
-                )}
-            </Container>
-          </Box>
-          <Card p={20} className={classes.buttonNav}>
-            {currentIndex !== 0 ? (
-              <Button
-                my={5}
-                onClick={() => {
-                  onQuestionVisit(currentIndex);
-                  setCurrentIndex(currentIndex - 1);
-                }}
-                w={100}
-              >
-                {t("previous")}
-              </Button>
-            ) : (
-              <div></div>
-            )}
-            <button style={{ display: "none" }} ref={submitButtonRef}></button>
-            <Text my={5}>
-              {currentIndex + 1}/{questions.length}
-            </Text>
-
-            {currentIndex < questions.length - 1 ? (
-              <Button
-                my={5}
-                onClick={() => {
-                  onQuestionVisit(currentIndex);
-                  setCurrentIndex((currentIndex) => currentIndex + 1);
-                }}
-                w={100}
-              >
-                {t("next")}
-              </Button>
-            ) : (
-              <div></div>
-            )}
-          </Card>
-        </Grid.Col>
-
-        {/* question counter section */}
-        {/* <Grid.Col span={matches ? 3 : 12} m={0}> */}
-        <Grid.Col span={3} m={0} className={classes.optionsGridCol}>
-          <Group p={10} className={classes.navigateWrapper}>
-            {form.values.map((x, i) => (
-              <div
-                key={i}
-                onClick={() => {
-                  setVisited((visited) => [...visited, currentIndex]);
-                  setCurrentIndex(i);
-                }}
+              <Box
+                p={10}
+                pb={20}
                 style={{
-                  outline: "none",
-                  border: "none",
-                  backgroundColor: "none",
+                  flexDirection: "column",
+                  width: "100%",
+                  justifyContent: "start",
+                  alignContent: "start",
                 }}
               >
-                <Card
-                  className={cx(classes.navigate, {
-                    [classes.visited]:
-                      visited.includes(i) &&
-                      x.questionOptions.filter((x) => x.isCorrect).length <= 0,
-                    [classes.answered]:
-                      x.questionOptions.filter((x) => x.isCorrect).length > 0,
-                    [classes.active]: currentIndex === i,
-                  })}
-                  radius={10000}
+                <Title mb={20}>{questions[currentIndex]?.name}</Title>
+                {questions[currentIndex]?.description && (
+                  <TextViewer
+                    key={currentIndex}
+                    content={questions[currentIndex]?.description}
+                    styles={{ wordBreak: "break-all" }}
+                  />
+                )}
+              </Box>
+              <Container className={classes.option}>
+                {questions[currentIndex]?.type ===
+                  QuestionType.MultipleChoice &&
+                  questions[currentIndex]?.questionOptions && (
+                    <ExamCheckBox
+                      currentIndex={currentIndex}
+                      options={questions[currentIndex]?.questionOptions}
+                    />
+                  )}
+                {questions[currentIndex]?.type === QuestionType.SingleChoice &&
+                  questions[currentIndex]?.questionOptions && (
+                    <ExamRadio
+                      currentIndex={currentIndex}
+                      options={questions[currentIndex]?.questionOptions}
+                    />
+                  )}
+              </Container>
+            </Box>
+            <Card p={20} className={classes.buttonNav}>
+              {currentIndex !== 0 ? (
+                <Button
+                  my={5}
+                  onClick={() => {
+                    onQuestionVisit(currentIndex);
+                    setCurrentIndex(currentIndex - 1);
+                  }}
+                  w={100}
                 >
-                  {i + 1}
-                </Card>
-              </div>
-            ))}
-          </Group>
-        </Grid.Col>
-      </Grid>
-    </form>
+                  {t("previous")}
+                </Button>
+              ) : (
+                <div></div>
+              )}
+              <button
+                style={{ display: "none" }}
+                ref={submitButtonRef}
+              ></button>
+              <Text my={5}>
+                {currentIndex + 1}/{questions.length}
+              </Text>
+
+              {currentIndex < questions.length - 1 ? (
+                <Button
+                  my={5}
+                  onClick={() => {
+                    onQuestionVisit(currentIndex);
+                    setCurrentIndex((currentIndex) => currentIndex + 1);
+                  }}
+                  w={100}
+                >
+                  {t("next")}
+                </Button>
+              ) : (
+                <div></div>
+              )}
+            </Card>
+          </Grid.Col>
+
+          {/* question counter section */}
+          <QuestionIndex
+            currentIndex={currentIndex}
+            setCurrentIndex={setCurrentIndex}
+            setVisited={setVisited}
+            visited={visited}
+            form={
+              form as UseFormReturn<{
+                questions:
+                  | IAssessmentExam[]
+                  | ILessonStartQuestion<ILessonStartQuestionOption>[];
+              }>
+            }
+          />
+        </Grid>
+      </form>
+    </FormProvider>
   );
 };
 

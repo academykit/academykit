@@ -87,6 +87,7 @@
                     Id = Guid.NewGuid(),
                     CompanyName = setupRequest.CompanyName,
                     CompanyAddress = setupRequest.CompanyAddress,
+                    EmailSignature = $"Best Regards,\n{setupRequest.CompanyName}",
                     LogoUrl = setupRequest.LogoUrl,
                     IsSetupCompleted = true,
                     CreatedBy = userId,
