@@ -45,7 +45,6 @@ const Exam = ({
   assessmentId: string;
 }) => {
   const params = useParams();
-  console.log(params.id, "id");
   const submitButtonRef = useRef<HTMLButtonElement | null>(null);
   const customLayout = useCustomLayout();
   const navigate = useNavigate();
