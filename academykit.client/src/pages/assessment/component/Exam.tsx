@@ -79,10 +79,10 @@ const Exam = ({
         auth?.auth && Number(auth?.auth?.role) >= UserRole.Trainer ? (
           <ExamCounter
             duration={data.duration}
-            onSubmit={() => (
-              submitButtonRef.current?.click(),
-              navigate(`/assessment/${params.id}`)
-            )}
+            onSubmit={() => {
+              submitButtonRef.current?.click();
+              navigate(`/assessment/${params.id}`);
+            }}
             isLoading={examSubmission.isPending}
             onClick={() => setShowConfirmation()}
           />

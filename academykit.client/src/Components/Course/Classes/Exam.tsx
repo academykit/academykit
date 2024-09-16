@@ -76,7 +76,10 @@ const Exam = ({
           !isAuthorOrTeacher ? (
           <ExamCounter
             duration={data.duration}
-            onSubmit={() => (submitButtonRef.current?.click(), navigate(-1))}
+            onSubmit={() => {
+              submitButtonRef.current?.click();
+              navigate(-1);
+            }}
             isLoading={examSubmission.isPending}
             onClick={() => setShowConfirmation()}
           />
