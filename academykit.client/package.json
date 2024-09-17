@@ -112,7 +112,7 @@
     "postcss-simple-vars": "^7.0.1",
     "prettier": "^3.3.3",
     "typescript": "^5.5.4",
-    "vite": "^5.3.5",
+    "vite": "^5.4.6",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-mkcert": "^1.17.5"
   }
