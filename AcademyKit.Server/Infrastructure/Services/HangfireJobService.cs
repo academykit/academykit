@@ -17,7 +17,6 @@ namespace AcademyKit.Infrastructure.Services;
 /// </summary>
 public class HangfireJobService : BaseService, IHangfireJobService
 {
-    private readonly string _appUrl;
     private readonly IEmailService _emailService;
     private readonly IVideoService _videoService;
     private readonly IFileServerService _fileServerService;
@@ -62,7 +61,6 @@ public class HangfireJobService : BaseService, IHangfireJobService
         : base(unitOfWork, logger, localizer)
     {
         _emailService = emailService;
-        _appUrl = configuration.GetSection("AppUrls:App").Value;
         _videoService = videoService;
         _fileServerService = fileServerService;
 
@@ -71,7 +69,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
             { EMAIL_PLACEHOLDER, "" },
             { PASSWORD_PLACEHOLDER, "" },
             { USER_NAME_PLACEHOLDER, "" },
-            { APP_PLACEHOLDER, _appUrl },
+            { APP_PLACEHOLDER, configuration.GetSection("AppUrls:App").Value },
             { TRAINING_NAME_PLACEHOLDER, "" },
             { TRAINING_SLUG_PLACEHOLDER, "" },
             { TRAINER_NAME_PLACEHOLDER, "" },
