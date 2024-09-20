@@ -23,20 +23,28 @@ public class HangfireJobService : BaseService, IHangfireJobService
     private readonly IFileServerService _fileServerService;
     private readonly Dictionary<string, string> _placeholders;
 
-    private const string EMAIL_PLACEHOLDER = "email";
-    private const string USER_NAME_PLACEHOLDER = "userName";
-    private const string APP_PLACEHOLDER = "app";
-    private const string EMAIL_SIGNATURE_PLACEHOLDER = "emailSignature";
-    private const string COURSE_NAME_PLACEHOLDER = "courseName";
-    private const string COURSE_SLUG_PLACEHOLDER = "courseSlug";
-    private const string COMPANY_NAME_PLACEHOLDER = "companyName";
-    private const string COMPANY_NUMBER_PLACEHOLDER = "companyNumber";
-    private const string PASSWORD_PLACEHOLDER = "password";
-    private const string MESSAGE_PLACEHOLDER = "message";
-    private const string GROUP_NAME_PLACEHOLDER = "groupName";
-    private const string GROUP_SLUG_PLACEHOLDER = "groupSlug";
-    private const string NEW_EMAIL_PLACEHOLDER = "newEmail";
-    private const string ASSESSMENT_TITLE_PLACEHOLDER = "assessmentTitle";
+    private const string EMAIL_PLACEHOLDER = "{EmailAddress}";
+    private const string PASSWORD_PLACEHOLDER = "{Password}";
+    private const string USER_NAME_PLACEHOLDER = "{UserName}";
+    private const string APP_PLACEHOLDER = "{AppUrl}";
+    private const string EMAIL_SIGNATURE_PLACEHOLDER = "{EmailSignature}";
+    private const string TRAINING_NAME_PLACEHOLDER = "{TrainingName}";
+    private const string TRAINING_SLUG_PLACEHOLDER = "{TrainingSlug}";
+    private const string TRAINER_NAME_PLACEHOLDER = "{TrainerName}";
+    private const string TRAINING_START_DATE_PLACEHOLDER = "{TrainingStartDate}";
+    private const string EXAM_START_DATE_PLACEHOLDER = "{ExamStartDate}";
+    private const string EXAM_START_TIME_PLACEHOLDER = "{ExamStartTime}";
+    private const string EXAM_END_DATE_PLACEHOLDER = "{ExamEndDate}";
+    private const string EXAM_END_TIME_PLACEHOLDER = "{ExamEndTime}";
+    private const string CERTIFICATE_TITLE_PLACEHOLDER = "{CertificateTitle}";
+    private const string CERTIFICATE_ISSUE_DATE_PLACEHOLDER = "{CertificateIssueDate}";
+    private const string COMPANY_NAME_PLACEHOLDER = "{CompanyName}";
+    private const string COMPANY_ADDRESS_PLACEHOLDER = "{CompanyAddress}";
+    private const string COMPANY_NUMBER_PLACEHOLDER = "{CompanyPhoneNumber}";
+    private const string MESSAGE_PLACEHOLDER = "{Message}";
+    private const string GROUP_NAME_PLACEHOLDER = "{GroupName}";
+    private const string GROUP_SLUG_PLACEHOLDER = "{GroupSlug}";
+    private const string ASSESSMENT_TITLE_PLACEHOLDER = "{AssessmentTitle}";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HangfireJobService"/> class.
@@ -59,19 +67,28 @@ public class HangfireJobService : BaseService, IHangfireJobService
 
         _placeholders = new Dictionary<string, string>
         {
-            { USER_NAME_PLACEHOLDER, "{userName}" },
-            { APP_PLACEHOLDER, "{appUrl}" },
-            { COURSE_NAME_PLACEHOLDER, "{courseName}" },
-            { COURSE_SLUG_PLACEHOLDER, "{courseSlug}" },
-            { EMAIL_SIGNATURE_PLACEHOLDER, "{emailSignature}" },
-            { COMPANY_NAME_PLACEHOLDER, "{companyName}" },
-            { COMPANY_NUMBER_PLACEHOLDER, "{companyNumber}" },
-            { PASSWORD_PLACEHOLDER, "{password}" },
-            { EMAIL_PLACEHOLDER, "{email}" },
-            { MESSAGE_PLACEHOLDER, "{message}" },
-            { GROUP_NAME_PLACEHOLDER, "{groupName}" },
-            { GROUP_SLUG_PLACEHOLDER, "{groupSlug}" },
-            { NEW_EMAIL_PLACEHOLDER, "{newEmail}" }
+            { EMAIL_PLACEHOLDER, "" },
+            { PASSWORD_PLACEHOLDER, "" },
+            { USER_NAME_PLACEHOLDER, "" },
+            { APP_PLACEHOLDER, _appUrl },
+            { TRAINING_NAME_PLACEHOLDER, "" },
+            { TRAINING_SLUG_PLACEHOLDER, "" },
+            { TRAINER_NAME_PLACEHOLDER, "" },
+            { TRAINING_START_DATE_PLACEHOLDER, "" },
+            { EXAM_START_DATE_PLACEHOLDER, "" },
+            { EXAM_START_TIME_PLACEHOLDER, "" },
+            { EXAM_END_DATE_PLACEHOLDER, "" },
+            { EXAM_END_TIME_PLACEHOLDER, "" },
+            { EMAIL_SIGNATURE_PLACEHOLDER, "" },
+            { CERTIFICATE_TITLE_PLACEHOLDER, "" },
+            { CERTIFICATE_ISSUE_DATE_PLACEHOLDER, "" },
+            { COMPANY_NAME_PLACEHOLDER, "" },
+            { COMPANY_ADDRESS_PLACEHOLDER, "" },
+            { COMPANY_NUMBER_PLACEHOLDER, "" },
+            { MESSAGE_PLACEHOLDER, "" },
+            { GROUP_NAME_PLACEHOLDER, "" },
+            { GROUP_SLUG_PLACEHOLDER, "" },
+            { ASSESSMENT_TITLE_PLACEHOLDER, "" }
         };
     }
 
@@ -105,18 +122,19 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 return;
             }
 
+            _placeholders[TRAINING_NAME_PLACEHOLDER] = courseName;
+
             foreach (var user in users)
             {
+                _placeholders[USER_NAME_PLACEHOLDER] = user.FirstName;
                 await SendEmailAsync(
-                    getSubject: _ => $"Training Review Status - {courseName}",
-                    getMessage: (name, companyName) =>
-                        $"Dear {name},<br><br>"
-                        + $"Training <a href='{_appUrl}/settings/courses'>'{courseName}'</a> is under review. "
+                    getSubject: () => $"Training Review Status",
+                    getMessage: () =>
+                        $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
+                        + $"Training <a href='{APP_PLACEHOLDER}/settings/courses'>'{TRAINING_NAME_PLACEHOLDER}'</a> is under review. "
                         + "Kindly provide feedback and assessment. Your input is vital for quality assurance. Thank you.<br><br>"
-                        + $"Best regards,<br>{companyName}",
+                        + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
                     user.Email,
-                    user.FirstName,
-                    new Dictionary<string, string> { { COURSE_NAME_PLACEHOLDER, courseName } },
                     MailType.TrainingReview
                 );
             }
@@ -157,27 +175,26 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 throw new EntityNotFoundException(_localizer.GetString("CourseNotFound"));
             }
 
+            _placeholders[TRAINING_NAME_PLACEHOLDER] = course.Name;
+            _placeholders[MESSAGE_PLACEHOLDER] = message;
+
             foreach (var teacher in course.CourseTeachers)
             {
                 if (!string.IsNullOrEmpty(teacher.User?.Email))
                 {
+                    _placeholders[USER_NAME_PLACEHOLDER] = teacher.User.FirstName;
+
                     await SendEmailAsync(
-                        getSubject: _ => $"Training Rejection - {course.Name}",
-                        getMessage: (name, companyName) =>
-                            $"Dear {name},<br><br>"
-                            + $"We regret to inform you that your training, {course.Name} has been rejected for the following reason:<br><br>"
-                            + $"{message}<br><br>"
+                        getSubject: () => $"Training Rejection",
+                        getMessage: () =>
+                            $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
+                            + $"We regret to inform you that your training, {TRAINING_NAME_PLACEHOLDER} has been rejected for the following reason:<br><br>"
+                            + $"{MESSAGE_PLACEHOLDER}<br><br>"
                             + "However, we encourage you to make the necessary corrections and adjustments based on the provided feedback. "
                             + "Once you have addressed the identified issues, please resubmit the training program for further review.<br><br>"
                             + $"Thank you for your understanding and cooperation.<br><br>"
-                            + $"Best regards,<br>{companyName}",
+                            + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
                         teacher.User.Email,
-                        teacher.User.FirstName,
-                        new Dictionary<string, string>
-                        {
-                            { COMPANY_NAME_PLACEHOLDER, course.Name },
-                            { MESSAGE_PLACEHOLDER, message }
-                        },
                         MailType.TrainingReject
                     );
                 }
@@ -211,25 +228,21 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 throw new ArgumentException("Context not found.");
             }
 
+            _placeholders[USER_NAME_PLACEHOLDER] = firstName;
+            _placeholders[PASSWORD_PLACEHOLDER] = password;
+            _placeholders[EMAIL_PLACEHOLDER] = emailAddress;
+
             await SendEmailAsync(
-                getSubject: _ => "Account Created",
-                getMessage: (name, company) =>
-                    $"Dear {name},<br><br>"
-                    + $"Your account has been created in the <a href='{_appUrl}'><u style='color:blue;'>LMS</u></a>.<br><br>"
+                getSubject: () => "Account Created",
+                getMessage: () =>
+                    $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
+                    + $"Your account has been created in the <a href='{APP_PLACEHOLDER}'><u style='color:blue;'>LMS</u></a>.<br><br>"
                     + $"Here are the login details for your LMS account:<br><br>"
-                    + $"Email: {emailAddress}<br>"
-                    + $"Password: {password}<br><br>"
+                    + $"Email: {EMAIL_PLACEHOLDER}<br>"
+                    + $"Password: {PASSWORD_PLACEHOLDER}<br><br>"
                     + $"Please use the above login credentials to access your account.<br><br>"
-                    + $"Best regards,<br>{company}<br>{companyNumber}",
+                    + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
                 emailAddress,
-                firstName,
-                new Dictionary<string, string>
-                {
-                    { EMAIL_PLACEHOLDER, emailAddress },
-                    { PASSWORD_PLACEHOLDER, password },
-                    { COMPANY_NAME_PLACEHOLDER, companyName },
-                    { COMPANY_NUMBER_PLACEHOLDER, companyNumber }
-                },
                 MailType.UserCreate
             );
         });
@@ -255,25 +268,21 @@ public class HangfireJobService : BaseService, IHangfireJobService
 
             foreach (var emailDto in dtos)
             {
+                _placeholders[USER_NAME_PLACEHOLDER] = emailDto.FullName;
+                _placeholders[PASSWORD_PLACEHOLDER] = emailDto.Password;
+                _placeholders[EMAIL_PLACEHOLDER] = emailDto.Email;
+
                 await SendEmailAsync(
-                    getSubject: _ => "Account Created",
-                    getMessage: (name, company) =>
-                        $"Dear {name},<br><br>"
-                        + $"Your account has been created in the <a href='{_appUrl}'><u style='color:blue;'>LMS</u></a>.<br><br>"
+                    getSubject: () => "Account Created",
+                    getMessage: () =>
+                        $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
+                        + $"Your account has been created in the <a href='{APP_PLACEHOLDER}'><u style='color:blue;'>LMS</u></a>.<br><br>"
                         + $"Here are the login details for your LMS account:<br><br>"
-                        + $"Email: {emailDto.Email}<br>"
-                        + $"Password: {emailDto.Password}<br><br>"
+                        + $"Email: {EMAIL_PLACEHOLDER}<br>"
+                        + $"Password: {PASSWORD_PLACEHOLDER}<br><br>"
                         + $"Please use the above login credentials to access your account.<br><br>"
-                        + $"Best regards,<br>{emailDto.CompanyName}<br>{emailDto.CompanyNumber}",
+                        + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
                     emailDto.Email,
-                    emailDto.FullName,
-                    new Dictionary<string, string>
-                    {
-                        { EMAIL_PLACEHOLDER, emailDto.Email },
-                        { PASSWORD_PLACEHOLDER, emailDto.Password },
-                        { COMPANY_NAME_PLACEHOLDER, emailDto.CompanyName },
-                        { COMPANY_NUMBER_PLACEHOLDER, emailDto.CompanyNumber }
-                    },
                     MailType.UserCreate
                 );
             }
@@ -312,26 +321,25 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 return;
             }
 
+            _placeholders[GROUP_NAME_PLACEHOLDER] = groupName;
+            _placeholders[GROUP_SLUG_PLACEHOLDER] = groupSlug;
+
             foreach (var user in users)
             {
+                _placeholders[USER_NAME_PLACEHOLDER] = user.FirstName;
+
                 var fullName = string.IsNullOrEmpty(user.MiddleName)
                     ? $"{user.FirstName} {user.LastName}"
                     : $"{user.FirstName} {user.MiddleName} {user.LastName}";
 
                 await SendEmailAsync(
-                    getSubject: _ => "New Group Member",
-                    getMessage: (name, company) =>
-                        $"Dear {name},<br><br>"
-                        + $"You have been added to the {groupName}. Now you can find the Training Materials which has been created for this group.<br><br>"
-                        + $"Link to the group: <a href='{_appUrl}/groups/{groupSlug}'><u style='color:blue;'>Click here</u></a><br><br>"
-                        + $"Thank You,<br>{company}",
+                    getSubject: () => "New Group Member",
+                    getMessage: () =>
+                        $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
+                        + $"You have been added to the {GROUP_NAME_PLACEHOLDER}. Now you can find the Training Materials which has been created for this group.<br><br>"
+                        + $"Link to the group: <a href='{APP_PLACEHOLDER}/groups/{GROUP_SLUG_PLACEHOLDER}'><u style='color:blue;'>Click here</u></a><br><br>"
+                        + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
                     user.Email,
-                    fullName,
-                    new Dictionary<string, string>
-                    {
-                        { GROUP_NAME_PLACEHOLDER, groupName },
-                        { GROUP_SLUG_PLACEHOLDER, groupSlug }
-                    },
                     MailType.GroupMemberAdd
                 );
             }
@@ -370,28 +378,27 @@ public class HangfireJobService : BaseService, IHangfireJobService
 
             if (group.GroupMembers.Count != default)
             {
+                _placeholders[GROUP_NAME_PLACEHOLDER] = group.Name;
+                _placeholders[GROUP_SLUG_PLACEHOLDER] = group.Slug;
+
                 foreach (var member in group.GroupMembers)
                 {
+                    _placeholders[USER_NAME_PLACEHOLDER] = member.User?.FirstName;
+
                     var fullName = string.IsNullOrEmpty(member.User?.MiddleName)
                         ? $"{member.User?.FirstName} {member.User?.LastName}"
                         : $"{member.User?.FirstName} {member.User?.MiddleName} {member.User?.LastName}";
 
                     await SendEmailAsync(
-                        getSubject: _ => "New training published",
-                        getMessage: (name, company) =>
-                            $"Dear {name},<br><br>"
-                            + $"You have new {courseName} training available for the {group.Name} group. "
-                            + $"Please, go to {group.Name} group or "
-                            + $"<a href='{_appUrl}/trainings/{courseSlug}'><u style='color:blue;'>Click Here</u></a> to find the training there.<br><br>"
-                            + $"Thank You,<br>{company}",
+                        getSubject: () => "New training published",
+                        getMessage: () =>
+                            $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
+                            + $"You have new {TRAINING_NAME_PLACEHOLDER} training available for the {GROUP_NAME_PLACEHOLDER} group. "
+                            + $"Please, go to {GROUP_NAME_PLACEHOLDER} group or "
+                            + $"<a href='{APP_PLACEHOLDER}/trainings/{TRAINING_SLUG_PLACEHOLDER}'><u style='color:blue;'>Click Here</u></a> to find the training there.<br><br>"
+                            + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
                         member.User?.Email,
-                        fullName,
-                        new Dictionary<string, string>
-                        {
-                            { COURSE_NAME_PLACEHOLDER, courseName },
-                            { COURSE_SLUG_PLACEHOLDER, courseSlug }
-                        },
-                        MailType.None
+                        MailType.TrainingPublish
                     );
                 }
             }
@@ -439,24 +446,23 @@ public class HangfireJobService : BaseService, IHangfireJobService
             var teachers = course
                 .CourseTeachers.Select(teacher => teacher.User)
                 .Where(user => user != null);
+
+            _placeholders[TRAINING_NAME_PLACEHOLDER] = course.Name;
+            _placeholders[TRAINING_SLUG_PLACEHOLDER] = course.Slug;
+
             foreach (var teacher in teachers)
             {
+                _placeholders[USER_NAME_PLACEHOLDER] = teacher.FirstName;
+
                 await SendEmailAsync(
-                    getSubject: _ => "New Training Enrollment",
-                    getMessage: (name, company) =>
-                        $"Dear {name},<br><br>"
-                        + $"A new user has enrolled in your {courseName} course. Here are the details:"
-                        + $"<ul><li>Training: {courseName}</li><li>Enrolled User: {userName}</li><li>User Email: {userEmail}</li></ul>"
+                    getSubject: () => "New Training Enrollment",
+                    getMessage: () =>
+                        $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
+                        + $"A new user has enrolled in your {TRAINING_NAME_PLACEHOLDER} course. Here are the details:"
+                        + $"<ul><li>Training: {TRAINING_NAME_PLACEHOLDER}</li><li>Enrolled User: {USER_NAME_PLACEHOLDER}</li><li>User Email: {EMAIL_PLACEHOLDER}</li></ul>"
                         + $"Thank you for your attention to this enrollment. We appreciate your dedication to providing an exceptional learning experience.<br><br>"
-                        + $"Best regards,<br>{company}",
+                        + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
                     teacher.Email,
-                    teacher.FirstName,
-                    new Dictionary<string, string>
-                    {
-                        { COURSE_NAME_PLACEHOLDER, courseName },
-                        { USER_NAME_PLACEHOLDER, userName },
-                        { EMAIL_PLACEHOLDER, userEmail }
-                    },
                     MailType.TrainingEnrollment
                 );
             }
@@ -483,20 +489,22 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
             }
 
+            _placeholders[TRAINING_NAME_PLACEHOLDER] = courseName;
+
             foreach (var user in certificateUserIssuedDtos)
             {
+                _placeholders[USER_NAME_PLACEHOLDER] = user.UserName;
+
                 await SendEmailAsync(
-                    getSubject: _ => "Certificate Issued",
-                    getMessage: (name, company) =>
-                        $"Dear {name},<br><br>"
-                        + $"We are happy to inform you that your Certificate of Achievement for {courseName} has been issued "
+                    getSubject: () => "Certificate Issued",
+                    getMessage: () =>
+                        $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
+                        + $"We are happy to inform you that your Certificate of Achievement for {TRAINING_NAME_PLACEHOLDER} has been issued "
                         + $"and is now available in your profile on the application. "
                         + $"Please log in to your account and navigate to your profile to view and download your certificate.<br><br>"
                         + $"We hope you find the training helpful.<br><br>"
-                        + $"Best regards,<br>{company}",
+                        + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
                     user?.Email,
-                    user?.UserName,
-                    new Dictionary<string, string> { { COURSE_NAME_PLACEHOLDER, courseName } },
                     MailType.CertificateIssue
                 );
             }
@@ -540,24 +548,24 @@ public class HangfireJobService : BaseService, IHangfireJobService
             var enrolledUsers = course
                 .CourseEnrollments.Select(enrollment => enrollment.User)
                 .Where(user => user != null && !string.IsNullOrEmpty(user.Email));
+
+            _placeholders[TRAINING_NAME_PLACEHOLDER] = courseName;
+            _placeholders[TRAINING_SLUG_PLACEHOLDER] = courseSlug;
+
             foreach (var user in enrolledUsers)
             {
+                _placeholders[USER_NAME_PLACEHOLDER] = user.FirstName;
+
                 await SendEmailAsync(
-                    getSubject: _ => "New Content Added",
-                    getMessage: (name, company) =>
-                        $"Dear {name},<br><br>"
-                        + $"Your enrolled training entitled <a href='{_appUrl}/trainings/{courseSlug}'>"
-                        + $"<u style='color:blue;'>{courseName}</u></a> has been updated with new content. "
+                    getSubject: () => "New Content Added",
+                    getMessage: () =>
+                        $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
+                        + $"Your enrolled training entitled <a href='{APP_PLACEHOLDER}/trainings/{TRAINING_SLUG_PLACEHOLDER}'>"
+                        + $"<u style='color:blue;'>{TRAINING_NAME_PLACEHOLDER}</u></a> has been updated with new content. "
                         + $"We encourage you to visit the training page and "
                         + $"explore the new materials to enhance your learning experience.<br><br>"
-                        + $"Thank You,<br>{company}",
+                        + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
                     user.Email,
-                    user.FirstName,
-                    new Dictionary<string, string>
-                    {
-                        { COURSE_NAME_PLACEHOLDER, courseName },
-                        { COURSE_SLUG_PLACEHOLDER, courseSlug }
-                    },
                     MailType.AddLesson
                 );
             }
@@ -586,17 +594,18 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 throw new ArgumentNullException(_localizer.GetString("ContextNotFound"));
             }
 
+            _placeholders[USER_NAME_PLACEHOLDER] = fullName;
+            _placeholders[EMAIL_PLACEHOLDER] = newEmail;
+
             await SendEmailAsync(
-                getSubject: _ => "Notification: Email Address Change",
-                getMessage: (name, company) =>
-                    $"Dear {name},<br><br>"
-                    + $"A recent change has been made to the email address associated with your account to {newEmail}.<br>"
+                getSubject: () => "Notification: Email Address Change",
+                getMessage: () =>
+                    $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
+                    + $"A recent change has been made to the email address associated with your account to {EMAIL_PLACEHOLDER}.<br>"
                     + $"Please check your email for the login credentials. If you encounter any difficulties, "
                     + $"please contact your administrator immediately.<br><br>"
-                    + $"Thank You,<br>{company}",
+                    + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
                 oldEmail,
-                fullName,
-                new Dictionary<string, string> { { NEW_EMAIL_PLACEHOLDER, newEmail } },
                 MailType.ChangedEmail
             );
         });
@@ -633,19 +642,16 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 return;
             }
 
+            _placeholders[USER_NAME_PLACEHOLDER] = assessment.User.FirstName;
+            _placeholders[ASSESSMENT_TITLE_PLACEHOLDER] = assessment.Title;
+
             await SendEmailAsync(
-                getSubject: _ => $"Assessment Review Status - {assessment.AssessmentStatus}",
-                getMessage: (name, company) =>
-                    $"Dear {name},<br><br>"
-                    + $"Assessment <a href='{_appUrl}/settings/courses'>{assessment.Title}</a> published successfully. Thank you.<br><br>"
-                    + $"Best regards,<br>{company}",
-                assessment.User.Email,
-                assessment.User.FirstName,
-                new Dictionary<string, string>
-                {
-                    { ASSESSMENT_TITLE_PLACEHOLDER, assessment.Title }
-                },
-                MailType.None
+                getSubject: () => $"Assessment Review Status",
+                getMessage: () =>
+                    $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
+                    + $"Assessment <a href='{APP_PLACEHOLDER}/settings/courses'>{ASSESSMENT_TITLE_PLACEHOLDER}</a> published successfully. Thank you.<br><br>"
+                    + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
+                assessment.User.Email
             );
         });
     }
@@ -681,24 +687,21 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 return;
             }
 
+            _placeholders[USER_NAME_PLACEHOLDER] = assessment.User.FirstName;
+            _placeholders[ASSESSMENT_TITLE_PLACEHOLDER] = assessment.Title;
+            _placeholders[MESSAGE_PLACEHOLDER] = assessment.Message;
+
             await SendEmailAsync(
-                getSubject: _ => $"Assessment Review Status - {assessment.AssessmentStatus}",
-                getMessage: (name, company) =>
-                    $"Dear {name},<br><br>"
-                    + $"We regret to inform you that your Assessment, {assessment.Title} has been rejected for the following reason:<br><br>"
-                    + $"{assessment.Message}<br><br>"
+                getSubject: () => $"Assessment Review Status",
+                getMessage: () =>
+                    $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
+                    + $"We regret to inform you that your Assessment, {ASSESSMENT_TITLE_PLACEHOLDER} has been rejected for the following reason:<br><br>"
+                    + $"{MESSAGE_PLACEHOLDER}<br><br>"
                     + $"However, we encourage you to make the necessary corrections and adjustments based on the provided feedback. "
                     + $"Once you have addressed the identified issues, please resubmit the assessment for further review.<br><br>"
                     + $"Thank you for your understanding and cooperation.<br><br>"
-                    + $"Best regards,<br>{company}",
-                assessment.User.Email,
-                assessment.User.FirstName,
-                new Dictionary<string, string>
-                {
-                    { ASSESSMENT_TITLE_PLACEHOLDER, assessment.Title },
-                    { MESSAGE_PLACEHOLDER, assessment.Message }
-                },
-                MailType.None
+                    + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
+                assessment.User.Email
             );
         });
     }
@@ -735,22 +738,18 @@ public class HangfireJobService : BaseService, IHangfireJobService
 
             var admins = user.Where(x => x.Role == UserRole.SuperAdmin || x.Role == UserRole.Admin);
 
+            _placeholders[ASSESSMENT_TITLE_PLACEHOLDER] = assessment.Title;
+
             foreach (var admin in admins)
             {
+                _placeholders[USER_NAME_PLACEHOLDER] = admin.FirstName;
                 await SendEmailAsync(
-                    getSubject: _ =>
-                        $"Request for Assessment Review - {assessment.AssessmentStatus}",
-                    getMessage: (name, company) =>
-                        $"Dear {name},<br><br>"
-                        + $"Assessment <a href='{_appUrl}/settings/courses'>{assessment.Title}</a> is requested for review. Thank you.<br><br>"
-                        + $"Best regards,<br>{company}",
-                    admin.Email,
-                    admin.FirstName,
-                    new Dictionary<string, string>
-                    {
-                        { ASSESSMENT_TITLE_PLACEHOLDER, assessment.Title }
-                    },
-                    MailType.None
+                    getSubject: () => $"Assessment Review Request",
+                    getMessage: () =>
+                        $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
+                        + $"Assessment <a href='{APP_PLACEHOLDER}/settings/courses'>{ASSESSMENT_TITLE_PLACEHOLDER}</a> is requested for review. Thank you.<br><br>"
+                        + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
+                    admin.Email
                 );
             }
         });
@@ -765,15 +764,11 @@ public class HangfireJobService : BaseService, IHangfireJobService
     /// <param name="getSubject">Function to get the email subject.</param>
     /// <param name="getMessage">Function to get the email message.</param>
     /// <param name="recipientEmail">The recipient's email address.</param>
-    /// <param name="recipientName">The recipient's name.</param>
-    /// <param name="additionalPlaceholders">Additional placeholders for the email template.</param>
     /// <param name="mailType">The type of mail being sent.</param>
     private async Task SendEmailAsync(
-        Func<string, string> getSubject,
-        Func<string, string, string> getMessage,
+        Func<string> getSubject,
+        Func<string> getMessage,
         string recipientEmail,
-        string recipientName,
-        Dictionary<string, string> additionalPlaceholders = null,
         MailType mailType = MailType.None
     )
     {
@@ -791,33 +786,26 @@ public class HangfireJobService : BaseService, IHangfireJobService
 
         if (template == null)
         {
-            model.Subject = getSubject(recipientName);
-            model.Message = getMessage(recipientName, setting.CompanyName);
+            model.Subject = getSubject();
+            model.Message = getMessage();
         }
         else
         {
             model.Subject = template.Subject;
             model.Message = template.Message;
+        }
 
-            var placeholders = new Dictionary<string, string>(_placeholders)
-            {
-                { USER_NAME_PLACEHOLDER, recipientName },
-                { APP_PLACEHOLDER, _appUrl },
-                { EMAIL_SIGNATURE_PLACEHOLDER, $"Best regards, <br> {setting.CompanyName}" }
-            };
+        _placeholders[COMPANY_ADDRESS_PLACEHOLDER] = setting?.CompanyAddress ?? string.Empty;
+        _placeholders[COMPANY_NAME_PLACEHOLDER] = setting?.CompanyName ?? string.Empty;
+        _placeholders[COMPANY_NUMBER_PLACEHOLDER] = setting?.CompanyContactNumber ?? string.Empty;
+        _placeholders[EMAIL_SIGNATURE_PLACEHOLDER] =
+            setting != null && !string.IsNullOrWhiteSpace(setting.EmailSignature)
+                ? setting.EmailSignature
+                : $"Best regards,<br>{COMPANY_NAME_PLACEHOLDER}";
 
-            if (additionalPlaceholders != null)
-            {
-                foreach (var placeholder in additionalPlaceholders)
-                {
-                    placeholders[placeholder.Key] = placeholder.Value;
-                }
-            }
-
-            foreach (var placeholder in placeholders)
-            {
-                model.Message = model.Message.Replace(placeholder.Key, placeholder.Value);
-            }
+        foreach (var placeholder in _placeholders)
+        {
+            model.Message = model.Message.Replace(placeholder.Key, placeholder.Value);
         }
 
         await _emailService.SendMailWithHtmlBodyAsync(model).ConfigureAwait(true);
