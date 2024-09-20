@@ -35,6 +35,6 @@ public class MailNotificationConfiguration : IEntityTypeConfiguration<MailNotifi
 
         builder.Property(x => x.IsActive).HasColumnName("is_active").HasDefaultValue(true);
 
-        builder.ConfigureAuditFields();
+        builder.ConfigureAuditFields(isRequiredCreatedBy: false);
     }
 }

@@ -18,7 +18,10 @@ public static class EntityTypeBuilderExtensions
             .IsRequired();
     }
 
-    public static void ConfigureAuditFields<TEntity>(this EntityTypeBuilder<TEntity> builder)
+    public static void ConfigureAuditFields<TEntity>(
+        this EntityTypeBuilder<TEntity> builder,
+        bool isRequiredCreatedBy = true
+    )
         where TEntity : AuditableEntity
     {
         builder
@@ -26,7 +29,7 @@ public static class EntityTypeBuilderExtensions
             .HasColumnName("created_by")
             .HasColumnType(MigrationConstants.Varchar50)
             .HasMaxLength(50)
-            .IsRequired();
+            .IsRequired(isRequiredCreatedBy);
 
         builder
             .Property(e => e.CreatedOn)

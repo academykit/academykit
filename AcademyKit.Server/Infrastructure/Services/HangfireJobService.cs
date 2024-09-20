@@ -43,7 +43,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
     private const string COMPANY_NUMBER_PLACEHOLDER = "{CompanyPhoneNumber}";
     private const string MESSAGE_PLACEHOLDER = "{Message}";
     private const string GROUP_NAME_PLACEHOLDER = "{GroupName}";
-    private const string GROUP_SLUG_PLACEHOLDER = "{GroupSlug}";
+    private const string GROUP_LINK_PLACEHOLDER = "{GroupLink}";
     private const string ASSESSMENT_TITLE_PLACEHOLDER = "{AssessmentTitle}";
 
     /// <summary>
@@ -87,7 +87,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
             { COMPANY_NUMBER_PLACEHOLDER, "" },
             { MESSAGE_PLACEHOLDER, "" },
             { GROUP_NAME_PLACEHOLDER, "" },
-            { GROUP_SLUG_PLACEHOLDER, "" },
+            { GROUP_LINK_PLACEHOLDER, "" },
             { ASSESSMENT_TITLE_PLACEHOLDER, "" }
         };
     }
@@ -127,16 +127,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
             foreach (var user in users)
             {
                 _placeholders[USER_NAME_PLACEHOLDER] = user.FirstName;
-                await SendEmailAsync(
-                    getSubject: () => $"Training Review Status",
-                    getMessage: () =>
-                        $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
-                        + $"Training <a href='{APP_PLACEHOLDER}/settings/courses'>'{TRAINING_NAME_PLACEHOLDER}'</a> is under review. "
-                        + "Kindly provide feedback and assessment. Your input is vital for quality assurance. Thank you.<br><br>"
-                        + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
-                    user.Email,
-                    MailType.TrainingReview
-                );
+                await SendEmailAsync(user.Email, MailType.TrainingReview);
             }
         });
     }
@@ -184,19 +175,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 {
                     _placeholders[USER_NAME_PLACEHOLDER] = teacher.User.FirstName;
 
-                    await SendEmailAsync(
-                        getSubject: () => $"Training Rejection",
-                        getMessage: () =>
-                            $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
-                            + $"We regret to inform you that your training, {TRAINING_NAME_PLACEHOLDER} has been rejected for the following reason:<br><br>"
-                            + $"{MESSAGE_PLACEHOLDER}<br><br>"
-                            + "However, we encourage you to make the necessary corrections and adjustments based on the provided feedback. "
-                            + "Once you have addressed the identified issues, please resubmit the training program for further review.<br><br>"
-                            + $"Thank you for your understanding and cooperation.<br><br>"
-                            + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
-                        teacher.User.Email,
-                        MailType.TrainingReject
-                    );
+                    await SendEmailAsync(teacher.User.Email, MailType.TrainingReject);
                 }
             }
         });
@@ -232,19 +211,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
             _placeholders[PASSWORD_PLACEHOLDER] = password;
             _placeholders[EMAIL_PLACEHOLDER] = emailAddress;
 
-            await SendEmailAsync(
-                getSubject: () => "Account Created",
-                getMessage: () =>
-                    $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
-                    + $"Your account has been created in the <a href='{APP_PLACEHOLDER}'><u style='color:blue;'>LMS</u></a>.<br><br>"
-                    + $"Here are the login details for your LMS account:<br><br>"
-                    + $"Email: {EMAIL_PLACEHOLDER}<br>"
-                    + $"Password: {PASSWORD_PLACEHOLDER}<br><br>"
-                    + $"Please use the above login credentials to access your account.<br><br>"
-                    + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
-                emailAddress,
-                MailType.UserCreate
-            );
+            await SendEmailAsync(emailAddress, MailType.UserCreate);
         });
     }
 
@@ -272,19 +239,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 _placeholders[PASSWORD_PLACEHOLDER] = emailDto.Password;
                 _placeholders[EMAIL_PLACEHOLDER] = emailDto.Email;
 
-                await SendEmailAsync(
-                    getSubject: () => "Account Created",
-                    getMessage: () =>
-                        $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
-                        + $"Your account has been created in the <a href='{APP_PLACEHOLDER}'><u style='color:blue;'>LMS</u></a>.<br><br>"
-                        + $"Here are the login details for your LMS account:<br><br>"
-                        + $"Email: {EMAIL_PLACEHOLDER}<br>"
-                        + $"Password: {PASSWORD_PLACEHOLDER}<br><br>"
-                        + $"Please use the above login credentials to access your account.<br><br>"
-                        + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
-                    emailDto.Email,
-                    MailType.UserCreate
-                );
+                await SendEmailAsync(emailDto.Email, MailType.UserCreate);
             }
         });
     }
@@ -322,7 +277,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
             }
 
             _placeholders[GROUP_NAME_PLACEHOLDER] = groupName;
-            _placeholders[GROUP_SLUG_PLACEHOLDER] = groupSlug;
+            _placeholders[GROUP_LINK_PLACEHOLDER] = groupSlug;
 
             foreach (var user in users)
             {
@@ -332,16 +287,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
                     ? $"{user.FirstName} {user.LastName}"
                     : $"{user.FirstName} {user.MiddleName} {user.LastName}";
 
-                await SendEmailAsync(
-                    getSubject: () => "New Group Member",
-                    getMessage: () =>
-                        $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
-                        + $"You have been added to the {GROUP_NAME_PLACEHOLDER}. Now you can find the Training Materials which has been created for this group.<br><br>"
-                        + $"Link to the group: <a href='{APP_PLACEHOLDER}/groups/{GROUP_SLUG_PLACEHOLDER}'><u style='color:blue;'>Click here</u></a><br><br>"
-                        + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
-                    user.Email,
-                    MailType.GroupMemberAdd
-                );
+                await SendEmailAsync(user.Email, MailType.GroupMemberAdd);
             }
         });
     }
@@ -379,7 +325,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
             if (group.GroupMembers.Count != default)
             {
                 _placeholders[GROUP_NAME_PLACEHOLDER] = group.Name;
-                _placeholders[GROUP_SLUG_PLACEHOLDER] = group.Slug;
+                _placeholders[GROUP_LINK_PLACEHOLDER] = group.Slug;
 
                 foreach (var member in group.GroupMembers)
                 {
@@ -389,17 +335,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
                         ? $"{member.User?.FirstName} {member.User?.LastName}"
                         : $"{member.User?.FirstName} {member.User?.MiddleName} {member.User?.LastName}";
 
-                    await SendEmailAsync(
-                        getSubject: () => "New training published",
-                        getMessage: () =>
-                            $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
-                            + $"You have new {TRAINING_NAME_PLACEHOLDER} training available for the {GROUP_NAME_PLACEHOLDER} group. "
-                            + $"Please, go to {GROUP_NAME_PLACEHOLDER} group or "
-                            + $"<a href='{APP_PLACEHOLDER}/trainings/{TRAINING_SLUG_PLACEHOLDER}'><u style='color:blue;'>Click Here</u></a> to find the training there.<br><br>"
-                            + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
-                        member.User?.Email,
-                        MailType.TrainingPublish
-                    );
+                    await SendEmailAsync(member.User?.Email, MailType.TrainingPublish);
                 }
             }
         });
@@ -454,17 +390,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
             {
                 _placeholders[USER_NAME_PLACEHOLDER] = teacher.FirstName;
 
-                await SendEmailAsync(
-                    getSubject: () => "New Training Enrollment",
-                    getMessage: () =>
-                        $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
-                        + $"A new user has enrolled in your {TRAINING_NAME_PLACEHOLDER} course. Here are the details:"
-                        + $"<ul><li>Training: {TRAINING_NAME_PLACEHOLDER}</li><li>Enrolled User: {USER_NAME_PLACEHOLDER}</li><li>User Email: {EMAIL_PLACEHOLDER}</li></ul>"
-                        + $"Thank you for your attention to this enrollment. We appreciate your dedication to providing an exceptional learning experience.<br><br>"
-                        + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
-                    teacher.Email,
-                    MailType.TrainingEnrollment
-                );
+                await SendEmailAsync(teacher.Email, MailType.TrainingEnrollment);
             }
         });
     }
@@ -495,18 +421,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
             {
                 _placeholders[USER_NAME_PLACEHOLDER] = user.UserName;
 
-                await SendEmailAsync(
-                    getSubject: () => "Certificate Issued",
-                    getMessage: () =>
-                        $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
-                        + $"We are happy to inform you that your Certificate of Achievement for {TRAINING_NAME_PLACEHOLDER} has been issued "
-                        + $"and is now available in your profile on the application. "
-                        + $"Please log in to your account and navigate to your profile to view and download your certificate.<br><br>"
-                        + $"We hope you find the training helpful.<br><br>"
-                        + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
-                    user?.Email,
-                    MailType.CertificateIssue
-                );
+                await SendEmailAsync(user?.Email, MailType.CertificateIssue);
             }
         });
     }
@@ -556,18 +471,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
             {
                 _placeholders[USER_NAME_PLACEHOLDER] = user.FirstName;
 
-                await SendEmailAsync(
-                    getSubject: () => "New Content Added",
-                    getMessage: () =>
-                        $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
-                        + $"Your enrolled training entitled <a href='{APP_PLACEHOLDER}/trainings/{TRAINING_SLUG_PLACEHOLDER}'>"
-                        + $"<u style='color:blue;'>{TRAINING_NAME_PLACEHOLDER}</u></a> has been updated with new content. "
-                        + $"We encourage you to visit the training page and "
-                        + $"explore the new materials to enhance your learning experience.<br><br>"
-                        + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
-                    user.Email,
-                    MailType.AddLesson
-                );
+                await SendEmailAsync(user.Email, MailType.AddLesson);
             }
         });
     }
@@ -597,17 +501,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
             _placeholders[USER_NAME_PLACEHOLDER] = fullName;
             _placeholders[EMAIL_PLACEHOLDER] = newEmail;
 
-            await SendEmailAsync(
-                getSubject: () => "Notification: Email Address Change",
-                getMessage: () =>
-                    $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
-                    + $"A recent change has been made to the email address associated with your account to {EMAIL_PLACEHOLDER}.<br>"
-                    + $"Please check your email for the login credentials. If you encounter any difficulties, "
-                    + $"please contact your administrator immediately.<br><br>"
-                    + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
-                oldEmail,
-                MailType.ChangedEmail
-            );
+            await SendEmailAsync(oldEmail, MailType.ChangedEmail);
         });
     }
 
@@ -645,14 +539,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
             _placeholders[USER_NAME_PLACEHOLDER] = assessment.User.FirstName;
             _placeholders[ASSESSMENT_TITLE_PLACEHOLDER] = assessment.Title;
 
-            await SendEmailAsync(
-                getSubject: () => $"Assessment Review Status",
-                getMessage: () =>
-                    $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
-                    + $"Assessment <a href='{APP_PLACEHOLDER}/settings/courses'>{ASSESSMENT_TITLE_PLACEHOLDER}</a> published successfully. Thank you.<br><br>"
-                    + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
-                assessment.User.Email
-            );
+            await SendEmailAsync(assessment.User.Email, MailType.AssessmentAccept);
         });
     }
 
@@ -691,18 +578,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
             _placeholders[ASSESSMENT_TITLE_PLACEHOLDER] = assessment.Title;
             _placeholders[MESSAGE_PLACEHOLDER] = assessment.Message;
 
-            await SendEmailAsync(
-                getSubject: () => $"Assessment Review Status",
-                getMessage: () =>
-                    $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
-                    + $"We regret to inform you that your Assessment, {ASSESSMENT_TITLE_PLACEHOLDER} has been rejected for the following reason:<br><br>"
-                    + $"{MESSAGE_PLACEHOLDER}<br><br>"
-                    + $"However, we encourage you to make the necessary corrections and adjustments based on the provided feedback. "
-                    + $"Once you have addressed the identified issues, please resubmit the assessment for further review.<br><br>"
-                    + $"Thank you for your understanding and cooperation.<br><br>"
-                    + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
-                assessment.User.Email
-            );
+            await SendEmailAsync(assessment.User.Email, MailType.AssessmentReject);
         });
     }
 
@@ -743,14 +619,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
             foreach (var admin in admins)
             {
                 _placeholders[USER_NAME_PLACEHOLDER] = admin.FirstName;
-                await SendEmailAsync(
-                    getSubject: () => $"Assessment Review Request",
-                    getMessage: () =>
-                        $"Dear {USER_NAME_PLACEHOLDER},<br><br>"
-                        + $"Assessment <a href='{APP_PLACEHOLDER}/settings/courses'>{ASSESSMENT_TITLE_PLACEHOLDER}</a> is requested for review. Thank you.<br><br>"
-                        + $"{EMAIL_SIGNATURE_PLACEHOLDER}",
-                    admin.Email
-                );
+                await SendEmailAsync(admin.Email, MailType.AssessmentReview);
             }
         });
     }
@@ -765,35 +634,24 @@ public class HangfireJobService : BaseService, IHangfireJobService
     /// <param name="getMessage">Function to get the email message.</param>
     /// <param name="recipientEmail">The recipient's email address.</param>
     /// <param name="mailType">The type of mail being sent.</param>
-    private async Task SendEmailAsync(
-        Func<string> getSubject,
-        Func<string> getMessage,
-        string recipientEmail,
-        MailType mailType = MailType.None
-    )
+    private async Task SendEmailAsync(string recipientEmail, MailType mailType)
     {
         var model = new EmailRequestDto { To = recipientEmail };
         var setting = await _unitOfWork.GetRepository<GeneralSetting>().GetFirstOrDefaultAsync();
 
-        MailNotification template = null;
-        if (mailType != MailType.None)
-        {
-            template = await _unitOfWork
-                .GetRepository<MailNotification>()
-                .GetFirstOrDefaultAsync(predicate: p => p.MailType == mailType && p.IsActive)
-                .ConfigureAwait(false);
-        }
+        var template = await _unitOfWork
+            .GetRepository<MailNotification>()
+            .GetFirstOrDefaultAsync(predicate: p => p.MailType == mailType && p.IsActive)
+            .ConfigureAwait(false);
 
         if (template == null)
         {
-            model.Subject = getSubject();
-            model.Message = getMessage();
+            _logger.LogError("Template not found for mail type: {MailType}", mailType);
+            return;
         }
-        else
-        {
-            model.Subject = template.Subject;
-            model.Message = template.Message;
-        }
+
+        model.Subject = template.Subject;
+        model.Message = template.Message;
 
         _placeholders[COMPANY_ADDRESS_PLACEHOLDER] = setting?.CompanyAddress ?? string.Empty;
         _placeholders[COMPANY_NAME_PLACEHOLDER] = setting?.CompanyName ?? string.Empty;
