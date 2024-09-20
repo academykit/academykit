@@ -45,6 +45,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
     private const string GROUP_NAME_PLACEHOLDER = "{GroupName}";
     private const string GROUP_LINK_PLACEHOLDER = "{GroupLink}";
     private const string ASSESSMENT_TITLE_PLACEHOLDER = "{AssessmentTitle}";
+    private const string ASSESSMENT_SLUG_PLACEHOLDER = "{AssessmentSlug}";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HangfireJobService"/> class.
@@ -88,7 +89,8 @@ public class HangfireJobService : BaseService, IHangfireJobService
             { MESSAGE_PLACEHOLDER, "" },
             { GROUP_NAME_PLACEHOLDER, "" },
             { GROUP_LINK_PLACEHOLDER, "" },
-            { ASSESSMENT_TITLE_PLACEHOLDER, "" }
+            { ASSESSMENT_TITLE_PLACEHOLDER, "" },
+            { ASSESSMENT_SLUG_PLACEHOLDER, "" }
         };
     }
 
@@ -538,6 +540,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
 
             _placeholders[USER_NAME_PLACEHOLDER] = assessment.User.FirstName;
             _placeholders[ASSESSMENT_TITLE_PLACEHOLDER] = assessment.Title;
+            _placeholders[ASSESSMENT_SLUG_PLACEHOLDER] = assessment.Slug;
 
             await SendEmailAsync(assessment.User.Email, MailType.AssessmentAccept);
         });
@@ -576,6 +579,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
 
             _placeholders[USER_NAME_PLACEHOLDER] = assessment.User.FirstName;
             _placeholders[ASSESSMENT_TITLE_PLACEHOLDER] = assessment.Title;
+            _placeholders[ASSESSMENT_SLUG_PLACEHOLDER] = assessment.Slug;
             _placeholders[MESSAGE_PLACEHOLDER] = assessment.Message;
 
             await SendEmailAsync(assessment.User.Email, MailType.AssessmentReject);
@@ -615,6 +619,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
             var admins = user.Where(x => x.Role == UserRole.SuperAdmin || x.Role == UserRole.Admin);
 
             _placeholders[ASSESSMENT_TITLE_PLACEHOLDER] = assessment.Title;
+            _placeholders[ASSESSMENT_SLUG_PLACEHOLDER] = assessment.Slug;
 
             foreach (var admin in admins)
             {
@@ -630,8 +635,6 @@ public class HangfireJobService : BaseService, IHangfireJobService
     /// <summary>
     /// Sends an email using a template or custom message.
     /// </summary>
-    /// <param name="getSubject">Function to get the email subject.</param>
-    /// <param name="getMessage">Function to get the email message.</param>
     /// <param name="recipientEmail">The recipient's email address.</param>
     /// <param name="mailType">The type of mail being sent.</param>
     private async Task SendEmailAsync(string recipientEmail, MailType mailType)
@@ -646,7 +649,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
 
         if (template == null)
         {
-            _logger.LogError("Template not found for mail type: {MailType}", mailType);
+            _logger.LogError("Template not found for  the specified mail type.");
             return;
         }
 

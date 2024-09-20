@@ -63,47 +63,19 @@ public class MailTemplateSeed
         {
             new MailNotification
             {
-                Id = Guid.Parse("0410a63f-9345-40b4-bb96-09c7c1433dd7"),
-                Name = "Training Review",
-                Subject = "Training Review Status",
+                Id = Guid.Parse("6d42256e-f88e-4721-9608-44bd9c06f2b6"),
+                Name = "Create User",
+                Subject = "User Account created",
                 Message =
                     "<p>Dear {UserName},<br></p>"
-                    + "<p>Training <a href='{AppUrl}/trainings/{TrainingSlug}'>{TrainingName}</a> is under review. Kindly provide feedback and assessment."
-                    + "Your input is vital for quality assurance. Thank you.</p>"
+                    + "<p>Your Account has been created in the <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" "
+                    + "href=\"{AppUrl}\">LMS academykit</a></p><p>Here are the Login details for your LMS account:</p>"
+                    + "<p>Email: {EmailAddress}"
+                    + "<br>Password: {Password}</p>" //NOSONAR
+                    + "<p>Please use the above login credentials to access your account.</p>"
                     + "<br>{EmailSignature}",
                 IsActive = true,
-                MailType = MailType.TrainingReview,
-                CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
-            },
-            new MailNotification
-            {
-                Id = Guid.Parse("17a02f3a-afe9-4ea8-bb54-56f989c0905b"),
-                Name = "Certificate Issue",
-                Subject = "Certificate Issued",
-                Message =
-                    "<p>Dear {UserName},<br></p>"
-                    + "<p>We are happy to inform you that your Certificate of Achievement for <a href='{AppUrl}/trainings/{TrainingSlug}'>{TrainingName}</a> "
-                    + "has been issued and is now available in your profile on the application.</p><p>Please log in to your account and navigate "
-                    + "to your profile to view and download your certificate.</p><p>We hope you find the training helpful.</p>"
-                    + "<br>{EmailSignature}",
-                IsActive = true,
-                MailType = MailType.CertificateIssue,
-                CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
-            },
-            new MailNotification
-            {
-                Id = Guid.Parse("26b566c8-c948-4f32-a2b7-a43c5c8641ce"),
-                Name = "Training Enrolled",
-                Subject = "New Enrollment",
-                Message =
-                    "<p>Dear {TrainerName},<br></p>"
-                    + "<p>A new user has enrolled in your <a href='{AppUrl}/trainings/{TrainingSlug}'>{TrainingName}</a> course. Here are the details:</p>"
-                    + "<p>Training: {TrainingName} <br> Enrolled User: {UserName} <br> User Email:{EmailAddress}</p>"
-                    + "<br><p>Thank you for your attention to this enrollment. We appreciate your dedication to "
-                    + "providing an exceptional learning experience.</p>"
-                    + "<br>{EmailSignature}",
-                IsActive = true,
-                MailType = MailType.TrainingEnrollment,
+                MailType = MailType.UserCreate,
                 CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
             },
             new MailNotification
@@ -114,8 +86,9 @@ public class MailTemplateSeed
                 Message =
                     "<p>Dear {UserName},<br></p>"
                     + "<p>Your Account has been created in the <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" "
-                    + "href=\"{AppUrl}\">LMS</a></p><p>Here are the Login details for your LMS account:</p>"
-                    + "<p>Email: {EmailAddress}</p><p>Password: {Password}</p>"
+                    + "href=\"{AppUrl}\">LMS academykit</a></p><p>Here are the Login details for your LMS account:</p>"
+                    + "<p>Email: {EmailAddress}"
+                    + "<br>Password: {Password}</p>" //NOSONAR
                     + "<p>Please use the above login credentials to access your account.</p>"
                     + "<br>{EmailSignature}",
                 IsActive = true,
@@ -124,16 +97,18 @@ public class MailTemplateSeed
             },
             new MailNotification
             {
-                Id = Guid.Parse("480797ac-a17b-4e9f-b356-fa9721f20c17"),
-                Name = "Training Publish",
-                Subject = "New training published",
+                Id = Guid.Parse("5a1c9d7b-a890-447e-853a-0bc9361783b8"),
+                Name = "Mail Changed",
+                Subject = "Mail Changed",
                 Message =
                     "<p>Dear {UserName},<br></p>"
-                    + "<p>You have new {TrainingName} training available for the {GroupName} group. "
-                    + "Please, go to <a href='{AppUrl}/groups/{GroupSlug}'>{GroupName}</a> group.</p>"
+                    + "<p>Your Email has been changed in the <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" "
+                    + "href=\"{AppUrl}\">LMS</a></p>"
+                    + "<p>Your email has been updated to {EmailAddress}.</p>"
+                    + "<p>If you did not request this change, please contact the administrator immediately.</p>"
                     + "<br>{EmailSignature}",
                 IsActive = true,
-                MailType = MailType.TrainingPublish,
+                MailType = MailType.ChangedEmail,
                 CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
             },
             new MailNotification
@@ -153,35 +128,46 @@ public class MailTemplateSeed
             },
             new MailNotification
             {
-                Id = Guid.Parse("5a1c9d7b-a890-447e-853a-0bc9361783b8"),
-                Name = "Mail Changed",
-                Subject = "Mail Changed",
+                Id = Guid.Parse("0410a63f-9345-40b4-bb96-09c7c1433dd7"),
+                Name = "Training Review",
+                Subject = "Training Review Status",
                 Message =
                     "<p>Dear {UserName},<br></p>"
-                    + "<p>Your Email has been changed in the <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" "
-                    + "href=\"{AppUrl}\">LMS</a></p><p>Here are the Login details for your LMS account:</p>"
-                    + "<p>Email: {EmailAddress}</p><p>Password: {Password}</p>"
-                    + "<p>Please use the above login credentials to access your account.</p>"
+                    + "<p>Training {TrainingName} is under review. Kindly provide feedback and assessment."
+                    + "Your input is vital for quality assurance. <br>Thank you.</p>"
                     + "<br>{EmailSignature}",
                 IsActive = true,
-                MailType = MailType.ChangedEmail,
+                MailType = MailType.TrainingReview,
                 CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
             },
             new MailNotification
             {
-                Id = Guid.Parse("6d42256e-f88e-4721-9608-44bd9c06f2b6"),
-                Name = "Create User",
-                Subject = "User Account created",
+                Id = Guid.Parse("26b566c8-c948-4f32-a2b7-a43c5c8641ce"),
+                Name = "Training Enrolled",
+                Subject = "New Enrollment",
                 Message =
-                    "<p>Dear {UserName},<br></p>"
-                    + "<p>Your Account has been created in the <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" "
-                    + "href=\"{AppUrl}\">LMS academykit</a></p><p>Here are the Login details for your LMS account:</p>"
-                    + "<p>Email: {EmailAddress}</p>"
-                    + "<p>Password: {Password}</p>"
-                    + "<p>Please use the above login credentials to access your account.</p>"
+                    "<p>Dear {TrainerName},<br></p>"
+                    + "<p>A new user has enrolled in your <a href='{AppUrl}/trainings/{TrainingSlug}'>{TrainingName}</a> course. Here are the details:</p>"
+                    + "<p>Training: {TrainingName} <br> Enrolled User: {UserName} <br> User Email:{EmailAddress}</p>"
+                    + "<p>Thank you for your attention to this enrollment. We appreciate your dedication to "
+                    + "providing an exceptional learning experience.</p>"
                     + "<br>{EmailSignature}",
                 IsActive = true,
-                MailType = MailType.UserCreate,
+                MailType = MailType.TrainingEnrollment,
+                CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
+            },
+            new MailNotification
+            {
+                Id = Guid.Parse("480797ac-a17b-4e9f-b356-fa9721f20c17"),
+                Name = "Training Publish",
+                Subject = "New training published",
+                Message =
+                    "<p>Dear {UserName},<br></p>"
+                    + "<p>You have new {TrainingName} training available for the {GroupName} group.</p>"
+                    + "<p>Please, go to <a href='{AppUrl}/groups/{GroupSlug}'>{GroupName}</a> group.</p>"
+                    + "<br>{EmailSignature}",
+                IsActive = true,
+                MailType = MailType.TrainingPublish,
                 CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
             },
             new MailNotification
@@ -191,7 +177,7 @@ public class MailTemplateSeed
                 Subject = "Training Rejection",
                 Message =
                     "<p>Dear {UserName},<br></p>"
-                    + "<p>We regret to inform you that your training <a href='{AppUrl}/trainings/{TrainingSlug}'>{TrainingName}</a> has been rejected for the following reason:</p>"
+                    + "<p>We regret to inform you that your training {TrainingName} has been rejected for the following reason:</p>"
                     + "<br>{Message}</br><p>However, we encourage you to make the necessary corrections and adjustments based on the provided feedback."
                     + "Once you have addressed the identified issues, please resubmit the training program for further review.</p>"
                     + "<p>Thank you for your understanding and cooperation.</p>"
@@ -202,18 +188,30 @@ public class MailTemplateSeed
             },
             new MailNotification
             {
-                Id = Guid.Parse("d1e8a1b2-3c4d-4e5f-8a6b-7c8d9e0f1a2b"),
-                Name = "Assessment Rejection",
-                Subject = "Assessment Review Status",
+                Id = Guid.Parse("17a02f3a-afe9-4ea8-bb54-56f989c0905b"),
+                Name = "Certificate Issue",
+                Subject = "Certificate Issued",
                 Message =
                     "<p>Dear {UserName},<br></p>"
-                    + "<p>We regret to inform you that your Assessment, <a href='{AppUrl}/assessment/{AssessmentSlug}'>{AssessmentTitle}</a> has been rejected for the following reason:<br>"
-                    + "<br>{Message}<br><p>However, we encourage you to make the necessary corrections and adjustments based on the provided feedback. "
-                    + "Once you have addressed the identified issues, please resubmit the assessment for further review.</p>"
-                    + "<br><p>Thank you for your understanding and cooperation.</p>"
+                    + "<p>We are happy to inform you that your Certificate of Achievement for <a href='{AppUrl}/trainings/{TrainingSlug}'>{TrainingName}</a> "
+                    + "has been issued and is now available in your profile on the application.</p><p>Please log in to your account and navigate "
+                    + "to your profile to view and download your certificate.</p><p>We hope you find the training helpful.</p>"
                     + "<br>{EmailSignature}",
                 IsActive = true,
-                MailType = MailType.AssessmentReject,
+                MailType = MailType.CertificateIssue,
+                CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
+            },
+            new MailNotification
+            {
+                Id = Guid.Parse("f3a0b4c5-6d7e-8f9a-0b1c-2d3e4f5a6b7c"),
+                Name = "Assessment Review Request",
+                Subject = "Assessment Review Request",
+                Message =
+                    "<p>Dear {UserName},<br></p>"
+                    + "<p>Assessment <a href='{AppUrl}/assessment/{AssessmentSlug}'>{AssessmentTitle}</a> is requested for review. Thank you.</p>"
+                    + "<br>{EmailSignature}",
+                IsActive = true,
+                MailType = MailType.AssessmentReview,
                 CreatedOn = DateTime.UtcNow
             },
             new MailNotification
@@ -231,17 +229,20 @@ public class MailTemplateSeed
             },
             new MailNotification
             {
-                Id = Guid.Parse("f3a0b4c5-6d7e-8f9a-0b1c-2d3e4f5a6b7c"),
-                Name = "Assessment Review Request",
-                Subject = "Assessment Review Request",
+                Id = Guid.Parse("d1e8a1b2-3c4d-4e5f-8a6b-7c8d9e0f1a2b"),
+                Name = "Assessment Rejection",
+                Subject = "Assessment Review Status",
                 Message =
                     "<p>Dear {UserName},<br></p>"
-                    + "<p>Assessment <a href='{AppUrl}/assessment/{AssessmentSlug}'>{AssessmentTitle}</a> is requested for review. Thank you.</p>"
+                    + "<p>We regret to inform you that your Assessment, <a href='{AppUrl}/assessment/{AssessmentSlug}'>{AssessmentTitle}</a> has been rejected for the following reason:<br>"
+                    + "<br>{Message}<br><p>However, we encourage you to make the necessary corrections and adjustments based on the provided feedback. "
+                    + "Once you have addressed the identified issues, please resubmit the assessment for further review.</p>"
+                    + "<br><p>Thank you for your understanding and cooperation.</p>"
                     + "<br>{EmailSignature}",
                 IsActive = true,
-                MailType = MailType.AssessmentReview,
+                MailType = MailType.AssessmentReject,
                 CreatedOn = DateTime.UtcNow
-            }
+            },
         };
     }
 }
