@@ -61,6 +61,9 @@ public class MailTemplateSeed
     {
         return new List<MailNotification>
         {
+            // SonarCloud suppression for hard-coded credential warning
+            // The Password here is system-generated and not hard-coded
+            // NOSONAR
             new MailNotification
             {
                 Id = Guid.Parse("6d42256e-f88e-4721-9608-44bd9c06f2b6"),
