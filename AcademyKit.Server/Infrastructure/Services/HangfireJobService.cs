@@ -284,11 +284,6 @@ public class HangfireJobService : BaseService, IHangfireJobService
             foreach (var user in users)
             {
                 _placeholders[USER_NAME_PLACEHOLDER] = user.FirstName;
-
-                var fullName = string.IsNullOrEmpty(user.MiddleName)
-                    ? $"{user.FirstName} {user.LastName}"
-                    : $"{user.FirstName} {user.MiddleName} {user.LastName}";
-
                 await SendEmailAsync(user.Email, MailType.GroupMemberAdd);
             }
         });
@@ -332,11 +327,6 @@ public class HangfireJobService : BaseService, IHangfireJobService
                 foreach (var member in group.GroupMembers)
                 {
                     _placeholders[USER_NAME_PLACEHOLDER] = member.User?.FirstName;
-
-                    var fullName = string.IsNullOrEmpty(member.User?.MiddleName)
-                        ? $"{member.User?.FirstName} {member.User?.LastName}"
-                        : $"{member.User?.FirstName} {member.User?.MiddleName} {member.User?.LastName}";
-
                     await SendEmailAsync(member.User?.Email, MailType.TrainingPublish);
                 }
             }
@@ -423,7 +413,7 @@ public class HangfireJobService : BaseService, IHangfireJobService
             {
                 _placeholders[USER_NAME_PLACEHOLDER] = user.UserName;
 
-                await SendEmailAsync(user?.Email, MailType.CertificateIssue);
+                await SendEmailAsync(user.Email, MailType.CertificateIssue);
             }
         });
     }

@@ -60,7 +60,9 @@ public class ApplicationDbInitializer : IHostedService
         CancellationToken cancellationToken
     )
     {
-        using (var transaction = context.Database.BeginTransaction())
+        await using (
+            var transaction = await context.Database.BeginTransactionAsync(cancellationToken)
+        )
         {
             try
             {
@@ -68,7 +70,6 @@ public class ApplicationDbInitializer : IHostedService
                 await MailTemplateSeed.SeedAsync(context, _logger, cancellationToken);
 
                 await transaction.CommitAsync(cancellationToken);
-                await transaction.DisposeAsync();
             }
             catch (Exception ex)
             {
@@ -77,7 +78,6 @@ public class ApplicationDbInitializer : IHostedService
                     "An error occurred during data seeding. Rolling back transaction."
                 );
                 await transaction.RollbackAsync(cancellationToken);
-                await transaction.DisposeAsync();
             }
         }
     }

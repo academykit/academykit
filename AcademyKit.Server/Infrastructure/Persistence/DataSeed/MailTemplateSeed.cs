@@ -1,11 +1,32 @@
-﻿using AcademyKit.Domain.Entities;
+﻿using System.Globalization;
+using AcademyKit.Domain.Entities;
 using AcademyKit.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace AcademyKit.Infrastructure.Persistence.DataSeed;
 
-public class MailTemplateSeed
+public static class MailTemplateSeed
 {
+    private static readonly string UserName_Placeholder = "{UserName}";
+    private static readonly string AppUrl_Placeholder = "{AppUrl}";
+    private static readonly string EmailAddress_Placeholder = "{EmailAddress}";
+    private static readonly string Password_Placeholder = "{Password}";
+    private static readonly string EmailSignature_Placeholder = "{EmailSignature}";
+    private static readonly string TrainerName_Placeholder = "{TrainerName}";
+    private static readonly string TrainingName_Placeholder = "{TrainingName}";
+    private static readonly string TrainingSlug_Placeholder = "{TrainingSlug}";
+    private static readonly string GroupName_Placeholder = "{GroupName}";
+    private static readonly string GroupSlug_Placeholder = "{GroupSlug}";
+    private static readonly string AssessmentTitle_Placeholder = "{AssessmentTitle}";
+    private static readonly string AssessmentSlug_Placeholder = "{AssessmentSlug}";
+    private static readonly string Message_Placeholder = "{Message}";
+
+    private static readonly DateTime CreatedOn = DateTime.ParseExact(
+        "2024-03-02 08:55:14",
+        "yyyy-MM-dd HH:mm:ss",
+        CultureInfo.InvariantCulture
+    );
+
     /// <summary>
     /// SeedAsync method is used to seed the settings data into the database.
     /// </summary>
@@ -22,11 +43,11 @@ public class MailTemplateSeed
         var existingMailTemplates = await context.MailNotifications.ToListAsync(cancellationToken);
 
         var newMailTemplates = mailTemplates
-            .Where(s => !existingMailTemplates.Any(e => e.Id == s.Id))
+            .Where(s => !existingMailTemplates.Exists(e => e.Id == s.Id))
             .ToList();
 
         var updatedMailTemplates = mailTemplates
-            .Where(s => existingMailTemplates.Any(e => e.Id == s.Id && !e.Equals(s)))
+            .Where(s => existingMailTemplates.Exists(e => e.Id == s.Id && !e.Equals(s)))
             .ToList();
 
         if (newMailTemplates.Any())
@@ -41,7 +62,10 @@ public class MailTemplateSeed
             {
                 var existingTemplate = existingMailTemplates.First(e => e.Id == updatedTemplate.Id);
                 context.Entry(existingTemplate).CurrentValues.SetValues(updatedTemplate);
-                logger.LogInformation($"Mail template with ID {updatedTemplate.Id} updated.");
+                logger.LogInformation(
+                    "Mail template with ID {templateId} updated.",
+                    updatedTemplate.Id
+                );
             }
         }
 
@@ -61,25 +85,22 @@ public class MailTemplateSeed
     {
         return new List<MailNotification>
         {
-            // SonarCloud suppression for hard-coded credential warning
-            // The Password here is system-generated and not hard-coded
-            // NOSONAR
             new MailNotification
             {
                 Id = Guid.Parse("6d42256e-f88e-4721-9608-44bd9c06f2b6"),
                 Name = "Create User",
                 Subject = "User Account created",
                 Message =
-                    "<p>Dear {UserName},<br></p>"
+                    $"<p>Dear {UserName_Placeholder} ,<br></p>"
                     + "<p>Your Account has been created in the <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" "
-                    + "href=\"{AppUrl}\">LMS academykit</a></p><p>Here are the Login details for your LMS account:</p>"
-                    + "<p>Email: {EmailAddress}"
-                    + "<br>Password: {Password}</p>" //NOSONAR
+                    + $"href=\"{AppUrl_Placeholder}\">LMS academykit</a></p><p>Here are the Login details for your LMS account:</p>"
+                    + $"<p>Email: {EmailAddress_Placeholder}"
+                    + $"<br>Password: {Password_Placeholder}</p>"
                     + "<p>Please use the above login credentials to access your account.</p>"
-                    + "<br>{EmailSignature}",
+                    + $"<br>{EmailSignature_Placeholder}",
                 IsActive = true,
                 MailType = MailType.UserCreate,
-                CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
+                CreatedOn = CreatedOn
             },
             new MailNotification
             {
@@ -87,16 +108,16 @@ public class MailTemplateSeed
                 Name = "Resend Email",
                 Subject = "Resend Email",
                 Message =
-                    "<p>Dear {UserName},<br></p>"
+                    $"<p>Dear {UserName_Placeholder},<br></p>"
                     + "<p>Your Account has been created in the <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" "
-                    + "href=\"{AppUrl}\">LMS academykit</a></p><p>Here are the Login details for your LMS account:</p>"
-                    + "<p>Email: {EmailAddress}"
-                    + "<br>Password: {Password}</p>" //NOSONAR
+                    + $"href=\"{AppUrl_Placeholder}\">LMS academykit</a></p><p>Here are the Login details for your LMS account:</p>"
+                    + $"<p>Email: {EmailAddress_Placeholder}"
+                    + $"<br>Password: {Password_Placeholder}</p>"
                     + "<p>Please use the above login credentials to access your account.</p>"
-                    + "<br>{EmailSignature}",
+                    + $"<br>{EmailSignature_Placeholder}",
                 IsActive = true,
                 MailType = MailType.ResendEmail,
-                CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
+                CreatedOn = CreatedOn
             },
             new MailNotification
             {
@@ -104,15 +125,15 @@ public class MailTemplateSeed
                 Name = "Mail Changed",
                 Subject = "Mail Changed",
                 Message =
-                    "<p>Dear {UserName},<br></p>"
+                    $"<p>Dear {UserName_Placeholder},<br></p>"
                     + "<p>Your Email has been changed in the <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" "
-                    + "href=\"{AppUrl}\">LMS</a></p>"
-                    + "<p>Your email has been updated to {EmailAddress}.</p>"
+                    + $"href=\"{AppUrl_Placeholder}\">LMS</a></p>"
+                    + $"<p>Your email has been updated to {EmailAddress_Placeholder}.</p>"
                     + "<p>If you did not request this change, please contact the administrator immediately.</p>"
-                    + "<br>{EmailSignature}",
+                    + $"<br>{EmailSignature_Placeholder}",
                 IsActive = true,
                 MailType = MailType.ChangedEmail,
-                CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
+                CreatedOn = CreatedOn
             },
             new MailNotification
             {
@@ -120,14 +141,14 @@ public class MailTemplateSeed
                 Name = "Group Member Add",
                 Subject = "New group member",
                 Message =
-                    "<p>Dear {UserName},<br></p>"
-                    + "<p>You have been added to the {GroupName}. "
-                    + "Now you can find the Training Materials which has been created for this {GroupName}.</p>"
-                    + "<p>Link to the group : <a href='{AppUrl}/groups/{GroupSlug}'>{GroupName}</a></p>"
-                    + "<br>{EmailSignature}",
+                    $"<p>Dear {UserName_Placeholder},<br></p>"
+                    + $"<p>You have been added to the {GroupName_Placeholder}. "
+                    + $"Now you can find the Training Materials which has been created for this {GroupName_Placeholder}.</p>"
+                    + $"<p>Link to the group : <a href='{AppUrl_Placeholder}/groups/{GroupSlug_Placeholder}'>{GroupName_Placeholder}</a></p>"
+                    + $"<br>{EmailSignature_Placeholder}",
                 IsActive = true,
                 MailType = MailType.GroupMemberAdd,
-                CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
+                CreatedOn = CreatedOn
             },
             new MailNotification
             {
@@ -135,13 +156,13 @@ public class MailTemplateSeed
                 Name = "Training Review",
                 Subject = "Training Review Status",
                 Message =
-                    "<p>Dear {UserName},<br></p>"
-                    + "<p>Training {TrainingName} is under review. Kindly provide feedback and assessment."
+                    $"<p>Dear {UserName_Placeholder},<br></p>"
+                    + $"<p>Training {TrainingName_Placeholder} is under review. Kindly provide feedback and assessment."
                     + "Your input is vital for quality assurance. <br>Thank you.</p>"
-                    + "<br>{EmailSignature}",
+                    + $"<br>{EmailSignature_Placeholder}",
                 IsActive = true,
                 MailType = MailType.TrainingReview,
-                CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
+                CreatedOn = CreatedOn
             },
             new MailNotification
             {
@@ -149,15 +170,15 @@ public class MailTemplateSeed
                 Name = "Training Enrolled",
                 Subject = "New Enrollment",
                 Message =
-                    "<p>Dear {TrainerName},<br></p>"
-                    + "<p>A new user has enrolled in your <a href='{AppUrl}/trainings/{TrainingSlug}'>{TrainingName}</a> course. Here are the details:</p>"
-                    + "<p>Training: {TrainingName} <br> Enrolled User: {UserName} <br> User Email:{EmailAddress}</p>"
+                    $"<p>Dear {TrainerName_Placeholder},<br></p>"
+                    + $"<p>A new user has enrolled in your <a href='{AppUrl_Placeholder}/trainings/{TrainingSlug_Placeholder}'>{TrainingName_Placeholder}</a> course. Here are the details:</p>"
+                    + $"<p>Training: {TrainingName_Placeholder} <br> Enrolled User: {UserName_Placeholder} <br> User Email:{EmailAddress_Placeholder}</p>"
                     + "<p>Thank you for your attention to this enrollment. We appreciate your dedication to "
                     + "providing an exceptional learning experience.</p>"
-                    + "<br>{EmailSignature}",
+                    + $"<br>{EmailSignature_Placeholder}",
                 IsActive = true,
                 MailType = MailType.TrainingEnrollment,
-                CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
+                CreatedOn = CreatedOn
             },
             new MailNotification
             {
@@ -165,13 +186,13 @@ public class MailTemplateSeed
                 Name = "Training Publish",
                 Subject = "New training published",
                 Message =
-                    "<p>Dear {UserName},<br></p>"
-                    + "<p>You have new {TrainingName} training available for the {GroupName} group.</p>"
-                    + "<p>Please, go to <a href='{AppUrl}/groups/{GroupSlug}'>{GroupName}</a> group.</p>"
-                    + "<br>{EmailSignature}",
+                    $"<p>Dear {UserName_Placeholder},<br></p>"
+                    + $"<p>You have new {TrainingName_Placeholder} training available for the {GroupName_Placeholder} group.</p>"
+                    + $"<p>Please, go to <a href='{AppUrl_Placeholder}/groups/{GroupSlug_Placeholder}'>{GroupName_Placeholder}</a> group.</p>"
+                    + $"<br>{EmailSignature_Placeholder}",
                 IsActive = true,
                 MailType = MailType.TrainingPublish,
-                CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
+                CreatedOn = CreatedOn
             },
             new MailNotification
             {
@@ -179,15 +200,15 @@ public class MailTemplateSeed
                 Name = "Training Reject",
                 Subject = "Training Rejection",
                 Message =
-                    "<p>Dear {UserName},<br></p>"
-                    + "<p>We regret to inform you that your training {TrainingName} has been rejected for the following reason:</p>"
-                    + "<br>{Message}</br><p>However, we encourage you to make the necessary corrections and adjustments based on the provided feedback."
+                    $"<p>Dear {UserName_Placeholder},<br></p>"
+                    + $"<p>We regret to inform you that your training {TrainingName_Placeholder} has been rejected for the following reason:</p>"
+                    + $"<br>{Message_Placeholder}</br><p>However, we encourage you to make the necessary corrections and adjustments based on the provided feedback."
                     + "Once you have addressed the identified issues, please resubmit the training program for further review.</p>"
                     + "<p>Thank you for your understanding and cooperation.</p>"
-                    + "<br>{EmailSignature}",
+                    + $"<br>{EmailSignature_Placeholder}",
                 IsActive = true,
                 MailType = MailType.TrainingReject,
-                CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
+                CreatedOn = CreatedOn
             },
             new MailNotification
             {
@@ -195,14 +216,14 @@ public class MailTemplateSeed
                 Name = "Certificate Issue",
                 Subject = "Certificate Issued",
                 Message =
-                    "<p>Dear {UserName},<br></p>"
-                    + "<p>We are happy to inform you that your Certificate of Achievement for <a href='{AppUrl}/trainings/{TrainingSlug}'>{TrainingName}</a> "
+                    $"<p>Dear {UserName_Placeholder},<br></p>"
+                    + $"<p>We are happy to inform you that your Certificate of Achievement for <a href='{AppUrl_Placeholder}/trainings/{TrainingSlug_Placeholder}'>{TrainingName_Placeholder}</a> "
                     + "has been issued and is now available in your profile on the application.</p><p>Please log in to your account and navigate "
                     + "to your profile to view and download your certificate.</p><p>We hope you find the training helpful.</p>"
-                    + "<br>{EmailSignature}",
+                    + $"<br>{EmailSignature_Placeholder}",
                 IsActive = true,
                 MailType = MailType.CertificateIssue,
-                CreatedOn = DateTime.Parse("2024-03-02 08:55:14")
+                CreatedOn = CreatedOn
             },
             new MailNotification
             {
@@ -210,12 +231,12 @@ public class MailTemplateSeed
                 Name = "Assessment Review Request",
                 Subject = "Assessment Review Request",
                 Message =
-                    "<p>Dear {UserName},<br></p>"
-                    + "<p>Assessment <a href='{AppUrl}/assessment/{AssessmentSlug}'>{AssessmentTitle}</a> is requested for review. Thank you.</p>"
-                    + "<br>{EmailSignature}",
+                    $"<p>Dear {UserName_Placeholder},<br></p>"
+                    + $"<p>Assessment <a href='{AppUrl_Placeholder}/assessment/{AssessmentSlug_Placeholder}'>{AssessmentTitle_Placeholder}</a> is requested for review. Thank you.</p>"
+                    + $"<br>{EmailSignature_Placeholder}",
                 IsActive = true,
                 MailType = MailType.AssessmentReview,
-                CreatedOn = DateTime.UtcNow
+                CreatedOn = CreatedOn
             },
             new MailNotification
             {
@@ -223,12 +244,12 @@ public class MailTemplateSeed
                 Name = "Assessment Published",
                 Subject = "Assessment Review Status",
                 Message =
-                    "<p>Dear {UserName},<br></p>"
-                    + "<p>Assessment <a href='{AppUrl}/assessment/{AssessmentSlug}'>{AssessmentTitle}</a> published successfully. Thank you.</p>"
-                    + "<br>{EmailSignature}",
+                    $"<p>Dear {UserName_Placeholder},<br></p>"
+                    + $"<p>Assessment <a href='{AppUrl_Placeholder}/assessment/{AssessmentSlug_Placeholder}'>{AssessmentTitle_Placeholder}</a> published successfully. Thank you.</p>"
+                    + $"<br>{EmailSignature_Placeholder}",
                 IsActive = true,
                 MailType = MailType.AssessmentAccept,
-                CreatedOn = DateTime.UtcNow
+                CreatedOn = CreatedOn
             },
             new MailNotification
             {
@@ -236,15 +257,18 @@ public class MailTemplateSeed
                 Name = "Assessment Rejection",
                 Subject = "Assessment Review Status",
                 Message =
-                    "<p>Dear {UserName},<br></p>"
-                    + "<p>We regret to inform you that your Assessment, <a href='{AppUrl}/assessment/{AssessmentSlug}'>{AssessmentTitle}</a> has been rejected for the following reason:<br>"
-                    + "<br>{Message}<br><p>However, we encourage you to make the necessary corrections and adjustments based on the provided feedback. "
-                    + "Once you have addressed the identified issues, please resubmit the assessment for further review.</p>"
+                    $"<p>Dear {UserName_Placeholder},<br></p>"
+                    + $"<p>We regret to inform you that your Assessment, "
+                    + $"<a href='{AppUrl_Placeholder}/assessment/{AssessmentSlug_Placeholder}'>{AssessmentTitle_Placeholder}</a> "
+                    + "has been rejected for the following reason:<br>"
+                    + $"<br>{Message_Placeholder}<br><p>However, we encourage you to make the necessary corrections and "
+                    + "adjustments based on the provided feedback. Once you have addressed the identified issues, "
+                    + "please resubmit the assessment for further review.</p>"
                     + "<br><p>Thank you for your understanding and cooperation.</p>"
-                    + "<br>{EmailSignature}",
+                    + $"<br>{EmailSignature_Placeholder}",
                 IsActive = true,
                 MailType = MailType.AssessmentReject,
-                CreatedOn = DateTime.UtcNow
+                CreatedOn = CreatedOn
             },
         };
     }
