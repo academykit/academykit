@@ -10,7 +10,7 @@
         /// <summary>
         /// Get or set created by
         /// </summary>
-        public Guid CreatedBy { get; set; }
+        public Guid? CreatedBy { get; set; }
 
         /// <summary>
         /// Get or set created on
