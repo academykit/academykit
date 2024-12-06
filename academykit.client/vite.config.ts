@@ -14,6 +14,7 @@ const baseFolder =
     ? `${env.APP_DATA}/ASP.NET/https`
     : `${env.HOME}/.aspnet/https`;
 
+fs.mkdirSync(baseFolder, { recursive: true });
 const certificateName = "academykit.client";
 const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
 const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
