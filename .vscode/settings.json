@@ -21,5 +21,12 @@
   "editor.stickyScroll.enabled": true,
   "eslint.options": {
     "configFile": "../academykit.client/.eslintrc.cjs"
-  }
+  },
+  "cssVariables.lookupFiles": [
+    "**/*.css",
+    "**/*.scss",
+    "**/*.sass",
+    "**/*.less",
+    "node_modules/@mantine/core/styles.css"
+  ]
 }

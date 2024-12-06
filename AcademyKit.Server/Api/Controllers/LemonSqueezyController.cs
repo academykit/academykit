@@ -295,7 +295,7 @@ public class LemonSqueezyController : BaseApiController
         license.LicenseKeyId = response.LicenseKey.Id;
         license.CustomerEmail = response.Meta.CustomerEmail;
         license.CustomerName = response.Meta.CustomerName;
-        license.ActivatedOn = response.Meta.CreatedAt;
+        license.ActivatedOn = response.LicenseKey.CreatedAt;
         license.ExpiredOn = response.LicenseKey.ExpiresAt;
         license.VariantName = response.Meta.VariantName;
         license.VariantId = response.Meta.VariantId;
