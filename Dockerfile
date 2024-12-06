@@ -1,5 +1,5 @@
 # Final stage/image
-FROM ghcr.io/academykit/academykit-base:main AS base
+FROM ghcr.io/academykit/academykit-base:latest AS base
 
 WORKDIR /app
 EXPOSE 80
