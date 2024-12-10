@@ -1466,6 +1466,8 @@ public class UserService : BaseGenericService<User, UserSearchCriteria>, IUserSe
             LoginAt = currentTimeStamp,
             UserId = user.Id,
             IsActive = true,
+            CreatedBy = user.Id,
+            CreatedOn = currentTimeStamp
         };
 
         authenticationModel.IsAuthenticated = true;

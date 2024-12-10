@@ -13,6 +13,7 @@ public enum MailType
     TrainingPublish = 9,
     CertificateIssue = 10,
     AddLesson = 11,
-
-    None = 999
+    AssessmentAccept = 12,
+    AssessmentReview = 13,
+    AssessmentReject = 14,
 }
