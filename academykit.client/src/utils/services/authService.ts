@@ -1,5 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { REFRESH_TOKEN_STORAGE, TOKEN_STORAGE } from "@utils/constants";
+import {
+  LICENSE_KEY,
+  REFRESH_TOKEN_STORAGE,
+  TOKEN_STORAGE,
+} from "@utils/constants";
 import { UserRole } from "@utils/enums";
 import { api } from "./service-api";
 import { httpClient } from "./service-axios";
@@ -46,6 +50,7 @@ export const useLogout = () => {
       localStorage.removeItem(TOKEN_STORAGE);
       localStorage.removeItem(REFRESH_TOKEN_STORAGE);
       localStorage.removeItem("id");
+      localStorage.removeItem(LICENSE_KEY);
     },
   });
 };

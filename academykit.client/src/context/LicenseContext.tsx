@@ -47,6 +47,7 @@ const LicenseProvider: FC<PropsWithChildren> = ({ children }) => {
       }
     } else if (license.isError) {
       setIsValid(false);
+      localStorage.removeItem(LICENSE_KEY);
     }
   }, [auth?.loggedIn, license]);
 
