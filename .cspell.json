@@ -52,6 +52,7 @@
     "nofollow",
     "noopener",
     "noreferrer",
+    "nprogress",
     "officedocument",
     "onaddfile",
     "onremovefile",
@@ -67,6 +68,7 @@
     "resheader",
     "resmimetype",
     "resx",
+    "Scaffolder",
     "setuid",
     "signin",
     "spreadsheetml",
@@ -90,8 +92,7 @@
     "Xzdz",
     "Zlypo",
     "zmmtg",
-    "नेपाली",
-    "Scaffolder"
+    "नेपाली"
   ],
   "ignorePaths": [
     "**/**/node_modules/**",
