@@ -84,6 +84,21 @@ public class LemonSqueezyController : BaseApiController
             return BadRequest("License Key is required.");
         }
 
+        var license = await _unitOfWork
+            .GetRepository<License>()
+            .GetFirstOrDefaultAsync()
+            .ConfigureAwait(false);
+
+        if (license == null)
+        {
+            return NotFound();
+        }
+
+        if (license.LicenseKey != licenseKey)
+        {
+            return ValidationProblem("License Key is invalid.");
+        }
+
         try
         {
             var response = await SendLemonSqueezyRequest("/v1/licenses/validate", licenseKey);
