@@ -20,6 +20,7 @@ public class LemonSqueezyController : BaseApiController
     private readonly string _lemonSqueezyBaseUrl;
     private readonly string _lemonSqueezyCheckoutKey;
     private readonly string _lemonSqueezyCheckoutUrl;
+    private readonly string _licenseHandlerUrl;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IStringLocalizer<ExceptionLocalizer> _stringLocalizer;
 
@@ -37,6 +38,7 @@ public class LemonSqueezyController : BaseApiController
         _lemonSqueezyBaseUrl = configuration["LEMON_SQUEEZY:BASE_URL"];
         _lemonSqueezyCheckoutKey = configuration["LEMON_SQUEEZY:CHECKOUT_KEY"];
         _lemonSqueezyCheckoutUrl = configuration["LEMON_SQUEEZY:CHECKOUT_URL"];
+        _licenseHandlerUrl = configuration["LEMON_SQUEEZY:LICENSE_HANDLER_URL"];
         _unitOfWork = unitOfWork;
         _stringLocalizer = stringLocalizer;
     }
@@ -101,8 +103,33 @@ public class LemonSqueezyController : BaseApiController
 
         try
         {
-            var response = await SendLemonSqueezyRequest("/v1/licenses/validate", licenseKey);
-            return await ProcessLicenseResponse(response, licenseKey, false);
+            // var response = await SendLemonSqueezyRequest("/v1/licenses/validate", licenseKey);
+            // return await ProcessLicenseResponse(response, licenseKey, false);
+
+            var userCount = await _unitOfWork
+                .GetRepository<User>()
+                .CountAsync()
+                .ConfigureAwait(false);
+
+            var client = new RestClient(_licenseHandlerUrl);
+            var request = new RestRequest("/license-handler", Method.Post)
+                .AddJsonBody(
+                    new
+                    {
+                        licenseKey,
+                        userCount,
+                        lemonSqueezyUrl = _lemonSqueezyBaseUrl
+                    }
+                )
+                .AddHeader("Accept", "application/json")
+                .AddHeader("Content-Type", "application/json");
+
+            var response = await client.PostAsync(request);
+
+            var responseObject = JsonConvert.DeserializeObject<LemonSqueezyResponseModel>(
+                response.Content
+            );
+            return Ok(responseObject);
         }
         catch (Exception ex)
         {
@@ -289,6 +316,7 @@ public class LemonSqueezyController : BaseApiController
         {
             _unitOfWork.GetRepository<License>().Update(license);
         }
+
         await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         return existingLicense;
     }
