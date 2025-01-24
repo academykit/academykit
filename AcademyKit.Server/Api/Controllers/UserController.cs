@@ -7,6 +7,7 @@ using AcademyKit.Application.Common.Models.RequestModels;
 using AcademyKit.Application.Common.Models.ResponseModels;
 using AcademyKit.Domain.Entities;
 using AcademyKit.Domain.Enums;
+using AcademyKit.Infrastructure.Common;
 using AcademyKit.Infrastructure.Helpers;
 using AcademyKit.Infrastructure.Localization;
 using CsvHelper;
@@ -24,6 +25,8 @@ public class UserController : BaseApiController
     private readonly ILogger<UserController> logger;
     private readonly IFileServerService fileServerService;
     private readonly IUserService userService;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ILicenseService _licenseService;
     private readonly IGeneralSettingService generalSettingService;
     private readonly IDepartmentService departmentService;
     private readonly IValidator<UserRequestModel> validator;
@@ -35,6 +38,8 @@ public class UserController : BaseApiController
         ILogger<UserController> logger,
         IFileServerService fileServerService,
         IUserService userService,
+        IUnitOfWork unitOfWork,
+        ILicenseService licenseService,
         IValidator<UserRequestModel> validator,
         IGeneralSettingService generalSettingService,
         IValidator<ChangeEmailRequestModel> changeEmailValidator,
@@ -52,6 +57,8 @@ public class UserController : BaseApiController
         this.localizer = localizer;
         this.departmentService = departmentService;
         _passwordHasher = passwordHasher;
+        _licenseService = licenseService;
+        _unitOfWork = unitOfWork;
     }
 
     /// <summary>
@@ -111,6 +118,19 @@ public class UserController : BaseApiController
         await validator
             .ValidateAsync(model, options => options.ThrowOnFailures())
             .ConfigureAwait(false);
+
+        var userCount = await _unitOfWork.GetRepository<User>().CountAsync().ConfigureAwait(false);
+        var licenseData = await _licenseService
+            .ValidateLicenseAsync(userCount + 1)
+            .ConfigureAwait(false);
+        if (!licenseData.Valid)
+        {
+            logger.LogWarning("License is not valid. User count: {userCount}.", userCount);
+            throw new ForbiddenException(
+                licenseData.Error
+                    ?? "You have reached the maximum number of users. Please contact support."
+            );
+        }
 
         var entity = new User()
         {

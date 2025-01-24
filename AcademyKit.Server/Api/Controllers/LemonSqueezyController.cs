@@ -1,4 +1,5 @@
 ﻿using AcademyKit.Application.Common.Dtos;
+using AcademyKit.Application.Common.Interfaces;
 using AcademyKit.Application.Common.Models.RequestModels;
 using AcademyKit.Application.Common.Models.ResponseModels;
 using AcademyKit.Domain.Entities;
@@ -24,7 +25,7 @@ public class LemonSqueezyController : BaseApiController
     private readonly IUnitOfWork _unitOfWork;
     private readonly IStringLocalizer<ExceptionLocalizer> _stringLocalizer;
 
-    private readonly LicenseService _licenseService;
+    private readonly ILicenseService _licenseService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LemonSqueezyController"/> class.
@@ -35,7 +36,7 @@ public class LemonSqueezyController : BaseApiController
         IConfiguration configuration,
         IUnitOfWork unitOfWork,
         IStringLocalizer<ExceptionLocalizer> stringLocalizer,
-        LicenseService licenseService
+        ILicenseService licenseService
     )
     {
         _lemonSqueezyBaseUrl = configuration["LEMON_SQUEEZY:BASE_URL"];

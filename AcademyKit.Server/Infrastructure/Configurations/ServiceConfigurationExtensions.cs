@@ -107,6 +107,7 @@ public static class ServiceConfigurationExtensions
         services.AddTransient<IApiKeyService, ApiKeyService>();
         services.AddTransient<IPasswordHasher, PasswordHasher>();
         services.AddTransient<ISettingService, SettingService>();
+        services.AddTransient<ILicenseService, LicenseService>();
 
         #endregion Service DI
 
