@@ -553,4 +553,8 @@
   <data name="NoOfQuestionSelectionExceeds" xml:space="preserve">
     <value>質問選択数が超過しました。</value>
   </data>
+  <data name="LicenseNotFound" xml:space="preserve">
+    <value>ライセンスが見つかりません。</value>
+  </data>
 </root>
+
