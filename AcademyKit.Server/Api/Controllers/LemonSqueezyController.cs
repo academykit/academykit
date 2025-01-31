@@ -1,9 +1,11 @@
 ﻿using AcademyKit.Application.Common.Dtos;
+using AcademyKit.Application.Common.Interfaces;
 using AcademyKit.Application.Common.Models.RequestModels;
 using AcademyKit.Application.Common.Models.ResponseModels;
 using AcademyKit.Domain.Entities;
 using AcademyKit.Infrastructure.Common;
 using AcademyKit.Infrastructure.Localization;
+using AcademyKit.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -23,6 +25,8 @@ public class LemonSqueezyController : BaseApiController
     private readonly IUnitOfWork _unitOfWork;
     private readonly IStringLocalizer<ExceptionLocalizer> _stringLocalizer;
 
+    private readonly ILicenseService _licenseService;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="LemonSqueezyController"/> class.
     /// </summary>
@@ -31,7 +35,8 @@ public class LemonSqueezyController : BaseApiController
     public LemonSqueezyController(
         IConfiguration configuration,
         IUnitOfWork unitOfWork,
-        IStringLocalizer<ExceptionLocalizer> stringLocalizer
+        IStringLocalizer<ExceptionLocalizer> stringLocalizer,
+        ILicenseService licenseService
     )
     {
         _lemonSqueezyBaseUrl = configuration["LEMON_SQUEEZY:BASE_URL"];
@@ -39,6 +44,7 @@ public class LemonSqueezyController : BaseApiController
         _lemonSqueezyCheckoutUrl = configuration["LEMON_SQUEEZY:CHECKOUT_URL"];
         _unitOfWork = unitOfWork;
         _stringLocalizer = stringLocalizer;
+        _licenseService = licenseService;
     }
 
     /// <summary>
@@ -77,37 +83,10 @@ public class LemonSqueezyController : BaseApiController
     /// <returns>The validation result.</returns>
     [HttpGet("validate")]
     [AllowAnonymous]
-    public async Task<IActionResult> ValidateLicenseAsync([FromQuery] string licenseKey)
+    public async Task<IActionResult> ValidateLicenseAsync()
     {
-        if (string.IsNullOrEmpty(licenseKey))
-        {
-            return BadRequest("License Key is required.");
-        }
-
-        var license = await _unitOfWork
-            .GetRepository<License>()
-            .GetFirstOrDefaultAsync()
-            .ConfigureAwait(false);
-
-        if (license == null)
-        {
-            return NotFound();
-        }
-
-        if (license.LicenseKey != licenseKey)
-        {
-            return ValidationProblem("License Key is invalid.");
-        }
-
-        try
-        {
-            var response = await SendLemonSqueezyRequest("/v1/licenses/validate", licenseKey);
-            return await ProcessLicenseResponse(response, licenseKey, false);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = ex.Message });
-        }
+        var userCount = await _unitOfWork.GetRepository<User>().CountAsync().ConfigureAwait(false);
+        return Ok(await _licenseService.ValidateLicenseAsync(userCount).ConfigureAwait(false));
     }
 
     /// <summary>
@@ -289,6 +268,7 @@ public class LemonSqueezyController : BaseApiController
         {
             _unitOfWork.GetRepository<License>().Update(license);
         }
+
         await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         return existingLicense;
     }

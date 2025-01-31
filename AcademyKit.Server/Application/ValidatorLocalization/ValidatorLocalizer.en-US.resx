@@ -556,4 +556,7 @@
   <data name="AssessmentCannotBeDeleted" xml:space="preserve">
     <value>Assessment Contains Submission so Cannot be Deleted</value>
   </data>
+  <data name="LicenseNotFound" xml:space="preserve">
+    <value>License not found.</value>
+  </data>
 </root>

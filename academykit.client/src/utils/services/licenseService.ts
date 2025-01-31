@@ -14,15 +14,14 @@ export interface ILicense {
   variantId: number;
 }
 
-const licenseValidation = (licenseKey: string) =>
-  httpClient.get<ILicense>(api.license.validate(licenseKey));
+const licenseValidation = () => httpClient.get<ILicense>(api.license.validate);
 
-export const useValidateLicense = (licenseKey: string) =>
+export const useValidateLicense = () =>
   useQuery({
-    queryKey: [api.license.validate(licenseKey)],
-    queryFn: () => licenseValidation(licenseKey),
+    queryKey: [api.license.validate],
+    queryFn: () => licenseValidation(),
     select: (data) => data.data,
-    enabled: !!(licenseKey && localStorage.getItem(TOKEN_STORAGE)),
+    enabled: !!localStorage.getItem(TOKEN_STORAGE),
   });
 
 const licenseCheckout = () => httpClient.get<ILicense>(api.license.checkout);

@@ -322,8 +322,7 @@ export const api = {
     checkVersions: "/api/admin/settings/CheckUpdates",
   },
   license: {
-    validate: (licenseKey: string) =>
-      `/api/LemonSqueezy/validate?licenseKey=${licenseKey}`,
+    validate: "/api/LemonSqueezy/validate",
     activate: "/api/LemonSqueezy/activate",
     list: "/api/LemonSqueezy/license",
     checkout: "/api/LemonSqueezy/checkout",

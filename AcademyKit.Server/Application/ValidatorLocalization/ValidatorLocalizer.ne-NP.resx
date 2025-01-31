@@ -553,4 +553,7 @@
   <data name="NoOfQuestionSelectionExceeds" xml:space="preserve">
     <value>प्रश्न चयनको सङ्ख्या बढी छ ।</value>
   </data>
+  <data name="LicenseNotFound" xml:space="preserve">
+    <value>लाइसेन्स फेला परेन।</value> // License not found.
+  </data>
 </root>
