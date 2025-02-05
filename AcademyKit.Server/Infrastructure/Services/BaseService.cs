@@ -158,7 +158,7 @@
         /// <returns></returns>
         /// <exception cref="ForbiddenException"></exception>
         protected async Task<Course> ValidateAndGetCourse(
-            Guid currentUserId,
+            Guid? currentUserId,
             string courseIdentity,
             bool validateForModify = true
         )
@@ -233,7 +233,7 @@
 
         protected async Task<bool> ValidateUserCanAccessGroupCourse(
             Course course,
-            Guid currentUserId
+            Guid? currentUserId
         )
         {
             if (!course.GroupId.HasValue)
@@ -274,7 +274,7 @@
         /// <returns></returns>
         /// <exception cref="ForbiddenException"></exception>
         protected async Task<QuestionPool> ValidateAndGetQuestionPool(
-            Guid currentUserId,
+            Guid? currentUserId,
             string questionPoolIdentity
         )
         {
@@ -336,7 +336,7 @@
             return user != null;
         }
 
-        protected async Task<bool> IsSuperAdminOrAdmin(Guid currentUserId)
+        protected async Task<bool> IsSuperAdminOrAdmin(Guid? currentUserId)
         {
             var user = await _unitOfWork
                 .GetRepository<User>()
@@ -349,7 +349,7 @@
             return user != null;
         }
 
-        protected async Task<bool> IsSuperAdminOrAdminOrTrainer(Guid currentUserId)
+        protected async Task<bool> IsSuperAdminOrAdminOrTrainer(Guid? currentUserId)
         {
             var user = await _unitOfWork
                 .GetRepository<User>()

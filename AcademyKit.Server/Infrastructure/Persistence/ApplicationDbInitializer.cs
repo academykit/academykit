@@ -1,13 +1,21 @@
-﻿using AcademyKit.Domain.Entities;
+﻿using AcademyKit.Infrastructure.Persistence.DataSeed;
 using Microsoft.EntityFrameworkCore;
 
 namespace AcademyKit.Infrastructure.Persistence;
 
+/// <summary>
+/// ApplicationDbInitializer class is used to initialize the database.
+/// </summary>
 public class ApplicationDbInitializer : IHostedService
 {
     private readonly ILogger<ApplicationDbInitializer> _logger;
     private readonly IServiceProvider _serviceProvider;
 
+    /// <summary>
+    /// Constructor for ApplicationDbInitializer.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
+    /// <param name="serviceProvider">The service provider.</param>
     public ApplicationDbInitializer(
         ILogger<ApplicationDbInitializer> logger,
         IServiceProvider serviceProvider
@@ -17,6 +25,10 @@ public class ApplicationDbInitializer : IHostedService
         _serviceProvider = serviceProvider;
     }
 
+    /// <summary>
+    /// StartAsync method is used to start the database initialization.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         await using var scope = _serviceProvider.CreateAsyncScope();
@@ -33,35 +45,40 @@ public class ApplicationDbInitializer : IHostedService
         _logger.LogInformation("Migrations applied and data seeded successfully");
     }
 
+    /// <summary>
+    /// StopAsync method is used to stop the database initialization.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
+    /// <summary>
+    /// SeedDataAsync method is used to seed the data into the database.
+    /// </summary>
+    /// <param name="context">The database context.</param>
     private async Task SeedDataAsync(
         ApplicationDbContext context,
         CancellationToken cancellationToken
     )
     {
-        if (!await context.Settings.AnyAsync(cancellationToken))
+        await using (
+            var transaction = await context.Database.BeginTransactionAsync(cancellationToken)
+        )
         {
-            var settingsData = new List<Setting>
+            try
             {
-                new Setting { Key = "Storage", Value = "Server" },
-                new Setting { Key = "AWS_AccessKey", Value = null },
-                new Setting { Key = "AWS_SecretKey", Value = null },
-                new Setting { Key = "AWS_FileBucket", Value = null },
-                new Setting { Key = "AWS_VideoBucket", Value = null },
-                new Setting { Key = "AWS_CloudFront", Value = null },
-                new Setting { Key = "AWS_RegionEndpoint", Value = null },
-                new Setting { Key = "Server_Url", Value = null },
-                new Setting { Key = "Server_Bucket", Value = null },
-                new Setting { Key = "Server_AccessKey", Value = null },
-                new Setting { Key = "Server_SecretKey", Value = null },
-                new Setting { Key = "Server_PresignedExpiryTime", Value = null },
-                new Setting { Key = "Server_EndPoint", Value = null },
-                new Setting { Key = "Server_PresignedUrl", Value = null }
-            };
-            await context.Settings.AddRangeAsync(settingsData, cancellationToken);
-            await context.SaveChangesAsync(cancellationToken);
-            _logger.LogInformation("Settings data seeded successfully");
+                await SettingSeed.SeedAsync(context, _logger, cancellationToken);
+                await MailTemplateSeed.SeedAsync(context, _logger, cancellationToken);
+
+                await transaction.CommitAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    ex,
+                    "An error occurred during data seeding. Rolling back transaction."
+                );
+                await transaction.RollbackAsync(cancellationToken);
+            }
         }
     }
 }
