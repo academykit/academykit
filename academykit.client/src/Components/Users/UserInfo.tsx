@@ -66,7 +66,9 @@ const schema = () => {
   });
 };
 const UserInfo = () => {
-  const userId = localStorage.getItem("id");
+  const [userId, setUserId] = useState<string | null>(
+    localStorage.getItem("id")
+  );
   const { data, isSuccess } = useReAuth();
   const [imageURL, setImageURL] = useState(data?.imageUrl ?? "");
   // const [viewMode, setViewMode] = useState(true);
@@ -114,10 +116,10 @@ const UserInfo = () => {
         imageUrl: data?.imageUrl ?? "",
       });
       setImageURL(data?.imageUrl ?? "");
+      setUserId(data?.id);
     }
   }, [isSuccess, params]); // reset on edit/view mode
-
-  const updateUser = useUpdateUser(userId as string);
+  const updateUser = useUpdateUser(data?.id as string);
   const navigator = useNavigate();
   const { t } = useTranslation();
 
