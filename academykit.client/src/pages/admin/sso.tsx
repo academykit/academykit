@@ -69,7 +69,7 @@ const Sso = () => {
   useFormErrorHooks(form);
 
   useEffect(() => {
-    if (domainList?.data) {
+    if (domainList?.data?.length) {
       form.setFieldValue(
         "domain",
         domainList.data.map((domain, index) => ({ id: index, domain: domain }))
