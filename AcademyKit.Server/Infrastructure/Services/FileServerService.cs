@@ -34,11 +34,7 @@
             try
             {
                 var credentials = await GetCredentialAsync().ConfigureAwait(false);
-                var minioClient = new MinioClient()
-                    .WithEndpoint(credentials.EndPoint)
-                    .WithCredentials(credentials.AccessKey, credentials.SecretKey)
-                    .WithSSL()
-                    .Build();
+                var minioClient = GetMinioClient(credentials);
                 var fileName = string.Concat(model.File.FileName.Where(c => !char.IsWhiteSpace(c)));
                 var extension = Path.GetExtension(fileName);
                 fileName = $"{Guid.NewGuid()}_{fileName}";
@@ -99,11 +95,7 @@
             try
             {
                 var credentials = await GetCredentialAsync().ConfigureAwait(false);
-                var minioClient = new MinioClient()
-                    .WithEndpoint(credentials.EndPoint)
-                    .WithCredentials(credentials.AccessKey, credentials.SecretKey)
-                    .WithSSL()
-                    .Build();
+                var minioClient = GetMinioClient(credentials);
                 var fileName = $"private/{Guid.NewGuid()}.mp4";
                 var objectArgs = new PutObjectArgs()
                     .WithObject(fileName)
@@ -137,11 +129,7 @@
             try
             {
                 var credentials = await GetCredentialAsync().ConfigureAwait(false);
-                var minioClient = new MinioClient()
-                    .WithEndpoint(credentials.PresignedUrl)
-                    .WithCredentials(credentials.AccessKey, credentials.SecretKey)
-                    .WithSSL()
-                    .Build();
+                var minioClient = GetMinioClient(credentials);
                 var objectArgs = new PresignedGetObjectArgs()
                     .WithObject(key)
                     .WithBucket(credentials.Bucket)
@@ -165,12 +153,7 @@
         public async Task<string> GetFileLocalPathAsync(string key)
         {
             var credentials = await GetCredentialAsync().ConfigureAwait(false);
-            var minioClient = new MinioClient()
-                .WithEndpoint(credentials.EndPoint)
-                .WithCredentials(credentials.AccessKey, credentials.SecretKey)
-                .WithSSL()
-                .Build();
-
+            var minioClient = GetMinioClient(credentials);
             var objectArgs = new PresignedGetObjectArgs()
                 .WithObject(key)
                 .WithBucket(credentials.Bucket)
@@ -205,12 +188,7 @@
             {
                 var credentials = await GetCredentialAsync().ConfigureAwait(false);
 
-                var minioClient = new MinioClient()
-                    .WithEndpoint(credentials.EndPoint)
-                    .WithCredentials(credentials.AccessKey, credentials.SecretKey)
-                    .WithSSL()
-                    .Build();
-
+                var minioClient = GetMinioClient(credentials);
                 var objectArgs = new RemoveObjectArgs()
                     .WithBucket(credentials.Bucket)
                     .WithObject(key);
@@ -230,6 +208,20 @@
         }
 
         #region private
+
+        /// <summary>
+        /// Handle to get minio client
+        /// </summary>
+        /// <param name="credentials">The credentials</param>
+        /// <returns></returns>
+        private static IMinioClient GetMinioClient(MinIoDto credentials)
+        {
+            var minioClient = new MinioClient()
+                .WithEndpoint(credentials.EndPoint)
+                .WithCredentials(credentials.AccessKey, credentials.SecretKey)
+                .Build();
+            return minioClient;
+        }
 
         /// <summary>
         /// Handle to get credential
