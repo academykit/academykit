@@ -810,7 +810,10 @@ public class HangfireJobService : BaseService, IHangfireJobService
             {
                 foreach (var placeholder in additionalPlaceholders)
                 {
-                    placeholders[placeholder.Key] = placeholder.Value;
+                    if (!placeholders.ContainsKey(placeholder.Key))
+                    {
+                        placeholders[placeholder.Key] = placeholder.Value;
+                    }
                 }
             }
 
