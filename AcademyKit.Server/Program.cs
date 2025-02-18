@@ -93,13 +93,7 @@ app.UseCors(x =>
 
 app.UseHangfireDashboard(
     "/hangfire",
-    new DashboardOptions
-    {
-        Authorization = new IDashboardAuthorizationFilter[]
-        {
-            new HangfireAuthorizationFilter(app.Configuration)
-        },
-    }
+    new DashboardOptions { Authorization = [new HangfireAuthorizationFilter(app.Configuration)], }
 );
 app.UseRequestLocalization();
 app.UseAuthentication();
