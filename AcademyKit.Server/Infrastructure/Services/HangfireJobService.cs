@@ -799,21 +799,16 @@ public class HangfireJobService : BaseService, IHangfireJobService
             model.Subject = template.Subject;
             model.Message = template.Message;
 
-            var placeholders = new Dictionary<string, string>(_placeholders)
-            {
-                { USER_NAME_PLACEHOLDER, recipientName },
-                { APP_PLACEHOLDER, _appUrl },
-                { EMAIL_SIGNATURE_PLACEHOLDER, $"Best regards, <br> {setting.CompanyName}" }
-            };
+            var placeholders = new Dictionary<string, string>(_placeholders);
+            placeholders[USER_NAME_PLACEHOLDER] = recipientName;
+            placeholders[APP_PLACEHOLDER] = _appUrl;
+            placeholders[EMAIL_SIGNATURE_PLACEHOLDER] = $"Best regards, <br> {setting.CompanyName}";
 
             if (additionalPlaceholders != null)
             {
                 foreach (var placeholder in additionalPlaceholders)
                 {
-                    if (!placeholders.ContainsKey(placeholder.Key))
-                    {
-                        placeholders[placeholder.Key] = placeholder.Value;
-                    }
+                    placeholders[placeholder.Key] = placeholder.Value;
                 }
             }
 
