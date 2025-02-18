@@ -49,6 +49,7 @@ export default defineConfig({
       project: "academykit-web",
     }),
   ],
+  logLevel: "warn",
   server: {
     https: {
       key: readFileSync(keyFilePath),

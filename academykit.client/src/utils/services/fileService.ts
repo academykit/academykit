@@ -9,26 +9,16 @@ export enum FileAccess {
 }
 
 export const uploadFile = (file: File, type: number) => {
-  return httpClient.post<string>(
-    "/api/media/file",
-    { file, type },
-    {
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-    }
-  );
+  const formData = new FormData();
+  formData.append("file", file, file.name);
+  formData.append("type", type.toString());
+  return httpClient.post<string>("/api/media/file", formData);
 };
 export const uploadVideo = (file: File, type: number) => {
-  return httpClient.post<string>(
-    "/api/media/file",
-    { file, type },
-    {
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-    }
-  );
+  const formData = new FormData();
+  formData.append("file", file, file.name);
+  formData.append("type", type.toString());
+  return httpClient.post<string>("/api/media/file", formData);
 };
 
 export const getFileUrl = (key: string, enabled: boolean) => {
@@ -46,15 +36,11 @@ export const getFileUrl = (key: string, enabled: boolean) => {
 };
 
 export const uploadUserCsv = (file: File | null) => {
-  return httpClient.post(
-    "/api/user/bulkUser",
-    { file },
-    {
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-    }
-  );
+  if (!file) return;
+  const formData = new FormData();
+  formData.append("file", file, file.name);
+
+  return httpClient.post("/api/user/bulkUser", formData);
 };
 
 export const downloadCSVFile = async (path: string, fileName: string) => {

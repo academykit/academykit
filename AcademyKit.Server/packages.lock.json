@@ -329,15 +329,15 @@
       },
       "Minio": {
         "type": "Direct",
-        "requested": "[6.0.4, )",
-        "resolved": "6.0.4",
-        "contentHash": "JckRL95hQ/eDHTQZ/BB7jeR0JyF+bOctMW6uriXHY5YPjCX61hiJGsswGjuDSEViKJEPxtPi3e4IwD/1TJ7PIw==",
+        "requested": "[6.0.0, )",
+        "resolved": "6.0.0",
+        "contentHash": "otyZTEZaKMpkmYFlX5MNYsijo5xT4BcKATFhBFMWUa2XdUEHNvU1mktGL2hxq/oLWSySDALpPDA0aWCvvnPlTg==",
         "dependencies": {
-          "CommunityToolkit.HighPerformance": "8.3.0",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.1",
-          "Microsoft.Extensions.Logging": "8.0.0",
-          "System.IO.Hashing": "8.0.0",
-          "System.Reactive": "6.0.1"
+          "CommunityToolkit.HighPerformance": "8.2.1",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0",
+          "Microsoft.Extensions.Logging": "7.0.0",
+          "System.IO.Hashing": "7.0.0",
+          "System.Reactive": "6.0.0"
         }
       },
       "MySql.Data": {
@@ -534,8 +534,8 @@
       },
       "CommunityToolkit.HighPerformance": {
         "type": "Transitive",
-        "resolved": "8.3.0",
-        "contentHash": "2zc0Wfr9OtEbLqm6J1Jycim/nKmYv+v12CytJ3tZGNzw7n3yjh1vNCMX0kIBaFBk3sw8g0pMR86QJGXGlArC+A=="
+        "resolved": "8.2.1",
+        "contentHash": "0/5BHriP3T/vbHnjL/kgHo9qIOVbwAMeSrz0XWMhL83IwLk3sNhSd2+sCzRKjzufQZWL2xKEFbF93Itwpoijbg=="
       },
       "Dapper": {
         "type": "Transitive",
@@ -1597,8 +1597,8 @@
       },
       "System.IO.Hashing": {
         "type": "Transitive",
-        "resolved": "8.0.0",
-        "contentHash": "ne1843evDugl0md7Fjzy6QjJrzsjh46ZKbhf8GwBXb5f/gw97J4bxMs0NQKifDuThh/f0bZ0e62NPl1jzTuRqA=="
+        "resolved": "7.0.0",
+        "contentHash": "sDnWM0N3AMCa86LrKTWeF3BZLD2sgWyYUc7HL6z4+xyDZNQRwzmxbo4qP2rX2MqC+Sy1/gOSRDah5ltxY5jPxw=="
       },
       "System.IO.Packaging": {
         "type": "Transitive",
@@ -1722,8 +1722,8 @@
       },
       "System.Reactive": {
         "type": "Transitive",
-        "resolved": "6.0.1",
-        "contentHash": "rHaWtKDwCi9qJ3ObKo8LHPMuuwv33YbmQi7TcUK1C264V3MFnOr5Im7QgCTdLniztP3GJyeiSg5x8NqYJFqRmg=="
+        "resolved": "6.0.0",
+        "contentHash": "31kfaW4ZupZzPsI5PVe77VhnvFF55qgma7KZr/E0iFTs6fmdhhG8j0mgEx620iLTey1EynOkEfnyTjtNEpJzGw=="
       },
       "System.Reflection": {
         "type": "Transitive",

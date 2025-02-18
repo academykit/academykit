@@ -73,7 +73,7 @@
                     .WithContentType(model.File.ContentType)
                     .WithObjectSize(model.File.Length);
 
-                await minioClient.PutObjectAsync(objectArgs);
+                await minioClient.PutObjectAsync(objectArgs).ConfigureAwait(false);
                 return model.Type == MediaType.Private
                     ? fileName
                     : $"{credentials.Url}/{credentials.Bucket}/{fileName}";
