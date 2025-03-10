@@ -1,10 +1,11 @@
 import TextViewer from "@components/Ui/RichTextViewer";
 import { Box, Card, Group, Title } from "@mantine/core";
 import { IAssessmentExam } from "@utils/services/assessmentService";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import classes from "../styles/assessmentQuestion.module.css";
-type Props = {
+
+export type OptionProps = {
   options: [
     {
       optionId: string;
@@ -15,16 +16,13 @@ type Props = {
   currentIndex: number;
 };
 
-const AssessmentExamRadio = ({ currentIndex }: Props) => {
+const AssessmentExamRadio = ({ currentIndex, options }: OptionProps) => {
   const form = useFormContext<{ questions: IAssessmentExam[] }>();
 
   const { t } = useTranslation();
-  const { fields } = useFieldArray({
-    name: `questions.${currentIndex}.assessmentQuestionOptions`,
-    control: form.control,
-  });
+
   const changeFieldValue = (optionCurrentIndex: number) => {
-    const updatedOptions = fields.map((option, index) => ({
+    const updatedOptions = options.map((option, index) => ({
       ...option,
       isCorrect: index === optionCurrentIndex,
     }));
@@ -44,7 +42,7 @@ const AssessmentExamRadio = ({ currentIndex }: Props) => {
           {t("options")}
         </Title>
       </Group>
-      {fields.map((option, index) => (
+      {options.map((option, index) => (
         <div
           style={{ cursor: "pointer" }}
           key={option.optionId}

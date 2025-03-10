@@ -26,12 +26,16 @@ import {
 import errorType from "@utils/services/axiosError";
 import { t } from "i18next";
 import { useEffect, useRef, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, UseFormReturn, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import classes from "../styles/assessmentExam.module.css";
 import AssessmentExamCheckBox from "./AssessmentExamCheckBox";
 import AssessmentExamRadio from "./AssessmentExamRadio";
 import QuestionIndex from "./QuestionIndex";
+import {
+  ILessonStartQuestion,
+  ILessonStartQuestionOption,
+} from "@utils/services/examService";
 
 const Exam = ({
   data,
@@ -48,7 +52,6 @@ const Exam = ({
   const examSubmission = useSubmitAssessmentExam();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visited, setVisited] = useState<number[]>([]);
-  // const matches = useMediaQuery("(min-width: 56.25em)");
   const [submitClicked, setSubmitClicked] = useState(false);
   const [showConfirmation, setShowConfirmation] = useToggle();
 
@@ -209,7 +212,12 @@ const Exam = ({
                   {questions[currentIndex]?.type ===
                     QuestionType.MultipleChoice &&
                     questions[currentIndex]?.assessmentQuestionOptions && (
-                      <AssessmentExamCheckBox currentIndex={currentIndex} />
+                      <AssessmentExamCheckBox
+                        currentIndex={currentIndex}
+                        options={
+                          questions[currentIndex]?.assessmentQuestionOptions
+                        }
+                      />
                     )}
                   {questions[currentIndex]?.type ===
                     QuestionType.SingleChoice &&
@@ -268,6 +276,13 @@ const Exam = ({
               setCurrentIndex={setCurrentIndex}
               setVisited={setVisited}
               visited={visited}
+              form={
+                form as UseFormReturn<{
+                  questions:
+                    | IAssessmentExam[]
+                    | ILessonStartQuestion<ILessonStartQuestionOption>[];
+                }>
+              }
             />
           </Grid>
         </form>
