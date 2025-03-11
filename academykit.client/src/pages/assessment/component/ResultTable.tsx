@@ -13,31 +13,36 @@ const Row = ({
   completedDuration,
   questionSetSubmissionId,
   assessmentId,
+  hasObtainedFullMark,
 }: {
   obtainedMark: string;
   submissionDate: string;
   completedDuration: string;
   questionSetSubmissionId: string;
   assessmentId: string;
+  hasObtainedFullMark: boolean;
 }) => {
   return (
     <Table.Tr>
       <Table.Td>{obtainedMark}</Table.Td>
       <Table.Td>{moment(submissionDate).format(DATE_FORMAT)}</Table.Td>
       <Table.Td>{completedDuration}</Table.Td>
+
       <Table.Td>
-        <ActionIcon
-          variant="light"
-          component={Link}
-          to={
-            RoutePath.assessmentExam.resultOne(
-              assessmentId,
-              questionSetSubmissionId
-            ).route
-          }
-        >
-          <IconEye />
-        </ActionIcon>
+        {hasObtainedFullMark && (
+          <ActionIcon
+            variant="light"
+            component={Link}
+            to={
+              RoutePath.assessmentExam.resultOne(
+                assessmentId,
+                questionSetSubmissionId
+              ).route
+            }
+          >
+            <IconEye />
+          </ActionIcon>
+        )}
       </Table.Td>
     </Table.Tr>
   );
@@ -51,6 +56,11 @@ const ResultTable = ({
   userId: string;
 }) => {
   const studentResult = useGetStudentResult(assessmentId, userId);
+
+  const hasObtainedFullMark =
+    studentResult?.data?.assessmentSetResultDetails?.some(
+      (result) => result?.obtainedMarks === result?.totalMarks
+    );
 
   return (
     <>
@@ -71,16 +81,19 @@ const ResultTable = ({
         <Table.Tbody>
           {studentResult.data &&
             studentResult.data.assessmentSetResultDetails &&
-            studentResult.data.assessmentSetResultDetails.map((result) => (
-              <Row
-                key={result.questionSetSubmissionId}
-                assessmentId={assessmentId}
-                obtainedMark={result.obtainedMarks}
-                completedDuration={result.completeDuration}
-                submissionDate={result.submissionDate.toString()}
-                questionSetSubmissionId={result.questionSetSubmissionId}
-              />
-            ))}
+            studentResult.data.assessmentSetResultDetails.map((result) => {
+              return (
+                <Row
+                  key={result.questionSetSubmissionId}
+                  assessmentId={assessmentId}
+                  obtainedMark={result.obtainedMarks}
+                  completedDuration={result.completeDuration}
+                  submissionDate={result.submissionDate.toString()}
+                  questionSetSubmissionId={result.questionSetSubmissionId}
+                  hasObtainedFullMark={hasObtainedFullMark ?? false}
+                />
+              );
+            })}
         </Table.Tbody>
       </Table>
     </>
