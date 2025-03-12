@@ -129,7 +129,7 @@
             try
             {
                 var credentials = await GetCredentialAsync().ConfigureAwait(false);
-                var minioClient = GetMinioClient(credentials);
+                var minioClient = GetPresignedMinioClient(credentials);
                 var objectArgs = new PresignedGetObjectArgs()
                     .WithObject(key)
                     .WithBucket(credentials.Bucket)
@@ -219,7 +219,24 @@
             var minioClient = new MinioClient()
                 .WithEndpoint(credentials.EndPoint)
                 .WithCredentials(credentials.AccessKey, credentials.SecretKey)
+                .WithSSL()
                 .Build();
+            return minioClient;
+        }
+
+        /// <summary>
+        /// Gets the secured presigned URL
+        /// </summary>
+        /// <param name="credentials">The credentials</param>
+        /// <returns></returns>
+        private static IMinioClient GetPresignedMinioClient(MinIoDto credentials)
+        {
+            var minioClient = new MinioClient()
+                .WithEndpoint(credentials.PresignedUrl)
+                .WithCredentials(credentials.AccessKey, credentials.SecretKey)
+                .WithSSL()
+                .Build();
+
             return minioClient;
         }
 
