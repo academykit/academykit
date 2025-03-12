@@ -219,7 +219,6 @@
             var minioClient = new MinioClient()
                 .WithEndpoint(credentials.EndPoint)
                 .WithCredentials(credentials.AccessKey, credentials.SecretKey)
-                .WithSSL()
                 .Build();
             return minioClient;
         }
